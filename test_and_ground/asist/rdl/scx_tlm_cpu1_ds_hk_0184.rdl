@@ -1,0 +1,77 @@
+!==============================================================================
+!
+!                Originator: W. Moleski
+!                Responsible SC:  
+!                Responsible CSE: 
+!                Rev:  Last Change: Oct 24 2017
+
+!
+!                    Telemetry Packet # 0184 (dec)
+!                 =================================
+!
+!       Packet Application ID: 0184 (Hex '00B8')
+!       Packet Title:  SCX CPU1 DS Telemetry Data Packet
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY: 
+!	16MAY11	WFM	: Removed the File Info State structure
+!	05JUL11	WFM	: Updated types to match DS source changes
+!	22JAN15	WFM	: Added Filter Table filename
+!
+!	2017/10/24	: Created from template 'template_tlm_DS_HK_TLM.rdl'
+!	with parameters spacecraft='SCX' and processor='CPU1'.
+!==============================================================================
+!
+! #include "osconfig.h"
+#include "ds_platform_cfg.h"
+!
+
+PACKET P00B8 APID=0184, DESC="SCX CPU1 DS Telemetry Data Packet", STALE = 36
+#include "ccsds_header.rdl"
+!
+  UB  SCX_CPU1_DS_CMDPC         DESC="SCX CPU1 DS Command Processed Counter",
+                                        UNITS=Counts
+!
+  UB  SCX_CPU1_DS_CMDEC         DESC="SCX CPU1 DS Command Error Counter",
+                                        UNITS=Counts, YH=1, DOLIMIT
+!
+  UB  SCX_CPU1_DS_DestLoadCnt    DESC="The number of times the Destination File table was loaded successfully"
+!
+  UB  SCX_CPU1_DS_DestPtrErrCnt  DESC="The number of times DS failed to get a pointer to the Destination File table"
+!
+  UB  SCX_CPU1_DS_FilterLoadCnt  DESC="The number of the packet filter table was loaded successfully"
+!
+  UB  SCX_CPU1_DS_FilterPtrErrCnt DESC="The number of times DS failed to get a pointer to the Packet Filter table"
+!
+  UB  SCX_CPU1_DS_AppEnaState    DESC="The state of the DS Application",
+				 DISCRETE, DRANGE=(0,1),
+				 DLABEL=("Disabled","Enabled")
+!
+  UB  SCX_CPU1_DS_Spare  DESC="Spare for alignment purposes"
+!
+  UI  SCX_CPU1_DS_FileWriteCnt   DESC="The number of good destination file writes"
+!
+  UI  SCX_CPU1_DS_FileWriteErrCnt DESC="The number of bad destination file writes"
+!
+  UI  SCX_CPU1_DS_FileUpdCnt     DESC="The number of good secondary header updates"
+!
+  UI  SCX_CPU1_DS_FileUpdErrCnt  DESC="The number of bad secondary header updates"
+!
+  ULI SCX_CPU1_DS_DisabledPktCnt DESC="The number of packets rcv'd while DS was disabled"
+!
+  ULI SCX_CPU1_DS_IgnoredPktCnt  DESC="The number of packets rcv'd that had no filter"
+!
+  ULI SCX_CPU1_DS_FilteredPktCnt DESC="The number of packets that failed the filter test"
+!
+  ULI SCX_CPU1_DS_PassedPktCnt   DESC="The number of packets that passed filter test"
+!
+  CHAR SCX_CPU1_DS_FiltTblName[CFE_MISSION_MAX_PATH_LEN]   DESC="The filter table filename"
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END

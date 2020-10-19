@@ -1,17 +1,22 @@
 /************************************************************************
-** File: ds_file.h
+** File: ds_file.h 
 **
-** NASA Docket No. GSC-16,126-1, and identified as "Core Flight Software System
-** (CFS) Data Storage Application Version 2” 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
+**  application version 2.5.2” 
+**  
+**  Copyright © 2019 United States Government as represented by the Administrator 
+**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
 **
-** Copyright © 2007-2014 United States Government as represented by the
-** Administrator of the National Aeronautics and Space Administration. All Rights
-** Reserved. 
-** 
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
+**  Licensed under the Apache License, Version 2.0 (the "License"); 
+**  you may not use this file except in compliance with the License. 
+**  You may obtain a copy of the License at 
+**  http://www.apache.org/licenses/LICENSE-2.0 
+**  Unless required by applicable law or agreed to in writing, software 
+**  distributed under the License is distributed on an "AS IS" BASIS, 
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+**  See the License for the specific language governing permissions and 
+**  limitations under the License. 
+**  
 **
 ** Unless required by applicable law or agreed to in writing, software 
 ** distributed under the License is distributed on an "AS IS" BASIS, 
@@ -38,7 +43,6 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
 /*
 ** \brief DS File Header (follows cFE file header at start of file)
 */
@@ -54,24 +58,6 @@ typedef struct
 
 } DS_FileHeader_t;
 
-#elif (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_GPM)
-/*
-** \brief GPM File Header (first record in Data Storage files)
-*/
-typedef struct
-{
-    char    SourceID[4];                                /**< \brief Principal source of file data */
-    char    SequenceID[8];                              /**< \brief File generation counter */
-
-    uint32  StartTime;                                  /**< \brief File creation time (seconds) */
-    uint32  StopTime;                                   /**< \brief File close time (seconds) */
-
-    char    FileSize[8];                                /**< \brief File size in bytes */
-    char    Spare[20];                                  /**< \brief Unused (set to space chars) */
-
-} DS_FileHeaderGPM_t;
-
-#endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -335,13 +321,6 @@ void DS_FileCloseDest(int32 FileIndex);
 **  \sa #DS_HkFileStatus_t, #DS_DestFileEntry_t
 */
 void DS_FileTestAge(uint32 ElapsedSeconds);
-
-/*
-** Prototype for utility function specific to GPM type file headers
-*/
-#if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_GPM)
-void DS_FileConvertGPM(char *Buffer, uint32 Value);
-#endif
 
 
 #endif /* _ds_file_h_ */

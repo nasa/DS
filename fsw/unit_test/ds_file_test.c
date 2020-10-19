@@ -231,12 +231,12 @@ void DS_FileSetupWrite_Test_MaxFileSizeExceeded(void)
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, DS_NOOP_CC);
 
     DS_AppData.FileStatus[FileIndex].FileHandle = 99;
-
     DS_AppData.DestFileTblPtr = &DestFileTable;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileSize = 5;
     DS_AppData.FileStatus[FileIndex].FileSize = 10;
 
+    strncpy (DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "path", OS_MAX_PATH_LEN);
     strncpy (DS_AppData.FileStatus[FileIndex].FileName, "directory1/", DS_TOTAL_FNAME_BUFSIZE);
 
     /* Set to prevent an error message that we don't care about in this test */
@@ -480,6 +480,7 @@ void DS_FileCreateDest_Test_Nominal(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
     DS_AppData.DestFileTblPtr->File[FileIndex].SequenceCount = 5;
 
+    strncpy (DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "path", OS_MAX_PATH_LEN);
     strncpy (DS_AppData.FileStatus[FileIndex].FileName, "filename", OS_MAX_PATH_LEN);
 
     DS_AppData.FileStatus[FileIndex].FileHandle = 99;
@@ -578,6 +579,37 @@ void DS_FileCreateName_Test_Nominal(void)
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 
 } /* end DS_FileCreateName_Test_Nominal */
+
+void DS_FileCreateName_Test_EmptyPath(void)
+{
+    CFE_SB_MsgId_t      FileIndex = 0;
+    DS_DestFileTable_t  DestFileTable;
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
+    strncpy (DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "", OS_MAX_PATH_LEN);
+    strncpy (DS_AppData.DestFileTblPtr->File[FileIndex].Basename, "basename", OS_MAX_PATH_LEN);
+    strncpy (DS_AppData.DestFileTblPtr->File[FileIndex].Extension, "extension", OS_MAX_PATH_LEN);
+
+    DS_AppData.FileStatus[FileIndex].FileCount = 1;
+
+
+    /* Execute the function being tested */
+    DS_FileCreateName(FileIndex);
+ 
+
+    /* Verify results */
+    UtAssert_True
+        (Ut_CFE_EVS_EventSent(DS_FILE_CREATE_EMPTY_PATH_ERR_EID, CFE_EVS_ERROR, "FILE NAME error: Path empty. dest = 0, path = ''"),
+        "FILE NAME error: Path empty. dest = 0, path = ''");
+
+    UtAssert_True (DS_AppData.FileStatus[FileIndex].FileState == DS_DISABLED, "DS_AppData.FileStatus[FileIndex].FileState == DS_DISABLED");
+
+    UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
+
+} /* end DS_FileCreateName_Test_EmptyPath */
+
+
 
 void DS_FileCreateName_Test_Error(void)
 {
@@ -1078,6 +1110,7 @@ void DS_File_Test_AddTestCases(void)
     UtTest_Add(DS_FileCreateDest_Test_Error, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateDest_Test_Error");
 
     UtTest_Add(DS_FileCreateName_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateName_Test_Nominal");
+    UtTest_Add(DS_FileCreateName_Test_EmptyPath, DS_Test_Setup,DS_Test_TearDown, "DS_FileCreateName_Test_EmptyPath");
     UtTest_Add(DS_FileCreateName_Test_Error, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateName_Test_Error");
 
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE

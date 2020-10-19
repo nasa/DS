@@ -1,23 +1,22 @@
 /************************************************************************
-** File: ds_events.h
+** File: ds_events.h 
 **
-** NASA Docket No. GSC-16,126-1, and identified as "Core Flight Software System
-** (CFS) Data Storage Application Version 2” 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
+**  application version 2.5.2” 
+**  
+**  Copyright © 2019 United States Government as represented by the Administrator 
+**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
 **
-** Copyright © 2007-2014 United States Government as represented by the
-** Administrator of the National Aeronautics and Space Administration. All Rights
-** Reserved. 
-** 
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
-**
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License.
+**  Licensed under the Apache License, Version 2.0 (the "License"); 
+**  you may not use this file except in compliance with the License. 
+**  You may obtain a copy of the License at 
+**  http://www.apache.org/licenses/LICENSE-2.0 
+**  Unless required by applicable law or agreed to in writing, software 
+**  distributed under the License is distributed on an "AS IS" BASIS, 
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+**  See the License for the specific language governing permissions and 
+**  limitations under the License. 
+**  
 **
 ** Purpose: 
 **  The CFS Data Storage (DS) Application event id header file
@@ -1084,7 +1083,7 @@
 /**
 **  \brief <tt> 'Add Message ID to Filter Table command' </tt>
 **
-**  \event <tt> 'ADD MID command: MID = 0x\%04X, index = \%d' </tt>
+**  \event <tt> 'ADD MID command: MID = 0x\%04X, filter index = \%d, hash index = \%d' </tt>
 **
 **  \par Type: DEBUG
 **
@@ -1160,6 +1159,59 @@
 **  The event text will indicate the cause of the failure.
 */
 #define DS_CLOSE_ALL_CMD_ERR_EID 67
+
+/**
+**  \brief <tt> 'FILE NAME error: Path empty. dest = %d, path = '%s'' </tt>
+**  \event <tt> 'FILE NAME error: Path empty. dest = %d, path = '%s'' </tt>
+**
+**  \par Type: ERROR
+** 
+**  \par Cause:
+**
+**  This event is generated when DS_FileCreateName is invoked with an 
+**  empty path name.
+**
+**  The dest field is the file index.
+**  The path field is the path name.
+*/
+#define DS_FILE_CREATE_EMPTY_PATH_ERR_EID  68
+
+
+/**
+ ** \brief <tt> 'Invalid filter tbl name in DS_AppProcessHK. Name=\%s,
+ Err=0x\%08X' </tt>
+ ** \event <tt> 'Invalid filter tbl name in DS_AppProcessHk. Name=\%s,
+ Err=0x\%08X' </tt>
+ **
+ ** \par Type: ERROR
+ **
+ ** \par Cause:
+ **
+ ** This event is issued when an invalid filter table name is passed to
+ ** the CFE_TBL_GetInfo.  
+ **
+ ** The "Name" field in the event text  is the table name passed to 
+ ** #CFE_TBL_GetInfo.
+ ** The "Err" field in the event text is the error code returned from 
+ ** #CFE_TBL_GetInfo.
+ */
+#define DS_APPHK_FILTER_TBL_ERR_EID 68
+
+/**
+ ** \brief <tt> 'Filter tbl name copy fail in DS_AppProcessHK. Err=\%d' </tt>
+ ** \event <tt> 'Filter tbl name copy fail in DS_AppProcessHk. Err=\%d' </tt>
+ **
+ ** \par Type: ERROR
+ **
+ ** \par Cause:
+ **
+ ** This event is issued when the filter table name is not successfully 
+ ** created (via snprintf) in the DS_AppProcessHK function.
+ **
+ ** The "Err" field in the event text is the value returned from snprintf.
+ */
+#define DS_APPHK_FILTER_TBL_PRINT_ERR_EID 69
+
 
 
 #endif /* _ds_events_h_ */

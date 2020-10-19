@@ -1452,7 +1452,7 @@ void DS_CmdSetDestExt_Test_FileTableNotLoaded(void)
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, DS_SET_DEST_EXT_CC);
 
     CmdPacket.FileTableIndex = 1;
-    strncpy (CmdPacket.Extension, "txt", DS_SET_DEST_EXT_CC);
+    strncpy (CmdPacket.Extension, "txt", DS_EXTENSION_BUFSIZE);
 
     DS_AppData.DestFileTblPtr = 0;
 
@@ -2112,6 +2112,8 @@ void DS_CmdAddMID_Test_Nominal(void)
     DS_FilterTable_t      FilterTable;
     int32                 FilterTableIndex;
     DS_HashLink_t         HashLink;
+    uint32                ExpHashIdx;
+    char                  message[100];
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True (CMD_STRUCT_DATA_IS_32_ALIGNED(DS_AddMidCmd_t), "DS_AddMidCmd_t is 32-bit aligned");
@@ -2120,6 +2122,10 @@ void DS_CmdAddMID_Test_Nominal(void)
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, DS_ADD_MID_CC);
 
     CmdPacket.MessageID = 0x18BB;
+
+    /* This is the hash done in DS_TableHashFunction */
+    ExpHashIdx = (CmdPacket.MessageID & DS_HASH_TABLE_MASK);
+    snprintf(message, 100, "ADD MID command: MID = 0x%04X, filter index = 0, hash index = %d", CmdPacket.MessageID, ExpHashIdx);
 
     DS_AppData.FilterTblPtr = &FilterTable;
 
@@ -2181,8 +2187,8 @@ void DS_CmdAddMID_Test_Nominal(void)
     UtAssert_True (DS_AppData.HashLinks[0].MessageID == 0x18BB, "DS_AppData.HashLinks[0].MessageID == 0x18BB");
     
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(DS_ADD_MID_CMD_EID, CFE_EVS_DEBUG, "ADD MID command: MID = 0x18BB, index = 0"),
-        "ADD MID command: MID = 0x18BB, index = 0");
+        (Ut_CFE_EVS_EventSent(DS_ADD_MID_CMD_EID, CFE_EVS_DEBUG, message),
+        message);
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
 

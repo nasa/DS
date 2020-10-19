@@ -9,6 +9,10 @@
 ## GNU Makefile for building UT unit tests
 
 #
+# In order to build the DS UT Assert unit tests, the following environment
+# variables must be defined: UT_ASSERT_SRC, CFS_MISSION, CFE_DIR, OSAL_DIR,
+# PSP_DIR, and APP_DIR.  
+#
 # Supported MAKEFILE targets:
 #   clean - deletes object files, executables, output files, and gcov files
 #   all   - makes ds_testrunner.exe
@@ -27,11 +31,13 @@
 #
 VPATH := .
 VPATH += $(UT_ASSERT_SRC)/src
-VPATH += $(CFS_MISSION)/apps/cfs_lib/fsw/src
+VPATH += $(OSAL_DIR)/src/ut-stubs
+VPATH += $(CFE_FSW)/cfe-core/unit-test
+VPATH += $(CFS_APP_SRC)/cfs_lib/fsw/src
 VPATH += ../src
 VPATH += ../for_build
 
-DS_PATH=../../
+DS_PATH=../..
 
 #
 # INCLUDES specifies the search paths for include files outside of the current directory.  
@@ -40,7 +46,7 @@ DS_PATH=../../
 INCLUDES := -I.
 INCLUDES += -I$(UT_ASSERT_SRC)/inc
 INCLUDES += -I$(CFS_MISSION)/build/pc-linux/inc
-INCLUDES += -I$(APP_DIR)/cfs_lib/fsw/public_inc
+INCLUDES += -I$(CFS_APP_SRC)/cfs_lib/fsw/public_inc
 INCLUDES += -I$(CFE_DIR)/fsw/cfe-core/os/inc
 INCLUDES += -I$(CFE_DIR)/fsw/cfe-core/src/inc
 INCLUDES += -I$(CFE_DIR)/fsw/cfe-core/src/time
@@ -53,6 +59,7 @@ INCLUDES += -I$(CFE_DIR)/fsw/mission_inc
 INCLUDES += -I$(CFE_DIR)/fsw/platform_inc/cpu1
 INCLUDES += -I$(OSAL_DIR)/src/os/inc
 INCLUDES += -I$(OSAL_DIR)/build/inc
+INCLUDES += -I$(OSAL_DIR)/src/bsp/pc-linux/config
 INCLUDES += -I$(PSP_DIR)/fsw/inc
 INCLUDES += -I$(PSP_DIR)/fsw/pc-linux/inc
 INCLUDES += -I$(PSP_DIR)/fsw/pc-linux/inc
@@ -113,7 +120,7 @@ GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov -lm
 WARNINGS = -Wall -Wstrict-prototypes -Wundef
 DEBUGGER = -g
 
-COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ -DUT_VERBOSE -DOSAPI_NO_SPECIAL_ATTRIBS
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -DUT_VERBOSE -DOSAPI_NO_SPECIAL_ATTRIBS
 
 LOPT = $(GCOV_LOPT)
 
@@ -144,7 +151,7 @@ run ::
 
 gcov ::
 	@echo
-	@gcov $(FLIGHT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+	@gcov -f -b $(FLIGHT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
 		sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
 		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
 	@rm -f *.gcda *.gcno

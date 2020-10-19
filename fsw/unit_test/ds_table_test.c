@@ -91,7 +91,7 @@ int32 UT_DS_TABLE_TEST_CFE_TBL_GetStatusHook (CFE_TBL_Handle_t TblHandle)
 
 int32 UT_DS_TABLE_TEST_CFE_ES_RestoreFromCDSHook (void *RestoreToMemory, CFE_ES_CDSHandle_t Handle)
 {
-    memset(RestoreToMemory, 0, DS_DEST_FILE_CNT*4);
+    memset(RestoreToMemory, 0, (DS_DEST_FILE_CNT + 1) * 4);
 
     return CFE_SUCCESS;
 } /* end UT_DS_TABLE_TEST_CFE_ES_RestoreFromCDSHook */
@@ -1399,8 +1399,11 @@ void DS_TableCreateCDS_Test_PreExistingCDSArea(void)
 
     UtAssert_True (DS_AppData.FileStatus[DS_DEST_FILE_CNT-1].FileCount == 0, "DS_AppData.FileStatus[DS_DEST_FILE_CNT-1].FileCount == 0");
      
+    #if (DS_CDS_ENABLE_STATE == 1)
+    /* only test if configured */ 
     UtAssert_True (DS_AppData.AppEnableState == 0, "DS_AppData.AppEnableState == 0");
-
+    #endif
+     
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 } /* end DS_TableCreateCDS_Test_PreExistingCDSArea */
 

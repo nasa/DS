@@ -1,23 +1,22 @@
 /************************************************************************
-** File: ds_platform_cfg.h
+** File: ds_platform_cfg.h 
 **
-** NASA Docket No. GSC-16,126-1, and identified as "Core Flight Software System
-** (CFS) Data Storage Application Version 2” 
+** NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) application
+** version 2.5.2"
 **
-** Copyright © 2007-2014 United States Government as represented by the
-** Administrator of the National Aeronautics and Space Administration. All Rights
-** Reserved. 
-** 
+** Copyright © 2019 United States Government as represented by the Administrator of
+** the National Aeronautics and Space Administration.  All Rights Reserved. 
+**
 ** Licensed under the Apache License, Version 2.0 (the "License"); 
 ** you may not use this file except in compliance with the License. 
 ** You may obtain a copy of the License at 
 ** http://www.apache.org/licenses/LICENSE-2.0 
-**
 ** Unless required by applicable law or agreed to in writing, software 
 ** distributed under the License is distributed on an "AS IS" BASIS, 
 ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 ** See the License for the specific language governing permissions and 
-** limitations under the License.
+** limitations under the License. 
+**
 **
 ** Purpose: 
 **  The CFS Data Storage (DS) Application platform configuration header file
@@ -57,7 +56,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #OS_MAX_PATH_LEN.  (limit is not verified)
 */
-#define DS_DEF_DEST_FILENAME            "/cf/apps/ds_file_tbl.tbl"
+#define DS_DEF_DEST_FILENAME            "/cf/ds_file_tbl.tbl"
 
 
 /**
@@ -160,7 +159,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #OS_MAX_PATH_LEN.  (limit is not verified)
 */
-#define DS_DEF_FILTER_FILENAME          "/cf/apps/ds_filter_tbl.tbl"
+#define DS_DEF_FILTER_FILENAME          "/cf/ds_filter_tbl.tbl"
 
 
 /**
@@ -468,10 +467,10 @@
 **
 **  \par Limits
 **       This parameter must be set to one of the following:
-**       TRUE  = add move pathname field to Destination File Table
-**       FALSE = do not add move pathname to Destination File Table
+**       true  = add move pathname field to Destination File Table
+**       false = do not add move pathname to Destination File Table
 */
-#define DS_MOVE_FILES                   FALSE
+#define DS_MOVE_FILES                   true
 
 
 /**

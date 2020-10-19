@@ -1,26 +1,24 @@
 /************************************************************************
 ** File: ds_table.h 
 **
-** NASA Docket No. GSC-16,126-1, and identified as "Core Flight Software System
-** (CFS) Data Storage Application Version 2” 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
+**  application version 2.5.2” 
+**  
+**  Copyright © 2019 United States Government as represented by the Administrator 
+**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
 **
-** Copyright © 2007-2014 United States Government as represented by the
-** Administrator of the National Aeronautics and Space Administration. All Rights
-** Reserved. 
-** 
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
-**
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License.
-**
+**  Licensed under the Apache License, Version 2.0 (the "License"); 
+**  you may not use this file except in compliance with the License. 
+**  You may obtain a copy of the License at 
+**  http://www.apache.org/licenses/LICENSE-2.0 
+**  Unless required by applicable law or agreed to in writing, software 
+**  distributed under the License is distributed on an "AS IS" BASIS, 
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+**  See the License for the specific language governing permissions and 
+**  limitations under the License. 
+**  
 ** Purpose:
-**   CFS Data Storage (DS) table definitions
+**  CFS Data Storage (DS) table definitions
 **
 *************************************************************************/
 
@@ -94,7 +92,7 @@ typedef struct
      The qualified filename length will be verified at run-time as each filename is created. */
 typedef struct
 {
-#if (DS_MOVE_FILES == TRUE)
+#if (DS_MOVE_FILES == true)
     char                Movename[DS_PATHNAME_BUFSIZE];         /**< \brief Move files to this dir after close */
 #endif
     char                Pathname[DS_PATHNAME_BUFSIZE];         /**< \brief Path portion of filename */
@@ -243,7 +241,7 @@ int32 DS_TableVerifyDestFile(void *TableData);
 **
 **  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFile
 */
-boolean DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry,
+bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry,
                                     uint8 TableIndex, int32 ErrorCount);
 
 
@@ -291,7 +289,7 @@ int32 DS_TableVerifyFilter(void *TableData);
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
 */
-boolean DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry,
+bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry,
                                   int32 TableIndex, int32 ErrorCount);
 
 
@@ -299,7 +297,7 @@ boolean DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry,
 /*  \brief Test for unused table entry
 **  
 **  \par Description
-**       This function returns TRUE if a table entry is unused.
+**       This function returns true if a table entry is unused.
 **       Unused is defined as containing nothing but zero's.
 **
 **  \par Called From:
@@ -314,7 +312,7 @@ boolean DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry,
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
 */
-boolean DS_TableEntryUnused(void *TableEntry, int32 BufferSize);
+bool DS_TableEntryUnused(void *TableEntry, int32 BufferSize);
 
 
 /*******************************************************************/
@@ -348,7 +346,7 @@ boolean DS_TableEntryUnused(void *TableEntry, int32 BufferSize);
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifyFileIndex(uint16 FileTableIndex);
+bool DS_TableVerifyFileIndex(uint16 FileTableIndex);
 
 
 /*******************************************************************/
@@ -373,7 +371,7 @@ boolean DS_TableVerifyFileIndex(uint16 FileTableIndex);
 **
 **  \sa #DS_TableVerifyType, #DS_TableVerifyState, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifyParms(uint16 Algorithm_N,
+bool DS_TableVerifyParms(uint16 Algorithm_N,
                             uint16 Algorithm_X,
                             uint16 Algorithm_O);
 
@@ -400,7 +398,7 @@ boolean DS_TableVerifyParms(uint16 Algorithm_N,
 **
 **  \sa #DS_TableVerifyState, #DS_TableVerifySize, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifyType(uint16 TimeVsCount);
+bool DS_TableVerifyType(uint16 TimeVsCount);
 
 
 /*******************************************************************/
@@ -423,7 +421,7 @@ boolean DS_TableVerifyType(uint16 TimeVsCount);
 **
 **  \sa #DS_TableVerifySize, #DS_TableVerifyAge, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifyState(uint16 EnableState);
+bool DS_TableVerifyState(uint16 EnableState);
 
 
 /*******************************************************************/
@@ -445,7 +443,7 @@ boolean DS_TableVerifyState(uint16 EnableState);
 **
 **  \sa #DS_TableVerifyAge, #DS_TableVerifyCount, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifySize(uint32 MaxFileSize);
+bool DS_TableVerifySize(uint32 MaxFileSize);
 
 
 /*******************************************************************/
@@ -467,7 +465,7 @@ boolean DS_TableVerifySize(uint32 MaxFileSize);
 **
 **  \sa #DS_TableVerifySize, #DS_TableVerifyCount, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifyAge(uint32 MaxFileAge);
+bool DS_TableVerifyAge(uint32 MaxFileAge);
 
 
 /*******************************************************************/
@@ -489,7 +487,7 @@ boolean DS_TableVerifyAge(uint32 MaxFileAge);
 **
 **  \sa #DS_TableVerifySize, #DS_TableVerifyAge, #DS_DestFileEntry_t
 */
-boolean DS_TableVerifyCount(uint32 SequenceCount);
+bool DS_TableVerifyCount(uint32 SequenceCount);
 
 
 /*******************************************************************/

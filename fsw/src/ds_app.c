@@ -1,23 +1,22 @@
 /************************************************************************
 ** File: ds_app.c 
 **
-** NASA Docket No. GSC-16,126-1, and identified as "Core Flight Software System
-** (CFS) Data Storage Application Version 2” 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
+**  application version 2.5.2” 
+**  
+**  Copyright © 2019 United States Government as represented by the Administrator 
+**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
 **
-** Copyright © 2007-2014 United States Government as represented by the
-** Administrator of the National Aeronautics and Space Administration. All Rights
-** Reserved. 
-** 
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
-**
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License.
+**  Licensed under the Apache License, Version 2.0 (the "License"); 
+**  you may not use this file except in compliance with the License. 
+**  You may obtain a copy of the License at 
+**  http://www.apache.org/licenses/LICENSE-2.0 
+**  Unless required by applicable law or agreed to in writing, software 
+**  distributed under the License is distributed on an "AS IS" BASIS, 
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+**  See the License for the specific language governing permissions and 
+**  limitations under the License. 
+**  
 **
 ** Purpose:
 **  The CFS Data Storage (DS) Application file containing the application
@@ -66,9 +65,9 @@ DS_AppData_t DS_AppData;
 
 void DS_AppMain(void)
 {
-    CFE_SB_MsgPtr_t MessagePtr;
-    int32 Result;
-    uint32 RunStatus = CFE_ES_APP_RUN;
+    CFE_SB_MsgPtr_t MessagePtr = NULL;
+    int32 Result = CFE_SUCCESS;
+    uint32 RunStatus = CFE_ES_RunStatus_APP_RUN;
 
     /*
     ** Performance Log (start time counter)...
@@ -96,7 +95,7 @@ void DS_AppMain(void)
         /*
         ** Set request to terminate main loop...
         */
-        RunStatus = CFE_ES_APP_ERROR;
+        RunStatus = CFE_ES_RunStatus_APP_ERROR;
     }
 
     /*
@@ -131,7 +130,7 @@ void DS_AppMain(void)
             /*
             ** Set request to terminate main loop...
             */
-            RunStatus = CFE_ES_APP_ERROR;
+            RunStatus = CFE_ES_RunStatus_APP_ERROR;
         }
 
         /*
@@ -149,7 +148,7 @@ void DS_AppMain(void)
         /*
         ** Send an event describing the reason for the termination...
         */
-        CFE_EVS_SendEvent(DS_EXIT_ERR_EID, CFE_EVS_CRITICAL,
+        CFE_EVS_SendEvent(DS_EXIT_ERR_EID, CFE_EVS_EventType_CRITICAL,
                          "Application terminating, err = 0x%08X", (unsigned int)Result);
 
         /*
@@ -180,7 +179,7 @@ void DS_AppMain(void)
 int32 DS_AppInitialize(void)
 {
     int32 Result = CFE_SUCCESS;
-    int32 i;
+    int32 i = 0;
 
     /*
     ** Initialize global data structure...
@@ -206,7 +205,7 @@ int32 DS_AppInitialize(void)
 
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
                "Unable to register for EVS services, err = 0x%08X", (unsigned int)Result);
         }
     }
@@ -220,7 +219,7 @@ int32 DS_AppInitialize(void)
                                     DS_APP_PIPE_DEPTH, DS_APP_PIPE_NAME);
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
                "Unable to create input pipe, err = 0x%08X", (unsigned int)Result);
         }
     }
@@ -234,7 +233,7 @@ int32 DS_AppInitialize(void)
 
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
                "Unable to subscribe to HK request, err = 0x%08X", (unsigned int)Result);
         }
     }
@@ -248,7 +247,7 @@ int32 DS_AppInitialize(void)
 
         if (Result != CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
                "Unable to subscribe to DS commands, err = 0x%08X", (unsigned int)Result);
         }
     }
@@ -274,10 +273,10 @@ int32 DS_AppInitialize(void)
     */
     if (Result == CFE_SUCCESS)
     {
-        CFE_EVS_SendEvent(DS_INIT_EID, CFE_EVS_INFORMATION,
-                         "Application initialized, version %d.%d.%d.%d, data at 0x%08X",
+        CFE_EVS_SendEvent(DS_INIT_EID, CFE_EVS_EventType_INFORMATION,
+                         "Application initialized, version %d.%d.%d.%d, data at %p",
                           DS_MAJOR_VERSION, DS_MINOR_VERSION,
-                          DS_REVISION, DS_MISSION_REV, (unsigned int) &DS_AppData);
+                          DS_REVISION, DS_MISSION_REV, (void*)&DS_AppData);
     }
 
     return(Result);
@@ -294,8 +293,8 @@ int32 DS_AppInitialize(void)
 void DS_AppProcessMsg(CFE_SB_MsgPtr_t MessagePtr)
 {
     CFE_SB_MsgId_t MessageID = CFE_SB_GetMsgId(MessagePtr);
-    uint16 ActualLength;
-    uint16 ExpectedLength;
+    uint16 ActualLength = 0;
+    uint16 ExpectedLength = 0;
 
     switch (MessageID)
     {
@@ -319,7 +318,7 @@ void DS_AppProcessMsg(CFE_SB_MsgPtr_t MessagePtr)
             ExpectedLength = CFE_SB_CMD_HDR_SIZE;
             if (ExpectedLength != ActualLength)
             {
-                CFE_EVS_SendEvent(DS_HK_REQUEST_ERR_EID, CFE_EVS_ERROR,
+                CFE_EVS_SendEvent(DS_HK_REQUEST_ERR_EID, CFE_EVS_EventType_ERROR,
                    "Invalid HK request length: expected = %d, actual = %d",
                     ExpectedLength, ActualLength);
             }
@@ -488,7 +487,7 @@ void DS_AppProcessCmd(CFE_SB_MsgPtr_t MessagePtr)
         ** DS application command with unknown command code...
         */
         default:
-            CFE_EVS_SendEvent(DS_CMD_CODE_ERR_EID, CFE_EVS_ERROR,
+            CFE_EVS_SendEvent(DS_CMD_CODE_ERR_EID, CFE_EVS_EventType_ERROR,
                              "Invalid command code: MID = 0x%04X, CC = %d",
                               DS_CMD_MID, CommandCode);
 
@@ -510,14 +509,15 @@ void DS_AppProcessCmd(CFE_SB_MsgPtr_t MessagePtr)
 void DS_AppProcessHK(void)
 {
     DS_HkPacket_t HkPacket;
-    int32 i;
-    char FilterTblName[CFE_TBL_MAX_NAME_LENGTH];
+    int32 i = 0;
+    int32 Status = 0;
+    char FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
     CFE_TBL_Info_t FilterTblInfo;
 
     /*
     ** Initialize housekeeping packet...
     */
-    CFE_SB_InitMsg(&HkPacket, DS_HK_TLM_MID, sizeof(DS_HkPacket_t), TRUE);
+    CFE_SB_InitMsg(&HkPacket, DS_HK_TLM_MID, sizeof(DS_HkPacket_t), true);
 
     /*
     ** Process data storage file age limits...
@@ -574,10 +574,38 @@ void DS_AppProcessHK(void)
         DS_AppData.FileStatus[i].FileGrowth = 0;
     }
 
-    /* Get the filter table info, put the file name in the hkp pkt. */
-    sprintf(FilterTblName,"DS.%s",DS_FILTER_TBL_NAME);
-    CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
-    strncpy(HkPacket.FilterTblFilename, FilterTblInfo.LastFileLoaded, OS_MAX_PATH_LEN);
+    /* Get the filter table info, put the file name in the hk pkt. */
+    Status = snprintf(FilterTblName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "DS.%s",DS_FILTER_TBL_NAME);
+    if(Status >= 0) {
+        Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
+        if (Status == CFE_SUCCESS) {
+            strncpy(HkPacket.FilterTblFilename, FilterTblInfo.LastFileLoaded, OS_MAX_PATH_LEN - 1);
+            HkPacket.FilterTblFilename[strlen(HkPacket.FilterTblFilename)] = '\0';
+        }
+        
+        else {
+            /* If the filter table name is invalid, send an event and erase any
+             * stale/misleading filename from the HK packet */
+            CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, 
+                              CFE_EVS_EventType_ERROR,
+                              "Invalid filter tbl name in DS_AppProcessHK. Name=%s, Err=0x%08X",
+                              FilterTblName,
+                              Status);
+        
+            CFE_PSP_MemSet(HkPacket.FilterTblFilename, 0, OS_MAX_PATH_LEN);
+        }
+    }
+    else {
+        /* If the filter table name couldn't be copied, send an event and erase
+         * any stale/misleading filename from the HK packet */
+        CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "Filter tbl name copy fail in DS_AppProcessHK. Err=%d",
+                          (int)Status);
+
+
+        CFE_PSP_MemSet(HkPacket.FilterTblFilename, 0, OS_MAX_PATH_LEN);
+    }
 
     /*
     ** Timestamp and send housekeeping telemetry packet...

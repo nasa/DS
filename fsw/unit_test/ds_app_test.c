@@ -72,12 +72,20 @@ void DS_AppMain_Test_Nominal(void)
     /* Set to prevent call to CFE_SB_RcvMsg from returning an error */
     Ut_CFE_SB_SetReturnCode(UT_CFE_SB_RCVMSG_INDEX, CFE_SUCCESS, 1);
 
+    /* Set to prevent segmentation fault */
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_GETTOTALMSGLENGTH_INDEX, sizeof(DS_NoopCmd_t), 1);
+
+    /* Set to prevent segmentation fault */
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_GETMSGID_INDEX, DS_SEND_HK_MID, 1);
+
     /* Execute the function being tested */
     DS_AppMain();
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 3, "Ut_CFE_EVS_GetEventQueueDepth() == 3");
     /* Generates 2 event messages we don't care about in this test */
+
+    UtAssert_True (Ut_CFE_ES_GetSysLogQueueDepth() == 0, "Ut_CFE_ES_GetSysLogQueueDepth() == 0");
 
 } /* end DS_AppMain_Test_Nominal */
 
@@ -875,14 +883,24 @@ void DS_AppStorePacket_Test_Nominal(void)
 {
     DS_CloseAllCmd_t   CmdPacket;
     CFE_SB_MsgId_t     MessageID = 1;
+    DS_DestFileTable_t destTable;
+    DS_FilterTable_t   filterTable;
 
     CFE_SB_InitMsg (&CmdPacket, DS_CMD_MID, sizeof(DS_CloseAllCmd_t), TRUE);
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, 99);
 
+    DS_AppData.AppEnableState = DS_ENABLED;
+    DS_AppData.DestFileTblPtr = &destTable;
+    DS_AppData.FilterTblPtr = &filterTable;
+
     /* Execute the function being tested */
     DS_AppStorePacket(MessageID, (CFE_SB_MsgPtr_t)(&CmdPacket));
     
-    /* Verify results */
+    /* Verify results -- IgnoredPktCounter increments in call to DS_FileStorePacket() */
+    UtAssert_True (DS_AppData.IgnoredPktCounter == 1, "DS_AppData.IgnoredPktCounter == 1");
+
+    UtAssert_True (DS_AppData.DisabledPktCounter == 0, "DS_AppData.DisabledPktCounter == 0");
+
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 
 } /* end DS_AppStorePacket_Test_Nominal */
@@ -911,11 +929,13 @@ void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
 {
     DS_CloseAllCmd_t   CmdPacket;
     CFE_SB_MsgId_t     MessageID = 1;
+    DS_DestFileTable_t destTable;
 
     CFE_SB_InitMsg (&CmdPacket, DS_CMD_MID, sizeof(DS_CloseAllCmd_t), TRUE);
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, 99);
 
     DS_AppData.AppEnableState = DS_ENABLED;
+    DS_AppData.DestFileTblPtr = &destTable; /* force to non-zero so filter table is tested */
     DS_AppData.FilterTblPtr = 0;
 
     /* Execute the function being tested */
@@ -932,11 +952,13 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
 {
     DS_CloseAllCmd_t   CmdPacket;
     CFE_SB_MsgId_t     MessageID = 1;
+    DS_FilterTable_t   filterTable;
 
     CFE_SB_InitMsg (&CmdPacket, DS_CMD_MID, sizeof(DS_CloseAllCmd_t), TRUE);
     CFE_SB_SetCmdCode((CFE_SB_MsgPtr_t)&CmdPacket, 99);
 
     DS_AppData.AppEnableState = DS_ENABLED;
+    DS_AppData.FilterTblPtr = &filterTable;  /* Force to non-zero so destination table is tested */
     DS_AppData.DestFileTblPtr = 0;
 
     /* Execute the function being tested */
