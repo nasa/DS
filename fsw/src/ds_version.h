@@ -1,6 +1,6 @@
 /************************************************************************
  * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.0”
+ * (DS) application version 2.6.1”
  *
  * Copyright (c) 2021 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
@@ -30,9 +30,9 @@
  * \{
  */
 
-#define DS_MAJOR_VERSION 2  /**< \brief Major version number */
-#define DS_MINOR_VERSION 6  /**< \brief Minor version number */
-#define DS_REVISION      99 /**< \brief Revision number */
+#define DS_MAJOR_VERSION 2 /**< \brief Major version number */
+#define DS_MINOR_VERSION 6 /**< \brief Minor version number */
+#define DS_REVISION      1 /**< \brief Revision number */
 
 /**\}*/
 
