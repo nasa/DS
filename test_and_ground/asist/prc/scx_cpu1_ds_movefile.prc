@@ -229,9 +229,27 @@ enddo
 write "==> Default Filter Table filename = '",filterFileName,"'"
 
 ;; Upload the files to CPU1
-s ftp_file("CF:0", "ds_movefile.tbl", destFileName, hostCPU, "P")
-s ftp_file("CF:0", "ds_movefilter.tbl", filterFileName, hostCPU, "P")
+;s ftp_file("CF:0", "ds_movefile.tbl", destFileName, hostCPU, "P")
+;s ftp_file("CF:0", "ds_movefilter.tbl", filterFileName, hostCPU, "P")
 
+; Load the File table created above
+s load_table("ds_movefile.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=fileTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=fileTblName
+wait 5
+
+; Load the Filter table created above
+s load_table("ds_movefilter.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=filterTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=filterTblName
 wait 5
 
 write ";***********************************************************************"
@@ -246,8 +264,8 @@ page SCX_CPU1_FM_DIR_LIST
 write ";***********************************************************************"
 write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("1.4")
-wait 5
+;s scx_cpu1_ds_start_apps("1.4")
+;wait 5
 
 ;; Verify the Housekeeping Packet is being generated
 local hkPktId
@@ -278,8 +296,8 @@ if (SCX_CPU1_DS_CMDPC = 0) AND (SCX_CPU1_DS_CMDEC = 0) AND ;;
    (SCX_CPU1_DS_FilteredPktCnt = 0) AND (SCX_CPU1_DS_PassedPktCnt = 0) AND ;;
    (SCX_CPU1_DS_FileWriteCnt = 0) AND (SCX_CPU1_DS_FileWriteErrCnt = 0) AND ;;
    (SCX_CPU1_DS_FileUpdCnt = 0) AND (SCX_CPU1_DS_FileUpdErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_FilterLoadCnt = 1) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
+   (SCX_CPU1_DS_DestLoadCnt = 2) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
+   (SCX_CPU1_DS_FilterLoadCnt = 2) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
   write "<*> Passed (9000) - Housekeeping telemetry initialized properly."
   ut_setrequirements DS_9000, "P"
 else

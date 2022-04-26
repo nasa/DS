@@ -1,0 +1,299 @@
+21-236-13:14:03.910 00     SPR-I:OPRO         ****************** FSW Configuration ******************
+21-236-13:14:03.910 00     SPR-I:OPRO                 Checksum:    29237
+21-236-13:14:03.911 00     SPR-I:OPRO                 cFE Version: 6.7.99.0
+21-236-13:14:03.911 00     SPR-I:OPRO                 OS Version:  5.0.0.255
+21-236-13:14:03.911 00     SPR-I:OPRO          
+21-236-13:14:03.912 00     SPR-I:OPRO                 Connection Status
+21-236-13:14:03.912 00     SPR-I:OPRO                 -----------------
+21-236-13:14:03.912 00     SPR-I:OPRO                 CFDP: DOWN
+21-236-13:14:03.912 00     SPR-I:OPRO                 UDP:  UP 
+21-236-13:14:03.912 00     SPR-I:OPRO                 SWTS:  UNK
+21-236-13:14:03.913 00     SPR-I:OPRO         
+21-236-13:14:03.913 00     SPR-I:OPRO                 CMD / TLM Path
+21-236-13:14:03.913 00     SPR-I:OPRO                 --------------
+21-236-13:14:03.913 00     SPR-I:OPRO                 UDP
+21-236-13:14:03.913 00     SPR-I:OPRO                 
+21-236-13:14:03.913 00     SPR-I:OPRO         
+21-236-13:14:03.913 00     SPR-I:OPRO                 ASIST / GDS Configuration
+21-236-13:14:03.914 00     SPR-I:OPRO                 -------------------------
+21-236-13:14:03.914 00     SPR-I:OPRO                 Workstation: GS582CFSLAB4
+21-236-13:14:03.914 00     SPR-I:OPRO                 Account: cfs_test
+21-236-13:14:03.914 00     SPR-I:OPRO                 Version: 21.0.7
+21-236-13:14:03.914 00     SPR-I:OPRO                 Tlm DB:  Version: 1.985  Date: 08-24-21  Time: 06:37:06 AM.
+21-236-13:14:03.914 00     SPR-I:OPRO                 Cmd DB:  Version: 1.51  Date: 08-24-21  Time: 06:47:31 AM.EDT
+21-236-13:14:03.914 00     SPR-I:OPRO         
+21-236-13:14:03.914 00     SPR-I:OPRO                 Telemetry Info
+21-236-13:14:03.914 00     SPR-I:OPRO                 --------------
+21-236-13:14:03.914 00     SPR-I:OPRO                 Pkt Loss Count: N/A
+21-236-13:14:03.914 00     SPR-I:OPRO         ****************  End FSW Configuration ***************
+21-236-13:14:03.914 00     SPR-I:OPRO         Starting Procedure.... scx_cpu1_ds_enablestate
+21-236-13:14:04.027 00     SPR-I:OPRI     --> start scx_cpu1_ds_enablestate
+21-236-13:14:04.027 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_enablestate.i
+21-236-13:14:04.031 00     SPR-I:STS          Procedure SCX_CPU1_DS_ENABLESTATE started
+21-236-13:14:04.108 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:14:04.108 00     SPR-I:OPRO         ;  Step 1.0: Data Storage Test Setup.
+21-236-13:14:04.108 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:14:04.108 00     SPR-I:OPRO         ;  Step 1.1: Command a Power-on Reset on CPU1.
+21-236-13:14:04.108 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:14:04.109 00     CMH-I:CMD             Command SFDU received:<1806C000000302220002> from gs582cfslab4:SPR
+21-236-13:14:04.120 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:14:14.130 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-13:14:14.131 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-13:14:14.137 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-13:14:14.157 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-13:15:14.222 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:20.183 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-236-13:15:24.232 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:24.301 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-13:15:24.302 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-13:15:24.303 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-13:15:24.304 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-236-13:15:24.354 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-13:15:24.354 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:25.293 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-13:15:28.358 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:28.359 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-13:15:28.361 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-13:15:28.365 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-13:15:28.365 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:33.370 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.370 00     SPR-I:OPRO         ;  Step 1.2: Upload the default DS table load images to CPU1.
+21-236-13:15:33.370 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.371 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_tbl3.i
+21-236-13:15:33.384 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL3 started
+21-236-13:15:33.447 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.447 00     SPR-I:OPRO         ;  Step 1.0: Define DS Destination File And Packet Filter Tables.
+21-236-13:15:33.447 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.451 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-13:15:33.451 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-13:15:33.453 00     SPR-I:OPRO         **********  ds_filtfile.tbl  **********
+21-236-13:15:33.453 00     SPR-I:OPRO         
+21-236-13:15:33.453 00     SPR-I:OPRO                Content Type: cFE1
+21-236-13:15:33.453 00     SPR-I:OPRO                    Sub Type: 8
+21-236-13:15:33.453 00     SPR-I:OPRO                      Length: 12
+21-236-13:15:33.454 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-13:15:33.454 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-13:15:33.454 00     SPR-I:OPRO              Application Id: 3958
+21-236-13:15:33.454 00     SPR-I:OPRO            Create Time Secs: 1629810933
+21-236-13:15:33.454 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-13:15:33.454 00     SPR-I:OPRO            File Description: File Write Test File Table
+21-236-13:15:33.454 00     SPR-I:OPRO         
+21-236-13:15:33.454 00     SPR-I:OPRO         **********  DS.FILE_TBL  **********
+21-236-13:15:33.454 00     SPR-I:OPRO         
+21-236-13:15:33.454 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_DF_TBL_Description
+21-236-13:15:33.454 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-13:15:33.454 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_DF_TBL[7].SeqCnt
+21-236-13:15:33.454 00     SPR-I:OPRO             Number of Bytes: 1760
+21-236-13:15:33.454 00     SPR-I:OPRO         
+21-236-13:15:33.468 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-13:15:33.469 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-13:15:33.469 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 1875 P0F76 ds.file_tbl
+21-236-13:15:33.473 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-13:15:33.473 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_filtfile.tbl.tmp ds.file_tbl > ds_filtfile.tbl
+21-236-13:15:33.477 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.file_tbl ds_filtfile.tbl.tmp
+21-236-13:15:33.481 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-13:15:33.955 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-13:15:33.955 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-13:15:33.957 00     SPR-I:OPRO         **********  ds_filtfilter.tbl  **********
+21-236-13:15:33.957 00     SPR-I:OPRO         
+21-236-13:15:33.957 00     SPR-I:OPRO                Content Type: cFE1
+21-236-13:15:33.957 00     SPR-I:OPRO                    Sub Type: 8
+21-236-13:15:33.957 00     SPR-I:OPRO                      Length: 12
+21-236-13:15:33.957 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-13:15:33.957 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-13:15:33.957 00     SPR-I:OPRO              Application Id: 3959
+21-236-13:15:33.957 00     SPR-I:OPRO            Create Time Secs: 1629810933
+21-236-13:15:33.957 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-13:15:33.958 00     SPR-I:OPRO            File Description: Filter Test Filter Table
+21-236-13:15:33.958 00     SPR-I:OPRO         
+21-236-13:15:33.958 00     SPR-I:OPRO         **********  DS.FILTER_TBL  **********
+21-236-13:15:33.958 00     SPR-I:OPRO         
+21-236-13:15:33.958 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_PF_TBL_Description
+21-236-13:15:33.958 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-13:15:33.958 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_PF_TBL[255].FilterParams[3].O_Value
+21-236-13:15:33.958 00     SPR-I:OPRO             Number of Bytes: 9248
+21-236-13:15:33.958 00     SPR-I:OPRO         
+21-236-13:15:33.963 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-13:15:33.963 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-13:15:33.964 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 9363 P0F77 ds.filter_tbl
+21-236-13:15:33.968 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-13:15:33.968 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_filtfilter.tbl.tmp ds.filter_tbl > ds_filtfilter.tbl
+21-236-13:15:33.972 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.filter_tbl ds_filtfilter.tbl.tmp
+21-236-13:15:33.976 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-13:15:33.976 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:15:33.976 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_tbl3
+21-236-13:15:33.977 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:15:33.977 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL3 completed
+21-236-13:15:33.981 00     SPR-I:OPRO         ==> Default Destination File Table filename = 'ds_file_tbl.tbl'
+21-236-13:15:33.982 00     SPR-I:OPRO         ==> Default Filter Table filename = 'ds_filter_tbl.tbl'
+21-236-13:15:33.982 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/ftp_file.i
+21-236-13:15:33.982 00     SPR-I:STS          Procedure FTP_FILE started
+21-236-13:15:34.296 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-13:15:34.296 00     SPR-I:STS          Procedure FTP_FILE completed
+21-236-13:15:34.298 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/ftp_file.i
+21-236-13:15:34.298 00     SPR-I:STS          Procedure FTP_FILE started
+21-236-13:15:34.796 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-13:15:34.796 00     SPR-I:STS          Procedure FTP_FILE completed
+21-236-13:15:34.797 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:39.802 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.802 00     SPR-I:OPRO         ;  Step 1.3: Display the Housekeeping pages 
+21-236-13:15:39.803 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.901 00     DPD-I:STS          Page SCX_CPU1_DS_HK added (cid:1).
+21-236-13:15:39.964 00     DPD-I:STS          Page SCX_CPU1_TST_DS_HK added (cid:1).
+21-236-13:15:39.967 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.967 00     SPR-I:OPRO         ;  Step 1.4:  Start the Data Storage (DS) and Test Applications.     
+21-236-13:15:39.968 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.971 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:44.977 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:44.979 00     SPR-I:OPRO         <*> Passed (8000) - Housekeeping packet is being generated.
+21-236-13:15:44.983 00     SPR-I:OPRO         <*> Passed (9000) - Housekeeping telemetry initialized properly.
+21-236-13:15:44.984 00     SPR-I:OPRO         <*> Passed (9008) - DS Application State is enabled as expected.
+21-236-13:15:44.985 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:49.989 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:49.989 00     SPR-I:OPRO         ;  Step 1.5: Enable DEBUG Event Messages 
+21-236-13:15:49.990 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:49.991 00     CMH-I:CMD             Command SFDU received:<1801C0000017052244530000000000000000000000000000000000000100> from gs582cfslab4:SPR
+21-236-13:15:50.007 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:53.011 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:53.012 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-13:15:53.013 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:58.018 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:58.018 00     SPR-I:OPRO         ;  Step 2.0: State Enable Tests.
+21-236-13:15:58.018 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:58.018 00     SPR-I:OPRO         ;  Step 2.1: Change the DS application state to the opposite state.
+21-236-13:15:58.018 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:58.021 00     CMH-I:CMD             Command SFDU received:<18BBC0000005029B00000000> from gs582cfslab4:SPR
+21-236-13:15:58.039 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:58.791 00    TLMH-I:STS          58-012-14:04:22.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=35 APP STATE command: state = 0
+21-236-13:16:01.042 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:16:01.044 00     SPR-I:OPRO         <*> Passed - DS Application State command sent properly.
+21-236-13:16:01.044 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:16:06.049 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:16:06.049 00     SPR-I:OPRO         ;  Step 2.2: Perform a Processor Reset. 
+21-236-13:16:06.049 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:16:06.051 00     CMH-I:CMD             Command SFDU received:<1806C000000302210001> from gs582cfslab4:SPR
+21-236-13:16:06.065 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:16:16.075 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-13:16:16.077 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-13:16:16.084 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-13:16:16.121 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-13:17:16.177 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:17:22.144 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-236-13:17:26.188 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:26.245 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-13:17:26.245 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-13:17:26.246 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-13:17:26.247 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-236-13:17:26.298 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-13:17:26.298 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:17:26.876 00    TLMH-I:STS          58-012-14:04:57.033 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-13:17:30.302 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:30.303 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-13:17:30.305 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-13:17:30.310 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-13:17:30.310 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:17:35.315 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:35.315 00     SPR-I:OPRO         ;  Step 2.3: Start the Data Storage (DS) and Test Applications.     
+21-236-13:17:35.315 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:35.316 00     SPR-I:OPRO         <*> Passed (9004) - DS Application State is set as expected.
+21-236-13:17:35.320 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:17:40.325 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:40.325 00     SPR-I:OPRO         ;  Step 2.4: Enable DEBUG Event Messages 
+21-236-13:17:40.325 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:40.328 00     CMH-I:CMD             Command SFDU received:<1801C0000017052244530000000000000000000000000000000000000100> from gs582cfslab4:SPR
+21-236-13:17:40.344 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:17:42.346 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:42.348 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-13:17:42.348 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:42.348 00     SPR-I:OPRO         ;  Step 2.5: Restart the DS and TST_DS Applications. 
+21-236-13:17:42.348 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:42.349 00     SPR-I:OPRO         ;  Step 2.5.1: Stop the DS and TST_DS Applications. 
+21-236-13:17:42.349 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:42.351 00     CMH-I:CMD             Command SFDU received:<1806C000001506295453545F44530000000000000000000000000000> from gs582cfslab4:SPR
+21-236-13:17:42.353 00     SPR-I:STTE         Wait mode - waiting 4 seconds ...
+21-236-13:17:43.380 00    TLMH-I:STS          58-012-14:05:14.001 ERROR CPU=CPU1 APPNAME=TST_DS EVENT ID=41 TST_DS_AppMain terminating!, Error = 0x0
+21-236-13:17:46.358 00     CMH-I:CMD             Command SFDU received:<1806C000001506254453000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-13:17:46.371 00     SPR-I:STTE         Wait mode - waiting 4 seconds ...
+21-236-13:17:48.381 00    TLMH-I:STS          58-012-14:05:19.000 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=17 Msg Limit Err,MsgId 0x1811,pipe TstDSCmdPipe,sender CFE_TIME.TIME_1HZ_TASK
+21-236-13:17:49.382 00    TLMH-I:STS          58-012-14:05:19.821 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application TST_DS Completed, AppID=1114124
+21-236-13:17:49.383 00    TLMH-I:STS          58-012-14:05:19.883 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=1 TST_DS Initialized. Version 2.5.1.0
+21-236-13:17:50.387 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:50.389 00     SPR-I:OPRO         <*> Passed - DS and TST_DS stop app commands sent properly.
+21-236-13:17:50.389 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:17:52.376 00    TLMH-I:STS          58-012-14:05:22.863 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application DS Completed, AppID=1114125
+21-236-13:17:52.377 00    TLMH-I:STS          58-012-14:05:22.939 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 0, unused = 8
+21-236-13:17:52.378 00    TLMH-I:STS          58-012-14:05:22.964 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 6, bad = 0, unused = 250
+21-236-13:17:52.379 00    TLMH-I:STS          58-012-14:05:22.966 INFO CPU=CPU1 APPNAME=DS EVENT ID=1 Application initialized, version 2.6.0.0, data at 0xa85e50
+21-236-13:17:52.380 00    TLMH-I:STS          58-012-14:05:23.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=20 Request Housekeeping command
+21-236-13:17:55.394 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:55.394 00     SPR-I:OPRO         ;  Step 2.5.2: Start the DS and TST_DS Applications. 
+21-236-13:17:55.394 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:55.395 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:55.395 00     SPR-I:OPRO         ;  Step 2.6: Enable DEBUG Event Messages 
+21-236-13:17:55.395 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:55.398 00     CMH-I:CMD             Command SFDU received:<1801C0000017052244530000000000000000000000000000000000000100> from gs582cfslab4:SPR
+21-236-13:17:55.411 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-236-13:17:56.379 00    TLMH-I:STS          58-012-14:05:27.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=20 Request Housekeeping command
+21-236-13:17:57.415 00     CMH-I:CMD             Command SFDU received:<1801C000001705704346455F54424C000000000000000000000000000100> from gs582cfslab4:SPR
+21-236-13:17:57.442 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:18:01.446 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:18:01.448 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-13:18:01.448 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:18:06.452 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:18:06.452 00     SPR-I:OPRO         ;  Step 2.7: Check the Enable State after reset
+21-236-13:18:06.452 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:18:06.452 00     SPR-I:OPRO         <*> Passed (9004) - DS Application State is set as expected.
+21-236-13:18:06.453 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:18:06.454 00     SPR-I:OPRO         ;  Step 6.0: Clean-up - Send the Reset command.             
+21-236-13:18:06.454 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:18:06.454 00     CMH-I:CMD             Command SFDU received:<1806C000000302220002> from gs582cfslab4:SPR
+21-236-13:18:06.465 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:18:16.475 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-13:18:16.476 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-13:18:16.491 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-13:18:16.554 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-13:19:16.615 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:19:22.581 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-236-13:19:26.626 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:19:26.696 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-13:19:26.697 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-13:19:26.698 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-13:19:26.699 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-236-13:19:26.750 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-13:19:26.750 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:19:27.954 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-13:19:31.756 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:19:31.756 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-13:19:31.758 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-13:19:31.769 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-13:19:31.771 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:19:36.774 00     SPR-I:OPRO         **** Requirements Status Reporting
+21-236-13:19:36.775 00     SPR-I:OPRO         --------------------------
+21-236-13:19:36.775 00     SPR-I:OPRO            Requirement(s) Report
+21-236-13:19:36.775 00     SPR-I:OPRO         --------------------------
+21-236-13:19:36.776 00     SPR-I:OPRO         FSW Requirement: DS_8000                          P/F: P
+21-236-13:19:36.779 00     SPR-I:OPRO         FSW Requirement: DS_9000                          P/F: P
+21-236-13:19:36.781 00     SPR-I:OPRO         FSW Requirement: DS_9003                          P/F: U
+21-236-13:19:36.783 00     SPR-I:OPRO         FSW Requirement: DS_9004                          P/F: P
+21-236-13:19:36.785 00     SPR-I:OPRO         FSW Requirement: DS_9008                          P/F: P
+21-236-13:19:36.801 00     SPR-I:STS          Variable "UT_REQUIREMENT" deleted
+21-236-13:19:36.802 00     SPR-I:STS          Variable "UT_REQ_ARRAY_SIZE" deleted
+21-236-13:19:36.802 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:19:36.802 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_resetnocds
+21-236-13:19:36.803 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:19:36.803 00     SPR-I:STS          Procedure SCX_CPU1_DS_ENABLESTATE completed
+21-236-13:19:36.806 00     SPR-I:OPRO         *** Telemetry Info ***
+21-236-13:19:36.807 00     SPR-I:OPRO         
+21-236-13:19:36.807 00     SPR-I:OPRO         Pkt Loss Count: N/A
+21-236-13:19:36.807 00     SPR-I:OPRO         
+21-236-13:19:36.807 00     SPR-I:OPRO         ******************
+21-236-13:19:36.807 00     SPR-I:OPRO         
+21-236-13:19:36.808 00     SPR-I:OPRO         Elapsed time:  332.893 seconds
+21-236-13:19:36.808 00     SPR-I:OPRO         Elapsed time:  5.54822 minutes
+21-236-13:19:36.811 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:19:46.821 00     SPR-I:OPRO         Creating filtered log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logf
+21-236-13:19:46.822 00     SPR-I:OPRO         Creating filtered output log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logp
+21-236-13:19:46.822 00     SPR-I:OPRO         Creating filtered output log (without SFDUs) at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logs
+21-236-13:19:46.823 00     SPR-I:OPRO         Creating filtered event log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.loge
+21-236-13:19:46.823 00     SPR-I:OPRO         Creating filtered requirements log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logr
+21-236-13:19:46.963 00     SPR-I:OPRI     --> newlog scx_cpu1_ds_enablestate-2021-236-13h14m03s.log

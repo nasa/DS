@@ -1,24 +1,24 @@
 /************************************************************************
-** File: ds_platform_cfg.h 
+** File: ds_platform_cfg.h
 **
 ** NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) application
 ** version 2.5.2"
 **
 ** Copyright © 2019 United States Government as represented by the Administrator of
-** the National Aeronautics and Space Administration.  All Rights Reserved. 
+** the National Aeronautics and Space Administration.  All Rights Reserved.
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-** You may obtain a copy of the License at 
-** http://www.apache.org/licenses/LICENSE-2.0 
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
-** limitations under the License. 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+** http://www.apache.org/licenses/LICENSE-2.0
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
 **
 **
-** Purpose: 
+** Purpose:
 **  The CFS Data Storage (DS) Application platform configuration header file
 **
 ** Notes:
@@ -26,7 +26,6 @@
 *************************************************************************/
 #ifndef _ds_platform_cfg_h_
 #define _ds_platform_cfg_h_
-
 
 /**
 **  \dscfg Destination File Table -- logical table name
@@ -42,8 +41,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #CFE_TBL_MAX_NAME_LENGTH.  (limit is not verified)
 */
-#define DS_DESTINATION_TBL_NAME         "FILE_TBL"
-
+#define DS_DESTINATION_TBL_NAME "FILE_TBL"
 
 /**
 **  \dscfg Destination File Table -- default table filename
@@ -56,8 +54,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #OS_MAX_PATH_LEN.  (limit is not verified)
 */
-#define DS_DEF_DEST_FILENAME            "/cf/ds_file_tbl.tbl"
-
+#define DS_DEF_DEST_FILENAME "/cf/ds_file_tbl.tbl"
 
 /**
 **  \dscfg Destination File Table -- number of files
@@ -74,8 +71,7 @@
 **       The number must be greater than zero but there is no upper
 **       enforced limit for this parameter.
 */
-#define DS_DEST_FILE_CNT                16
-
+#define DS_DEST_FILE_CNT 16
 
 /**
 **  \dscfg Destination File Table -- pathname buffer size
@@ -92,8 +88,7 @@
 **       of four bytes for alignment.  The value cannot exceed the
 **       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
 */
-#define DS_PATHNAME_BUFSIZE             OS_MAX_PATH_LEN
-
+#define DS_PATHNAME_BUFSIZE OS_MAX_PATH_LEN
 
 /**
 **  \dscfg Destination File Table -- basename buffer size
@@ -110,8 +105,7 @@
 **       of four bytes for alignment.  The value cannot exceed the
 **       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
 */
-#define DS_BASENAME_BUFSIZE             OS_MAX_PATH_LEN
-
+#define DS_BASENAME_BUFSIZE OS_MAX_PATH_LEN
 
 /**
 **  \dscfg Destination File Table -- extension buffer size
@@ -128,8 +122,7 @@
 **       of four bytes for alignment.  The value cannot exceed the
 **       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
 */
-#define DS_EXTENSION_BUFSIZE            8
-
+#define DS_EXTENSION_BUFSIZE 8
 
 /**
 **  \dscfg Packet Filter Table -- logical table name
@@ -145,8 +138,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #CFE_TBL_MAX_NAME_LENGTH.  (limit is not verified)
 */
-#define DS_FILTER_TBL_NAME              "FILTER_TBL"
-
+#define DS_FILTER_TBL_NAME "FILTER_TBL"
 
 /**
 **  \dscfg Packet Filter Table -- default table filename
@@ -159,8 +151,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #OS_MAX_PATH_LEN.  (limit is not verified)
 */
-#define DS_DEF_FILTER_FILENAME          "/cf/ds_filter_tbl.tbl"
-
+#define DS_DEF_FILTER_FILENAME "/cf/ds_filter_tbl.tbl"
 
 /**
 **  \dscfg Packet Filter Table -- number of packets
@@ -179,8 +170,7 @@
 **       defined for this project, will reduce the table file size,
 **       possibly significantly.
 */
-#define DS_PACKETS_IN_FILTER_TABLE      256
-
+#define DS_PACKETS_IN_FILTER_TABLE 256
 
 /**
 **  \dscfg Packet Filter Table -- filters per packet
@@ -195,8 +185,7 @@
 **       The number of filters per packet must be greater than zero
 **       and not greater than #DS_DEST_FILE_CNT.
 */
-#define DS_FILTERS_PER_PACKET           4
-
+#define DS_FILTERS_PER_PACKET 4
 
 /**
 **  \dscfg Common Table File -- descriptor text buffer size
@@ -210,8 +199,7 @@
 **       The buffer size must be greater than zero and a multiple
 **       of four bytes for alignment.  There is no upper limit.
 */
-#define DS_DESCRIPTOR_BUFSIZE           32
-
+#define DS_DESCRIPTOR_BUFSIZE 32
 
 /**
 **  \dscfg Filename Sequence Count -- number of digits
@@ -228,8 +216,7 @@
 **       the filename type to "count".  This value should match
 **       the definition for #DS_MAX_SEQUENCE_COUNT, below.
 */
-#define DS_SEQUENCE_DIGITS              8
-
+#define DS_SEQUENCE_DIGITS 8
 
 /**
 **  \dscfg Filename Sequence Count -- max counter value
@@ -243,8 +230,7 @@
 **       more digits than the number of sequence count digits
 **       defined for #DS_SEQUENCE_DIGITS, above.
 */
-#define DS_MAX_SEQUENCE_COUNT           99999999
-
+#define DS_MAX_SEQUENCE_COUNT 99999999
 
 /**
 **  \dscfg Data Storage File -- total filename size
@@ -258,8 +244,7 @@
 **       of four bytes for alignment.  The buffer size (including
 **       string terminator) cannot exceed #OS_MAX_PATH_LEN.
 */
-#define DS_TOTAL_FNAME_BUFSIZE          OS_MAX_PATH_LEN
-
+#define DS_TOTAL_FNAME_BUFSIZE OS_MAX_PATH_LEN
 
 /**
 **  \dscfg Data Storage File -- cFE file header sub-type
@@ -273,8 +258,7 @@
 **       thus the value can be anything from zero to 4,294,967,295.
 **       (limit is not verified)
 */
-#define DS_FILE_HDR_SUBTYPE             12345
-
+#define DS_FILE_HDR_SUBTYPE 12345
 
 /**
 **  \dscfg Data Storage File -- cFE file header description
@@ -287,8 +271,7 @@
 **       The string length (including string terminator) cannot exceed
 **       #CFE_FS_HDR_DESC_MAX_LEN.  (limit is not verified)
 */
-#define DS_FILE_HDR_DESCRIPTION         "DS data storage file"
-
+#define DS_FILE_HDR_DESCRIPTION "DS data storage file"
 
 /**
 **  \dscfg Data Storage File -- minimum size limit
@@ -304,8 +287,7 @@
 **       frequently, while a very large value will effectively
 **       prevent files from ever being closed due to size.
 */
-#define DS_FILE_MIN_SIZE_LIMIT          1024
-
+#define DS_FILE_MIN_SIZE_LIMIT 1024
 
 /**
 **  \dscfg Data Storage File -- minimum age limit
@@ -321,8 +303,7 @@
 **       frequently, while a very large value will effectively
 **       prevent files from ever being closed due to age.
 */
-#define DS_FILE_MIN_AGE_LIMIT           60
-
+#define DS_FILE_MIN_AGE_LIMIT 60
 
 /**
 **  \dscfg Application Pipe Name
@@ -338,11 +319,10 @@
 **       The string length (including string terminator) cannot
 **       exceed #OS_MAX_API_NAME.  (limit is not verified)
 */
-#define DS_APP_PIPE_NAME                "DS_CMD_PIPE"
-
+#define DS_APP_PIPE_NAME "DS_CMD_PIPE"
 
 /**
-**  \dscfg Application Pipe Depth 
+**  \dscfg Application Pipe Depth
 **
 **  \par Description:
 **       This parameter defines the depth of the DS input pipe.  The
@@ -353,13 +333,12 @@
 **
 **  \par Limits:
 **		 The value must be greater than zero and cannot exceed the
-**       definition of #CFE_SB_MAX_PIPE_DEPTH.
+**       definition of #OS_QUEUE_MAX_DEPTH
 */
-#define DS_APP_PIPE_DEPTH               256
-
+#define DS_APP_PIPE_DEPTH 45
 
 /**
-**  \dscfg Make DS Tables Critical 
+**  \dscfg Make DS Tables Critical
 **
 **  \par Description:
 **       Set this parameter to a value of one to make the DS tables critical,
@@ -368,8 +347,7 @@
 **  \par Limits
 **       This parameter must be set to zero or one.
 */
-#define DS_MAKE_TABLES_CRITICAL         0
-
+#define DS_MAKE_TABLES_CRITICAL 0
 
 /**
 **  \dscfg Housekeeping Request Frequency
@@ -385,11 +363,10 @@
 **  \par Limits
 **       This parameter must be greater than zero.
 */
-#define DS_SECS_PER_HK_CYCLE            4
-
+#define DS_SECS_PER_HK_CYCLE 4
 
 /**
-**  \dscfg Default DS Packet Processor State 
+**  \dscfg Default DS Packet Processor State
 **
 **  \par Description:
 **       Set this parameter to a value of one and DS will begin to
@@ -400,8 +377,7 @@
 **  \par Limits
 **       This parameter must be set to zero or one.
 */
-#define DS_DEF_ENABLE_STATE             1
-
+#define DS_DEF_ENABLE_STATE 1
 
 /**
 **  \dscfg Save DS Packet Processor State in Critical Data Store
@@ -418,11 +394,10 @@
 **  \par Limits
 **       This parameter must be set to zero or one.
 */
-#define DS_CDS_ENABLE_STATE             1
-
+#define DS_CDS_ENABLE_STATE 1
 
 /** \dscfg Mission specific version number for DS application
-**  
+**
 **  \par Description:
 **       An application version number consists of four parts:
 **       major version number, minor version number, revision
@@ -434,11 +409,10 @@
 **       Must be defined as a numeric value that is greater than
 **       or equal to zero.
 */
-#define DS_MISSION_REV                  0
-
+#define DS_MISSION_REV 0
 
 /**
-**  \dscfg File Header Type Selection 
+**  \dscfg File Header Type Selection
 **
 **  \par Description:
 **       Set this parameter to select the type of file header that
@@ -448,13 +422,11 @@
 **       This parameter must be set to one of the following:
 **       0 = none -- set this value to have no file header
 **       1 = CFE -- set this value to use CFE file headers
-**       2 = GPM -- set this value to use GPM file headers
 */
-#define DS_FILE_HEADER_TYPE             1
-
+#define DS_FILE_HEADER_TYPE 1
 
 /**
-**  \dscfg Move Files to Downlink Directory After Close Selection 
+**  \dscfg Move Files to Downlink Directory After Close Selection
 **
 **  \par Description:
 **       Set this parameter to enable the code and structures to
@@ -470,8 +442,7 @@
 **       true  = add move pathname field to Destination File Table
 **       false = do not add move pathname to Destination File Table
 */
-#define DS_MOVE_FILES                   true
-
+#define DS_MOVE_FILES true
 
 /**
 **  \dscfg Application Per Packet Pipe Limit
@@ -487,8 +458,7 @@
 **		 The value must be greater than zero and cannot exceed the
 **       definition of #DS_APP_PIPE_DEPTH.
 */
-#define DS_PER_PACKET_PIPE_LIMIT        50
-
+#define DS_PER_PACKET_PIPE_LIMIT 45
 
 #endif /* _ds_platform_cfg_h_ */
 

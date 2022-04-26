@@ -43,26 +43,23 @@ CLASS P00BB APID=0187, DESC="SCX CPU1 Data Storage App Commands"
   END
 !
   CMDS  SCX_CPU1_DS_SetFilterFile   FCTN=3, DESC="SCX CPU1 DS Set Filter File Selection command"
-	UI MessageID	DESC="The ID of the existing message"
+	SB_MSGID_T MessageID	DESC="The ID of the existing message"
 	UI ParamIndex	DESC="The index into Filter Parameter Array"
 	UI FileIndex	DESC="The index into Destination File Table"
-	UI Spare	STATIC,DEFAULT=0,INVISIBLE, DESC=""
   END
 !
   CMDS  SCX_CPU1_DS_SetFilterType   FCTN=4, DESC="SCX CPU1 DS Set Filter Type command"
-	UI MessageID	DESC="The ID of the existing message"
+	SB_MSGID_T MessageID	DESC="The ID of the existing message"
 	UI ParamIndex	DESC="The index into Filter Parameter Array"
 	UI FilterType	DESC="The Filter Type to use for the index above"
-	UI Spare	STATIC,DEFAULT=0,INVISIBLE, DESC=""
   END
 !
   CMDS  SCX_CPU1_DS_SetFilterParams FCTN=5, DESC="SCX CPU1 DS Set Filter Paramaters command"
-	UI MessageID	DESC="The ID of the existing message"
+	SB_MSGID_T MessageID	DESC="The ID of the existing message"
 	UI ParamIndex	DESC="The index into Filter Parameter Array"
 	UI N_Value	DESC="The N value to use in the Filter Algorithm for the index above"
 	UI X_Value	DESC="The X value to use in the Filter Algorithm for the index above"
 	UI O_Value	DESC="The O value to use in the Filter Algorithm for the index above"
-	UI Spare	STATIC,DEFAULT=0,INVISIBLE, DESC=""
   END
 !
   CMDS  SCX_CPU1_DS_SetFileType     FCTN=6, DESC="SCX CPU1 DS Set Destination File Type command"
@@ -124,8 +121,7 @@ CLASS P00BB APID=0187, DESC="SCX CPU1 Data Storage App Commands"
   CMD  SCX_CPU1_DS_GetFileInfo      FCTN=15, DESC="The Get File Info command"
 !
   CMDS  SCX_CPU1_DS_AddMID          FCTN=16, DESC="SCX CPU1 DS Add Message ID command"
-	UI MessageID	DESC="The message ID to add to the Packet Filter Table"
-	UI Spare	STATIC,DEFAULT=0,INVISIBLE, DESC=""
+	SB_MSGID_T MessageID	DESC="The ID of the existing message"
   END
 !
   CMD  SCX_CPU1_DS_CloseAllFiles    FCTN=17, DESC="The Get File Info command"

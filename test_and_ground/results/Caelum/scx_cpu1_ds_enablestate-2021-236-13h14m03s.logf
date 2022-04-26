@@ -1,0 +1,924 @@
+21-236-13:14:03.892 00     UT_RUNPROC/99       
+21-236-13:14:03.892 00     UT_RUNPROC/100      ; Build the database prefix using SC and CPU definitions from cfe_utils.h
+21-236-13:14:03.892 00     UT_RUNPROC/101      local db_prefix, cpu_prefix
+21-236-13:14:03.892 00     UT_RUNPROC/102      
+21-236-13:14:03.892 00     UT_RUNPROC/103      ; If SC is set, use it
+21-236-13:14:03.892 00     UT_RUNPROC/104      if (SC <> "") then
+21-236-13:14:03.892 00     UT_RUNPROC/105        db_prefix = SC
+21-236-13:14:03.892 00     UT_RUNPROC/106      endif
+21-236-13:14:03.892 00     UT_RUNPROC/107      
+21-236-13:14:03.892 00     UT_RUNPROC/109      db_prefix = db_prefix & CPU_CFG
+21-236-13:14:03.892 00     UT_RUNPROC/110      
+21-236-13:14:03.892 00     UT_RUNPROC/111      cpu_prefix = db_prefix
+21-236-13:14:03.892 00     UT_RUNPROC/112      
+21-236-13:14:03.892 00     UT_RUNPROC/113      ; Set the database prefix for CPU1
+21-236-13:14:03.892 00     UT_RUNPROC/114      if (numCPUs > 1) then
+21-236-13:14:03.892 00     UT_RUNPROC/116      endif
+21-236-13:14:03.892 00     UT_RUNPROC/117      
+21-236-13:14:03.909 00     UT_RUNPROC/118      ; setup the database mnemonics for CPU1
+21-236-13:14:03.909 00     UT_RUNPROC/119      local cksumItem = cpu_prefix & "_ES_CKSUM"
+21-236-13:14:03.909 00     UT_RUNPROC/120      local cfeMajorVerItem = cpu_prefix & "_ES_CFEMAJORVER"
+21-236-13:14:03.909 00     UT_RUNPROC/121      local cfeMinorVerItem = cpu_prefix & "_ES_CFEMINORVER"
+21-236-13:14:03.909 00     UT_RUNPROC/122      local cfeRevisionItem = cpu_prefix & "_ES_CFEREVISION"
+21-236-13:14:03.910 00     UT_RUNPROC/123      local cfeMissionRevItem = cpu_prefix & "_ES_CFEMSNREV"
+21-236-13:14:03.910 00     UT_RUNPROC/124      local osMajorVerItem = cpu_prefix & "_ES_OSMAJORVER"
+21-236-13:14:03.910 00     UT_RUNPROC/125      local osMinorVerItem = cpu_prefix & "_ES_OSMINORVER"
+21-236-13:14:03.910 00     UT_RUNPROC/126      local osRevisionItem = cpu_prefix & "_ES_OSREVISION"
+21-236-13:14:03.910 00     UT_RUNPROC/127      local osMissionRevItem = cpu_prefix & "_ES_OSMISSIONREV"
+21-236-13:14:03.910 00     UT_RUNPROC/128      
+21-236-13:14:03.910 00     UT_RUNPROC/129      ;
+21-236-13:14:03.910 00     UT_RUNPROC/130      ; Output FSW configuration information
+21-236-13:14:03.910 00     UT_RUNPROC/131      ;
+21-236-13:14:03.910 00     UT_RUNPROC/132      write "****************** FSW Configuration ******************"
+21-236-13:14:03.910 00     SPR-I:OPRO         ****************** FSW Configuration ******************
+21-236-13:14:03.910 00     UT_RUNPROC/134      if (numCPUs = 1) then
+21-236-13:14:03.910 00     UT_RUNPROC/135        write "        Checksum:    ", {cksumItem}
+21-236-13:14:03.910 00     SPR-I:OPRO                 Checksum:    29237
+21-236-13:14:03.910 00     UT_RUNPROC/136        write "        cFE Version: ", {cfeMajorVerItem} & "." & {cfeMinorVerItem} & "." & {cfeRevisionItem} & "." & {cfeMissionRevItem}
+21-236-13:14:03.911 00     SPR-I:OPRO                 cFE Version: 6.7.99.0
+21-236-13:14:03.911 00     UT_RUNPROC/137        write "        OS Version:  ", {osMajorVerItem} & "." & {osMinorVerItem} & "." & {osRevisionItem} & "." & {osMissionRevItem}
+21-236-13:14:03.911 00     SPR-I:OPRO                 OS Version:  5.0.0.255
+21-236-13:14:03.911 00     UT_RUNPROC/138        write " "
+21-236-13:14:03.911 00     SPR-I:OPRO          
+21-236-13:14:03.911 00     UT_RUNPROC/139      endif
+21-236-13:14:03.912 00     UT_RUNPROC/140      
+21-236-13:14:03.912 00     UT_RUNPROC/141      if (numCPUs >= 2) then
+21-236-13:14:03.912 00     UT_RUNPROC/166      endif
+21-236-13:14:03.912 00     UT_RUNPROC/167      
+21-236-13:14:03.912 00     UT_RUNPROC/168      ; This proc only supports up to 3 CPUs.
+21-236-13:14:03.912 00     UT_RUNPROC/169      ; If there are more than 3, the additional CPUs must be added below
+21-236-13:14:03.912 00     UT_RUNPROC/170      if (numCPUs = 3) then
+21-236-13:14:03.912 00     UT_RUNPROC/189      endif
+21-236-13:14:03.912 00     UT_RUNPROC/190      
+21-236-13:14:03.912 00     UT_RUNPROC/191      write "        Connection Status"
+21-236-13:14:03.912 00     SPR-I:OPRO                 Connection Status
+21-236-13:14:03.912 00     UT_RUNPROC/192      write "        -----------------"
+21-236-13:14:03.912 00     SPR-I:OPRO                 -----------------
+21-236-13:14:03.912 00     UT_RUNPROC/193      write "        CFDP: ", %select(packet_valid("my_entity_id"),"UP","DOWN")
+21-236-13:14:03.912 00     SPR-I:OPRO                 CFDP: DOWN
+21-236-13:14:03.912 00     UT_RUNPROC/194      write "        UDP: ", p@GSE_ICHAN
+21-236-13:14:03.912 00     SPR-I:OPRO                 UDP:  UP 
+21-236-13:14:03.912 00     UT_RUNPROC/195      write "        SWTS: ", p@GSE_SCHAN
+21-236-13:14:03.912 00     SPR-I:OPRO                 SWTS:  UNK
+21-236-13:14:03.912 00     UT_RUNPROC/196      ; write "        ITOS: ", p@GSE_ZCHAN
+21-236-13:14:03.912 00     UT_RUNPROC/197      
+21-236-13:14:03.912 00     UT_RUNPROC/199      gds_label = ""
+21-236-13:14:03.912 00     UT_RUNPROC/200      gds_version = "N/A"
+21-236-13:14:03.912 00     UT_RUNPROC/201      
+21-236-13:14:03.913 00     UT_RUNPROC/202      #ifdef GDS_EXISTS
+21-236-13:14:03.913 00     UT_RUNPROC/203        write "        GDS:  ", %select(packet_valid("GDS_EXECUTOR_SIMULATION_TIME"),"UP", "DOWN")
+21-236-13:14:03.913 00     UT_RUNPROC/204        if (GSE_HCHAN = 1) then
+21-236-13:14:03.913 00     UT_RUNPROC/205          gds_label = "GDS"
+21-236-13:14:03.913 00     UT_RUNPROC/206          gds_version = GDS_EXECUTOR_GDS_VERSION_VALUE
+21-236-13:14:03.913 00     UT_RUNPROC/207        endif
+21-236-13:14:03.913 00     UT_RUNPROC/208      #endif
+21-236-13:14:03.913 00     UT_RUNPROC/209      
+21-236-13:14:03.913 00     UT_RUNPROC/211      write "        CMD / TLM Path"
+21-236-13:14:03.913 00     SPR-I:OPRO         
+21-236-13:14:03.913 00     UT_RUNPROC/211      write "        CMD / TLM Path"
+21-236-13:14:03.913 00     SPR-I:OPRO                 CMD / TLM Path
+21-236-13:14:03.913 00     UT_RUNPROC/212      write "        --------------"
+21-236-13:14:03.913 00     SPR-I:OPRO                 --------------
+21-236-13:14:03.913 00     UT_RUNPROC/213      if (GSE_ICHAN = 1) then
+21-236-13:14:03.913 00     UT_RUNPROC/214        cmd_tlm_path = "UDP"
+21-236-13:14:03.913 00     UT_RUNPROC/219      endif
+21-236-13:14:03.913 00     UT_RUNPROC/220      
+21-236-13:14:03.913 00     UT_RUNPROC/221      write "        ", cmd_tlm_path
+21-236-13:14:03.913 00     SPR-I:OPRO                 UDP
+21-236-13:14:03.913 00     UT_RUNPROC/222      write "        ", gds_label
+21-236-13:14:03.913 00     SPR-I:OPRO                 
+21-236-13:14:03.913 00     UT_RUNPROC/224      write "        ASIST / GDS Configuration"
+21-236-13:14:03.913 00     SPR-I:OPRO         
+21-236-13:14:03.913 00     UT_RUNPROC/224      write "        ASIST / GDS Configuration"
+21-236-13:14:03.913 00     SPR-I:OPRO                 ASIST / GDS Configuration
+21-236-13:14:03.913 00     UT_RUNPROC/225      write "        -------------------------"
+21-236-13:14:03.914 00     SPR-I:OPRO                 -------------------------
+21-236-13:14:03.914 00     UT_RUNPROC/226      write "        Workstation: ", %upper(%liv(LOCALHOST))
+21-236-13:14:03.914 00     SPR-I:OPRO                 Workstation: GS582CFSLAB4
+21-236-13:14:03.914 00     UT_RUNPROC/227      write "        Account: ", %env("ACCOUNT")
+21-236-13:14:03.914 00     SPR-I:OPRO                 Account: cfs_test
+21-236-13:14:03.914 00     UT_RUNPROC/228      write "        Version: ", ASIST_VERSION
+21-236-13:14:03.914 00     SPR-I:OPRO                 Version: 21.0.7
+21-236-13:14:03.914 00     UT_RUNPROC/229      write "        Tlm DB:  Version: ",vidtlm.version, "  Date: ", tlmdbdate, "  Time: ", vidtlm.timeof
+21-236-13:14:03.914 00     SPR-I:OPRO                 Tlm DB:  Version: 1.985  Date: 08-24-21  Time: 06:37:06 AM.
+21-236-13:14:03.914 00     UT_RUNPROC/230      write "        Cmd DB:  Version: ",%rpad(command_parm_attr("verid_cmd", "version", "description"),4," "),"  Date: ",cmddbdate,"  Time: ",command_parm_attr("verid_cmd", "timeof", "description")
+21-236-13:14:03.914 00     SPR-I:OPRO                 Cmd DB:  Version: 1.51  Date: 08-24-21  Time: 06:47:31 AM.EDT
+21-236-13:14:03.914 00     UT_RUNPROC/231      
+21-236-13:14:03.914 00     UT_RUNPROC/232      #ifdef GDS_EXISTS
+21-236-13:14:03.914 00     UT_RUNPROC/233        write "        GDS: ", gds_version
+21-236-13:14:03.914 00     UT_RUNPROC/234      #endif
+21-236-13:14:03.914 00     UT_RUNPROC/235      
+21-236-13:14:03.914 00     UT_RUNPROC/237      write "        Telemetry Info"
+21-236-13:14:03.914 00     SPR-I:OPRO         
+21-236-13:14:03.914 00     UT_RUNPROC/237      write "        Telemetry Info"
+21-236-13:14:03.914 00     SPR-I:OPRO                 Telemetry Info
+21-236-13:14:03.914 00     UT_RUNPROC/238      write "        --------------"
+21-236-13:14:03.914 00     SPR-I:OPRO                 --------------
+21-236-13:14:03.914 00     UT_RUNPROC/240      write "        Pkt Loss Count: N/A"
+21-236-13:14:03.914 00     SPR-I:OPRO                 Pkt Loss Count: N/A
+21-236-13:14:03.914 00     UT_RUNPROC/241      write "****************  End FSW Configuration ***************"
+21-236-13:14:03.914 00     SPR-I:OPRO         ****************  End FSW Configuration ***************
+21-236-13:14:03.914 00     UT_RUNPROC/242      ;
+21-236-13:14:03.914 00     UT_RUNPROC/243      ; Start the procedure
+21-236-13:14:03.914 00     UT_RUNPROC/244      ;
+21-236-13:14:03.914 00     UT_RUNPROC/245      write "Starting Procedure.... ", proc_to_run
+21-236-13:14:03.914 00     SPR-I:OPRO         Starting Procedure.... scx_cpu1_ds_enablestate
+21-236-13:14:03.914 00     UT_RUNPROC/246      rstol_dir = "rstol 'start " & proc_to_run & "'"
+21-236-13:14:03.915 00     UT_RUNPROC/247      stime = %gmt
+21-236-13:14:03.915 00     UT_RUNPROC/248      native(rstol_dir)
+21-236-13:14:04.027 00     SPR-I:OPRI     --> start scx_cpu1_ds_enablestate
+21-236-13:14:04.027 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_enablestate.i
+21-236-13:14:04.031 00     SPR-I:STS          Procedure SCX_CPU1_DS_ENABLESTATE started
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/2        ;*******************************************************************************
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/3        ;  Test Name:  ds_resetnocds
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/4        ;  Test Level: Build Verification
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/5        ;  Test Type:  Functional
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/6        ;
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/7        ;  Test Description
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/8        ;	This test verifies that the CFS Data Storage (DS) application sets its
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/9        ;	its state according to the DS_DEF_ENABLE_STATE and DS_CDS_ENABLE_STATE
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/10       ;	configuration settings when any reset occurs (Application Reset,
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/11       ;	Processor Reset, or Power-On Reset). 
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/12       ;
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/13       ;  Requirements Tested
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/14       ;    cDS8000	DS shall generate a housekeeping message containing the
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/15       ;		following:
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/16       ;			a. Valid Ground Command Counter
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/17       ;			b. Command Rejected Counter
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/18       ;			c. Packets discarded (DS was disabled) Counter
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/19       ;			d. Packets discarded (pkt has no filter) Counter
+21-236-13:14:04.031 00 SCX_CPU1_DS_EN/20       ;			e. Packets discarded (failed filter test) Counter
+21-236-13:14:04.032 00 SCX_CPU1_DS_EN/21       ;			f. Packets that passed filter test Counter
+21-236-13:14:04.032 00 SCX_CPU1_DS_EN/22       ;			g. Good destination file I/O Counter
+21-236-13:14:04.032 00 SCX_CPU1_DS_EN/23       ;			h. Bad destination file I/O Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/24       ;			i. Good updates to secondary header Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/25       ;			j. Bad updates to secondary header Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/26       ;			k. Destination file table loads Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/27       ;			l. Failed attempts to get table data pointer Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/28       ;			m. Packet filter table loads Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/29       ;			n. Failed attempts to get table data pointer Counter
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/30       ;			o. Application State
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/31       ;			p. Destinatation file(s) state:
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/32       ;				1. File age
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/33       ;				2. File size
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/34       ;				3. File rate
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/35       ;				4. Sequence count
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/36       ;				5. Enable State
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/37       ;				6. Open State
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/38       ;				7. Filename
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/39       ;    cDS9000	Upon initialization of the DS Application, DS shall initialize
+21-236-13:14:04.034 00 SCX_CPU1_DS_EN/40       ;		the following data to Zero:
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/41       ;			a. Valid Ground Command Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/42       ;			b. Command Rejected Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/43       ;			c. Packets discarded (DS was disabled) Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/44       ;			d. Packets discarded (pkt has no filter) Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/45       ;			e. Packets discarded (failed filter test) Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/46       ;			f. Packets that passed filter test Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/47       ;			g. Good destination file I/O Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/48       ;			h. Bad destination file I/O Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/49       ;			i. Good updates to secondary header Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/50       ;			j. Bad updates to secondary header Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/51       ;			k. Destination file table loads Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/52       ;			l. Failed attempts to get table data pointer Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/53       ;			m. Packet filter table loads Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/54       ;			n. Failed attempts to get table data pointer Counter
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/55       ;    cDS9003    Upon a cFE Processor Reset or DS Application Reset, DS shall
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/56       ;               restore the following if the associated <PLATFORM_DEFINED>
+21-236-13:14:04.035 00 SCX_CPU1_DS_EN/57       ;               Preserve Flag is set to TRUE:
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/58       ;                       a. Packet Filter Table
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/59       ;                       b. Destination File Table
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/60       ;                       c. File Sequence number for all Destination File Sets
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/61       ;                       d. Packet Processing State (ENABLED or DISABLED)
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/62       ;    cDS9004	Upon a cFE Processor Reset or DS Application Reset, DS shall
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/63       ;		restore the following if the associated <PLATFORM_DEFINED> 
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/64       ;		Preserve State set to FALSE:
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/65       ;			a. File Sequence Counters
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/66       ;                       b. <PLATFORM_DEFINED> Packet Processing State
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/67       ;    cDS9008    Upon cFE Power-On, DS shall set the Packet Processing State to
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/68       ;               the <PLATFORM_DEFINED> state (ENABLED or DISABLED).
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/69       ;
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/70       ;  Prerequisite Conditions
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/71       ;	The cFE is up and running and ready to accept commands.
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/72       ;	The DS commands and telemetry items exist in the GSE database.
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/73       ;	The display pages exist for the DS Housekeeping.
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/74       ;	A DS Test application (TST_DS) exists in order to fully test the DS
+21-236-13:14:04.036 00 SCX_CPU1_DS_EN/75       ;		Application.
+21-236-13:14:04.037 00 SCX_CPU1_DS_EN/76       ;
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/77       ;  Assumptions and Constraints
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/78       ;	None.
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/79       ;
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/80       ;  Change History
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/81       ;	Date		   Name		Description
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/82       ;       02/06/17        Walt Moleski    Added this test to verify the settings
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/83       ;                                       of the STATE configuration parameters.
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/84       ;
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/85       ;  Arguments
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/86       ;	None.
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/87       ;
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/88       ;  Procedures Called
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/89       ;	Name			Description
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/90       ;       ut_tlmwait	Wait for a specified telemetry point to update to a
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/91       ;			specified value. 
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/92       ;       ut_pfindicate	Print the pass fail status of a particular requirement
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/93       ;			number.
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/94       ;       ut_setupevents	Performs setup to verify that a particular event
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/95       ;			message was received by ASIST.
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/96       ;	ut_setrequirements	A directive to set the status of the cFE
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/97       ;			requirements array.
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/98       ;
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/99       ;  Expected Test Results and Analysis
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/100      ;
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/101      ;**********************************************************************
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/103      local logging = %liv (log_procedure)
+21-236-13:14:04.038 00 SCX_CPU1_DS_EN/104      %liv (log_procedure) = FALSE
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/119      
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/120      #define DS_8000		0
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/121      #define DS_9000		1
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/122      #define DS_9003		2
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/123      #define DS_9004		3
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/124      #define DS_9008		4
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/125      
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/126      global ut_req_array_size = 4
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/127      global ut_requirement[0 .. ut_req_array_size]
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/128      
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/129      for i = 0 to ut_req_array_size DO
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/130        ut_requirement[i] = "U"
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/131      enddo
+21-236-13:14:04.106 00 SCX_CPU1_DS_EN/129      for i = 0 to ut_req_array_size DO
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/130        ut_requirement[i] = "U"
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/131      enddo
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/129      for i = 0 to ut_req_array_size DO
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/130        ut_requirement[i] = "U"
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/131      enddo
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/129      for i = 0 to ut_req_array_size DO
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/130        ut_requirement[i] = "U"
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/131      enddo
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/129      for i = 0 to ut_req_array_size DO
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/130        ut_requirement[i] = "U"
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/131      enddo
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/129      for i = 0 to ut_req_array_size DO
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/132      
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/133      ;**********************************************************************
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/134      ; Set the local values
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/135      ;**********************************************************************
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/136      local cfe_requirements[0 .. ut_req_array_size] = ["DS_8000", "DS_9000", "DS_9003", "DS_9004", "DS_9008" ]
+21-236-13:14:04.107 00 SCX_CPU1_DS_EN/137      
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/138      ;**********************************************************************
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/139      ; Define local variables
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/140      ;**********************************************************************
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/141      LOCAL rawcmd
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/142      LOCAL fileTblPktId, fileTblAppId
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/143      LOCAL filterTblPktId, filterTblAppId
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/144      local DSAppName = "DS"  
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/145      local fileTblName = DSAppName & "." & DS_DESTINATION_TBL_NAME
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/146      local filterTblName = DSAppName & "." & DS_FILTER_TBL_NAME
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/147      local ramDir = "RAM:0"
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/148      local hostCPU = "CPU3"
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/149      
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/152      fileTblPktId = "0F76"
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/153      fileTblAppId = 3958
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/154      filterTblPktId = "0F77"
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/155      filterTblAppId = 3959
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/156      
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/157      write ";***********************************************************************"
+21-236-13:14:04.108 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/158      write ";  Step 1.0: Data Storage Test Setup."
+21-236-13:14:04.108 00     SPR-I:OPRO         ;  Step 1.0: Data Storage Test Setup.
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/159      write ";***********************************************************************"
+21-236-13:14:04.108 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/160      write ";  Step 1.1: Command a Power-on Reset on CPU1."
+21-236-13:14:04.108 00     SPR-I:OPRO         ;  Step 1.1: Command a Power-on Reset on CPU1.
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/161      write ";***********************************************************************"
+21-236-13:14:04.108 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:14:04.108 00 SCX_CPU1_DS_EN/162      /SCX_CPU1_ES_POWERONRESET
+21-236-13:14:04.120 00 SCX_CPU1_DS_EN/163      wait 10
+21-236-13:14:04.120 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:14:14.129 00 SCX_CPU1_DS_EN/164      
+21-236-13:14:14.129 00 SCX_CPU1_DS_EN/165      close_data_center
+21-236-13:14:14.130 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-13:14:14.131 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-13:14:14.131 00 CLEAR_SPACECRA/2        ;
+21-236-13:14:14.131 00 CLEAR_SPACECRA/3        local logging = %liv(log_procedure)
+21-236-13:14:14.131 00 CLEAR_SPACECRA/4        %liv (log_procedure) = FALSE
+21-236-13:14:14.137 00 CLEAR_SPACECRA/135      
+21-236-13:14:14.137 00 CLEAR_SPACECRA/136      endproc
+21-236-13:14:14.137 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-13:14:14.157 00 SCX_CPU1_DS_EN/166      wait 60
+21-236-13:14:14.157 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-13:15:14.209 00 SCX_CPU1_DS_EN/167      
+21-236-13:15:14.210 00 SCX_CPU1_DS_EN/168      cfe_startup {hostCPU}
+21-236-13:15:14.222 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:24.232 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:24.301 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-13:15:24.302 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-13:15:24.302 00 SEND_THAT_TO_C/2        ;
+21-236-13:15:24.302 00 SEND_THAT_TO_C/3        local logging = %liv (log_procedure)
+21-236-13:15:24.302 00 SEND_THAT_TO_C/4        %liv (log_procedure) = FALSE
+21-236-13:15:24.303 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-13:15:24.354 00 SEND_THAT_TO_C/83       
+21-236-13:15:24.354 00 SEND_THAT_TO_C/84       endproc
+21-236-13:15:24.354 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-13:15:24.354 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:25.293 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-13:15:28.358 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:28.359 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-13:15:28.361 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-13:15:28.361 00 FILL_IN_SPACEC/2        ;
+21-236-13:15:28.361 00 FILL_IN_SPACEC/3        local logging = %liv (log_procedure)
+21-236-13:15:28.361 00 FILL_IN_SPACEC/4        %liv (log_procedure) = FALSE
+21-236-13:15:28.365 00 FILL_IN_SPACEC/152      
+21-236-13:15:28.365 00 FILL_IN_SPACEC/153      endproc
+21-236-13:15:28.365 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-13:15:28.365 00 SCX_CPU1_DS_EN/169      wait 5
+21-236-13:15:28.365 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:33.370 00 SCX_CPU1_DS_EN/170      
+21-236-13:15:33.370 00 SCX_CPU1_DS_EN/171      write ";***********************************************************************"
+21-236-13:15:33.370 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.370 00 SCX_CPU1_DS_EN/172      write ";  Step 1.2: Upload the default DS table load images to CPU1."
+21-236-13:15:33.370 00     SPR-I:OPRO         ;  Step 1.2: Upload the default DS table load images to CPU1.
+21-236-13:15:33.370 00 SCX_CPU1_DS_EN/173      write ";***********************************************************************"
+21-236-13:15:33.370 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.370 00 SCX_CPU1_DS_EN/175      s scx_cpu1_ds_tbl3
+21-236-13:15:33.371 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_tbl3.i
+21-236-13:15:33.384 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL3 started
+21-236-13:15:33.384 00 SCX_CPU1_DS_TB/2        ;*******************************************************************************
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/3        ;  Test Name:  ds_tbl3
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/4        ;  Test Level: Build Verification
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/5        ;  Test Type:  Functional
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/6        ;
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/7        ;  Test Description
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/8        ;	This procedure creates the initial CFS Data Storage (DS) Destination
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/9        ;	File and Packet Filter Table load image files. These files are currently
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/10       ;	used by the Filter and Reset No CDS test procedures.
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/11       ;	
+21-236-13:15:33.385 00 SCX_CPU1_DS_TB/12       ;  Prerequisite Conditions
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/13       ;	None.
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/14       ;
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/15       ;  Assumptions and Constraints
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/16       ;	None.
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/17       ;
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/18       ;  Change History
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/19       ;	Date		   Name		Description
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/20       ;	11/17/09	Walt Moleski	Inital implemetation.
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/21       ;       12/08/10        Walt Moleski    Modified the procedure to use variables
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/22       ;                                       for the application name and ram disk.
+21-236-13:15:33.386 00 SCX_CPU1_DS_TB/23       ;       01/31/17        Walt Moleski    Updated for DS 2.5.0.0 using CPU1 for
+21-236-13:15:33.391 00 SCX_CPU1_DS_TB/24       ;                                       commanding and added a hostCPU variable
+21-236-13:15:33.391 00 SCX_CPU1_DS_TB/25       ;                                       for the utility procs to connect to the
+21-236-13:15:33.391 00 SCX_CPU1_DS_TB/26       ;                                       proper host IP address.
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/27       ;
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/28       ;  Arguments
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/29       ;	None.
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/30       ;
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/31       ;  Procedures Called
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/32       ;	Name			Description
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/33       ;
+21-236-13:15:33.392 00 SCX_CPU1_DS_TB/34       ;  Expected Test Results and Analysis
+21-236-13:15:33.393 00 SCX_CPU1_DS_TB/35       ;
+21-236-13:15:33.393 00 SCX_CPU1_DS_TB/36       ;**********************************************************************
+21-236-13:15:33.393 00 SCX_CPU1_DS_TB/37       
+21-236-13:15:33.393 00 SCX_CPU1_DS_TB/38       local logging = %liv (log_procedure)
+21-236-13:15:33.393 00 SCX_CPU1_DS_TB/39       %liv (log_procedure) = FALSE
+21-236-13:15:33.447 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.447 00     SPR-I:OPRO         ;  Step 1.0: Define DS Destination File And Packet Filter Tables.
+21-236-13:15:33.447 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:33.451 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-13:15:33.451 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-13:15:33.453 00     SPR-I:OPRO         **********  ds_filtfile.tbl  **********
+21-236-13:15:33.453 00     SPR-I:OPRO         
+21-236-13:15:33.453 00     SPR-I:OPRO                Content Type: cFE1
+21-236-13:15:33.453 00     SPR-I:OPRO                    Sub Type: 8
+21-236-13:15:33.453 00     SPR-I:OPRO                      Length: 12
+21-236-13:15:33.454 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-13:15:33.454 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-13:15:33.454 00     SPR-I:OPRO              Application Id: 3958
+21-236-13:15:33.454 00     SPR-I:OPRO            Create Time Secs: 1629810933
+21-236-13:15:33.454 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-13:15:33.454 00     SPR-I:OPRO            File Description: File Write Test File Table
+21-236-13:15:33.454 00     SPR-I:OPRO         
+21-236-13:15:33.454 00     SPR-I:OPRO         **********  DS.FILE_TBL  **********
+21-236-13:15:33.454 00     SPR-I:OPRO         
+21-236-13:15:33.454 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_DF_TBL_Description
+21-236-13:15:33.454 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-13:15:33.454 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_DF_TBL[7].SeqCnt
+21-236-13:15:33.454 00     SPR-I:OPRO             Number of Bytes: 1760
+21-236-13:15:33.454 00     SPR-I:OPRO         
+21-236-13:15:33.468 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-13:15:33.469 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-13:15:33.469 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 1875 P0F76 ds.file_tbl
+21-236-13:15:33.473 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-13:15:33.473 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_filtfile.tbl.tmp ds.file_tbl > ds_filtfile.tbl
+21-236-13:15:33.477 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.file_tbl ds_filtfile.tbl.tmp
+21-236-13:15:33.481 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-13:15:33.955 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-13:15:33.955 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-13:15:33.957 00     SPR-I:OPRO         **********  ds_filtfilter.tbl  **********
+21-236-13:15:33.957 00     SPR-I:OPRO         
+21-236-13:15:33.957 00     SPR-I:OPRO                Content Type: cFE1
+21-236-13:15:33.957 00     SPR-I:OPRO                    Sub Type: 8
+21-236-13:15:33.957 00     SPR-I:OPRO                      Length: 12
+21-236-13:15:33.957 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-13:15:33.957 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-13:15:33.957 00     SPR-I:OPRO              Application Id: 3959
+21-236-13:15:33.957 00     SPR-I:OPRO            Create Time Secs: 1629810933
+21-236-13:15:33.957 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-13:15:33.958 00     SPR-I:OPRO            File Description: Filter Test Filter Table
+21-236-13:15:33.958 00     SPR-I:OPRO         
+21-236-13:15:33.958 00     SPR-I:OPRO         **********  DS.FILTER_TBL  **********
+21-236-13:15:33.958 00     SPR-I:OPRO         
+21-236-13:15:33.958 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_PF_TBL_Description
+21-236-13:15:33.958 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-13:15:33.958 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_PF_TBL[255].FilterParams[3].O_Value
+21-236-13:15:33.958 00     SPR-I:OPRO             Number of Bytes: 9248
+21-236-13:15:33.958 00     SPR-I:OPRO         
+21-236-13:15:33.963 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-13:15:33.963 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-13:15:33.964 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 9363 P0F77 ds.filter_tbl
+21-236-13:15:33.968 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-13:15:33.968 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_filtfilter.tbl.tmp ds.filter_tbl > ds_filtfilter.tbl
+21-236-13:15:33.972 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.filter_tbl ds_filtfilter.tbl.tmp
+21-236-13:15:33.976 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-13:15:33.976 00 SCX_CPU1_DS_TB/309      
+21-236-13:15:33.976 00 SCX_CPU1_DS_TB/310      write ";*********************************************************************"
+21-236-13:15:33.976 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:15:33.976 00 SCX_CPU1_DS_TB/311      write ";  End procedure SCX_CPU1_ds_tbl3"
+21-236-13:15:33.976 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_tbl3
+21-236-13:15:33.976 00 SCX_CPU1_DS_TB/312      write ";*********************************************************************"
+21-236-13:15:33.977 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:15:33.977 00 SCX_CPU1_DS_TB/313      ENDPROC
+21-236-13:15:33.977 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL3 completed
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/176      
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/178      local destFileName = DS_DEF_DEST_FILENAME
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/179      local filterFileName = DS_DEF_FILTER_FILENAME
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/180      local slashLoc = %locate(destFileName,"/")
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/181      
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/183      while (slashLoc <> 0) do
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/184        destFileName = %substring(destFileName,slashLoc+1,%length(destFileName))
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/185        slashLoc = %locate(destFileName,"/")
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/186      enddo
+21-236-13:15:33.978 00 SCX_CPU1_DS_EN/184        destFileName = %substring(destFileName,slashLoc+1,%length(destFileName))
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/185        slashLoc = %locate(destFileName,"/")
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/186      enddo
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/187      
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/188      write "==> Default Destination File Table filename = '",destFileName,"'"
+21-236-13:15:33.981 00     SPR-I:OPRO         ==> Default Destination File Table filename = 'ds_file_tbl.tbl'
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/189      
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/190      slashLoc = %locate(filterFileName,"/")
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/192      while (slashLoc <> 0) do
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/193        filterFileName = %substring(filterFileName,slashLoc+1,%length(filterFileName))
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/194        slashLoc = %locate(filterFileName,"/")
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/195      enddo
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/193        filterFileName = %substring(filterFileName,slashLoc+1,%length(filterFileName))
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/194        slashLoc = %locate(filterFileName,"/")
+21-236-13:15:33.981 00 SCX_CPU1_DS_EN/195      enddo
+21-236-13:15:33.982 00 SCX_CPU1_DS_EN/196      
+21-236-13:15:33.982 00 SCX_CPU1_DS_EN/197      write "==> Default Filter Table filename = '",filterFileName,"'"
+21-236-13:15:33.982 00     SPR-I:OPRO         ==> Default Filter Table filename = 'ds_filter_tbl.tbl'
+21-236-13:15:33.982 00 SCX_CPU1_DS_EN/198      
+21-236-13:15:33.982 00 SCX_CPU1_DS_EN/200      s ftp_file("CF:0", "ds_filtfile.tbl", destFileName, hostCPU, "P")
+21-236-13:15:33.982 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/ftp_file.i
+21-236-13:15:33.982 00     SPR-I:STS          Procedure FTP_FILE started
+21-236-13:15:33.982 00       FTP_FILE/2        ;
+21-236-13:15:33.984 00       FTP_FILE/3        local logging = %liv (log_procedure)
+21-236-13:15:33.984 00       FTP_FILE/4        %liv (log_procedure) = FALSE
+21-236-13:15:34.296 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-13:15:34.296 00       FTP_FILE/85       ENDPROC
+21-236-13:15:34.296 00     SPR-I:STS          Procedure FTP_FILE completed
+21-236-13:15:34.297 00 SCX_CPU1_DS_EN/201      s ftp_file("CF:0", "ds_filtfilter.tbl", filterFileName, hostCPU, "P")
+21-236-13:15:34.298 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/ftp_file.i
+21-236-13:15:34.298 00     SPR-I:STS          Procedure FTP_FILE started
+21-236-13:15:34.299 00       FTP_FILE/2        ;
+21-236-13:15:34.299 00       FTP_FILE/3        local logging = %liv (log_procedure)
+21-236-13:15:34.299 00       FTP_FILE/4        %liv (log_procedure) = FALSE
+21-236-13:15:34.796 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-13:15:34.796 00       FTP_FILE/85       ENDPROC
+21-236-13:15:34.796 00     SPR-I:STS          Procedure FTP_FILE completed
+21-236-13:15:34.797 00 SCX_CPU1_DS_EN/202      
+21-236-13:15:34.797 00 SCX_CPU1_DS_EN/203      wait 5
+21-236-13:15:34.797 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:39.802 00 SCX_CPU1_DS_EN/204      
+21-236-13:15:39.802 00 SCX_CPU1_DS_EN/205      write ";***********************************************************************"
+21-236-13:15:39.802 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.802 00 SCX_CPU1_DS_EN/206      write ";  Step 1.3: Display the Housekeeping pages "
+21-236-13:15:39.802 00     SPR-I:OPRO         ;  Step 1.3: Display the Housekeeping pages 
+21-236-13:15:39.802 00 SCX_CPU1_DS_EN/207      write ";***********************************************************************"
+21-236-13:15:39.803 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.803 00 SCX_CPU1_DS_EN/208      page SCX_CPU1_DS_HK
+21-236-13:15:39.905 00 SCX_CPU1_DS_EN/209      page SCX_CPU1_TST_DS_HK
+21-236-13:15:39.967 00 SCX_CPU1_DS_EN/210      
+21-236-13:15:39.967 00 SCX_CPU1_DS_EN/211      write ";***********************************************************************"
+21-236-13:15:39.967 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.967 00 SCX_CPU1_DS_EN/212      write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications.     "
+21-236-13:15:39.967 00     SPR-I:OPRO         ;  Step 1.4:  Start the Data Storage (DS) and Test Applications.     
+21-236-13:15:39.967 00 SCX_CPU1_DS_EN/213      write ";***********************************************************************"
+21-236-13:15:39.968 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/214      ;s scx_cpu1_ds_start_apps("1.4")
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/215      ;wait 5
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/216      
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/218      local hkPktId = "p0B8"
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/219      
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/221      local seqTlmItem = hkPktId & "scnt"
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/222      local currSCnt = {seqTlmItem}
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/223      local expectedSCnt = currSCnt + 2
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/224      
+21-236-13:15:39.968 00 SCX_CPU1_DS_EN/225      ut_tlmwait {seqTlmItem}, {expectedSCnt}
+21-236-13:15:39.971 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:44.977 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:44.978 00 SCX_CPU1_DS_EN/226      if (UT_TW_Status = UT_Success) then
+21-236-13:15:44.979 00 SCX_CPU1_DS_EN/227        write "<*> Passed (8000) - Housekeeping packet is being generated."
+21-236-13:15:44.979 00     SPR-I:OPRO         <*> Passed (8000) - Housekeeping packet is being generated.
+21-236-13:15:44.979 00 SCX_CPU1_DS_EN/228        ut_setrequirements DS_8000, "P"
+21-236-13:15:44.981 00 SCX_CPU1_DS_EN/232      endif
+21-236-13:15:44.981 00 SCX_CPU1_DS_EN/233      
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/235      if (SCX_CPU1_DS_CMDPC = 0) AND (SCX_CPU1_DS_CMDEC = 0) AND ;;
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/236         (SCX_CPU1_DS_DisabledPktCnt = 0) AND ;;
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/237         (SCX_CPU1_DS_FilteredPktCnt = 0) AND (SCX_CPU1_DS_PassedPktCnt = 0) AND ;;
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/238         (SCX_CPU1_DS_FileWriteCnt = 0) AND (SCX_CPU1_DS_FileWriteErrCnt = 0) AND ;;
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/239         (SCX_CPU1_DS_FileUpdCnt = 0) AND (SCX_CPU1_DS_FileUpdErrCnt = 0) AND ;;
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/240         (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
+21-236-13:15:44.982 00 SCX_CPU1_DS_EN/241         (SCX_CPU1_DS_FilterLoadCnt = 1) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
+21-236-13:15:44.983 00 SCX_CPU1_DS_EN/242        write "<*> Passed (9000) - Housekeeping telemetry initialized properly."
+21-236-13:15:44.983 00     SPR-I:OPRO         <*> Passed (9000) - Housekeeping telemetry initialized properly.
+21-236-13:15:44.983 00 SCX_CPU1_DS_EN/243        ut_setrequirements DS_9000, "P"
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/260      endif
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/261      
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/263      if (DS_DEF_ENABLE_STATE = 1) then
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/264        if (p@SCX_CPU1_DS_AppEnaState = "Enabled") then
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/265          write "<*> Passed (9008) - DS Application State is enabled as expected."
+21-236-13:15:44.984 00     SPR-I:OPRO         <*> Passed (9008) - DS Application State is enabled as expected.
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/266          ut_setrequirements DS_9008, "P"
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/270        endif
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/279      endif
+21-236-13:15:44.984 00 SCX_CPU1_DS_EN/280      
+21-236-13:15:44.985 00 SCX_CPU1_DS_EN/281      wait 5
+21-236-13:15:44.985 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:49.989 00 SCX_CPU1_DS_EN/282      
+21-236-13:15:49.989 00 SCX_CPU1_DS_EN/283      write ";***********************************************************************"
+21-236-13:15:49.989 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:49.989 00 SCX_CPU1_DS_EN/284      write ";  Step 1.5: Enable DEBUG Event Messages "
+21-236-13:15:49.989 00     SPR-I:OPRO         ;  Step 1.5: Enable DEBUG Event Messages 
+21-236-13:15:49.989 00 SCX_CPU1_DS_EN/285      write ";***********************************************************************"
+21-236-13:15:49.990 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:49.990 00 SCX_CPU1_DS_EN/286      local cmdCtr = SCX_CPU1_EVS_CMDPC + 1
+21-236-13:15:49.990 00 SCX_CPU1_DS_EN/287      
+21-236-13:15:49.990 00 SCX_CPU1_DS_EN/289      /SCX_CPU1_EVS_EnaAppEVTType Application=DSAppName DEBUG
+21-236-13:15:50.003 00 SCX_CPU1_DS_EN/290      
+21-236-13:15:50.003 00 SCX_CPU1_DS_EN/291      ut_tlmwait SCX_CPU1_EVS_CMDPC, {cmdCtr}
+21-236-13:15:50.007 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:53.011 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:15:53.012 00 SCX_CPU1_DS_EN/292      if (UT_TW_Status = UT_Success) then
+21-236-13:15:53.012 00 SCX_CPU1_DS_EN/293        write "<*> Passed - Enable Debug events command sent properly."
+21-236-13:15:53.012 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-13:15:53.012 00 SCX_CPU1_DS_EN/296      endif
+21-236-13:15:53.012 00 SCX_CPU1_DS_EN/297      
+21-236-13:15:53.013 00 SCX_CPU1_DS_EN/298      wait 5
+21-236-13:15:53.013 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:15:58.017 00 SCX_CPU1_DS_EN/299      
+21-236-13:15:58.018 00 SCX_CPU1_DS_EN/300      write ";***********************************************************************"
+21-236-13:15:58.018 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:58.018 00 SCX_CPU1_DS_EN/301      write ";  Step 2.0: State Enable Tests."
+21-236-13:15:58.018 00     SPR-I:OPRO         ;  Step 2.0: State Enable Tests.
+21-236-13:15:58.018 00 SCX_CPU1_DS_EN/302      write ";***********************************************************************"
+21-236-13:15:58.018 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:58.018 00 SCX_CPU1_DS_EN/303      write ";  Step 2.1: Change the DS application state to the opposite state."
+21-236-13:15:58.018 00     SPR-I:OPRO         ;  Step 2.1: Change the DS application state to the opposite state.
+21-236-13:15:58.018 00 SCX_CPU1_DS_EN/304      write ";***********************************************************************"
+21-236-13:15:58.018 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:15:58.019 00 SCX_CPU1_DS_EN/305      local expectedState
+21-236-13:15:58.019 00 SCX_CPU1_DS_EN/306      cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-13:15:58.019 00 SCX_CPU1_DS_EN/307      if (p@SCX_CPU1_DS_AppEnaState = "Enabled") then
+21-236-13:15:58.019 00 SCX_CPU1_DS_EN/308        expectedState = "Disabled"
+21-236-13:15:58.019 00 SCX_CPU1_DS_EN/310        /SCX_CPU1_DS_Disable
+21-236-13:15:58.033 00 SCX_CPU1_DS_EN/315      endif
+21-236-13:15:58.033 00 SCX_CPU1_DS_EN/316      
+21-236-13:15:58.033 00 SCX_CPU1_DS_EN/317      ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-13:15:58.039 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:15:58.791 00    TLMH-I:STS          58-012-14:04:22.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=35 APP STATE command: state = 0
+21-236-13:16:01.042 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:16:01.044 00 SCX_CPU1_DS_EN/318      if (UT_TW_Status = UT_Success) then
+21-236-13:16:01.044 00 SCX_CPU1_DS_EN/319        write "<*> Passed - DS Application State command sent properly."
+21-236-13:16:01.044 00     SPR-I:OPRO         <*> Passed - DS Application State command sent properly.
+21-236-13:16:01.044 00 SCX_CPU1_DS_EN/322      endif
+21-236-13:16:01.044 00 SCX_CPU1_DS_EN/323      
+21-236-13:16:01.044 00 SCX_CPU1_DS_EN/324      wait 5
+21-236-13:16:01.044 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:16:06.048 00 SCX_CPU1_DS_EN/325      
+21-236-13:16:06.049 00 SCX_CPU1_DS_EN/326      write ";*********************************************************************"
+21-236-13:16:06.049 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:16:06.049 00 SCX_CPU1_DS_EN/327      write ";  Step 2.2: Perform a Processor Reset. "
+21-236-13:16:06.049 00     SPR-I:OPRO         ;  Step 2.2: Perform a Processor Reset. 
+21-236-13:16:06.049 00 SCX_CPU1_DS_EN/328      write ";*********************************************************************"
+21-236-13:16:06.049 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:16:06.049 00 SCX_CPU1_DS_EN/329      /SCX_CPU1_ES_PROCESSORRESET
+21-236-13:16:06.065 00 SCX_CPU1_DS_EN/330      wait 10
+21-236-13:16:06.065 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:16:16.074 00 SCX_CPU1_DS_EN/331      
+21-236-13:16:16.074 00 SCX_CPU1_DS_EN/332      close_data_center
+21-236-13:16:16.075 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-13:16:16.077 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-13:16:16.078 00 CLEAR_SPACECRA/2        ;
+21-236-13:16:16.078 00 CLEAR_SPACECRA/3        local logging = %liv(log_procedure)
+21-236-13:16:16.078 00 CLEAR_SPACECRA/4        %liv (log_procedure) = FALSE
+21-236-13:16:16.084 00 CLEAR_SPACECRA/135      
+21-236-13:16:16.084 00 CLEAR_SPACECRA/136      endproc
+21-236-13:16:16.084 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-13:16:16.121 00 SCX_CPU1_DS_EN/333      wait 60
+21-236-13:16:16.121 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-13:17:16.170 00 SCX_CPU1_DS_EN/334      
+21-236-13:17:16.170 00 SCX_CPU1_DS_EN/335      cfe_startup {hostCPU}
+21-236-13:17:16.177 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:17:26.188 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:26.245 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-13:17:26.245 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-13:17:26.245 00 SEND_THAT_TO_C/2        ;
+21-236-13:17:26.245 00 SEND_THAT_TO_C/3        local logging = %liv (log_procedure)
+21-236-13:17:26.245 00 SEND_THAT_TO_C/4        %liv (log_procedure) = FALSE
+21-236-13:17:26.246 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-13:17:26.298 00 SEND_THAT_TO_C/83       
+21-236-13:17:26.298 00 SEND_THAT_TO_C/84       endproc
+21-236-13:17:26.298 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-13:17:26.298 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:17:26.876 00    TLMH-I:STS          58-012-14:04:57.033 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-13:17:30.302 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:30.303 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-13:17:30.305 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-13:17:30.305 00 FILL_IN_SPACEC/2        ;
+21-236-13:17:30.305 00 FILL_IN_SPACEC/3        local logging = %liv (log_procedure)
+21-236-13:17:30.305 00 FILL_IN_SPACEC/4        %liv (log_procedure) = FALSE
+21-236-13:17:30.310 00 FILL_IN_SPACEC/152      
+21-236-13:17:30.310 00 FILL_IN_SPACEC/153      endproc
+21-236-13:17:30.310 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-13:17:30.310 00 SCX_CPU1_DS_EN/336      wait 5
+21-236-13:17:30.310 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:17:35.314 00 SCX_CPU1_DS_EN/337      
+21-236-13:17:35.315 00 SCX_CPU1_DS_EN/338      write ";***********************************************************************"
+21-236-13:17:35.315 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:35.315 00 SCX_CPU1_DS_EN/339      write ";  Step 2.3: Start the Data Storage (DS) and Test Applications.     "
+21-236-13:17:35.315 00     SPR-I:OPRO         ;  Step 2.3: Start the Data Storage (DS) and Test Applications.     
+21-236-13:17:35.315 00 SCX_CPU1_DS_EN/340      write ";***********************************************************************"
+21-236-13:17:35.315 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:35.315 00 SCX_CPU1_DS_EN/341      ;s scx_cpu1_ds_start_apps("2.3")
+21-236-13:17:35.315 00 SCX_CPU1_DS_EN/342      ;wait 5
+21-236-13:17:35.315 00 SCX_CPU1_DS_EN/343      
+21-236-13:17:35.316 00 SCX_CPU1_DS_EN/347      if (DS_CDS_ENABLE_STATE = 1) then
+21-236-13:17:35.316 00 SCX_CPU1_DS_EN/348        if (p@SCX_CPU1_DS_AppEnaState = expectedState) then
+21-236-13:17:35.316 00 SCX_CPU1_DS_EN/349          write "<*> Passed (9004) - DS Application State is set as expected."
+21-236-13:17:35.316 00     SPR-I:OPRO         <*> Passed (9004) - DS Application State is set as expected.
+21-236-13:17:35.316 00 SCX_CPU1_DS_EN/350          ut_setrequirements DS_9004, "P"
+21-236-13:17:35.320 00 SCX_CPU1_DS_EN/354        endif
+21-236-13:17:35.320 00 SCX_CPU1_DS_EN/377      endif
+21-236-13:17:35.320 00 SCX_CPU1_DS_EN/378      
+21-236-13:17:35.320 00 SCX_CPU1_DS_EN/379      wait 5
+21-236-13:17:35.320 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:17:40.324 00 SCX_CPU1_DS_EN/380      
+21-236-13:17:40.324 00 SCX_CPU1_DS_EN/381      write ";***********************************************************************"
+21-236-13:17:40.325 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:40.325 00 SCX_CPU1_DS_EN/382      write ";  Step 2.4: Enable DEBUG Event Messages "
+21-236-13:17:40.325 00     SPR-I:OPRO         ;  Step 2.4: Enable DEBUG Event Messages 
+21-236-13:17:40.325 00 SCX_CPU1_DS_EN/383      write ";***********************************************************************"
+21-236-13:17:40.325 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:40.325 00 SCX_CPU1_DS_EN/384      local cmdCtr = SCX_CPU1_EVS_CMDPC + 1
+21-236-13:17:40.326 00 SCX_CPU1_DS_EN/385      
+21-236-13:17:40.326 00 SCX_CPU1_DS_EN/387      /SCX_CPU1_EVS_EnaAppEVTType Application=DSAppName DEBUG
+21-236-13:17:40.340 00 SCX_CPU1_DS_EN/388        
+21-236-13:17:40.340 00 SCX_CPU1_DS_EN/389      ut_tlmwait SCX_CPU1_EVS_CMDPC, {cmdCtr}
+21-236-13:17:40.344 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:17:42.346 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:42.347 00 SCX_CPU1_DS_EN/390      if (UT_TW_Status = UT_Success) then
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/391        write "<*> Passed - Enable Debug events command sent properly."
+21-236-13:17:42.348 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/394      endif
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/395      
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/396      write ";*********************************************************************"
+21-236-13:17:42.348 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/397      write ";  Step 2.5: Restart the DS and TST_DS Applications. "
+21-236-13:17:42.348 00     SPR-I:OPRO         ;  Step 2.5: Restart the DS and TST_DS Applications. 
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/398      write ";*********************************************************************"
+21-236-13:17:42.348 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:42.348 00 SCX_CPU1_DS_EN/399      write ";  Step 2.5.1: Stop the DS and TST_DS Applications. "
+21-236-13:17:42.349 00     SPR-I:OPRO         ;  Step 2.5.1: Stop the DS and TST_DS Applications. 
+21-236-13:17:42.349 00 SCX_CPU1_DS_EN/400      write ";*********************************************************************"
+21-236-13:17:42.349 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:42.349 00 SCX_CPU1_DS_EN/401      local cmdCtr = SCX_CPU1_ES_CMDPC + 2
+21-236-13:17:42.349 00 SCX_CPU1_DS_EN/402      
+21-236-13:17:42.349 00 SCX_CPU1_DS_EN/403      /SCX_CPU1_ES_RESTARTAPP Application="TST_DS"
+21-236-13:17:42.353 00 SCX_CPU1_DS_EN/404      wait 4
+21-236-13:17:42.353 00     SPR-I:STTE         Wait mode - waiting 4 seconds ...
+21-236-13:17:43.380 00    TLMH-I:STS          58-012-14:05:14.001 ERROR CPU=CPU1 APPNAME=TST_DS EVENT ID=41 TST_DS_AppMain terminating!, Error = 0x0
+21-236-13:17:46.356 00 SCX_CPU1_DS_EN/405      /SCX_CPU1_ES_RESTARTAPP Application=DSAppName
+21-236-13:17:46.371 00 SCX_CPU1_DS_EN/406      wait 4
+21-236-13:17:46.371 00     SPR-I:STTE         Wait mode - waiting 4 seconds ...
+21-236-13:17:48.381 00    TLMH-I:STS          58-012-14:05:19.000 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=17 Msg Limit Err,MsgId 0x1811,pipe TstDSCmdPipe,sender CFE_TIME.TIME_1HZ_TASK
+21-236-13:17:49.382 00    TLMH-I:STS          58-012-14:05:19.821 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application TST_DS Completed, AppID=1114124
+21-236-13:17:49.383 00    TLMH-I:STS          58-012-14:05:19.883 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=1 TST_DS Initialized. Version 2.5.1.0
+21-236-13:17:50.375 00 SCX_CPU1_DS_EN/407      
+21-236-13:17:50.375 00 SCX_CPU1_DS_EN/408      ut_tlmwait SCX_CPU1_ES_CMDPC, {cmdCtr}
+21-236-13:17:50.387 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:17:50.389 00 SCX_CPU1_DS_EN/409      if (UT_TW_Status = UT_Success) then
+21-236-13:17:50.389 00 SCX_CPU1_DS_EN/410        write "<*> Passed - DS and TST_DS stop app commands sent properly."
+21-236-13:17:50.389 00     SPR-I:OPRO         <*> Passed - DS and TST_DS stop app commands sent properly.
+21-236-13:17:50.389 00 SCX_CPU1_DS_EN/413      endif
+21-236-13:17:50.389 00 SCX_CPU1_DS_EN/414      
+21-236-13:17:50.389 00 SCX_CPU1_DS_EN/415      wait 5
+21-236-13:17:50.389 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:17:52.376 00    TLMH-I:STS          58-012-14:05:22.863 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application DS Completed, AppID=1114125
+21-236-13:17:52.377 00    TLMH-I:STS          58-012-14:05:22.939 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 0, unused = 8
+21-236-13:17:52.378 00    TLMH-I:STS          58-012-14:05:22.964 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 6, bad = 0, unused = 250
+21-236-13:17:52.379 00    TLMH-I:STS          58-012-14:05:22.966 INFO CPU=CPU1 APPNAME=DS EVENT ID=1 Application initialized, version 2.6.0.0, data at 0xa85e50
+21-236-13:17:52.380 00    TLMH-I:STS          58-012-14:05:23.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=20 Request Housekeeping command
+21-236-13:17:55.394 00 SCX_CPU1_DS_EN/416      
+21-236-13:17:55.394 00 SCX_CPU1_DS_EN/417      write ";*********************************************************************"
+21-236-13:17:55.394 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:55.394 00 SCX_CPU1_DS_EN/418      write ";  Step 2.5.2: Start the DS and TST_DS Applications. "
+21-236-13:17:55.394 00     SPR-I:OPRO         ;  Step 2.5.2: Start the DS and TST_DS Applications. 
+21-236-13:17:55.394 00 SCX_CPU1_DS_EN/419      write ";*********************************************************************"
+21-236-13:17:55.394 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:17:55.394 00 SCX_CPU1_DS_EN/420      ;s scx_cpu1_ds_start_apps("2.5.2")
+21-236-13:17:55.395 00 SCX_CPU1_DS_EN/421      ;wait 5
+21-236-13:17:55.395 00 SCX_CPU1_DS_EN/422      
+21-236-13:17:55.395 00 SCX_CPU1_DS_EN/423      write ";***********************************************************************"
+21-236-13:17:55.395 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:55.395 00 SCX_CPU1_DS_EN/424      write ";  Step 2.6: Enable DEBUG Event Messages "
+21-236-13:17:55.395 00     SPR-I:OPRO         ;  Step 2.6: Enable DEBUG Event Messages 
+21-236-13:17:55.395 00 SCX_CPU1_DS_EN/425      write ";***********************************************************************"
+21-236-13:17:55.395 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:17:55.395 00 SCX_CPU1_DS_EN/426      local cmdCtr = SCX_CPU1_EVS_CMDPC + 2
+21-236-13:17:55.396 00 SCX_CPU1_DS_EN/427      
+21-236-13:17:55.396 00 SCX_CPU1_DS_EN/429      /SCX_CPU1_EVS_EnaAppEVTType Application=DSAppName DEBUG
+21-236-13:17:55.411 00 SCX_CPU1_DS_EN/430      wait 2
+21-236-13:17:55.411 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-236-13:17:56.379 00    TLMH-I:STS          58-012-14:05:27.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=20 Request Housekeeping command
+21-236-13:17:57.413 00 SCX_CPU1_DS_EN/431      /SCX_CPU1_EVS_EnaAppEVTType Application="CFE_TBL" DEBUG
+21-236-13:17:57.428 00 SCX_CPU1_DS_EN/432        
+21-236-13:17:57.428 00 SCX_CPU1_DS_EN/433      ut_tlmwait SCX_CPU1_EVS_CMDPC, {cmdCtr}
+21-236-13:17:57.442 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:18:01.446 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:18:01.448 00 SCX_CPU1_DS_EN/434      if (UT_TW_Status = UT_Success) then
+21-236-13:18:01.448 00 SCX_CPU1_DS_EN/435        write "<*> Passed - Enable Debug events command sent properly."
+21-236-13:18:01.448 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-13:18:01.448 00 SCX_CPU1_DS_EN/438      endif
+21-236-13:18:01.448 00 SCX_CPU1_DS_EN/439      
+21-236-13:18:01.448 00 SCX_CPU1_DS_EN/440      wait 5
+21-236-13:18:01.448 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/441      
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/442      write ";***********************************************************************"
+21-236-13:18:06.452 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/443      write ";  Step 2.7: Check the Enable State after reset"
+21-236-13:18:06.452 00     SPR-I:OPRO         ;  Step 2.7: Check the Enable State after reset
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/444      write ";***********************************************************************"
+21-236-13:18:06.452 00     SPR-I:OPRO         ;***********************************************************************
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/448      if (DS_CDS_ENABLE_STATE = 1) then
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/449        if (p@SCX_CPU1_DS_AppEnaState = expectedState) then
+21-236-13:18:06.452 00 SCX_CPU1_DS_EN/450          write "<*> Passed (9004) - DS Application State is set as expected."
+21-236-13:18:06.452 00     SPR-I:OPRO         <*> Passed (9004) - DS Application State is set as expected.
+21-236-13:18:06.453 00 SCX_CPU1_DS_EN/451          ut_setrequirements DS_9004, "P"
+21-236-13:18:06.453 00 SCX_CPU1_DS_EN/455        endif
+21-236-13:18:06.453 00 SCX_CPU1_DS_EN/478      endif
+21-236-13:18:06.453 00 SCX_CPU1_DS_EN/479      
+21-236-13:18:06.453 00 SCX_CPU1_DS_EN/480      write ";*********************************************************************"
+21-236-13:18:06.453 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:18:06.453 00 SCX_CPU1_DS_EN/481      write ";  Step 6.0: Clean-up - Send the Reset command.             "
+21-236-13:18:06.454 00     SPR-I:OPRO         ;  Step 6.0: Clean-up - Send the Reset command.             
+21-236-13:18:06.454 00 SCX_CPU1_DS_EN/482      write ";*********************************************************************"
+21-236-13:18:06.454 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:18:06.454 00 SCX_CPU1_DS_EN/483      /SCX_CPU1_ES_POWERONRESET
+21-236-13:18:06.465 00 SCX_CPU1_DS_EN/484      wait 10
+21-236-13:18:06.465 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:18:16.474 00 SCX_CPU1_DS_EN/485      
+21-236-13:18:16.474 00 SCX_CPU1_DS_EN/486      close_data_center
+21-236-13:18:16.475 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-13:18:16.476 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-13:18:16.477 00 CLEAR_SPACECRA/2        ;
+21-236-13:18:16.477 00 CLEAR_SPACECRA/3        local logging = %liv(log_procedure)
+21-236-13:18:16.477 00 CLEAR_SPACECRA/4        %liv (log_procedure) = FALSE
+21-236-13:18:16.491 00 CLEAR_SPACECRA/135      
+21-236-13:18:16.491 00 CLEAR_SPACECRA/136      endproc
+21-236-13:18:16.491 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-13:18:16.554 00 SCX_CPU1_DS_EN/487      wait 60
+21-236-13:18:16.554 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-13:19:16.603 00 SCX_CPU1_DS_EN/488      
+21-236-13:19:16.603 00 SCX_CPU1_DS_EN/489      cfe_startup {hostCPU}
+21-236-13:19:16.615 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:19:26.626 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:19:26.696 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-13:19:26.697 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-13:19:26.697 00 SEND_THAT_TO_C/2        ;
+21-236-13:19:26.697 00 SEND_THAT_TO_C/3        local logging = %liv (log_procedure)
+21-236-13:19:26.697 00 SEND_THAT_TO_C/4        %liv (log_procedure) = FALSE
+21-236-13:19:26.698 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-13:19:26.750 00 SEND_THAT_TO_C/83       
+21-236-13:19:26.750 00 SEND_THAT_TO_C/84       endproc
+21-236-13:19:26.750 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-13:19:26.750 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-13:19:27.954 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-13:19:31.756 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-13:19:31.756 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-13:19:31.758 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-13:19:31.758 00 FILL_IN_SPACEC/2        ;
+21-236-13:19:31.759 00 FILL_IN_SPACEC/3        local logging = %liv (log_procedure)
+21-236-13:19:31.759 00 FILL_IN_SPACEC/4        %liv (log_procedure) = FALSE
+21-236-13:19:31.769 00 FILL_IN_SPACEC/152      
+21-236-13:19:31.769 00 FILL_IN_SPACEC/153      endproc
+21-236-13:19:31.769 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-13:19:31.770 00 SCX_CPU1_DS_EN/490      wait 5
+21-236-13:19:31.771 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-13:19:36.774 00 SCX_CPU1_DS_EN/491      
+21-236-13:19:36.774 00 SCX_CPU1_DS_EN/492      write "**** Requirements Status Reporting"
+21-236-13:19:36.774 00     SPR-I:OPRO         **** Requirements Status Reporting
+21-236-13:19:36.775 00 SCX_CPU1_DS_EN/493                                                                                      
+21-236-13:19:36.775 00 SCX_CPU1_DS_EN/494      write "--------------------------"
+21-236-13:19:36.775 00     SPR-I:OPRO         --------------------------
+21-236-13:19:36.775 00 SCX_CPU1_DS_EN/495      write "   Requirement(s) Report"
+21-236-13:19:36.775 00     SPR-I:OPRO            Requirement(s) Report
+21-236-13:19:36.775 00 SCX_CPU1_DS_EN/496      write "--------------------------"
+21-236-13:19:36.775 00     SPR-I:OPRO         --------------------------
+21-236-13:19:36.775 00 SCX_CPU1_DS_EN/497      
+21-236-13:19:36.775 00 SCX_CPU1_DS_EN/498      FOR i = 0 to ut_req_array_size DO
+21-236-13:19:36.776 00 SCX_CPU1_DS_EN/499        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-13:19:36.776 00     SPR-I:OPRO         FSW Requirement: DS_8000                          P/F: P
+21-236-13:19:36.777 00 SCX_CPU1_DS_EN/500      ENDDO
+21-236-13:19:36.777 00 SCX_CPU1_DS_EN/498      FOR i = 0 to ut_req_array_size DO
+21-236-13:19:36.778 00 SCX_CPU1_DS_EN/499        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-13:19:36.779 00     SPR-I:OPRO         FSW Requirement: DS_9000                          P/F: P
+21-236-13:19:36.779 00 SCX_CPU1_DS_EN/500      ENDDO
+21-236-13:19:36.779 00 SCX_CPU1_DS_EN/498      FOR i = 0 to ut_req_array_size DO
+21-236-13:19:36.780 00 SCX_CPU1_DS_EN/499        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-13:19:36.781 00     SPR-I:OPRO         FSW Requirement: DS_9003                          P/F: U
+21-236-13:19:36.781 00 SCX_CPU1_DS_EN/500      ENDDO
+21-236-13:19:36.782 00 SCX_CPU1_DS_EN/498      FOR i = 0 to ut_req_array_size DO
+21-236-13:19:36.782 00 SCX_CPU1_DS_EN/499        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-13:19:36.783 00     SPR-I:OPRO         FSW Requirement: DS_9004                          P/F: P
+21-236-13:19:36.783 00 SCX_CPU1_DS_EN/500      ENDDO
+21-236-13:19:36.784 00 SCX_CPU1_DS_EN/498      FOR i = 0 to ut_req_array_size DO
+21-236-13:19:36.784 00 SCX_CPU1_DS_EN/499        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-13:19:36.785 00     SPR-I:OPRO         FSW Requirement: DS_9008                          P/F: P
+21-236-13:19:36.786 00 SCX_CPU1_DS_EN/500      ENDDO
+21-236-13:19:36.786 00 SCX_CPU1_DS_EN/498      FOR i = 0 to ut_req_array_size DO
+21-236-13:19:36.787 00 SCX_CPU1_DS_EN/501      
+21-236-13:19:36.801 00 SCX_CPU1_DS_EN/502      drop ut_requirement ; needed to clear global variables
+21-236-13:19:36.801 00     SPR-I:STS          Variable "UT_REQUIREMENT" deleted
+21-236-13:19:36.802 00 SCX_CPU1_DS_EN/503      drop ut_req_array_size ; needed to clear global variables
+21-236-13:19:36.802 00     SPR-I:STS          Variable "UT_REQ_ARRAY_SIZE" deleted
+21-236-13:19:36.802 00 SCX_CPU1_DS_EN/504      
+21-236-13:19:36.802 00 SCX_CPU1_DS_EN/505      write ";*********************************************************************"
+21-236-13:19:36.802 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:19:36.802 00 SCX_CPU1_DS_EN/506      write ";  End procedure SCX_CPU1_ds_resetnocds"
+21-236-13:19:36.802 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_resetnocds
+21-236-13:19:36.803 00 SCX_CPU1_DS_EN/507      write ";*********************************************************************"
+21-236-13:19:36.803 00     SPR-I:OPRO         ;*********************************************************************
+21-236-13:19:36.803 00 SCX_CPU1_DS_EN/508      ENDPROC
+21-236-13:19:36.803 00     SPR-I:STS          Procedure SCX_CPU1_DS_ENABLESTATE completed
+21-236-13:19:36.805 00     UT_RUNPROC/249      
+21-236-13:19:36.805 00     UT_RUNPROC/264      #endif
+21-236-13:19:36.806 00     UT_RUNPROC/265      
+21-236-13:19:36.806 00     UT_RUNPROC/266      write "*** Telemetry Info ***"
+21-236-13:19:36.806 00     SPR-I:OPRO         *** Telemetry Info ***
+21-236-13:19:36.807 00     UT_RUNPROC/268      ;;; write "Pkt Loss Count: ", TO_PCKTSDISCARD
+21-236-13:19:36.807 00     UT_RUNPROC/269      write "Pkt Loss Count: N/A"
+21-236-13:19:36.807 00     SPR-I:OPRO         
+21-236-13:19:36.807 00     UT_RUNPROC/269      write "Pkt Loss Count: N/A"
+21-236-13:19:36.807 00     SPR-I:OPRO         Pkt Loss Count: N/A
+21-236-13:19:36.807 00     UT_RUNPROC/271      write "******************"
+21-236-13:19:36.807 00     SPR-I:OPRO         
+21-236-13:19:36.807 00     UT_RUNPROC/271      write "******************"
+21-236-13:19:36.807 00     SPR-I:OPRO         ******************
+21-236-13:19:36.807 00     UT_RUNPROC/273      
+21-236-13:19:36.807 00     SPR-I:OPRO         
+21-236-13:19:36.808 00     UT_RUNPROC/273      
+21-236-13:19:36.808 00     UT_RUNPROC/274      etime = %gmt
+21-236-13:19:36.808 00     UT_RUNPROC/275      write "Elapsed time:  ", etime-stime, " seconds"
+21-236-13:19:36.808 00     SPR-I:OPRO         Elapsed time:  332.893 seconds
+21-236-13:19:36.808 00     UT_RUNPROC/276      write "Elapsed time:  ", (etime-stime)/60, " minutes"
+21-236-13:19:36.808 00     SPR-I:OPRO         Elapsed time:  5.54822 minutes
+21-236-13:19:36.810 00     UT_RUNPROC/277      ;
+21-236-13:19:36.811 00     UT_RUNPROC/278      ; wait for completion of procedure
+21-236-13:19:36.811 00     UT_RUNPROC/279      ;
+21-236-13:19:36.811 00     UT_RUNPROC/280      wait(10)
+21-236-13:19:36.811 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-13:19:46.820 00     UT_RUNPROC/281      ;
+21-236-13:19:46.820 00     UT_RUNPROC/282      ; close the log to procedure log name for archive
+21-236-13:19:46.820 00     UT_RUNPROC/283      ;
+21-236-13:19:46.820 00     UT_RUNPROC/284      local test_log_string = "/test_logs/"
+21-236-13:19:46.820 00     UT_RUNPROC/285      if ((logoff_when_done = 0) and  (%length(opt_parm) <> 0)) then
+21-236-13:19:46.821 00     UT_RUNPROC/286        test_log_string = test_log_string & opt_parm & "/"
+21-236-13:19:46.821 00     UT_RUNPROC/287      endif
+21-236-13:19:46.821 00     UT_RUNPROC/288      
+21-236-13:19:46.821 00     UT_RUNPROC/289      write "Creating filtered log at " & %env("WORK") & test_log_string ;;
+21-236-13:19:46.821 00     UT_RUNPROC/290            & log_name & "f"
+21-236-13:19:46.821 00     SPR-I:OPRO         Creating filtered log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logf
+21-236-13:19:46.822 00     UT_RUNPROC/291      write "Creating filtered output log at " & %env("WORK") & test_log_string ;;
+21-236-13:19:46.822 00     UT_RUNPROC/292            & log_name & "p"
+21-236-13:19:46.822 00     SPR-I:OPRO         Creating filtered output log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logp
+21-236-13:19:46.822 00     UT_RUNPROC/293      write "Creating filtered output log (without SFDUs) at " & %env("WORK") ;;
+21-236-13:19:46.822 00     UT_RUNPROC/294            & test_log_string & log_name & "s"
+21-236-13:19:46.822 00     SPR-I:OPRO         Creating filtered output log (without SFDUs) at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logs
+21-236-13:19:46.822 00     UT_RUNPROC/295      write "Creating filtered event log at " & %env("WORK") & test_log_string ;;
+21-236-13:19:46.822 00     UT_RUNPROC/296            & log_name & "e"
+21-236-13:19:46.823 00     SPR-I:OPRO         Creating filtered event log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.loge
+21-236-13:19:46.823 00     UT_RUNPROC/297      write "Creating filtered requirements log at " & %env("WORK") ;;
+21-236-13:19:46.823 00     UT_RUNPROC/298            & test_log_string & log_name & "r"
+21-236-13:19:46.823 00     SPR-I:OPRO         Creating filtered requirements log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_enablestate-2021-236-13h14m03s.logr
+21-236-13:19:46.823 00     UT_RUNPROC/299      
+21-236-13:19:46.824 00     UT_RUNPROC/300      rstol_dir = "rstol 'newlog " & log_name & "'"
+21-236-13:19:46.824 00     UT_RUNPROC/301      native(rstol_dir)
+21-236-13:19:46.963 00     SPR-I:OPRI     --> newlog scx_cpu1_ds_enablestate-2021-236-13h14m03s.log

@@ -306,9 +306,27 @@ enddo
 write "==> Default Filter Table filename = '",filterFileName,"'"
 
 ;; Upload the files to CPU1
-s ftp_file("CF:0", "ds_fwfile.tbl", destFileName, hostCPU, "P")
-s ftp_file("CF:0", "ds_fwfilter.tbl", filterFileName, hostCPU, "P")
+;s ftp_file("CF:0", "ds_fwfile.tbl", destFileName, hostCPU, "P")
+;s ftp_file("CF:0", "ds_fwfilter.tbl", filterFileName, hostCPU, "P")
 
+;wait 5
+
+; Load the File table created above
+s load_table("ds_fwfile.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=fileTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=fileTblName
+wait 5
+
+; Load the Filter table created above
+s load_table("ds_fwfilter.tbl",hostCPU)
+wait 5
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=filterTblName
+wait 5
+/SCX_CPU1_TBL_ACTIVATE ATableName=filterTblName
 wait 5
 
 write ";***********************************************************************"
@@ -322,8 +340,7 @@ page SCX_CPU1_DS_FILE_TBL
 write ";***********************************************************************"
 write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("1.4")
-wait 5
+;s scx_cpu1_ds_start_apps("1.4")
 
 ;; Verify the Housekeeping Packet is being generated
 local hkPktId
@@ -354,8 +371,8 @@ if (SCX_CPU1_DS_CMDPC = 0) AND (SCX_CPU1_DS_CMDEC = 0) AND ;;
    (SCX_CPU1_DS_FilteredPktCnt = 0) AND (SCX_CPU1_DS_PassedPktCnt = 0) AND ;;
    (SCX_CPU1_DS_FileWriteCnt = 0) AND (SCX_CPU1_DS_FileWriteErrCnt = 0) AND ;;
    (SCX_CPU1_DS_FileUpdCnt = 0) AND (SCX_CPU1_DS_FileUpdErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_FilterLoadCnt = 1) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
+   (SCX_CPU1_DS_DestLoadCnt = 2) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
+   (SCX_CPU1_DS_FilterLoadCnt = 2) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
   write "<*> Passed (9000) - Housekeeping telemetry initialized properly."
   ut_setrequirements DS_9000, "P"
 else
@@ -428,11 +445,6 @@ for i = 0 to DS_DEST_FILE_CNT-1 do
   endif
 enddo
 
-;; Since the table index is 0-based, subtract 1
-;;if (foundEntry = TRUE) then
-;;  seqFileEntry = seqFileEntry - 1
-;;endif
-
 ;; Parse the Packet Filter Table to find a MessageID 
 ;; using the Destination File Entry found above
 local filterEntry = 0
@@ -453,6 +465,7 @@ write "==> Found file entry at ", seqFileEntry
 write "==> Found filter entry at ", filterEntry
 
 local seqMsgID = SCX_CPU1_DS_PF_TBL[filterEntry].MessageID
+write "==> Using MID = ", seqMsgID
 
 write ";***********************************************************************"
 write ";  Step 2.1.3: Send the TST_DS command to send a message to DS using the"

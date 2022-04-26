@@ -1,0 +1,129 @@
+21-237-13:00:29.788 00    TLMH-I:STS          58-012-14:03:48.950 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-237-13:00:45.289 00    TLMH-I:STS          58-012-14:04:04.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_filtfile.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:00:56.790 00    TLMH-I:STS          58-012-14:04:16.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 0, unused = 8
+21-237-13:00:56.791 00    TLMH-I:STS          58-012-14:04:16.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 DS validation successful for Inactive 'DS.FILE_TBL'
+21-237-13:01:00.788 00    TLMH-I:STS          58-012-14:04:20.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 DS Successfully Updated 'DS.FILE_TBL'
+21-237-13:01:10.281 00    TLMH-I:STS          58-012-14:04:29.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_filtfilter.tbl' into 'DS.FILTER_TBL' working buffer
+21-237-13:01:20.785 00    TLMH-I:STS          58-012-14:04:40.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 6, bad = 0, unused = 250
+21-237-13:01:20.786 00    TLMH-I:STS          58-012-14:04:40.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 DS validation successful for Inactive 'DS.FILTER_TBL'
+21-237-13:01:24.785 00    TLMH-I:STS          58-012-14:04:44.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 DS Successfully Updated 'DS.FILTER_TBL'
+21-237-13:02:30.280 00    TLMH-I:STS          58-012-14:05:49.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'DS.FILTER_TBL' to '/ram/cpu1_filtertbl16'
+21-237-13:03:05.280 00    TLMH-I:STS          58-012-14:06:24.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'DS.FILE_TBL' to '/ram/cpu1_filetbl17'
+21-237-13:05:11.781 00    TLMH-I:STS          58-012-14:03:49.450 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-237-13:06:54.807 00    TLMH-I:STS          58-012-14:03:49.450 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-237-13:08:31.785 00    TLMH-I:STS          58-012-14:03:48.917 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-237-13:08:51.283 00    TLMH-I:STS          58-012-14:04:08.500 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=4 Set counters to non-zero command
+21-237-13:10:23.264 00    TLMH-I:STS          58-012-14:03:49.450 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-237-13:10:42.754 00    TLMH-I:STS          58-012-14:04:09.004 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000901
+21-237-13:10:47.755 00    TLMH-I:STS          58-012-14:04:14.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000902
+21-237-13:10:52.754 00    TLMH-I:STS          58-012-14:04:19.002 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000903
+21-237-13:11:02.762 00    TLMH-I:STS          58-012-14:04:29.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-237-13:11:06.757 00    TLMH-I:STS          58-012-14:04:33.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=35 APP STATE command: state = 0
+21-237-13:12:36.167 00    TLMH-I:STS          58-012-14:05:09.600 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-237-13:13:34.661 00    TLMH-I:STS          58-012-14:06:08.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-237-13:13:38.664 00    TLMH-I:STS          58-012-14:06:12.504 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000901
+21-237-13:13:43.667 00    TLMH-I:STS          58-012-14:06:17.500 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000902
+21-237-13:13:49.164 00    TLMH-I:STS          58-012-14:06:23.002 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000903
+21-237-13:13:59.166 00    TLMH-I:STS          58-012-14:06:33.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-237-13:14:08.157 00    TLMH-I:STS          58-012-14:06:42.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-237-13:14:11.163 00    TLMH-I:STS          58-012-14:06:45.012 ERROR CPU=CPU1 APPNAME=TST_DS EVENT ID=41 TST_DS_AppMain terminating!, Error = 0x0
+21-237-13:14:11.165 00    TLMH-I:STS          58-012-14:06:45.082 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application TST_DS Completed, AppID=1114124
+21-237-13:14:11.660 00    TLMH-I:STS          58-012-14:06:45.133 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=1 TST_DS Initialized. Version 2.5.1.0
+21-237-13:14:15.163 00    TLMH-I:STS          58-012-14:06:49.009 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=20 Request Housekeeping command
+21-237-13:14:19.165 00    TLMH-I:STS          58-012-14:06:53.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=20 Request Housekeeping command
+21-237-13:14:20.666 00    TLMH-I:STS          58-012-14:06:54.364 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=10 Restart Application DS Completed, AppID=1114125
+21-237-13:14:20.667 00    TLMH-I:STS          58-012-14:06:54.435 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 0, unused = 8
+21-237-13:14:20.668 00    TLMH-I:STS          58-012-14:06:54.470 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 6, bad = 0, unused = 250
+21-237-13:14:20.669 00    TLMH-I:STS          58-012-14:06:54.473 INFO CPU=CPU1 APPNAME=DS EVENT ID=1 Application initialized, version 2.6.0.0, data at 0xa7d1f0
+21-237-13:15:15.156 00    TLMH-I:STS          58-012-14:07:49.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-237-13:15:19.159 00    TLMH-I:STS          58-012-14:07:53.005 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000901
+21-237-13:15:24.162 00    TLMH-I:STS          58-012-14:07:58.001 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000902
+21-237-13:15:29.161 00    TLMH-I:STS          58-012-14:08:03.002 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000903
+21-237-13:15:39.158 00    TLMH-I:STS          58-012-14:08:13.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-237-13:15:59.165 00    TLMH-I:STS          58-012-14:08:33.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfilter1.tbl' into 'DS.FILTER_TBL' working buffer
+21-237-13:16:03.163 00    TLMH-I:STS          58-012-14:08:37.002 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILTER_TBL'
+21-237-13:16:06.165 00    TLMH-I:STS          58-012-14:08:40.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=13 Filter table verify err: invalid descriptor text
+21-237-13:16:06.166 00    TLMH-I:STS          58-012-14:08:40.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=13 Filter table verify err: MID = 0x00001000, index = 0, filter = 0, file table index = 16
+21-237-13:16:06.168 00    TLMH-I:STS          58-012-14:08:40.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = bad, good entries = 1, bad = 4, unused = 251
+21-237-13:16:06.169 00    TLMH-I:STS          58-012-14:08:40.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILTER_TBL', Status=0xFFFFFFFF
+21-237-13:16:07.665 00    TLMH-I:STS          58-012-14:08:41.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILTER_TBL'
+21-237-13:16:16.662 00    TLMH-I:STS          58-012-14:08:50.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfilter2.tbl' into 'DS.FILTER_TBL' working buffer
+21-237-13:16:18.662 00    TLMH-I:STS          58-012-14:08:52.502 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILTER_TBL'
+21-237-13:16:22.168 00    TLMH-I:STS          58-012-14:08:56.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=13 Filter table verify err: MID = 0x00001000, index = 0, filter = 0, file table index = 16
+21-237-13:16:22.169 00    TLMH-I:STS          58-012-14:08:56.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 1, bad = 4, unused = 251
+21-237-13:16:22.170 00    TLMH-I:STS          58-012-14:08:56.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILTER_TBL', Status=0xFFFFFFFF
+21-237-13:16:22.666 00    TLMH-I:STS          58-012-14:08:56.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILTER_TBL'
+21-237-13:16:32.164 00    TLMH-I:STS          58-012-14:09:06.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfilter3.tbl' into 'DS.FILTER_TBL' working buffer
+21-237-13:16:35.165 00    TLMH-I:STS          58-012-14:09:09.002 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILTER_TBL'
+21-237-13:16:38.162 00    TLMH-I:STS          58-012-14:09:12.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=13 Filter table verify err: MID = 0x00001001, index = 1, filter = 0, filter type = 3
+21-237-13:16:38.163 00    TLMH-I:STS          58-012-14:09:12.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 2, bad = 3, unused = 251
+21-237-13:16:38.164 00    TLMH-I:STS          58-012-14:09:12.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILTER_TBL', Status=0xFFFFFFFF
+21-237-13:16:39.163 00    TLMH-I:STS          58-012-14:09:13.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILTER_TBL'
+21-237-13:16:48.159 00    TLMH-I:STS          58-012-14:09:22.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfilter4.tbl' into 'DS.FILTER_TBL' working buffer
+21-237-13:16:51.166 00    TLMH-I:STS          58-012-14:09:25.002 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILTER_TBL'
+21-237-13:16:54.167 00    TLMH-I:STS          58-012-14:09:28.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=13 Filter table verify err: MID = 0x00001002, index = 2, filter = 0, filter parms N = 2, X = 1, O = 0
+21-237-13:16:54.168 00    TLMH-I:STS          58-012-14:09:28.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 3, bad = 2, unused = 251
+21-237-13:16:54.170 00    TLMH-I:STS          58-012-14:09:28.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILTER_TBL', Status=0xFFFFFFFF
+21-237-13:16:55.163 00    TLMH-I:STS          58-012-14:09:29.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILTER_TBL'
+21-237-13:17:04.660 00    TLMH-I:STS          58-012-14:09:38.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfilter5.tbl' into 'DS.FILTER_TBL' working buffer
+21-237-13:17:07.657 00    TLMH-I:STS          58-012-14:09:41.502 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILTER_TBL'
+21-237-13:17:10.160 00    TLMH-I:STS          58-012-14:09:44.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=13 Filter table verify err: MID = 0x00001003, index = 3, filter = 0, filter parms N = 1, X = 1, O = 2
+21-237-13:17:10.161 00    TLMH-I:STS          58-012-14:09:44.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 4, bad = 1, unused = 251
+21-237-13:17:10.162 00    TLMH-I:STS          58-012-14:09:44.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILTER_TBL', Status=0xFFFFFFFF
+21-237-13:17:10.665 00    TLMH-I:STS          58-012-14:09:44.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILTER_TBL'
+21-237-13:17:30.163 00    TLMH-I:STS          58-012-14:10:04.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile1.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:17:31.157 00    TLMH-I:STS          58-012-14:10:05.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:17:34.165 00    TLMH-I:STS          58-012-14:10:08.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: invalid descriptor text
+21-237-13:17:34.166 00    TLMH-I:STS          58-012-14:10:08.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 0, invalid pathname text
+21-237-13:17:34.168 00    TLMH-I:STS          58-012-14:10:08.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = bad, good entries = 1, bad = 8, unused = 7
+21-237-13:17:34.169 00    TLMH-I:STS          58-012-14:10:08.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:17:35.165 00    TLMH-I:STS          58-012-14:10:09.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:17:44.162 00    TLMH-I:STS          58-012-14:10:18.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile2.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:17:47.160 00    TLMH-I:STS          58-012-14:10:21.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:17:50.158 00    TLMH-I:STS          58-012-14:10:24.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 0, invalid pathname text
+21-237-13:17:50.160 00    TLMH-I:STS          58-012-14:10:24.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 1, bad = 8, unused = 7
+21-237-13:17:50.161 00    TLMH-I:STS          58-012-14:10:24.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:17:51.656 00    TLMH-I:STS          58-012-14:10:25.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:18:00.656 00    TLMH-I:STS          58-012-14:10:34.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile3.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:18:02.662 00    TLMH-I:STS          58-012-14:10:36.501 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:18:06.164 00    TLMH-I:STS          58-012-14:10:40.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 1, filename type = 3
+21-237-13:18:06.165 00    TLMH-I:STS          58-012-14:10:40.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 2, bad = 7, unused = 7
+21-237-13:18:06.166 00    TLMH-I:STS          58-012-14:10:40.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:18:06.663 00    TLMH-I:STS          58-012-14:10:40.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:18:15.658 00    TLMH-I:STS          58-012-14:10:49.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile4.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:18:19.158 00    TLMH-I:STS          58-012-14:10:53.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:18:22.157 00    TLMH-I:STS          58-012-14:10:56.003 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 2, file enable state = 2
+21-237-13:18:22.159 00    TLMH-I:STS          58-012-14:10:56.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 3, bad = 6, unused = 7
+21-237-13:18:22.160 00    TLMH-I:STS          58-012-14:10:56.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:18:23.163 00    TLMH-I:STS          58-012-14:10:57.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:18:32.164 00    TLMH-I:STS          58-012-14:11:06.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile5.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:18:35.165 00    TLMH-I:STS          58-012-14:11:09.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:18:38.163 00    TLMH-I:STS          58-012-14:11:12.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 3, max file size = 512
+21-237-13:18:38.164 00    TLMH-I:STS          58-012-14:11:12.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 4, bad = 5, unused = 7
+21-237-13:18:38.166 00    TLMH-I:STS          58-012-14:11:12.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:18:39.157 00    TLMH-I:STS          58-012-14:11:13.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:18:48.164 00    TLMH-I:STS          58-012-14:11:22.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile6.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:18:51.657 00    TLMH-I:STS          58-012-14:11:25.501 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:18:54.156 00    TLMH-I:STS          58-012-14:11:28.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 4, max file age = 30
+21-237-13:18:54.157 00    TLMH-I:STS          58-012-14:11:28.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 5, bad = 4, unused = 7
+21-237-13:18:54.157 00    TLMH-I:STS          58-012-14:11:28.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:18:55.655 00    TLMH-I:STS          58-012-14:11:29.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:19:04.661 00    TLMH-I:STS          58-012-14:11:38.484 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile7.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:19:06.664 00    TLMH-I:STS          58-012-14:11:40.501 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:19:10.162 00    TLMH-I:STS          58-012-14:11:44.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 5, invalid extension text
+21-237-13:19:10.164 00    TLMH-I:STS          58-012-14:11:44.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 6, bad = 3, unused = 7
+21-237-13:19:10.165 00    TLMH-I:STS          58-012-14:11:44.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:19:10.656 00    TLMH-I:STS          58-012-14:11:44.500 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:19:20.164 00    TLMH-I:STS          58-012-14:11:54.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile8.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:19:23.162 00    TLMH-I:STS          58-012-14:11:57.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:19:26.162 00    TLMH-I:STS          58-012-14:12:00.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 6, sequence count = 100000000
+21-237-13:19:26.163 00    TLMH-I:STS          58-012-14:12:00.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 7, bad = 2, unused = 7
+21-237-13:19:26.165 00    TLMH-I:STS          58-012-14:12:00.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:19:27.164 00    TLMH-I:STS          58-012-14:12:01.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:19:36.159 00    TLMH-I:STS          58-012-14:12:10.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_badfile9.tbl' into 'DS.FILE_TBL' working buffer
+21-237-13:19:39.157 00    TLMH-I:STS          58-012-14:12:13.001 DEBUG CPU=CPU1 APPNAME=CFE_TBL EVENT ID=16 Tbl Services issued validation request for 'DS.FILE_TBL'
+21-237-13:19:42.156 00    TLMH-I:STS          58-012-14:12:16.004 ERROR CPU=CPU1 APPNAME=DS EVENT ID=11 Destination file table verify err: index = 8, sequence count = 100000000
+21-237-13:19:42.158 00    TLMH-I:STS          58-012-14:12:16.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 1, unused = 7
+21-237-13:19:42.159 00    TLMH-I:STS          58-012-14:12:16.004 ERROR CPU=CPU1 APPNAME=CFE_TBL EVENT ID=96 DS validation failed for Inactive 'DS.FILE_TBL', Status=0xFFFFFFFF
+21-237-13:19:43.162 00    TLMH-I:STS          58-012-14:12:17.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=21 Table Load Aborted for 'DS.FILE_TBL'
+21-237-13:21:12.769 00    TLMH-I:STS          58-012-14:12:53.533 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101

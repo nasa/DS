@@ -1,24 +1,24 @@
 /************************************************************************
-** File: ds_msgdefs.h 
+** File: ds_msgdefs.h
 **
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
-**  application version 2.5.2” 
-**  
-**  Copyright © 2019 United States Government as represented by the Administrator 
-**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
+**  application version 2.5.2”
 **
-**  Licensed under the Apache License, Version 2.0 (the "License"); 
-**  you may not use this file except in compliance with the License. 
-**  You may obtain a copy of the License at 
-**  http://www.apache.org/licenses/LICENSE-2.0 
-**  Unless required by applicable law or agreed to in writing, software 
-**  distributed under the License is distributed on an "AS IS" BASIS, 
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-**  See the License for the specific language governing permissions and 
-**  limitations under the License. 
-**  
+**  Copyright © 2019 United States Government as represented by the Administrator
+**  of the National Aeronautics and Space Administration.  All Rights Reserved.
 **
-** Purpose: 
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**  http://www.apache.org/licenses/LICENSE-2.0
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**
+** Purpose:
 **   The CFS Data Storage (DS) command codes header file
 **
 ** Notes:
@@ -38,8 +38,8 @@
 **
 **  \par Description
 **       This command will increment the command execution counter and send an
-**       event containing the version number of the application.  The command 
-**       is often used as a general test for application "aliveness".         
+**       event containing the version number of the application.  The command
+**       is often used as a general test for application "aliveness".
 **
 **  \dscmdmnemonic \DS_NOOP
 **
@@ -64,8 +64,7 @@
 **
 **  \sa
 */
-#define DS_NOOP_CC              0
-
+#define DS_NOOP_CC 0
 
 /** \dscmd Reset Housekeeping Telemetry Counters Command
 **
@@ -106,8 +105,7 @@
 **
 **  \sa
 */
-#define DS_RESET_CC             1
-
+#define DS_RESET_CC 1
 
 /** \dscmd Set Enable/Disable State For DS Application
 **
@@ -140,8 +138,7 @@
 **
 **  \sa
 */
-#define DS_SET_APP_STATE_CC    2
-
+#define DS_SET_APP_STATE_CC 2
 
 /** \dscmd Set Destination File For Packet Filter Table Entry
 **
@@ -177,8 +174,7 @@
 **
 **  \sa
 */
-#define DS_SET_FILTER_FILE_CC   3
-
+#define DS_SET_FILTER_FILE_CC 3
 
 /** \dscmd Set Filter Type For Packet Filter Table Entry
 **
@@ -214,8 +210,7 @@
 **
 **  \sa
 */
-#define DS_SET_FILTER_TYPE_CC   4
-
+#define DS_SET_FILTER_TYPE_CC 4
 
 /** \dscmd Set Algorithm Parameters For Packet Filter Table Entry
 **
@@ -251,8 +246,7 @@
 **
 **  \sa
 */
-#define DS_SET_FILTER_PARMS_CC  5
-
+#define DS_SET_FILTER_PARMS_CC 5
 
 /** \dscmd Set Filename Type For Destination File Table Entry
 **
@@ -286,8 +280,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_TYPE_CC     6
-
+#define DS_SET_DEST_TYPE_CC 6
 
 /** \dscmd Set Ena/Dis State For Destination File Table Entry
 **
@@ -322,8 +315,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_STATE_CC    7
-
+#define DS_SET_DEST_STATE_CC 7
 
 /** \dscmd Set Pathname For Destination File Table Entry
 **
@@ -357,8 +349,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_PATH_CC     8
-
+#define DS_SET_DEST_PATH_CC 8
 
 /** \dscmd Set Basename For Destination File Table Entry
 **
@@ -392,8 +383,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_BASE_CC     9
-
+#define DS_SET_DEST_BASE_CC 9
 
 /** \dscmd Set Extension For Destination File Table Entry
 **
@@ -427,8 +417,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_EXT_CC     10
-
+#define DS_SET_DEST_EXT_CC 10
 
 /** \dscmd Set Max File Size For Destination File Table Entry
 **
@@ -462,8 +451,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_SIZE_CC    11
-
+#define DS_SET_DEST_SIZE_CC 11
 
 /** \dscmd Set Max File Age For Destination File Table Entry
 **
@@ -497,8 +485,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_AGE_CC     12
-
+#define DS_SET_DEST_AGE_CC 12
 
 /** \dscmd Set Sequence Count For Destination File Table Entry
 **
@@ -532,8 +519,7 @@
 **
 **  \sa
 */
-#define DS_SET_DEST_COUNT_CC   13
-
+#define DS_SET_DEST_COUNT_CC 13
 
 /** \dscmd Close Destination File
 **
@@ -565,9 +551,8 @@
 **
 **  \sa
 */
-#define DS_CLOSE_FILE_CC       14
+#define DS_CLOSE_FILE_CC 14
 
-      
 /** \dscmd Get File Info Packet
 **
 **  \par Description
@@ -596,9 +581,8 @@
 **
 **  \sa
 */
-#define DS_GET_FILE_INFO_CC    15
+#define DS_GET_FILE_INFO_CC 15
 
-      
 /** \dscmd Add Message ID To Packet Filter Table
 **
 **  \par Description
@@ -632,8 +616,7 @@
 **
 **  \sa
 */
-#define DS_ADD_MID_CC          16
-
+#define DS_ADD_MID_CC 16
 
 /** \dscmd Close All Destination Files
 **
@@ -666,9 +649,8 @@
 **
 **  \sa
 */
-#define DS_CLOSE_ALL_CC        17
+#define DS_CLOSE_ALL_CC 17
 
-      
 #endif /* _ds_msgdefs_h_ */
 
 /************************/

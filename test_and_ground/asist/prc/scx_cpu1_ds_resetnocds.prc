@@ -233,9 +233,27 @@ enddo
 write "==> Default Filter Table filename = '",filterFileName,"'"
 
 ;; Upload the files to CPU1
-s ftp_file("CF:0", "ds_filtfile.tbl", destFileName, hostCPU, "P")
-s ftp_file("CF:0", "ds_filtfilter.tbl", filterFileName, hostCPU, "P")
+;s ftp_file("CF:0", "ds_filtfile.tbl", destFileName, hostCPU, "P")
+;s ftp_file("CF:0", "ds_filtfilter.tbl", filterFileName, hostCPU, "P")
 
+; Load the File table created above
+s load_table("ds_filtfile.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=fileTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=fileTblName
+wait 5
+
+; Load the Filter table created above
+s load_table("ds_filtfilter.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=filterTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=filterTblName
 wait 5
 
 write ";***********************************************************************"
@@ -249,8 +267,8 @@ page SCX_CPU1_DS_FILE_TBL
 write ";***********************************************************************"
 write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("1.4")
-wait 5
+;s scx_cpu1_ds_start_apps("1.4")
+;wait 5
 
 ;; Verify the Housekeeping Packet is being generated
 local hkPktId = "p0B8"
@@ -275,8 +293,8 @@ if (SCX_CPU1_DS_CMDPC = 0) AND (SCX_CPU1_DS_CMDEC = 0) AND ;;
    (SCX_CPU1_DS_FilteredPktCnt = 0) AND (SCX_CPU1_DS_PassedPktCnt = 0) AND ;;
    (SCX_CPU1_DS_FileWriteCnt = 0) AND (SCX_CPU1_DS_FileWriteErrCnt = 0) AND ;;
    (SCX_CPU1_DS_FileUpdCnt = 0) AND (SCX_CPU1_DS_FileUpdErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_FilterLoadCnt = 1) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
+   (SCX_CPU1_DS_DestLoadCnt = 2) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
+   (SCX_CPU1_DS_FilterLoadCnt = 2) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
   write "<*> Passed (9000) - Housekeeping telemetry initialized properly."
   ut_setrequirements DS_9000, "P"
 else
@@ -298,16 +316,16 @@ else
 endif
 
 ;; Verify 9005, and 9007
-if (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_FilterLoadCnt = 1) then
+if (SCX_CPU1_DS_DestLoadCnt = 2) AND (SCX_CPU1_DS_FilterLoadCnt = 2) then
   write "<*> Passed (9005;9007) - The tables were validated properly."
   ut_setrequirements DS_9005, "P"
   ut_setrequirements DS_9007, "P"
 else
-  if (SCX_CPU1_DS_DestLoadCnt = 0) then
+  if (SCX_CPU1_DS_DestLoadCnt != 2) then
     write "<!> Failed (9005) - The Destination File table was not validated properly at startup."
     ut_setrequirements DS_9005, "P"
   endif
-  if (SCX_CPU1_DS_FilterLoadCnt = 0) then
+  if (SCX_CPU1_DS_FilterLoadCnt != 2) then
     write "<!> Failed (9007) - The Packet Filter table was not validated properly at startup."
     ut_setrequirements DS_9007, "P"
   endif
@@ -469,16 +487,16 @@ ut_setupevents "SCX","CPU1","CFE_TBL",CFE_TBL_FILE_ACCESS_ERR_EID, "ERROR", 3
 ut_setupevents "SCX","CPU1",{DSAppName},DS_INIT_TBL_ERR_EID, "ERROR", 4
 
 ;; Start the apps
-s scx_cpu1_ds_start_apps("2.3")
-wait 5
+;s scx_cpu1_ds_start_apps("2.3")
+;wait 5
 
 ;; Check for the error events
-if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
-   (SCX_CPU1_find_event[4].num_found_messages = 1) then
-  write "<*> Passed - Table Load Error message rcvd."
-else
-  write "<!> Failed - Table Load Error messages were NOT rcvd."
-endif
+;if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
+;   (SCX_CPU1_find_event[4].num_found_messages = 1) then
+;  write "<*> Passed - Table Load Error message rcvd."
+;else
+;  write "<!> Failed - Table Load Error messages were NOT rcvd."
+;endif
 
 write ";***********************************************************************"
 write ";  Step 2.4: Enable DEBUG Event Messages "
@@ -528,16 +546,16 @@ ut_setupevents "SCX","CPU1","CFE_TBL",CFE_TBL_FILE_ACCESS_ERR_EID, "ERROR", 3
 ut_setupevents "SCX","CPU1",{DSAppName},DS_INIT_TBL_ERR_EID, "ERROR", 4
 
 ;; Start the apps
-s scx_cpu1_ds_start_apps("2.8")
-wait 5
+;s scx_cpu1_ds_start_apps("2.8")
+;wait 5
 
 ;; Check for the error events
-if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
-   (SCX_CPU1_find_event[4].num_found_messages = 1) then
-  write "<*> Passed - Table Load Error message rcvd."
-else
-  write "<!> Failed - Table Load Error messages were NOT rcvd."
-endif
+;if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
+;   (SCX_CPU1_find_event[4].num_found_messages = 1) then
+;  write "<*> Passed - Table Load Error message rcvd."
+;else
+;  write "<!> Failed - Table Load Error messages were NOT rcvd."
+;endif
 
 write ";***********************************************************************"
 write ";  Step 2.9: Enable DEBUG Event Messages "
@@ -581,16 +599,16 @@ ut_setupevents "SCX","CPU1","CFE_TBL",CFE_TBL_FILE_ACCESS_ERR_EID, "ERROR", 3
 ut_setupevents "SCX","CPU1",{DSAppName},DS_INIT_TBL_ERR_EID, "ERROR", 4
 
 ;; Start the apps
-s scx_cpu1_ds_start_apps("2.12")
-wait 5
+;s scx_cpu1_ds_start_apps("2.12")
+;wait 5
 
 ;; Check for the error events
-if (SCX_CPU1_find_event[3].num_found_messages = 2) AND ;;
-   (SCX_CPU1_find_event[4].num_found_messages = 2) then
-  write "<*> Passed - Table Load Error message rcvd."
-else
-  write "<!> Failed - Table Load Error messages were NOT rcvd."
-endif
+;if (SCX_CPU1_find_event[3].num_found_messages = 2) AND ;;
+;   (SCX_CPU1_find_event[4].num_found_messages = 2) then
+;  write "<*> Passed - Table Load Error message rcvd."
+;else
+;  write "<!> Failed - Table Load Error messages were NOT rcvd."
+;endif
 
 write ";***********************************************************************"
 write ";  Step 2.13: Restore the default Table files."
@@ -649,10 +667,11 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 2.16: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("2.13")
-wait 5
+;s scx_cpu1_ds_start_apps("2.13")
+;wait 5
 
 ;; Wait until at least 2 Housekeeping packets are rcv'd
+currSCnt = {seqTlmItem}
 expectedSCnt = currSCnt + 2
 
 ut_tlmwait {seqTlmItem}, {expectedSCnt}
@@ -833,8 +852,8 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 3.4: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("3.4")
-wait 5
+;s scx_cpu1_ds_start_apps("3.4")
+;wait 5
 
 ;; Verify 9005, and 9007
 if (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_FilterLoadCnt = 1) then
@@ -1074,16 +1093,16 @@ write ";  Step 4.2.1: Stop the DS and TST_DS Applications. "
 write ";*********************************************************************"
 local cmdCtr = SCX_CPU1_ES_CMDPC + 2
 
-/SCX_CPU1_ES_DELETEAPP Application="TST_DS"
+/SCX_CPU1_ES_RESTARTAPP Application="TST_DS"
 wait 4
-/SCX_CPU1_ES_DELETEAPP Application=DSAppName
+/SCX_CPU1_ES_RESTARTAPP Application=DSAppName
 wait 4
 
 ut_tlmwait  SCX_CPU1_ES_CMDPC, {cmdCtr}
 if (UT_TW_Status = UT_Success) then
-  write "<*> Passed - DS and TST_DS stop app commands sent properly."
+  write "<*> Passed - DS and TST_DS app commands sent properly."
 else
-  write "<!> Failed - Stop App commands did not increment CMDPC."
+  write "<!> Failed - App commands did not increment CMDPC."
 endif
 
 wait 5
@@ -1091,8 +1110,8 @@ wait 5
 write ";*********************************************************************"
 write ";  Step 4.2.2: Start the DS and TST_DS Applications. "
 write ";*********************************************************************"
-s scx_cpu1_ds_start_apps("4.2.2")
-wait 5
+;s scx_cpu1_ds_start_apps("4.2.2")
+;wait 5
 
 ;; Verify 9005, and 9007
 if (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_FilterLoadCnt = 1) then

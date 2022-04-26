@@ -1,27 +1,27 @@
 /************************************************************************
-** File: ds_file.h 
+** File: ds_file.h
 **
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
-**  application version 2.5.2” 
-**  
-**  Copyright © 2019 United States Government as represented by the Administrator 
-**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
+**  application version 2.5.2”
 **
-**  Licensed under the Apache License, Version 2.0 (the "License"); 
-**  you may not use this file except in compliance with the License. 
-**  You may obtain a copy of the License at 
-**  http://www.apache.org/licenses/LICENSE-2.0 
-**  Unless required by applicable law or agreed to in writing, software 
-**  distributed under the License is distributed on an "AS IS" BASIS, 
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-**  See the License for the specific language governing permissions and 
-**  limitations under the License. 
-**  
+**  Copyright © 2019 United States Government as represented by the Administrator
+**  of the National Aeronautics and Space Administration.  All Rights Reserved.
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**  http://www.apache.org/licenses/LICENSE-2.0
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
 ** limitations under the License.
 **
 ** Purpose:
@@ -36,28 +36,28 @@
 
 #include "ds_platform_cfg.h"
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* DS file header definitions                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
 /*
 ** \brief DS File Header (follows cFE file header at start of file)
 */
 typedef struct
 {
-    uint32  CloseSeconds;                               /**< \brief Time when file was closed */
-    uint32  CloseSubsecs;        
+    uint32 CloseSeconds; /**< \brief Time when file was closed */
+    uint32 CloseSubsecs;
 
-    uint16  FileTableIndex;                             /**< \brief Destination file table index */
-    uint16  FileNameType;                               /**< \brief Filename type - count vs time */
+    uint16 FileTableIndex; /**< \brief Destination file table index */
+    uint16 FileNameType;   /**< \brief Filename type - count vs time */
 
-    char    FileName[DS_TOTAL_FNAME_BUFSIZE];           /**< \brief On-board filename */
+    char FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief On-board filename */
 
 } DS_FileHeader_t;
-
+#endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -67,7 +67,7 @@ typedef struct
 
 /*******************************************************************/
 /*  \brief Data Storage packet processor
-**  
+**
 **  \par Description
 **       This function searches for a packet filter table entry that
 **       matches the input argument Message ID. If no matching packet
@@ -81,18 +81,17 @@ typedef struct
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Message ID (extracted from message pointer)
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
 */
-void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Prepare to write to a data storage destination file
-**  
+**
 **  \par Description
 **       This function is called for packets that have passed the
 **       common CFS filter algorithm. The function first queries the
@@ -107,18 +106,17 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_AppFileStatus_t, #DS_DestFileEntry_t
 */
-void DS_FileSetupWrite(int32 FileIndex, CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Write data (packet) to file
-**  
+**
 **  \par Description
 **       This function writes data to an existing data storage
 **       destination file and updates the associated data rate
@@ -127,19 +125,18 @@ void DS_FileSetupWrite(int32 FileIndex, CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **  \param [in]  Pointer to packet data
 **  \param [in]  Length of packet data
 **
 **  \sa #DS_AppFileStatus_t, #DS_DestFileEntry_t
 */
-void DS_FileWriteData(int32 FileIndex, void *FileData, uint32 DataLength);
-
+void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength);
 
 /*******************************************************************/
 /*  \brief Write data storage file header
-**  
+**
 **  \par Description
 **       This function is called just after opening a new data storage
 **       destination file. The purpose of the function is to write
@@ -150,17 +147,16 @@ void DS_FileWriteData(int32 FileIndex, void *FileData, uint32 DataLength);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **
 **  \sa #DS_FileUpdateHeader
 */
 void DS_FileWriteHeader(int32 FileIndex);
 
-
 /*******************************************************************/
 /*  \brief File write error handler
-**  
+**
 **  \par Description
 **       This function is called upon detection of a file I/O error
 **       that occurred while writing to a data storage destination
@@ -172,7 +168,7 @@ void DS_FileWriteHeader(int32 FileIndex);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **  \param [in]  Length of data being written to file
 **
@@ -186,7 +182,7 @@ void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult);
 
 /*******************************************************************/
 /*  \brief Create a new data storage destination file
-**  
+**
 **  \par Description
 **       This function is called when a packet has passed the filter
 **       test and the destination file does not exist. The file may
@@ -198,7 +194,7 @@ void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **
 **  \sa #DS_HkFileStatus_t, #DS_DestFileEntry_t
@@ -211,7 +207,7 @@ void DS_FileCreateDest(uint32 FileIndex);
 
 /*******************************************************************/
 /*  \brief Construct the next filename for a destination file
-**  
+**
 **  \par Description
 **       The filename is constructed using data from the Destination
 **       File Table.  First, the pathname and basename fields from
@@ -222,17 +218,16 @@ void DS_FileCreateDest(uint32 FileIndex);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **
 **  \sa #DS_DestFileEntry_t
 */
 void DS_FileCreateName(uint32 FileIndex);
 
-
 /*******************************************************************/
 /*  \brief Construct the sequence portion of a filename
-**  
+**
 **  \par Description
 **       The filename sequence string will be constructed to contain
 **       either the current date and time, or a file sequence count
@@ -244,7 +239,7 @@ void DS_FileCreateName(uint32 FileIndex);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Pointer to buffer for sequence portion of filename
 **  \param [in]  Filename type (date and time vs sequence count)
 **  \param [in]  Sequence counter (used only if type is sequence)
@@ -253,10 +248,9 @@ void DS_FileCreateName(uint32 FileIndex);
 */
 void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count);
 
-
 /*******************************************************************/
 /*  \brief Update destination file header (prior to closing)
-**  
+**
 **  \par Description
 **       This function is called just before closing a data storage
 **       destination file. The purpose of the function is to update
@@ -267,7 +261,7 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **
 **  \sa #DS_FileWriteHeader
@@ -280,7 +274,7 @@ void DS_FileUpdateHeader(int32 FileIndex);
 
 /*******************************************************************/
 /*  \brief Close selected destination file
-**  
+**
 **  \par Description
 **       This function may be called from the DS Close File command
 **       handler, from the file age processor, from the file size
@@ -291,17 +285,16 @@ void DS_FileUpdateHeader(int32 FileIndex);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination file index
 **
 **  \sa #DS_HkFileStatus_t, #DS_DestFileEntry_t
 */
 void DS_FileCloseDest(int32 FileIndex);
 
-
 /*******************************************************************/
 /*  \brief File age processor
-**  
+**
 **  \par Description
 **       This function is called upon receipt of the DS 1Hz command
 **       (if defined) or upon receipt of the DS housekeeping request
@@ -315,16 +308,14 @@ void DS_FileCloseDest(int32 FileIndex);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Elapsed seconds since previous call
 **
 **  \sa #DS_HkFileStatus_t, #DS_DestFileEntry_t
 */
 void DS_FileTestAge(uint32 ElapsedSeconds);
 
-
 #endif /* _ds_file_h_ */
-
 
 /************************/
 /*  End of File Comment */

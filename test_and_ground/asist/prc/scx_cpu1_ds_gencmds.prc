@@ -222,8 +222,8 @@ write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications. Verify "
 write ";  that the DS Housekeeping telemetry packet is being generated and the "
 write ";  appropriate items are initialized to zero (0). "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("1.4")
-wait 5
+;s scx_cpu1_ds_start_apps("1.4")
+;wait 5
 
 ;; Verify the Housekeeping Packet is being generated
 local hkPktId

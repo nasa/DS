@@ -1,22 +1,22 @@
 /************************************************************************
-** File: ds_table.h 
+** File: ds_table.h
 **
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
-**  application version 2.5.2” 
-**  
-**  Copyright © 2019 United States Government as represented by the Administrator 
-**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
+**  application version 2.5.2”
 **
-**  Licensed under the Apache License, Version 2.0 (the "License"); 
-**  you may not use this file except in compliance with the License. 
-**  You may obtain a copy of the License at 
-**  http://www.apache.org/licenses/LICENSE-2.0 
-**  Unless required by applicable law or agreed to in writing, software 
-**  distributed under the License is distributed on an "AS IS" BASIS, 
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-**  See the License for the specific language governing permissions and 
-**  limitations under the License. 
-**  
+**  Copyright © 2019 United States Government as represented by the Administrator
+**  of the National Aeronautics and Space Administration.  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**  http://www.apache.org/licenses/LICENSE-2.0
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
 ** Purpose:
 **  CFS Data Storage (DS) table definitions
 **
@@ -27,9 +27,7 @@
 
 #include "cfe.h"
 
-
 #include "ds_platform_cfg.h"
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -37,19 +35,18 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#define DS_HASH_TABLE_ENTRIES  256
-#define DS_HASH_TABLE_MASK     0x00FF
+#define DS_HASH_TABLE_ENTRIES 256
+#define DS_HASH_TABLE_MASK    0x00FF
 
 /**  \brief DS Hash Table Linked List structure */
 typedef struct DS_HashTag
 {
-    CFE_SB_MsgId_t      MessageID;     /**< \brief DS filter table entry MessageID */
-    uint16              Index;         /**< \brief DS filter table entry index */
+    CFE_SB_MsgId_t MessageID; /**< \brief DS filter table entry MessageID */
+    uint16         Index;     /**< \brief DS filter table entry index */
 
-    struct DS_HashTag  *Next;          /**< \brief Next hash table linked list element */
+    struct DS_HashTag *Next; /**< \brief Next hash table linked list element */
 
 } DS_HashLink_t;
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -60,62 +57,60 @@ typedef struct DS_HashTag
 /**  \brief DS Packet Filter Table structures */
 typedef struct
 {
-	uint8               FileTableIndex;                        /**< \brief Index into Destination File Table */
-    uint8               FilterType;                            /**< \brief Filter type (packet count or time) */
+    uint8 FileTableIndex; /**< \brief Index into Destination File Table */
+    uint8 FilterType;     /**< \brief Filter type (packet count or time) */
 
-    uint16              Algorithm_N;                           /**< \brief Algorithm value N (pass this many) */
-    uint16              Algorithm_X;                           /**< \brief Algorithm value X (out of this many) */
-    uint16              Algorithm_O;                           /**< \brief Algorithm value O (at this offset) */
+    uint16 Algorithm_N; /**< \brief Algorithm value N (pass this many) */
+    uint16 Algorithm_X; /**< \brief Algorithm value X (out of this many) */
+    uint16 Algorithm_O; /**< \brief Algorithm value O (at this offset) */
 
 } DS_FilterParms_t;
 
 typedef struct
 {
-    CFE_SB_MsgId_t      MessageID;                             /**< \brief Packet MessageID (may be cmd or tlm)
-                                                                    \details DS defines ID zero to be unused */
+    CFE_SB_MsgId_t MessageID; /**< \brief Packet MessageID (may be cmd or tlm)
+                                   \details DS defines ID zero to be unused */
 
-    DS_FilterParms_t    Filter[DS_FILTERS_PER_PACKET];         /**< \brief One entry for each packet destination */
+    DS_FilterParms_t Filter[DS_FILTERS_PER_PACKET]; /**< \brief One entry for each packet destination */
 
 } DS_PacketEntry_t;
 
 typedef struct
 {
-    char                Descriptor[DS_DESCRIPTOR_BUFSIZE];     /**< \brief Description such as "Safehold Filter Table" */
-    DS_PacketEntry_t    Packet[DS_PACKETS_IN_FILTER_TABLE];    /**< \brief One entry for each filtered packet */
+    char             Descriptor[DS_DESCRIPTOR_BUFSIZE];  /**< \brief Description such as "Safehold Filter Table" */
+    DS_PacketEntry_t Packet[DS_PACKETS_IN_FILTER_TABLE]; /**< \brief One entry for each filtered packet */
 
 } DS_FilterTable_t;
 
-
-/**  \brief DS Destination File Table structures 
+/**  \brief DS Destination File Table structures
      \details Note that the sum of the string buffer sizes exceeds the max for a qualified filename (OS_MAX_PATH_LEN).
      This allows a variable definition of how many characters may be used in the pathname versus the filename.
      The qualified filename length will be verified at run-time as each filename is created. */
 typedef struct
 {
 #if (DS_MOVE_FILES == true)
-    char                Movename[DS_PATHNAME_BUFSIZE];         /**< \brief Move files to this dir after close */
+    char Movename[DS_PATHNAME_BUFSIZE]; /**< \brief Move files to this dir after close */
 #endif
-    char                Pathname[DS_PATHNAME_BUFSIZE];         /**< \brief Path portion of filename */
-    char                Basename[DS_BASENAME_BUFSIZE];         /**< \brief Base portion of filename */
-    char                Extension[DS_EXTENSION_BUFSIZE];       /**< \brief Extension portion of filename */
+    char Pathname[DS_PATHNAME_BUFSIZE];   /**< \brief Path portion of filename */
+    char Basename[DS_BASENAME_BUFSIZE];   /**< \brief Base portion of filename */
+    char Extension[DS_EXTENSION_BUFSIZE]; /**< \brief Extension portion of filename */
 
-    uint16              FileNameType;                          /**< \brief Filename type - count vs time */
-    uint16              EnableState;                           /**< \brief File enable/disable state */
+    uint16 FileNameType; /**< \brief Filename type - count vs time */
+    uint16 EnableState;  /**< \brief File enable/disable state */
 
-    uint32              MaxFileSize;                           /**< \brief Max file size (bytes) */
-    uint32              MaxFileAge;                            /**< \brief Max file age (seconds) */
+    uint32 MaxFileSize; /**< \brief Max file size (bytes) */
+    uint32 MaxFileAge;  /**< \brief Max file age (seconds) */
 
-    uint32              SequenceCount;                         /**< \brief Sequence count portion of filename */
+    uint32 SequenceCount; /**< \brief Sequence count portion of filename */
 
 } DS_DestFileEntry_t;
 
 typedef struct
 {
-    char                Descriptor[DS_DESCRIPTOR_BUFSIZE];     /**< \brief Description such as "HK Telemetry File" */
-    DS_DestFileEntry_t  File[DS_DEST_FILE_CNT];                /**< \brief One entry for each destination data file */
+    char               Descriptor[DS_DESCRIPTOR_BUFSIZE]; /**< \brief Description such as "HK Telemetry File" */
+    DS_DestFileEntry_t File[DS_DEST_FILE_CNT];            /**< \brief One entry for each destination data file */
 
 } DS_DestFileTable_t;
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -125,7 +120,7 @@ typedef struct
 
 /*******************************************************************/
 /*  \brief Startup table initialization function
-**  
+**
 **  \par Description
 **       This function creates the Packet Filter and Destination
 **       File tables. The function then tries to load default table
@@ -138,17 +133,16 @@ typedef struct
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
 */
 int32 DS_TableInit(void);
 
-
 /*******************************************************************/
 /*  \brief Manage destination file table loads, dumps, etc.
-**  
+**
 **  \par Description
 **       This function will provide cFE Table Services with an
 **       opportunity to make updates to the Destination File Table
@@ -162,17 +156,16 @@ int32 DS_TableInit(void);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFile
 */
-void  DS_TableManageDestFile(void);
-
+void DS_TableManageDestFile(void);
 
 /*******************************************************************/
 /*  \brief Manage packet filter table loads, dumps, etc.
-**  
+**
 **  \par Description
 **       This function will provide cFE Table Services with an
 **       opportunity to make updates to the Packet Filter Table
@@ -188,17 +181,16 @@ void  DS_TableManageDestFile(void);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
 */
-void  DS_TableManageFilter(void);
-
+void DS_TableManageFilter(void);
 
 /*******************************************************************/
 /*  \brief Verify destination file table data
-**  
+**
 **  \par Description
 **       This function is called by cFE Table Services to verify
 **       the contents of a candidate Destination File Table.  This
@@ -212,17 +204,16 @@ void  DS_TableManageFilter(void);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Pointer to Destination File Table data
 **
 **  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFileEntry
 */
-int32 DS_TableVerifyDestFile(void *TableData);
-
+int32 DS_TableVerifyDestFile(const void *TableData);
 
 /*******************************************************************/
 /*  \brief Verify destination file table entry
-**  
+**
 **  \par Description
 **       This function is called from the Destination File Table
 **       verification function to verify a single table entry.
@@ -231,23 +222,21 @@ int32 DS_TableVerifyDestFile(void *TableData);
 **
 **  \par Called From:
 **       - Destination File Table validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Pointer to selected Destination File Table entry
 **  \param [in]  Index of selected Destination File Table entry
 **  \param [in]  Previous verification result (event for 1st err)
 **
 **  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFile
 */
-bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry,
-                                    uint8 TableIndex, int32 ErrorCount);
-
+bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableIndex, int32 ErrorCount);
 
 /*******************************************************************/
 /*  \brief Verify packet filter table data
-**  
+**
 **  \par Description
 **       This function is called by cFE Table Services to verify
 **       the contents of a candidate Packet Filter Table.  This
@@ -258,20 +247,19 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry,
 **
 **  \par Called From:
 **       - cFE Table Services
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Pointer to Packet Filter Table data
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilterEntry
 */
-int32 DS_TableVerifyFilter(void *TableData);
-
+int32 DS_TableVerifyFilter(const void *TableData);
 
 /*******************************************************************/
 /*  \brief Verify packet filter table entry
-**  
+**
 **  \par Description
 **       This function is called from the Packet Filter Table
 **       verification function to verify a single table entry.
@@ -280,22 +268,20 @@ int32 DS_TableVerifyFilter(void *TableData);
 **
 **  \par Called From:
 **       - Packet Filter Table validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Pointer to a Packet Filter Table entry
 **  \param [in]  Index of selected Packet Filter Table entry
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
 */
-bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry,
-                                  int32 TableIndex, int32 ErrorCount);
-
+bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount);
 
 /*******************************************************************/
 /*  \brief Test for unused table entry
-**  
+**
 **  \par Description
 **       This function returns true if a table entry is unused.
 **       Unused is defined as containing nothing but zero's.
@@ -303,21 +289,20 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry,
 **  \par Called From:
 **       - Packet Filter Table validation function
 **       - Destination File Table validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Pointer to the table entry data
 **  \param [in]  Length of the table entry data
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
 */
-bool DS_TableEntryUnused(void *TableEntry, int32 BufferSize);
-
+bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize);
 
 /*******************************************************************/
 /*  \brief Verify destination file index
-**  
+**
 **  \par Description
 **       This function verifies that the indicated packet filter
 **       table file table index is within bounds - as defined by
@@ -338,20 +323,19 @@ bool DS_TableEntryUnused(void *TableEntry, int32 BufferSize);
 **       - Command handler (set file sequence count)
 **       - Command handler (close file)
 **       - Packet Filter Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Destination File Table Index value
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
 */
 bool DS_TableVerifyFileIndex(uint16 FileTableIndex);
 
-
 /*******************************************************************/
 /*  \brief Verify packet filter parameters
-**  
+**
 **  \par Description
 **       This function verifies that the indicated packet filter
 **       table filter parameters are within bounds.
@@ -361,24 +345,21 @@ bool DS_TableVerifyFileIndex(uint16 FileTableIndex);
 **  \par Called From:
 **       - Command handler (set filter parms)
 **       - Packet Filter Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Filter Algorithm N value
 **  \param [in]  Filter Algorithm X value
 **  \param [in]  Filter Algorithm O value
 **
 **  \sa #DS_TableVerifyType, #DS_TableVerifyState, #DS_DestFileEntry_t
 */
-bool DS_TableVerifyParms(uint16 Algorithm_N,
-                            uint16 Algorithm_X,
-                            uint16 Algorithm_O);
-
+bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O);
 
 /*******************************************************************/
 /*  \brief Verify packet filter type or filename type
-**  
+**
 **  \par Description
 **       This common function verifies that the indicated packet
 **       filter table filter type, or destination file table
@@ -390,20 +371,19 @@ bool DS_TableVerifyParms(uint16 Algorithm_N,
 **       - Command handler (set filename type)
 **       - Packet Filter Table entry validation function
 **       - Destination File Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Filter Type or Filename Type value
 **
 **  \sa #DS_TableVerifyState, #DS_TableVerifySize, #DS_DestFileEntry_t
 */
 bool DS_TableVerifyType(uint16 TimeVsCount);
 
-
 /*******************************************************************/
 /*  \brief Verify application or destination file enable/disable state
-**  
+**
 **  \par Description
 **       This function verifies that the indicated destination file
 **       enable/disable state is within bounds.
@@ -413,20 +393,19 @@ bool DS_TableVerifyType(uint16 TimeVsCount);
 **       - Command handler (set application enable/disable state)
 **       - Command handler (set file enable/disable state)
 **       - Destination File Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Enable/Disable State value
 **
 **  \sa #DS_TableVerifySize, #DS_TableVerifyAge, #DS_DestFileEntry_t
 */
 bool DS_TableVerifyState(uint16 EnableState);
 
-
 /*******************************************************************/
 /*  \brief Verify destination file max size limit
-**  
+**
 **  \par Description
 **       This function verifies that the indicated destination file
 **       max size limit is within bounds - as defined by platform
@@ -435,20 +414,19 @@ bool DS_TableVerifyState(uint16 EnableState);
 **  \par Called From:
 **       - Command handler (set file max size limit)
 **       - Destination File Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Maximum Size Limit value
 **
 **  \sa #DS_TableVerifyAge, #DS_TableVerifyCount, #DS_DestFileEntry_t
 */
 bool DS_TableVerifySize(uint32 MaxFileSize);
 
-
 /*******************************************************************/
 /*  \brief Verify destination file max age limit
-**  
+**
 **  \par Description
 **       This function verifies that the indicated destination file
 **       max age limit is within bounds - as defined by platform
@@ -457,20 +435,19 @@ bool DS_TableVerifySize(uint32 MaxFileSize);
 **  \par Called From:
 **       - Command handler (set file max age limit)
 **       - Destination File Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Maximum Age Limit value
 **
 **  \sa #DS_TableVerifySize, #DS_TableVerifyCount, #DS_DestFileEntry_t
 */
 bool DS_TableVerifyAge(uint32 MaxFileAge);
 
-
 /*******************************************************************/
 /*  \brief Verify destination file sequence count
-**  
+**
 **  \par Description
 **       This function verifies that the indicated destination file
 **       sequence count is within bounds - as defined by platform
@@ -479,20 +456,19 @@ bool DS_TableVerifyAge(uint32 MaxFileAge);
 **  \par Called From:
 **       - Command handler (set file sequence count)
 **       - Destination File Table entry validation function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Sequence Count value
 **
 **  \sa #DS_TableVerifySize, #DS_TableVerifyAge, #DS_DestFileEntry_t
 */
 bool DS_TableVerifyCount(uint32 SequenceCount);
 
-
 /*******************************************************************/
 /*  \brief Subscribe to packet filter table packets
-**  
+**
 **  \par Description
 **       A new Packet Filter Table is available for use. This
 **       function is called to subscribe to packets referenced
@@ -500,42 +476,40 @@ bool DS_TableVerifyCount(uint32 SequenceCount);
 **
 **  \par Called From:
 **       - Packet Filter Table manage function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       Caller has determined that the new filter table exists.
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableUnsubscribe
 */
 void DS_TableSubscribe(void);
 
-
 /*******************************************************************/
 /*  \brief Unsubscribe to packet filter table packets
-**  
+**
 **  \par Description
-**       A new Packet Filter Table is available for use. Prior to 
+**       A new Packet Filter Table is available for use. Prior to
 **       subscribing to the packets referenced by the new filter
 **       table, this function is called to unsubscribe to packets
 **       referenced by the old filter table.
 **
 **  \par Called From:
 **       - Packet Filter Table manage function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       Caller has determined that the old filter table exists.
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableSubscribe
 */
 void DS_TableUnsubscribe(void);
 
-
 /*******************************************************************/
 /*  \brief Create local area within the Critical Data Store (CDS)
-**  
+**
 **  \par Description
 **       This function creates a new CDS area or gets access to a
 **       CDS area created prior to a processor reset. The CDS area
@@ -544,20 +518,19 @@ void DS_TableUnsubscribe(void);
 **
 **  \par Called From:
 **       - Application initialization function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_DestFileEntry_t
 */
 int32 DS_TableCreateCDS(void);
 
-
 /*******************************************************************/
 /*  \brief Update CDS with current filename sequence count values
-**  
+**
 **  \par Description
 **       This function writes the current filename sequence count
 **       values to the Critical Data Store. The function is called
@@ -567,20 +540,19 @@ int32 DS_TableCreateCDS(void);
 **       - Destination table data update handler
 **       - Destination file creation function
 **       - Command handler (set sequence count)
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_DestFileEntry_t
 */
 void DS_TableUpdateCDS(void);
 
-
 /*******************************************************************/
 /*  \brief Hash table function
-**  
+**
 **  \par Description
 **       This function converts a cFE MessageID into an index into
 **       the hash table. The indexed hash table entry contains a
@@ -593,10 +565,10 @@ void DS_TableUpdateCDS(void);
 **  \par Called From:
 **       - Hash table creation function (after load filter table)
 **       - Find messageID in filter table function
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Software Bus message ID (#CFE_SB_MsgId_t)
 **  \param [out] Index of hash table entry for input message ID
 **
@@ -604,10 +576,9 @@ void DS_TableUpdateCDS(void);
 */
 uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID);
 
-
 /*******************************************************************/
 /*  \brief Create hash table function
-**  
+**
 **  \par Description
 **       This function populates the hash table following a new
 **       load of the packet filter table. Because there may be
@@ -619,30 +590,29 @@ uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID);
 **
 **  \par Called From:
 **       - Filter table manage updates function (after table load)
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  (none)
 **
 **  \sa #DS_HashLink_t, #DS_TableHashFunction, #DS_TableFindMsgID
 */
 void DS_TableCreateHash(void);
 
-
 /*******************************************************************/
 /*  \brief Adds a message ID to the hash table
-**  
+**
 **  \par Description
 **       This function populates the hash table with a new message ID
 **
 **  \par Called From:
 **       - Creation of Hash Table
 **       - Command to add a MID
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Software Bus message ID (#CFE_SB_MsgId_t)
 **  \param [in] Filter table index for message ID
 **  \param [out] Hash table index for message ID
@@ -653,7 +623,7 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex);
 
 /*******************************************************************/
 /*  \brief Search packet filter table for message ID
-**  
+**
 **  \par Description
 **       This function searches for a packet filter table entry that
 **       matches the input argument message ID.
@@ -664,17 +634,16 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex);
 **       - Command handler (set filter type)
 **       - Command handler (set filter parms)
 **       - Command handler (add messageID to filter table)
-**       
+**
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
+**
 **  \param [in]  Software Bus message ID (#CFE_SB_MsgId_t)
 **  \param [out] Filter table index for message ID
 **
 **  \sa #DS_HashLink_t, #DS_TableHashFunction, #DS_TableCreateHash
 */
 int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID);
-
 
 #endif /* _ds_table_h_ */
 

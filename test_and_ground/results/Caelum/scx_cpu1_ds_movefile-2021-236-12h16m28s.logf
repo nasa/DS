@@ -1,0 +1,2072 @@
+21-236-12:16:28.725 00     UT_RUNPROC/99       
+21-236-12:16:28.725 00     UT_RUNPROC/100      ; Build the database prefix using SC and CPU definitions from cfe_utils.h
+21-236-12:16:28.725 00     UT_RUNPROC/101      local db_prefix, cpu_prefix
+21-236-12:16:28.725 00     UT_RUNPROC/102      
+21-236-12:16:28.725 00     UT_RUNPROC/103      ; If SC is set, use it
+21-236-12:16:28.725 00     UT_RUNPROC/104      if (SC <> "") then
+21-236-12:16:28.725 00     UT_RUNPROC/105        db_prefix = SC
+21-236-12:16:28.725 00     UT_RUNPROC/106      endif
+21-236-12:16:28.725 00     UT_RUNPROC/107      
+21-236-12:16:28.725 00     UT_RUNPROC/109      db_prefix = db_prefix & CPU_CFG
+21-236-12:16:28.726 00     UT_RUNPROC/110      
+21-236-12:16:28.726 00     UT_RUNPROC/111      cpu_prefix = db_prefix
+21-236-12:16:28.726 00     UT_RUNPROC/112      
+21-236-12:16:28.726 00     UT_RUNPROC/113      ; Set the database prefix for CPU1
+21-236-12:16:28.726 00     UT_RUNPROC/114      if (numCPUs > 1) then
+21-236-12:16:28.726 00     UT_RUNPROC/116      endif
+21-236-12:16:28.726 00     UT_RUNPROC/117      
+21-236-12:16:28.726 00     UT_RUNPROC/118      ; setup the database mnemonics for CPU1
+21-236-12:16:28.736 00     UT_RUNPROC/119      local cksumItem = cpu_prefix & "_ES_CKSUM"
+21-236-12:16:28.736 00     UT_RUNPROC/120      local cfeMajorVerItem = cpu_prefix & "_ES_CFEMAJORVER"
+21-236-12:16:28.736 00     UT_RUNPROC/121      local cfeMinorVerItem = cpu_prefix & "_ES_CFEMINORVER"
+21-236-12:16:28.736 00     UT_RUNPROC/122      local cfeRevisionItem = cpu_prefix & "_ES_CFEREVISION"
+21-236-12:16:28.736 00     UT_RUNPROC/123      local cfeMissionRevItem = cpu_prefix & "_ES_CFEMSNREV"
+21-236-12:16:28.736 00     UT_RUNPROC/124      local osMajorVerItem = cpu_prefix & "_ES_OSMAJORVER"
+21-236-12:16:28.736 00     UT_RUNPROC/125      local osMinorVerItem = cpu_prefix & "_ES_OSMINORVER"
+21-236-12:16:28.736 00     UT_RUNPROC/126      local osRevisionItem = cpu_prefix & "_ES_OSREVISION"
+21-236-12:16:28.736 00     UT_RUNPROC/127      local osMissionRevItem = cpu_prefix & "_ES_OSMISSIONREV"
+21-236-12:16:28.736 00     UT_RUNPROC/128      
+21-236-12:16:28.736 00     UT_RUNPROC/129      ;
+21-236-12:16:28.736 00     UT_RUNPROC/130      ; Output FSW configuration information
+21-236-12:16:28.736 00     UT_RUNPROC/131      ;
+21-236-12:16:28.736 00     UT_RUNPROC/132      write "****************** FSW Configuration ******************"
+21-236-12:16:28.736 00     SPR-I:OPRO         ****************** FSW Configuration ******************
+21-236-12:16:28.736 00     UT_RUNPROC/134      if (numCPUs = 1) then
+21-236-12:16:28.737 00     UT_RUNPROC/135        write "        Checksum:    ", {cksumItem}
+21-236-12:16:28.737 00     SPR-I:OPRO                 Checksum:    29237
+21-236-12:16:28.737 00     UT_RUNPROC/136        write "        cFE Version: ", {cfeMajorVerItem} & "." & {cfeMinorVerItem} & "." & {cfeRevisionItem} & "." & {cfeMissionRevItem}
+21-236-12:16:28.737 00     SPR-I:OPRO                 cFE Version: 6.7.99.0
+21-236-12:16:28.737 00     UT_RUNPROC/137        write "        OS Version:  ", {osMajorVerItem} & "." & {osMinorVerItem} & "." & {osRevisionItem} & "." & {osMissionRevItem}
+21-236-12:16:28.737 00     SPR-I:OPRO                 OS Version:  5.0.0.255
+21-236-12:16:28.737 00     UT_RUNPROC/138        write " "
+21-236-12:16:28.737 00     SPR-I:OPRO          
+21-236-12:16:28.742 00     UT_RUNPROC/139      endif
+21-236-12:16:28.742 00     UT_RUNPROC/140      
+21-236-12:16:28.742 00     UT_RUNPROC/141      if (numCPUs >= 2) then
+21-236-12:16:28.742 00     UT_RUNPROC/166      endif
+21-236-12:16:28.742 00     UT_RUNPROC/167      
+21-236-12:16:28.742 00     UT_RUNPROC/168      ; This proc only supports up to 3 CPUs.
+21-236-12:16:28.742 00     UT_RUNPROC/169      ; If there are more than 3, the additional CPUs must be added below
+21-236-12:16:28.742 00     UT_RUNPROC/170      if (numCPUs = 3) then
+21-236-12:16:28.742 00     UT_RUNPROC/189      endif
+21-236-12:16:28.742 00     UT_RUNPROC/190      
+21-236-12:16:28.742 00     UT_RUNPROC/191      write "        Connection Status"
+21-236-12:16:28.742 00     SPR-I:OPRO                 Connection Status
+21-236-12:16:28.742 00     UT_RUNPROC/192      write "        -----------------"
+21-236-12:16:28.742 00     SPR-I:OPRO                 -----------------
+21-236-12:16:28.742 00     UT_RUNPROC/193      write "        CFDP: ", %select(packet_valid("my_entity_id"),"UP","DOWN")
+21-236-12:16:28.742 00     SPR-I:OPRO                 CFDP: DOWN
+21-236-12:16:28.742 00     UT_RUNPROC/194      write "        UDP: ", p@GSE_ICHAN
+21-236-12:16:28.742 00     SPR-I:OPRO                 UDP:  UP 
+21-236-12:16:28.742 00     UT_RUNPROC/195      write "        SWTS: ", p@GSE_SCHAN
+21-236-12:16:28.742 00     SPR-I:OPRO                 SWTS:  UNK
+21-236-12:16:28.742 00     UT_RUNPROC/196      ; write "        ITOS: ", p@GSE_ZCHAN
+21-236-12:16:28.742 00     UT_RUNPROC/197      
+21-236-12:16:28.742 00     UT_RUNPROC/199      gds_label = ""
+21-236-12:16:28.742 00     UT_RUNPROC/200      gds_version = "N/A"
+21-236-12:16:28.743 00     UT_RUNPROC/201      
+21-236-12:16:28.743 00     UT_RUNPROC/202      #ifdef GDS_EXISTS
+21-236-12:16:28.743 00     UT_RUNPROC/203        write "        GDS:  ", %select(packet_valid("GDS_EXECUTOR_SIMULATION_TIME"),"UP", "DOWN")
+21-236-12:16:28.743 00     UT_RUNPROC/204        if (GSE_HCHAN = 1) then
+21-236-12:16:28.743 00     UT_RUNPROC/205          gds_label = "GDS"
+21-236-12:16:28.743 00     UT_RUNPROC/206          gds_version = GDS_EXECUTOR_GDS_VERSION_VALUE
+21-236-12:16:28.743 00     UT_RUNPROC/207        endif
+21-236-12:16:28.743 00     UT_RUNPROC/208      #endif
+21-236-12:16:28.743 00     UT_RUNPROC/209      
+21-236-12:16:28.743 00     UT_RUNPROC/211      write "        CMD / TLM Path"
+21-236-12:16:28.743 00     SPR-I:OPRO         
+21-236-12:16:28.743 00     UT_RUNPROC/211      write "        CMD / TLM Path"
+21-236-12:16:28.743 00     SPR-I:OPRO                 CMD / TLM Path
+21-236-12:16:28.743 00     UT_RUNPROC/212      write "        --------------"
+21-236-12:16:28.743 00     SPR-I:OPRO                 --------------
+21-236-12:16:28.743 00     UT_RUNPROC/213      if (GSE_ICHAN = 1) then
+21-236-12:16:28.743 00     UT_RUNPROC/214        cmd_tlm_path = "UDP"
+21-236-12:16:28.743 00     UT_RUNPROC/219      endif
+21-236-12:16:28.743 00     UT_RUNPROC/220      
+21-236-12:16:28.743 00     UT_RUNPROC/221      write "        ", cmd_tlm_path
+21-236-12:16:28.743 00     SPR-I:OPRO                 UDP
+21-236-12:16:28.743 00     UT_RUNPROC/222      write "        ", gds_label
+21-236-12:16:28.744 00     SPR-I:OPRO                 
+21-236-12:16:28.744 00     UT_RUNPROC/224      write "        ASIST / GDS Configuration"
+21-236-12:16:28.744 00     SPR-I:OPRO         
+21-236-12:16:28.745 00     UT_RUNPROC/224      write "        ASIST / GDS Configuration"
+21-236-12:16:28.745 00     SPR-I:OPRO                 ASIST / GDS Configuration
+21-236-12:16:28.745 00     UT_RUNPROC/225      write "        -------------------------"
+21-236-12:16:28.745 00     SPR-I:OPRO                 -------------------------
+21-236-12:16:28.745 00     UT_RUNPROC/226      write "        Workstation: ", %upper(%liv(LOCALHOST))
+21-236-12:16:28.745 00     SPR-I:OPRO                 Workstation: GS582CFSLAB4
+21-236-12:16:28.745 00     UT_RUNPROC/227      write "        Account: ", %env("ACCOUNT")
+21-236-12:16:28.745 00     SPR-I:OPRO                 Account: cfs_test
+21-236-12:16:28.745 00     UT_RUNPROC/228      write "        Version: ", ASIST_VERSION
+21-236-12:16:28.745 00     SPR-I:OPRO                 Version: 21.0.7
+21-236-12:16:28.745 00     UT_RUNPROC/229      write "        Tlm DB:  Version: ",vidtlm.version, "  Date: ", tlmdbdate, "  Time: ", vidtlm.timeof
+21-236-12:16:28.745 00     SPR-I:OPRO                 Tlm DB:  Version: 1.985  Date: 08-24-21  Time: 06:37:06 AM.
+21-236-12:16:28.745 00     UT_RUNPROC/230      write "        Cmd DB:  Version: ",%rpad(command_parm_attr("verid_cmd", "version", "description"),4," "),"  Date: ",cmddbdate,"  Time: ",command_parm_attr("verid_cmd", "timeof", "description")
+21-236-12:16:28.745 00     SPR-I:OPRO                 Cmd DB:  Version: 1.51  Date: 08-24-21  Time: 06:47:31 AM.EDT
+21-236-12:16:28.745 00     UT_RUNPROC/231      
+21-236-12:16:28.745 00     UT_RUNPROC/232      #ifdef GDS_EXISTS
+21-236-12:16:28.745 00     UT_RUNPROC/233        write "        GDS: ", gds_version
+21-236-12:16:28.745 00     UT_RUNPROC/234      #endif
+21-236-12:16:28.745 00     UT_RUNPROC/235      
+21-236-12:16:28.745 00     UT_RUNPROC/237      write "        Telemetry Info"
+21-236-12:16:28.745 00     SPR-I:OPRO         
+21-236-12:16:28.745 00     UT_RUNPROC/237      write "        Telemetry Info"
+21-236-12:16:28.746 00     SPR-I:OPRO                 Telemetry Info
+21-236-12:16:28.746 00     UT_RUNPROC/238      write "        --------------"
+21-236-12:16:28.746 00     SPR-I:OPRO                 --------------
+21-236-12:16:28.746 00     UT_RUNPROC/240      write "        Pkt Loss Count: N/A"
+21-236-12:16:28.746 00     SPR-I:OPRO                 Pkt Loss Count: N/A
+21-236-12:16:28.746 00     UT_RUNPROC/241      write "****************  End FSW Configuration ***************"
+21-236-12:16:28.746 00     SPR-I:OPRO         ****************  End FSW Configuration ***************
+21-236-12:16:28.746 00     UT_RUNPROC/242      ;
+21-236-12:16:28.746 00     UT_RUNPROC/243      ; Start the procedure
+21-236-12:16:28.746 00     UT_RUNPROC/244      ;
+21-236-12:16:28.746 00     UT_RUNPROC/245      write "Starting Procedure.... ", proc_to_run
+21-236-12:16:28.746 00     SPR-I:OPRO         Starting Procedure.... scx_cpu1_ds_movefile
+21-236-12:16:28.746 00     UT_RUNPROC/246      rstol_dir = "rstol 'start " & proc_to_run & "'"
+21-236-12:16:28.746 00     UT_RUNPROC/247      stime = %gmt
+21-236-12:16:28.746 00     UT_RUNPROC/248      native(rstol_dir)
+21-236-12:16:28.881 00     SPR-I:OPRI     --> start scx_cpu1_ds_movefile
+21-236-12:16:28.881 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_movefile.i
+21-236-12:16:28.886 00     SPR-I:STS          Procedure SCX_CPU1_DS_MOVEFILE started
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/2        ;*******************************************************************************
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/3        ;  Test Name:  ds_movefile
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/4        ;  Test Level: Build Verification
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/5        ;  Test Type:  Functional
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/6        ;
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/7        ;  Test Description
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/8        ;	This test verifies that the CFS Data Storage (DS) application writes
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/9        ;	messages to files according to the requirements and moves these files to
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/10       ;	the table-specified directory after they are closed.
+21-236-12:16:28.886 00 SCX_CPU1_DS_MO/11       ;
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/12       ;	This test should only be executed if the DS_MOVE_FILES confuguration
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/13       ;	parameter is set to TRUE. Also, for this test to work properly, this
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/14       ;	configuration parameter must be set to 1 in order to generate the
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/15       ;	necessary File Table rdl since STOL expects this to be 1.
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/16       ;
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/17       ;  Requirements Tested
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/18       ;   cDS1004	If DS accepts any command as valid, DS shall execute the
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/19       ;		command, increment the DS Valid Command Counter and issue an
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/20       ;		event message.
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/21       ;   cDS3000	DS shall construct filenames based on the following definitions
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/22       ;		provided in the Destination File table:
+21-236-12:16:28.887 00 SCX_CPU1_DS_MO/23       ;		path + base + [time/sequence characters] + extension
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/24       ;   cDS3000.1	If Filename Type indicates naming based on Sequence, the
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/25       ;		constructed filename will include a character representation of
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/26       ;		the Sequence Count value from the Destination File table.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/27       ;   cDS3000.1.1	If Filename Type indicates naming based on Sequence, the value
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/28       ;		of Sequence Count shall be incremented each time a file is
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/29       ;		created.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/30       ;   cDS3001	Prior to writing a packet to an existing destination file, DS
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/31       ;		shall verify that the resulting file size (after the write)
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/32       ;		shall not exceed the file size limit as defined in the
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/33       ;		Destination File Table.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/34       ;   cDS3001.1	If the resulting file size would exceed the file size limit then
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/35       ;		DS shall close the existing file and open another file.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/36       ;   cDS3001.2	A minimum of one packet shall be written to a file.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/37       ;   cDS3002	Periodically, DS shall test the age of all open destination
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/38       ;		files. If any file age exceeds the maximum age defined for that
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/39       ;		file in the Destination File Table, then DS shall close the
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/40       ;		file.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/41       ;   cDS3002.1	DS shall update file age and test age limits every time DS 
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/42       ;		processes its housekeeping telemetry request command.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/43       ;   cDS5002	Upon receipt of a Close File command, DS shall close the
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/44       ;		command-specified file.
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/45       ;   cDS8000	DS shall generate a housekeeping message containing the
+21-236-12:16:28.890 00 SCX_CPU1_DS_MO/46       ;		following:
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/47       ;			a. Valid Ground Command Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/48       ;			b. Command Rejected Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/49       ;			c. Packets discarded (DS was disabled) Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/50       ;			d. Packets discarded (pkt has no filter) Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/51       ;			e. Packets discarded (failed filter test) Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/52       ;			f. Packets that passed filter test Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/53       ;			g. Good destination file I/O Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/54       ;			h. Bad destination file I/O Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/55       ;			i. Good updates to secondary header Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/56       ;			j. Bad updates to secondary header Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/57       ;			k. Destination file table loads Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/58       ;			l. Failed attempts to get table data pointer Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/59       ;			m. Packet filter table loads Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/60       ;			n. Failed attempts to get table data pointer Counter
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/61       ;			o. Application State
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/62       ;			p. Destinatation file(s) state:
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/63       ;				1. File age
+21-236-12:16:28.891 00 SCX_CPU1_DS_MO/64       ;				2. File size
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/65       ;				3. File rate
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/66       ;				4. Sequence count
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/67       ;				5. Enable State
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/68       ;				6. Open State
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/69       ;				7. Filename
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/70       ;   cDS9000	Upon initialization of the SC Application, SC shall initialize
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/71       ;		the following data to Zero:
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/72       ;			a. Valid Ground Command Counter
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/73       ;			b. Command Rejected Counter
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/74       ;			c. Packets discarded (DS was disabled) Counter
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/75       ;			d. Packets discarded (pkt has no filter) Counter
+21-236-12:16:28.892 00 SCX_CPU1_DS_MO/76       ;			e. Packets discarded (failed filter test) Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/77       ;			f. Packets that passed filter test Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/78       ;			g. Good destination file I/O Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/79       ;			h. Bad destination file I/O Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/80       ;			i. Good updates to secondary header Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/81       ;			j. Bad updates to secondary header Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/82       ;			k. Destination file table loads Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/83       ;			l. Failed attempts to get table data pointer Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/84       ;			m. Packet filter table loads Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/85       ;			n. Failed attempts to get table data pointer Counter
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/86       ;
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/87       ;  Prerequisite Conditions
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/88       ;	The cFE is up and running and ready to accept commands.
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/89       ;	The DS commands and telemetry items exist in the GSE database.
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/90       ;	The display pages exist for the DS Housekeeping.
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/91       ;	A DS Test application (TST_DS) exists in order to fully test the DS
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/92       ;		Application.
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/93       ;
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/94       ;  Assumptions and Constraints
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/95       ;	None.
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/96       ;
+21-236-12:16:28.894 00 SCX_CPU1_DS_MO/97       ;  Change History
+21-236-12:16:28.896 00 SCX_CPU1_DS_MO/98       ;	Date		   Name		Description
+21-236-12:16:28.896 00 SCX_CPU1_DS_MO/99       ;	01/03/11	Walt Moleski	Original Procedure.
+21-236-12:16:28.896 00 SCX_CPU1_DS_MO/100      ;	01/23/15	Walt Moleski	Updated the comments to detail what
+21-236-12:16:28.896 00 SCX_CPU1_DS_MO/101      ;					must be done prior to executing this
+21-236-12:16:28.896 00 SCX_CPU1_DS_MO/102      ;					test procedure.
+21-236-12:16:28.897 00 SCX_CPU1_DS_MO/103      ;       01/31/17        Walt Moleski    Updated for DS 2.5.0.0 using CPU1 for
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/104      ;                                       commanding and added a hostCPU variable
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/105      ;                                       for the utility procs to connect to the
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/106      ;                                       proper host IP address.
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/107      ;
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/108      ;  Arguments
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/109      ;	None.
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/110      ;
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/111      ;  Procedures Called
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/112      ;	Name			Description
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/113      ;       ut_tlmwait	Wait for a specified telemetry point to update to a
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/114      ;			specified value. 
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/115      ;       ut_pfindicate	Print the pass fail status of a particular requirement
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/116      ;			number.
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/117      ;       ut_setupevents	Performs setup to verify that a particular event
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/118      ;			message was received by ASIST.
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/119      ;	ut_setrequirements	A directive to set the status of the cFE
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/120      ;			requirements array.
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/121      ;
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/122      ;  Expected Test Results and Analysis
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/123      ;
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/124      ;**********************************************************************
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/125      
+21-236-12:16:28.901 00 SCX_CPU1_DS_MO/127      local logging = %liv (log_procedure)
+21-236-12:16:28.902 00 SCX_CPU1_DS_MO/128      %liv (log_procedure) = FALSE
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/144      
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/145      #define DS_1004		0
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/146      #define DS_3000		1
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/147      #define DS_30001	2
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/148      #define DS_300011	3
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/149      #define DS_3001		4
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/150      #define DS_30011	5
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/151      #define DS_30012	6
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/152      #define DS_3002 	7
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/153      #define DS_30021 	8
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/154      #define DS_5002		9
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/155      #define DS_8000		10
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/156      #define DS_9000		11
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/157      
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/158      global ut_req_array_size = 11
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/159      global ut_requirement[0 .. ut_req_array_size]
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/160      
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.988 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.989 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/162        ut_requirement[i] = "U"
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/163      enddo
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/161      for i = 0 to ut_req_array_size DO
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/164      
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/165      ;**********************************************************************
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/166      ; Set the local values
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/167      ;**********************************************************************
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/168      local cfe_requirements[0 .. ut_req_array_size] = ["DS_1004", "DS_3000", "DS_3000.1", "DS_3000.1.1", "DS_3001", "DS_3001.1", "DS_3001.2", "DS_3002", "DS_3002.1", "DS_5002", "DS_8000", "DS_9000" ]
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/169      
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/170      ;**********************************************************************
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/171      ; Define local variables
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/172      ;**********************************************************************
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/173      LOCAL rawcmd
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/174      LOCAL fileTblPktId, fileTblAppId
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/175      LOCAL filterTblPktId, filterTblAppId
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/176      local DSAppName = "DS"
+21-236-12:16:28.990 00 SCX_CPU1_DS_MO/177      local fileTblName = DSAppName & "." & DS_DESTINATION_TBL_NAME
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/178      local filterTblName = DSAppName & "." & DS_FILTER_TBL_NAME
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/179      local ramDir = "RAM:0"
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/180      local hostCPU = "CPU3"
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/181      
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/184      fileTblPktId = "0F76"
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/185      fileTblAppId = 3958
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/186      filterTblPktId = "0F77"
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/187      filterTblAppId = 3959
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/188      
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/189      write ";***********************************************************************"
+21-236-12:16:28.991 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/190      write ";  Step 1.0: Data Storage Test Setup."
+21-236-12:16:28.991 00     SPR-I:OPRO         ;  Step 1.0: Data Storage Test Setup.
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/191      write ";***********************************************************************"
+21-236-12:16:28.991 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/192      write ";  Step 1.1: Command a Power-on Reset on CPU1."
+21-236-12:16:28.991 00     SPR-I:OPRO         ;  Step 1.1: Command a Power-on Reset on CPU1.
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/193      write ";***********************************************************************"
+21-236-12:16:28.991 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:16:28.991 00 SCX_CPU1_DS_MO/194      /SCX_CPU1_ES_POWERONRESET
+21-236-12:16:29.003 00 SCX_CPU1_DS_MO/195      wait 10
+21-236-12:16:29.003 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:16:39.010 00 SCX_CPU1_DS_MO/196      
+21-236-12:16:39.010 00 SCX_CPU1_DS_MO/197      close_data_center
+21-236-12:16:39.011 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-12:16:39.012 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-12:16:39.013 00 CLEAR_SPACECRA/2        ;
+21-236-12:16:39.013 00 CLEAR_SPACECRA/3        local logging = %liv(log_procedure)
+21-236-12:16:39.013 00 CLEAR_SPACECRA/4        %liv (log_procedure) = FALSE
+21-236-12:16:39.018 00 CLEAR_SPACECRA/135      
+21-236-12:16:39.018 00 CLEAR_SPACECRA/136      endproc
+21-236-12:16:39.018 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-12:16:39.032 00 SCX_CPU1_DS_MO/198      wait 60
+21-236-12:16:39.032 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-12:17:39.081 00 SCX_CPU1_DS_MO/199      
+21-236-12:17:39.081 00 SCX_CPU1_DS_MO/200      cfe_startup {hostCPU}
+21-236-12:17:39.095 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:17:49.106 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:17:49.167 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-12:17:49.167 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-12:17:49.167 00 SEND_THAT_TO_C/2        ;
+21-236-12:17:49.168 00 SEND_THAT_TO_C/3        local logging = %liv (log_procedure)
+21-236-12:17:49.168 00 SEND_THAT_TO_C/4        %liv (log_procedure) = FALSE
+21-236-12:17:49.169 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-12:17:49.221 00 SEND_THAT_TO_C/83       
+21-236-12:17:49.221 00 SEND_THAT_TO_C/84       endproc
+21-236-12:17:49.221 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-12:17:49.221 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:17:49.720 00    TLMH-I:STS          58-012-14:03:48.517 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-12:17:53.226 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:17:53.226 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-12:17:53.228 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-12:17:53.228 00 FILL_IN_SPACEC/2        ;
+21-236-12:17:53.228 00 FILL_IN_SPACEC/3        local logging = %liv (log_procedure)
+21-236-12:17:53.229 00 FILL_IN_SPACEC/4        %liv (log_procedure) = FALSE
+21-236-12:17:53.233 00 FILL_IN_SPACEC/152      
+21-236-12:17:53.233 00 FILL_IN_SPACEC/153      endproc
+21-236-12:17:53.233 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-12:17:53.233 00 SCX_CPU1_DS_MO/201      wait 5
+21-236-12:17:53.233 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:17:58.237 00 SCX_CPU1_DS_MO/202      
+21-236-12:17:58.237 00 SCX_CPU1_DS_MO/203      write ";***********************************************************************"
+21-236-12:17:58.237 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.237 00 SCX_CPU1_DS_MO/204      write ";  Step 1.2: Upload the initial DS table load images to CPU1."
+21-236-12:17:58.237 00     SPR-I:OPRO         ;  Step 1.2: Upload the initial DS table load images to CPU1.
+21-236-12:17:58.238 00 SCX_CPU1_DS_MO/205      write ";***********************************************************************"
+21-236-12:17:58.238 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.238 00 SCX_CPU1_DS_MO/207      s scx_cpu1_ds_tbl4
+21-236-12:17:58.238 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_tbl4.i
+21-236-12:17:58.252 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL4 started
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/2        ;*******************************************************************************
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/3        ;  Test Name:  ds_tbl4
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/4        ;  Test Level: Build Verification
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/5        ;  Test Type:  Functional
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/6        ;
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/7        ;  Test Description
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/8        ;	This procedure creates the initial CFS Data Storage (DS) Destination
+21-236-12:17:58.252 00 SCX_CPU1_DS_TB/9        ;	File and Packet Filter Table load image files. These files are currently
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/10       ;	used by the MoveFile test procedure.
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/11       ;	
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/12       ;  Prerequisite Conditions
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/13       ;	None.
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/14       ;
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/15       ;  Assumptions and Constraints
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/16       ;	None.
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/17       ;
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/18       ;  Change History
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/19       ;
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/20       ;	Date		   Name		Description
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/21       ;	01/03/11	Walt Moleski	Inital implemetation.
+21-236-12:17:58.253 00 SCX_CPU1_DS_TB/22       ;       01/31/17        Walt Moleski    Updated for DS 2.5.0.0 using CPU1 for
+21-236-12:17:58.254 00 SCX_CPU1_DS_TB/23       ;                                       commanding and added a hostCPU variable
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/24       ;                                       for the utility procs to connect to the
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/25       ;                                       proper host IP address.
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/26       ;
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/27       ;  Arguments
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/28       ;	None.
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/29       ;
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/30       ;  Procedures Called
+21-236-12:17:58.262 00 SCX_CPU1_DS_TB/31       ;	Name			Description
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/32       ;
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/33       ;  Expected Test Results and Analysis
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/34       ;
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/35       ;**********************************************************************
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/36       
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/37       local logging = %liv (log_procedure)
+21-236-12:17:58.263 00 SCX_CPU1_DS_TB/38       %liv (log_procedure) = FALSE
+21-236-12:17:58.318 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.318 00     SPR-I:OPRO         ;  Step 1.0: Define DS Destination File And Packet Filter Tables.
+21-236-12:17:58.319 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.324 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-12:17:58.324 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-12:17:58.326 00     SPR-I:OPRO         **********  ds_movefile.tbl  **********
+21-236-12:17:58.326 00     SPR-I:OPRO         
+21-236-12:17:58.326 00     SPR-I:OPRO                Content Type: cFE1
+21-236-12:17:58.326 00     SPR-I:OPRO                    Sub Type: 8
+21-236-12:17:58.326 00     SPR-I:OPRO                      Length: 12
+21-236-12:17:58.326 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-12:17:58.326 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-12:17:58.326 00     SPR-I:OPRO              Application Id: 3958
+21-236-12:17:58.327 00     SPR-I:OPRO            Create Time Secs: 1629807478
+21-236-12:17:58.327 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-12:17:58.327 00     SPR-I:OPRO            File Description: Move File Test File Table
+21-236-12:17:58.327 00     SPR-I:OPRO         
+21-236-12:17:58.327 00     SPR-I:OPRO         **********  DS.FILE_TBL  **********
+21-236-12:17:58.327 00     SPR-I:OPRO         
+21-236-12:17:58.327 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_DF_TBL_Description
+21-236-12:17:58.327 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-12:17:58.327 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_DF_TBL[7].SeqCnt
+21-236-12:17:58.327 00     SPR-I:OPRO             Number of Bytes: 1760
+21-236-12:17:58.327 00     SPR-I:OPRO         
+21-236-12:17:58.332 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-12:17:58.332 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-12:17:58.332 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 1875 P0F76 ds.file_tbl
+21-236-12:17:58.338 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-12:17:58.338 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_movefile.tbl.tmp ds.file_tbl > ds_movefile.tbl
+21-236-12:17:58.343 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.file_tbl ds_movefile.tbl.tmp
+21-236-12:17:58.346 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-12:17:58.829 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-12:17:58.830 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-12:17:58.831 00     SPR-I:OPRO         **********  ds_movefilter.tbl  **********
+21-236-12:17:58.831 00     SPR-I:OPRO         
+21-236-12:17:58.831 00     SPR-I:OPRO                Content Type: cFE1
+21-236-12:17:58.831 00     SPR-I:OPRO                    Sub Type: 8
+21-236-12:17:58.831 00     SPR-I:OPRO                      Length: 12
+21-236-12:17:58.832 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-12:17:58.832 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-12:17:58.832 00     SPR-I:OPRO              Application Id: 3959
+21-236-12:17:58.832 00     SPR-I:OPRO            Create Time Secs: 1629807478
+21-236-12:17:58.832 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-12:17:58.832 00     SPR-I:OPRO            File Description: Move File Test Filter Table
+21-236-12:17:58.832 00     SPR-I:OPRO         
+21-236-12:17:58.832 00     SPR-I:OPRO         **********  DS.FILTER_TBL  **********
+21-236-12:17:58.832 00     SPR-I:OPRO         
+21-236-12:17:58.832 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_PF_TBL_Description
+21-236-12:17:58.832 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-12:17:58.832 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_PF_TBL[255].FilterParams[3].O_Value
+21-236-12:17:58.832 00     SPR-I:OPRO             Number of Bytes: 9248
+21-236-12:17:58.832 00     SPR-I:OPRO         
+21-236-12:17:58.839 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-12:17:58.839 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-12:17:58.839 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 9363 P0F77 ds.filter_tbl
+21-236-12:17:58.843 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-12:17:58.843 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_movefilter.tbl.tmp ds.filter_tbl > ds_movefilter.tbl
+21-236-12:17:58.848 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.filter_tbl ds_movefilter.tbl.tmp
+21-236-12:17:58.854 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-12:17:58.854 00 SCX_CPU1_DS_TB/314      
+21-236-12:17:58.854 00 SCX_CPU1_DS_TB/315      write ";*********************************************************************"
+21-236-12:17:58.854 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:17:58.854 00 SCX_CPU1_DS_TB/316      write ";  End procedure SCX_CPU1_ds_tbl4"
+21-236-12:17:58.854 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_tbl4
+21-236-12:17:58.854 00 SCX_CPU1_DS_TB/317      write ";*********************************************************************"
+21-236-12:17:58.854 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:17:58.854 00 SCX_CPU1_DS_TB/318      ENDPROC
+21-236-12:17:58.854 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL4 completed
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/208      
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/210      local destFileName = DS_DEF_DEST_FILENAME
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/211      local filterFileName = DS_DEF_FILTER_FILENAME
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/212      local slashLoc = %locate(destFileName,"/")
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/213      
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/215      while (slashLoc <> 0) do
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/216        destFileName = %substring(destFileName,slashLoc+1,%length(destFileName))
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/217        slashLoc = %locate(destFileName,"/")
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/218      enddo
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/216        destFileName = %substring(destFileName,slashLoc+1,%length(destFileName))
+21-236-12:17:58.855 00 SCX_CPU1_DS_MO/217        slashLoc = %locate(destFileName,"/")
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/218      enddo
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/219      
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/220      write "==> Default Destination File Table filename = '",destFileName,"'"
+21-236-12:17:58.856 00     SPR-I:OPRO         ==> Default Destination File Table filename = 'ds_file_tbl.tbl'
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/221      
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/222      slashLoc = %locate(filterFileName,"/")
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/224      while (slashLoc <> 0) do
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/225        filterFileName = %substring(filterFileName,slashLoc+1,%length(filterFileName))
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/226        slashLoc = %locate(filterFileName,"/")
+21-236-12:17:58.856 00 SCX_CPU1_DS_MO/227      enddo
+21-236-12:17:58.859 00 SCX_CPU1_DS_MO/225        filterFileName = %substring(filterFileName,slashLoc+1,%length(filterFileName))
+21-236-12:17:58.859 00 SCX_CPU1_DS_MO/226        slashLoc = %locate(filterFileName,"/")
+21-236-12:17:58.859 00 SCX_CPU1_DS_MO/227      enddo
+21-236-12:17:58.859 00 SCX_CPU1_DS_MO/228      
+21-236-12:17:58.859 00 SCX_CPU1_DS_MO/229      write "==> Default Filter Table filename = '",filterFileName,"'"
+21-236-12:17:58.859 00     SPR-I:OPRO         ==> Default Filter Table filename = 'ds_filter_tbl.tbl'
+21-236-12:17:58.859 00 SCX_CPU1_DS_MO/230      
+21-236-12:17:58.860 00 SCX_CPU1_DS_MO/232      ;s ftp_file("CF:0", "ds_movefile.tbl", destFileName, hostCPU, "P")
+21-236-12:17:58.860 00 SCX_CPU1_DS_MO/233      ;s ftp_file("CF:0", "ds_movefilter.tbl", filterFileName, hostCPU, "P")
+21-236-12:17:58.860 00 SCX_CPU1_DS_MO/234      
+21-236-12:17:58.860 00 SCX_CPU1_DS_MO/235      ; Load the File table created above
+21-236-12:17:58.860 00 SCX_CPU1_DS_MO/236      s load_table("ds_movefile.tbl",hostCPU)
+21-236-12:17:58.860 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-236-12:17:58.860 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-236-12:17:58.860 00     LOAD_TABLE/2        ;
+21-236-12:17:58.860 00     LOAD_TABLE/3        local logging = %liv (log_procedure)
+21-236-12:17:58.860 00     LOAD_TABLE/4        %liv (log_procedure) = FALSE
+21-236-12:17:58.861 00     SPR-I:OPRO         Table Filename: ds_movefile.tbl
+21-236-12:17:58.862 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 ds_movefile.tbl RAM:0 3
+21-236-12:17:58.862 00     SPR-I:OPRO         
+21-236-12:17:59.005 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:17:59.005 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:04.009 00     SPR-I:OPRO         
+21-236-12:18:04.012 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/ds_movefile.tbl"
+21-236-12:18:04.028 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:04.211 00    TLMH-I:STS          58-012-14:04:03.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_movefile.tbl' into 'DS.FILE_TBL' working buffer
+21-236-12:18:05.029 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:05.031 00     LOAD_TABLE/195      
+21-236-12:18:05.031 00     LOAD_TABLE/196      ENDPROC
+21-236-12:18:05.031 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-236-12:18:05.032 00 SCX_CPU1_DS_MO/237      wait 5
+21-236-12:18:05.032 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:10.036 00 SCX_CPU1_DS_MO/238      
+21-236-12:18:10.036 00 SCX_CPU1_DS_MO/239      /SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=fileTblName
+21-236-12:18:10.053 00 SCX_CPU1_DS_MO/240      wait 5
+21-236-12:18:10.053 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:12.715 00    TLMH-I:STS          58-012-14:04:12.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 0, unused = 8
+21-236-12:18:12.716 00    TLMH-I:STS          58-012-14:04:12.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 DS validation successful for Inactive 'DS.FILE_TBL'
+21-236-12:18:15.058 00 SCX_CPU1_DS_MO/241      
+21-236-12:18:15.058 00 SCX_CPU1_DS_MO/242      /SCX_CPU1_TBL_ACTIVATE ATableName=fileTblName
+21-236-12:18:15.073 00 SCX_CPU1_DS_MO/243      wait 5
+21-236-12:18:15.073 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:16.718 00    TLMH-I:STS          58-012-14:04:16.003 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 DS Successfully Updated 'DS.FILE_TBL'
+21-236-12:18:20.079 00 SCX_CPU1_DS_MO/244      
+21-236-12:18:20.079 00 SCX_CPU1_DS_MO/245      ; Load the Filter table created above
+21-236-12:18:20.079 00 SCX_CPU1_DS_MO/246      s load_table("ds_movefilter.tbl",hostCPU)
+21-236-12:18:20.080 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-236-12:18:20.081 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-236-12:18:20.082 00     LOAD_TABLE/2        ;
+21-236-12:18:20.082 00     LOAD_TABLE/3        local logging = %liv (log_procedure)
+21-236-12:18:20.082 00     LOAD_TABLE/4        %liv (log_procedure) = FALSE
+21-236-12:18:20.085 00     SPR-I:OPRO         Table Filename: ds_movefilter.tbl
+21-236-12:18:20.087 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 ds_movefilter.tbl RAM:0 3
+21-236-12:18:20.087 00     SPR-I:OPRO         
+21-236-12:18:20.219 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:18:20.220 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:25.224 00     SPR-I:OPRO         
+21-236-12:18:25.225 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/ds_movefilter.tbl"
+21-236-12:18:25.239 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:25.714 00    TLMH-I:STS          58-012-14:04:25.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_movefilter.tbl' into 'DS.FILTER_TBL' working buffer
+21-236-12:18:29.243 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:29.245 00     LOAD_TABLE/195      
+21-236-12:18:29.245 00     LOAD_TABLE/196      ENDPROC
+21-236-12:18:29.245 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-236-12:18:29.246 00 SCX_CPU1_DS_MO/247      wait 5
+21-236-12:18:29.246 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:34.251 00 SCX_CPU1_DS_MO/248      
+21-236-12:18:34.251 00 SCX_CPU1_DS_MO/249      /SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=filterTblName
+21-236-12:18:34.265 00 SCX_CPU1_DS_MO/250      wait 5
+21-236-12:18:34.265 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:36.716 00    TLMH-I:STS          58-012-14:04:36.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 6, bad = 0, unused = 250
+21-236-12:18:36.717 00    TLMH-I:STS          58-012-14:04:36.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 DS validation successful for Inactive 'DS.FILTER_TBL'
+21-236-12:18:39.270 00 SCX_CPU1_DS_MO/251      
+21-236-12:18:39.270 00 SCX_CPU1_DS_MO/252      /SCX_CPU1_TBL_ACTIVATE ATableName=filterTblName
+21-236-12:18:39.284 00 SCX_CPU1_DS_MO/253      wait 5
+21-236-12:18:39.284 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:40.720 00    TLMH-I:STS          58-012-14:04:40.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 DS Successfully Updated 'DS.FILTER_TBL'
+21-236-12:18:44.289 00 SCX_CPU1_DS_MO/254      
+21-236-12:18:44.289 00 SCX_CPU1_DS_MO/255      write ";***********************************************************************"
+21-236-12:18:44.289 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.289 00 SCX_CPU1_DS_MO/256      write ";  Step 1.3: Display the Housekeeping pages "
+21-236-12:18:44.289 00     SPR-I:OPRO         ;  Step 1.3: Display the Housekeeping pages 
+21-236-12:18:44.289 00 SCX_CPU1_DS_MO/257      write ";***********************************************************************"
+21-236-12:18:44.289 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.290 00 SCX_CPU1_DS_MO/258      page SCX_CPU1_DS_HK
+21-236-12:18:44.397 00 SCX_CPU1_DS_MO/259      page SCX_CPU1_TST_DS_HK
+21-236-12:18:44.470 00 SCX_CPU1_DS_MO/260      page SCX_CPU1_DS_FILTER_TBL
+21-236-12:18:44.544 00 SCX_CPU1_DS_MO/261      page SCX_CPU1_DS_FILE_TBL
+21-236-12:18:44.624 00 SCX_CPU1_DS_MO/262      page SCX_CPU1_FM_DIR_LIST
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/263      
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/264      write ";***********************************************************************"
+21-236-12:18:44.773 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/265      write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications.     "
+21-236-12:18:44.773 00     SPR-I:OPRO         ;  Step 1.4:  Start the Data Storage (DS) and Test Applications.     
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/266      write ";***********************************************************************"
+21-236-12:18:44.773 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/267      ;s scx_cpu1_ds_start_apps("1.4")
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/268      ;wait 5
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/269      
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/271      local hkPktId
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/272      
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/274      hkPktId = "p0B8"
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/275      
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/278      local seqTlmItem = hkPktId & "scnt"
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/279      local currSCnt = {seqTlmItem}
+21-236-12:18:44.773 00 SCX_CPU1_DS_MO/280      local expectedSCnt = currSCnt + 2
+21-236-12:18:44.774 00 SCX_CPU1_DS_MO/281      
+21-236-12:18:44.774 00 SCX_CPU1_DS_MO/282      ut_tlmwait {seqTlmItem}, {expectedSCnt}
+21-236-12:18:44.782 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:52.789 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:52.791 00 SCX_CPU1_DS_MO/283      if (UT_TW_Status = UT_Success) then
+21-236-12:18:52.791 00 SCX_CPU1_DS_MO/284        write "<*> Passed (8000) - Housekeeping packet is being generated."
+21-236-12:18:52.791 00     SPR-I:OPRO         <*> Passed (8000) - Housekeeping packet is being generated.
+21-236-12:18:52.791 00 SCX_CPU1_DS_MO/285        ut_setrequirements DS_8000, "P"
+21-236-12:18:52.794 00 SCX_CPU1_DS_MO/289      endif
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/290      
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/294      if (SCX_CPU1_DS_CMDPC = 0) AND (SCX_CPU1_DS_CMDEC = 0) AND ;;
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/295         (SCX_CPU1_DS_DisabledPktCnt = 0) AND ;;
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/296         (SCX_CPU1_DS_FilteredPktCnt = 0) AND (SCX_CPU1_DS_PassedPktCnt = 0) AND ;;
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/297         (SCX_CPU1_DS_FileWriteCnt = 0) AND (SCX_CPU1_DS_FileWriteErrCnt = 0) AND ;;
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/298         (SCX_CPU1_DS_FileUpdCnt = 0) AND (SCX_CPU1_DS_FileUpdErrCnt = 0) AND ;;
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/299         (SCX_CPU1_DS_DestLoadCnt = 2) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
+21-236-12:18:52.795 00 SCX_CPU1_DS_MO/300         (SCX_CPU1_DS_FilterLoadCnt = 2) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
+21-236-12:18:52.797 00 SCX_CPU1_DS_MO/301        write "<*> Passed (9000) - Housekeeping telemetry initialized properly."
+21-236-12:18:52.797 00     SPR-I:OPRO         <*> Passed (9000) - Housekeeping telemetry initialized properly.
+21-236-12:18:52.797 00 SCX_CPU1_DS_MO/302        ut_setrequirements DS_9000, "P"
+21-236-12:18:52.803 00 SCX_CPU1_DS_MO/319      endif
+21-236-12:18:52.803 00 SCX_CPU1_DS_MO/320      
+21-236-12:18:52.803 00 SCX_CPU1_DS_MO/321      wait 5
+21-236-12:18:52.803 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:57.806 00 SCX_CPU1_DS_MO/322      
+21-236-12:18:57.806 00 SCX_CPU1_DS_MO/323      write ";*********************************************************************"
+21-236-12:18:57.807 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:18:57.807 00 SCX_CPU1_DS_MO/324      write ";  Step 1.5: Start the File Manager (FM) Application "
+21-236-12:18:57.807 00     SPR-I:OPRO         ;  Step 1.5: Start the File Manager (FM) Application 
+21-236-12:18:57.807 00 SCX_CPU1_DS_MO/325      write ";********************************************************************"
+21-236-12:18:57.807 00     SPR-I:OPRO         ;********************************************************************
+21-236-12:18:57.807 00 SCX_CPU1_DS_MO/326      ut_setupevents "SCX", "CPU1", "CFE_ES", CFE_ES_START_INF_EID, "INFO", 1
+21-236-12:18:57.812 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.812 00     SPR-I:OPRO         ; Setup event 1 with CFE_ES INFO 6
+21-236-12:18:57.813 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.813 00 SCX_CPU1_DS_MO/327      ut_setupevents "SCX", "CPU1", "FM", FM_STARTUP_EID, "INFO", 2
+21-236-12:18:57.814 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.815 00     SPR-I:OPRO         ; Setup event 2 with FM INFO 1
+21-236-12:18:57.815 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.815 00 SCX_CPU1_DS_MO/328      
+21-236-12:18:57.815 00 SCX_CPU1_DS_MO/329      s load_start_app ("FM",hostCPU,"FM_AppMain")
+21-236-12:18:57.815 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_start_app.i
+21-236-12:18:57.823 00     SPR-I:STS          Procedure LOAD_START_APP started
+21-236-12:18:57.823 00 LOAD_START_APP/2        ;
+21-236-12:18:57.823 00 LOAD_START_APP/3        local logging = %liv (log_procedure)
+21-236-12:18:57.824 00 LOAD_START_APP/4        %liv (log_procedure) = FALSE
+21-236-12:18:57.824 00     SPR-I:OPRO         Application Filename: fm.o
+21-236-12:18:57.825 00     SPR-I:OPRO         The perl command is perl /s/opr/accounts/global/tools/fsw_ftp.pl 192.168.1.8 fm.o RAM:0 3
+21-236-12:18:57.955 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:18:57.958 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_ES_STARTAPP APPLICATION="FM" APP_ENTRY_PT="FM_AppMain" APP_FILE_NAME="/ram/fm.o" STACKSIZE=X'2000' PRIORITY=X'b7' RESTARTCPU 
+21-236-12:18:57.974 00 LOAD_START_APP/128      
+21-236-12:18:57.974 00 LOAD_START_APP/129      ENDPROC
+21-236-12:18:57.974 00     SPR-I:STS          Procedure LOAD_START_APP completed
+21-236-12:18:57.975 00 SCX_CPU1_DS_MO/330      
+21-236-12:18:57.975 00 SCX_CPU1_DS_MO/331      ; Wait for app startup events
+21-236-12:18:57.975 00 SCX_CPU1_DS_MO/332      ut_tlmwait  SCX_CPU1_find_event[2].num_found_messages, 1
+21-236-12:18:57.989 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:58.213 00    TLMH-I:STS          58-012-14:04:57.512 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=6 Started FM from /ram/fm.o, AppID = 1114124
+21-236-12:18:58.719 00    TLMH-I:STS          58-012-14:04:57.565 INFO CPU=CPU1 APPNAME=FM EVENT ID=97 Free Space Table verify results: good entries = 2, bad = 0, unused = 6
+21-236-12:18:58.720 00    TLMH-I:STS          58-012-14:04:57.566 INFO CPU=CPU1 APPNAME=FM EVENT ID=1 Initialization complete: version 2.5.4.0
+21-236-12:18:58.722 00    TLMH-I:STS          58-012-14:04:57.600 INFO CPU=CPU1 APPNAME=FM EVENT ID=89 Child Task initialization complete
+21-236-12:18:58.990 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:58.991 00 SCX_CPU1_DS_MO/333      IF (UT_TW_Status = UT_Success) THEN
+21-236-12:18:58.991 00 SCX_CPU1_DS_MO/334        write "<*> Passed - FM Application Started"
+21-236-12:18:58.991 00     SPR-I:OPRO         <*> Passed - FM Application Started
+21-236-12:18:58.991 00 SCX_CPU1_DS_MO/337      endif
+21-236-12:18:58.991 00 SCX_CPU1_DS_MO/338      
+21-236-12:18:58.991 00 SCX_CPU1_DS_MO/339      local fmPkt = x'088C'
+21-236-12:18:58.991 00 SCX_CPU1_DS_MO/340      
+21-236-12:18:58.992 00 SCX_CPU1_DS_MO/341      /SCX_CPU1_TO_ADDPACKET STREAM=fmPkt PKT_SIZE=X'0' PRIORITY=X'0' RELIABILITY=X'0' BUFLIMIT=x'4'
+21-236-12:18:59.005 00 SCX_CPU1_DS_MO/342      
+21-236-12:18:59.005 00 SCX_CPU1_DS_MO/343      wait 5
+21-236-12:18:59.005 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:59.715 00    TLMH-I:STS          58-012-14:04:58.517 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88c0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-236-12:18:59.716 00    TLMH-I:STS          58-012-14:04:58.517 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88c0000 status -905969661
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/344      
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/345      write ";***********************************************************************"
+21-236-12:19:04.008 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/346      write ";  Step 1.6: Enable DEBUG Event Messages "
+21-236-12:19:04.008 00     SPR-I:OPRO         ;  Step 1.6: Enable DEBUG Event Messages 
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/347      write ";***********************************************************************"
+21-236-12:19:04.008 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/348      local cmdCtr = SCX_CPU1_EVS_CMDPC + 2
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/349      
+21-236-12:19:04.008 00 SCX_CPU1_DS_MO/351      /SCX_CPU1_EVS_EnaAppEVTType Application=DSAppName DEBUG
+21-236-12:19:04.021 00 SCX_CPU1_DS_MO/352      wait 2
+21-236-12:19:04.021 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-236-12:19:06.023 00 SCX_CPU1_DS_MO/353      /SCX_CPU1_EVS_EnaAppEVTType Application="CFE_TBL" DEBUG
+21-236-12:19:06.035 00 SCX_CPU1_DS_MO/354      
+21-236-12:19:06.035 00 SCX_CPU1_DS_MO/355      ut_tlmwait SCX_CPU1_EVS_CMDPC, {cmdCtr}
+21-236-12:19:06.041 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:19:09.045 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:19:09.046 00 SCX_CPU1_DS_MO/356      if (UT_TW_Status = UT_Success) then
+21-236-12:19:09.046 00 SCX_CPU1_DS_MO/357        write "<*> Passed - Enable Debug events command sent properly."
+21-236-12:19:09.047 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-12:19:09.047 00 SCX_CPU1_DS_MO/360      endif
+21-236-12:19:09.047 00 SCX_CPU1_DS_MO/361      
+21-236-12:19:09.047 00 SCX_CPU1_DS_MO/362      write ";***********************************************************************"
+21-236-12:19:09.047 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.047 00 SCX_CPU1_DS_MO/363      write ";  Step 2.0: File Creation Tests."
+21-236-12:19:09.047 00     SPR-I:OPRO         ;  Step 2.0: File Creation Tests.
+21-236-12:19:09.047 00 SCX_CPU1_DS_MO/364      write ";***********************************************************************"
+21-236-12:19:09.048 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.048 00 SCX_CPU1_DS_MO/365      write ";  Step 2.1: Utilizing the TST_DS application, send a message to the DS"
+21-236-12:19:09.048 00     SPR-I:OPRO         ;  Step 2.1: Utilizing the TST_DS application, send a message to the DS
+21-236-12:19:09.048 00 SCX_CPU1_DS_MO/366      write ";  application that will pass the filtering algorithm and uses a "
+21-236-12:19:09.048 00     SPR-I:OPRO         ;  application that will pass the filtering algorithm and uses a 
+21-236-12:19:09.048 00 SCX_CPU1_DS_MO/367      write ";  Destination File Table entry that specifies Sequence file type naming"
+21-236-12:19:09.048 00     SPR-I:OPRO         ;  Destination File Table entry that specifies Sequence file type naming
+21-236-12:19:09.048 00 SCX_CPU1_DS_MO/368      write ";***********************************************************************"
+21-236-12:19:09.048 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.049 00 SCX_CPU1_DS_MO/369      write ";  Step 2.1.1: Dump the Destination File and Packet Filter Tables"
+21-236-12:19:09.049 00     SPR-I:OPRO         ;  Step 2.1.1: Dump the Destination File and Packet Filter Tables
+21-236-12:19:09.056 00 SCX_CPU1_DS_MO/370      write ";***********************************************************************"
+21-236-12:19:09.056 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.056 00 SCX_CPU1_DS_MO/372      s get_tbl_to_cvt (ramDir,filterTblName,"A","cpu1_filtertbl211",hostCPU,filterTblPktId)
+21-236-12:19:09.057 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-236-12:19:09.059 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-236-12:19:09.060 00 GET_TBL_TO_CVT/2        ;
+21-236-12:19:09.060 00 GET_TBL_TO_CVT/3        local logging = %liv (log_procedure)
+21-236-12:19:09.060 00 GET_TBL_TO_CVT/4        %liv (log_procedure) = FALSE
+21-236-12:19:09.078 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="DS.FILTER_TBL" DFILENAME="/ram/cpu1_filtertbl211"
+21-236-12:19:09.081 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:19:09.210 00    TLMH-I:STS          58-012-14:05:08.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'DS.FILTER_TBL' to '/ram/cpu1_filtertbl211'
+21-236-12:19:24.091 00     SPR-I:OPRO         
+21-236-12:19:24.091 00     SPR-I:OPRO            The TBLNAME is: DS.FILTER_TBL
+21-236-12:19:24.092 00     SPR-I:OPRO               The APID is: P0F77
+21-236-12:19:24.092 00     SPR-I:OPRO                The CPU is: CPU3
+21-236-12:19:24.092 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-236-12:19:24.095 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_filtertbl211 cpu1_filtertbl211 binary 192.168.1.8
+21-236-12:19:24.266 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:19:24.266 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:19:39.278 00     SPR-I:OPRO         
+21-236-12:19:39.324 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3959].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_filtertbl211`"
+21-236-12:19:39.324 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:19:44.329 00 GET_TBL_TO_CVT/238      
+21-236-12:19:44.329 00 GET_TBL_TO_CVT/239      ENDPROC
+21-236-12:19:44.329 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-236-12:19:44.330 00 SCX_CPU1_DS_MO/374      s get_tbl_to_cvt (ramDir,fileTblName,"A","cpu1_filetbl211",hostCPU,fileTblPktId)
+21-236-12:19:44.331 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-236-12:19:44.333 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-236-12:19:44.333 00 GET_TBL_TO_CVT/2        ;
+21-236-12:19:44.333 00 GET_TBL_TO_CVT/3        local logging = %liv (log_procedure)
+21-236-12:19:44.334 00 GET_TBL_TO_CVT/4        %liv (log_procedure) = FALSE
+21-236-12:19:44.353 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="DS.FILE_TBL" DFILENAME="/ram/cpu1_filetbl211"
+21-236-12:19:44.368 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:19:44.718 00    TLMH-I:STS          58-012-14:05:44.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'DS.FILE_TBL' to '/ram/cpu1_filetbl211'
+21-236-12:19:50.883 00     SPR-I:OPRI     --> page SCX_CPU1_DS_FILE_HK
+21-236-12:19:59.447 00     SPR-I:OPRO         
+21-236-12:19:59.447 00     SPR-I:OPRO            The TBLNAME is: DS.FILE_TBL
+21-236-12:19:59.447 00     SPR-I:OPRO               The APID is: P0F76
+21-236-12:19:59.447 00     SPR-I:OPRO                The CPU is: CPU3
+21-236-12:19:59.448 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-236-12:19:59.448 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_filetbl211 cpu1_filetbl211 binary 192.168.1.8
+21-236-12:19:59.582 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:19:59.582 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:20:14.595 00     SPR-I:OPRO         
+21-236-12:20:14.616 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3958].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_filetbl211`"
+21-236-12:20:14.616 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:20:19.620 00 GET_TBL_TO_CVT/238      
+21-236-12:20:19.620 00 GET_TBL_TO_CVT/239      ENDPROC
+21-236-12:20:19.620 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-236-12:20:19.621 00 SCX_CPU1_DS_MO/375      
+21-236-12:20:19.622 00 SCX_CPU1_DS_MO/376      write ";***********************************************************************"
+21-236-12:20:19.622 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.622 00 SCX_CPU1_DS_MO/377      write ";  Step 2.1.2: Parse the tables to find a MessageID to use for the "
+21-236-12:20:19.622 00     SPR-I:OPRO         ;  Step 2.1.2: Parse the tables to find a MessageID to use for the 
+21-236-12:20:19.622 00 SCX_CPU1_DS_MO/378      write ";  Sequence file type naming entry."
+21-236-12:20:19.622 00     SPR-I:OPRO         ;  Sequence file type naming entry.
+21-236-12:20:19.622 00 SCX_CPU1_DS_MO/379      write ";***********************************************************************"
+21-236-12:20:19.622 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.622 00 SCX_CPU1_DS_MO/381      logging = %liv (log_procedure)
+21-236-12:20:19.623 00 SCX_CPU1_DS_MO/382      %liv (log_procedure) = FALSE
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/410      
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/411      write "==> Found file entry at ", seqFileEntry
+21-236-12:20:19.886 00     SPR-I:OPRO         ==> Found file entry at 0
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/412      write "==> Found filter entry at ", filterEntry
+21-236-12:20:19.886 00     SPR-I:OPRO         ==> Found filter entry at 0
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/413      
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/414      local seqMsgID = SCX_CPU1_DS_PF_TBL[filterEntry].MessageID
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/415      
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/416      write ";***********************************************************************"
+21-236-12:20:19.886 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/417      write ";  Step 2.1.3: Create the directory where files will be moved when they "
+21-236-12:20:19.886 00     SPR-I:OPRO         ;  Step 2.1.3: Create the directory where files will be moved when they 
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/418      write ";  are closed by the DS application. "
+21-236-12:20:19.886 00     SPR-I:OPRO         ;  are closed by the DS application. 
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/419      write ";***********************************************************************"
+21-236-12:20:19.886 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/420      local moveDirName = SCX_CPU1_DS_DF_TBL[seqFileEntry].MoveDirName
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/421      local pathName = SCX_CPU1_DS_DF_TBL[seqFileEntry].PathName
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/422      
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/423      write "==> Creating File Move Directory =  ", moveDirName
+21-236-12:20:19.886 00     SPR-I:OPRO         ==> Creating File Move Directory =  /ram/movedir/
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/424      
+21-236-12:20:19.886 00 SCX_CPU1_DS_MO/425      /SCX_CPU1_FM_DirCreate DirName=moveDirName
+21-236-12:20:19.898 00 SCX_CPU1_DS_MO/426      wait 5
+21-236-12:20:19.898 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/427      
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/428      write ";***********************************************************************"
+21-236-12:20:24.901 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/429      write ";  Step 2.1.4: Send the TST_DS command to send a message to DS using the"
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  Step 2.1.4: Send the TST_DS command to send a message to DS using the
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/430      write ";  MessageID found above. Since the message being set will not exceed "
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  MessageID found above. Since the message being set will not exceed 
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/431      write ";  the file size constraint, the FileState HK should contain info about"
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  the file size constraint, the FileState HK should contain info about
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/432      write ";  the file that was created. "
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  the file that was created. 
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/433      write ";***********************************************************************"
+21-236-12:20:24.901 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.901 00 SCX_CPU1_DS_MO/435      ut_setupevents "SCX", "CPU1", "TST_DS", TST_DS_MSG1_SENT_INF_EID, "INFO", 1
+21-236-12:20:24.903 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.903 00     SPR-I:OPRO         ; Setup event 1 with TST_DS INFO 5
+21-236-12:20:24.903 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.903 00 SCX_CPU1_DS_MO/436      
+21-236-12:20:24.903 00 SCX_CPU1_DS_MO/438      local expFileWrites = SCX_CPU1_DS_FileWriteCnt + 16
+21-236-12:20:24.903 00 SCX_CPU1_DS_MO/439      local expPassedPkts = SCX_CPU1_DS_PassedPktCnt + 1
+21-236-12:20:24.903 00 SCX_CPU1_DS_MO/440      
+21-236-12:20:24.903 00 SCX_CPU1_DS_MO/442      /SCX_CPU1_TST_DS_SENDMESSAGE MsgID=seqMsgID MsgType=1 Pattern=x'55'
+21-236-12:20:24.915 00 SCX_CPU1_DS_MO/443      
+21-236-12:20:24.915 00 SCX_CPU1_DS_MO/445      ut_tlmwait  SCX_CPU1_find_event[1].num_found_messages, 1
+21-236-12:20:24.918 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:25.209 00    TLMH-I:STS          58-012-14:06:24.504 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000900
+21-236-12:20:25.919 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/446      if (UT_TW_Status = UT_Success) then
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/447        write "<*> Passed - Expected Event Msg ",TST_DS_MSG1_SENT_INF_EID," rcv'd."
+21-236-12:20:25.919 00     SPR-I:OPRO         <*> Passed - Expected Event Msg 5 rcv'd.
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/450      endif
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/451      
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/453      cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/454      
+21-236-12:20:25.919 00 SCX_CPU1_DS_MO/455      /SCX_CPU1_DS_GetFileInfo
+21-236-12:20:25.930 00 SCX_CPU1_DS_MO/456      
+21-236-12:20:25.930 00 SCX_CPU1_DS_MO/457      ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:20:25.933 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:26.217 00    TLMH-I:STS          58-012-14:06:25.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:20:28.936 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:28.936 00 SCX_CPU1_DS_MO/458      
+21-236-12:20:28.936 00 SCX_CPU1_DS_MO/461      local fileName1 = ""
+21-236-12:20:28.937 00 SCX_CPU1_DS_MO/462      if (SCX_CPU1_DS_FileState[seqFileEntry].FileName <> "") then
+21-236-12:20:28.937 00 SCX_CPU1_DS_MO/463        fileName1 = SCX_CPU1_DS_FileState[seqFileEntry].FileName
+21-236-12:20:28.937 00 SCX_CPU1_DS_MO/464        write "<*> Passed (3000;3000.1;3000.1.1) - A file was created with name '",fileName1,"'"
+21-236-12:20:28.937 00     SPR-I:OPRO         <*> Passed (3000;3000.1;3000.1.1) - A file was created with name '/ram/seq100000100.dat'
+21-236-12:20:28.937 00 SCX_CPU1_DS_MO/465        ut_setrequirements DS_3000, "P"
+21-236-12:20:28.938 00 SCX_CPU1_DS_MO/466        ut_setrequirements DS_30001, "A"
+21-236-12:20:28.938 00 SCX_CPU1_DS_MO/467        ut_setrequirements DS_300011, "A"
+21-236-12:20:28.939 00 SCX_CPU1_DS_MO/468      
+21-236-12:20:28.939 00 SCX_CPU1_DS_MO/469        slashLoc = %locate(fileName1,"/")
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/471        while (slashLoc <> 0) do
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/472          fileName1 = %substring(fileName1,slashLoc+1,%length(fileName1))
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/473          slashLoc = %locate(fileName1,"/")
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/474        enddo
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/472          fileName1 = %substring(fileName1,slashLoc+1,%length(fileName1))
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/473          slashLoc = %locate(fileName1,"/")
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/474        enddo
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/475      
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/476        write "==> FileName1 filename only = '",fileName1,"'"
+21-236-12:20:28.940 00     SPR-I:OPRO         ==> FileName1 filename only = 'seq100000100.dat'
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/477      
+21-236-12:20:28.940 00 SCX_CPU1_DS_MO/478        if (SCX_CPU1_DS_FileState[seqFileEntry].OpenState = DS_OPEN) then
+21-236-12:20:28.941 00 SCX_CPU1_DS_MO/479          write "<*> Passed (3001) - The file is marked 'OPEN'"
+21-236-12:20:28.941 00     SPR-I:OPRO         <*> Passed (3001) - The file is marked 'OPEN'
+21-236-12:20:28.947 00 SCX_CPU1_DS_MO/480          ut_setrequirements DS_3001, "P"
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/481        endif
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/482      
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/484        if (expFileWrites = SCX_CPU1_DS_FileWriteCnt) AND ;;
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/485           (expPassedPkts = SCX_CPU1_DS_PassedPktCnt) then
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/486          write "<*> Passed - The file write and passed packet counters are correct."
+21-236-12:20:28.949 00     SPR-I:OPRO         <*> Passed - The file write and passed packet counters are correct.
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/491        endif
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/498      endif
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/499      
+21-236-12:20:28.949 00 SCX_CPU1_DS_MO/500      wait 5
+21-236-12:20:28.949 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:20:33.953 00 SCX_CPU1_DS_MO/501      
+21-236-12:20:33.953 00 SCX_CPU1_DS_MO/502      write ";***********************************************************************"
+21-236-12:20:33.953 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.953 00 SCX_CPU1_DS_MO/503      write ";  Step 2.2: Send the TST_DS command again using a message type that "
+21-236-12:20:33.953 00     SPR-I:OPRO         ;  Step 2.2: Send the TST_DS command again using a message type that 
+21-236-12:20:33.953 00 SCX_CPU1_DS_MO/504      write ";  will exceed the file size of the destination file entry."
+21-236-12:20:33.953 00     SPR-I:OPRO         ;  will exceed the file size of the destination file entry.
+21-236-12:20:33.953 00 SCX_CPU1_DS_MO/505      write ";***********************************************************************"
+21-236-12:20:33.953 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.953 00 SCX_CPU1_DS_MO/507      ut_setupevents "SCX", "CPU1", "TST_DS", TST_DS_MSG3_SENT_INF_EID, "INFO", 1
+21-236-12:20:33.957 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.958 00     SPR-I:OPRO         ; Setup event 1 with TST_DS INFO 7
+21-236-12:20:33.958 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.959 00 SCX_CPU1_DS_MO/508      
+21-236-12:20:33.959 00 SCX_CPU1_DS_MO/509      local expHdrUpdates = SCX_CPU1_DS_FileUpdCnt + 4
+21-236-12:20:33.959 00 SCX_CPU1_DS_MO/510      
+21-236-12:20:33.959 00 SCX_CPU1_DS_MO/512      /SCX_CPU1_TST_DS_SENDMESSAGE MsgID=seqMsgID MsgType=3 Pattern=x'AA'
+21-236-12:20:33.974 00 SCX_CPU1_DS_MO/513      
+21-236-12:20:33.974 00 SCX_CPU1_DS_MO/515      ut_tlmwait  SCX_CPU1_find_event[1].num_found_messages, 1
+21-236-12:20:33.986 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:34.216 00    TLMH-I:STS          58-012-14:06:33.509 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=7 Sent Message Size 1016 to MID 0x00000900
+21-236-12:20:34.987 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:34.988 00 SCX_CPU1_DS_MO/516      if (UT_TW_Status = UT_Success) then
+21-236-12:20:34.989 00 SCX_CPU1_DS_MO/517        write "<*> Passed - Expected Event Msg ",TST_DS_MSG3_SENT_INF_EID," rcv'd."
+21-236-12:20:34.989 00     SPR-I:OPRO         <*> Passed - Expected Event Msg 7 rcv'd.
+21-236-12:20:34.989 00 SCX_CPU1_DS_MO/520      endif
+21-236-12:20:34.989 00 SCX_CPU1_DS_MO/521      
+21-236-12:20:34.989 00 SCX_CPU1_DS_MO/523      cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:20:34.990 00 SCX_CPU1_DS_MO/524      
+21-236-12:20:34.990 00 SCX_CPU1_DS_MO/525      /SCX_CPU1_DS_GetFileInfo
+21-236-12:20:35.005 00 SCX_CPU1_DS_MO/526      
+21-236-12:20:35.006 00 SCX_CPU1_DS_MO/527      ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:20:35.024 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:35.208 00    TLMH-I:STS          58-012-14:06:34.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:20:37.026 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:37.028 00 SCX_CPU1_DS_MO/528      
+21-236-12:20:37.028 00 SCX_CPU1_DS_MO/531      local fileName2 = ""
+21-236-12:20:37.028 00 SCX_CPU1_DS_MO/532      if (SCX_CPU1_DS_FileState[seqFileEntry].FileName <> "") then
+21-236-12:20:37.029 00 SCX_CPU1_DS_MO/533        fileName2 = SCX_CPU1_DS_FileState[seqFileEntry].FileName
+21-236-12:20:37.029 00 SCX_CPU1_DS_MO/534        write "<*> Passed (3000;3000.1;3000.1.1) - A file was created with name '",fileName2,"'"
+21-236-12:20:37.029 00     SPR-I:OPRO         <*> Passed (3000;3000.1;3000.1.1) - A file was created with name '/ram/seq100000101.dat'
+21-236-12:20:37.029 00 SCX_CPU1_DS_MO/535        ut_setrequirements DS_3000, "P"
+21-236-12:20:37.033 00 SCX_CPU1_DS_MO/536        ut_setrequirements DS_30001, "A"
+21-236-12:20:37.038 00 SCX_CPU1_DS_MO/537        ut_setrequirements DS_300011, "A"
+21-236-12:20:37.042 00 SCX_CPU1_DS_MO/538      
+21-236-12:20:37.042 00 SCX_CPU1_DS_MO/539        slashLoc = %locate(fileName2,"/")
+21-236-12:20:37.042 00 SCX_CPU1_DS_MO/541        while (slashLoc <> 0) do
+21-236-12:20:37.042 00 SCX_CPU1_DS_MO/542          fileName2 = %substring(fileName2,slashLoc+1,%length(fileName2))
+21-236-12:20:37.043 00 SCX_CPU1_DS_MO/543          slashLoc = %locate(fileName2,"/")
+21-236-12:20:37.043 00 SCX_CPU1_DS_MO/544        enddo
+21-236-12:20:37.043 00 SCX_CPU1_DS_MO/542          fileName2 = %substring(fileName2,slashLoc+1,%length(fileName2))
+21-236-12:20:37.044 00 SCX_CPU1_DS_MO/543          slashLoc = %locate(fileName2,"/")
+21-236-12:20:37.044 00 SCX_CPU1_DS_MO/544        enddo
+21-236-12:20:37.044 00 SCX_CPU1_DS_MO/545      
+21-236-12:20:37.044 00 SCX_CPU1_DS_MO/546        write "==> FileName2 filename only = '",fileName2,"'"
+21-236-12:20:37.045 00     SPR-I:OPRO         ==> FileName2 filename only = 'seq100000101.dat'
+21-236-12:20:37.045 00 SCX_CPU1_DS_MO/547      
+21-236-12:20:37.045 00 SCX_CPU1_DS_MO/548        if (SCX_CPU1_DS_FileState[seqFileEntry].OpenState = DS_OPEN) then
+21-236-12:20:37.045 00 SCX_CPU1_DS_MO/549          write "<*> Passed (3001) - The file is marked 'OPEN'"
+21-236-12:20:37.045 00     SPR-I:OPRO         <*> Passed (3001) - The file is marked 'OPEN'
+21-236-12:20:37.066 00 SCX_CPU1_DS_MO/550          ut_setrequirements DS_3001, "P"
+21-236-12:20:37.067 00 SCX_CPU1_DS_MO/551        endif
+21-236-12:20:37.067 00 SCX_CPU1_DS_MO/552      
+21-236-12:20:37.068 00 SCX_CPU1_DS_MO/553        if (fileName1 <> fileName2) then
+21-236-12:20:37.068 00 SCX_CPU1_DS_MO/554          write "<*> Passed (3001.1) - A new file was opened"
+21-236-12:20:37.068 00     SPR-I:OPRO         <*> Passed (3001.1) - A new file was opened
+21-236-12:20:37.068 00 SCX_CPU1_DS_MO/555          ut_setrequirements DS_30011, "P"
+21-236-12:20:37.069 00 SCX_CPU1_DS_MO/559        endif
+21-236-12:20:37.069 00 SCX_CPU1_DS_MO/560      
+21-236-12:20:37.069 00 SCX_CPU1_DS_MO/562        if (expHdrUpdates = SCX_CPU1_DS_FileUpdCnt) then
+21-236-12:20:37.069 00 SCX_CPU1_DS_MO/563          write "<*> Passed - The header update counter incremented as expected."
+21-236-12:20:37.070 00     SPR-I:OPRO         <*> Passed - The header update counter incremented as expected.
+21-236-12:20:37.076 00 SCX_CPU1_DS_MO/567        endif
+21-236-12:20:37.076 00 SCX_CPU1_DS_MO/568      
+21-236-12:20:37.076 00 SCX_CPU1_DS_MO/571        /SCX_CPU1_FM_DirListTlm DirName=pathName Offset=0 GetStatFlag=0
+21-236-12:20:37.088 00 SCX_CPU1_DS_MO/572        wait 10
+21-236-12:20:37.089 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:20:47.096 00 SCX_CPU1_DS_MO/573      
+21-236-12:20:47.096 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.096 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.097 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.097 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.097 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.097 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.097 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.097 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.098 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.098 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.098 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.098 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.098 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.099 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.099 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.099 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.099 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.099 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.100 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.100 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.100 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.100 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.100 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.100 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.101 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.101 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.101 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.101 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.101 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.102 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.102 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.102 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.102 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/576          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/579          endif
+21-236-12:20:47.103 00 SCX_CPU1_DS_MO/580        enddo
+21-236-12:20:47.104 00 SCX_CPU1_DS_MO/575        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:47.104 00 SCX_CPU1_DS_MO/581      
+21-236-12:20:47.104 00 SCX_CPU1_DS_MO/583        /SCX_CPU1_FM_DirListTlm DirName=moveDirName Offset=0 GetStatFlag=0
+21-236-12:20:47.116 00 SCX_CPU1_DS_MO/584        wait 10
+21-236-12:20:47.116 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:20:57.124 00 SCX_CPU1_DS_MO/585      
+21-236-12:20:57.124 00 SCX_CPU1_DS_MO/587        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:57.124 00 SCX_CPU1_DS_MO/588          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:57.124 00 SCX_CPU1_DS_MO/589            write "<*> Passed - File '",fileName1,"' is contained in directory '",moveDirName,"' as expected."
+21-236-12:20:57.125 00     SPR-I:OPRO         <*> Passed - File 'seq100000100.dat' is contained in directory '/ram/movedir/' as expected.
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/590          endif
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/591        enddo
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/587        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/588          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/590          endif
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/591        enddo
+21-236-12:20:57.125 00 SCX_CPU1_DS_MO/587        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/588          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/590          endif
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/591        enddo
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/587        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/588          if (fileName1 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/590          endif
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/591        enddo
+21-236-12:20:57.126 00 SCX_CPU1_DS_MO/587        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:20:57.127 00 SCX_CPU1_DS_MO/598      endif
+21-236-12:20:57.127 00 SCX_CPU1_DS_MO/599      
+21-236-12:20:57.127 00 SCX_CPU1_DS_MO/600      wait 5
+21-236-12:20:57.127 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:21:02.130 00 SCX_CPU1_DS_MO/601      
+21-236-12:21:02.130 00 SCX_CPU1_DS_MO/602      write ";***********************************************************************"
+21-236-12:21:02.131 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.131 00 SCX_CPU1_DS_MO/603      write ";  Step 2.3: Test that DS will store at least 1 message in a destination"
+21-236-12:21:02.131 00     SPR-I:OPRO         ;  Step 2.3: Test that DS will store at least 1 message in a destination
+21-236-12:21:02.131 00 SCX_CPU1_DS_MO/604      write ";  file even though the message will exceed the file size."
+21-236-12:21:02.131 00     SPR-I:OPRO         ;  file even though the message will exceed the file size.
+21-236-12:21:02.131 00 SCX_CPU1_DS_MO/605      write ";***********************************************************************"
+21-236-12:21:02.131 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.131 00 SCX_CPU1_DS_MO/606      write ";  Step 2.3.1: Send the Close command for the file created in Step 2.2."
+21-236-12:21:02.131 00     SPR-I:OPRO         ;  Step 2.3.1: Send the Close command for the file created in Step 2.2.
+21-236-12:21:02.131 00 SCX_CPU1_DS_MO/607      write ";***********************************************************************"
+21-236-12:21:02.131 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.131 00 SCX_CPU1_DS_MO/609      ut_setupevents "SCX", "CPU1", {DSAppName}, DS_CLOSE_CMD_EID, "DEBUG", 1
+21-236-12:21:02.133 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.133 00     SPR-I:OPRO         ; Setup event 1 with DS DEBUG 59
+21-236-12:21:02.133 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.134 00 SCX_CPU1_DS_MO/610      
+21-236-12:21:02.134 00 SCX_CPU1_DS_MO/611      cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:02.134 00 SCX_CPU1_DS_MO/613      /SCX_CPU1_DS_CloseFile FileIndex=seqFileEntry
+21-236-12:21:02.146 00 SCX_CPU1_DS_MO/614      
+21-236-12:21:02.146 00 SCX_CPU1_DS_MO/615      ut_tlmwait  SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:02.151 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:02.214 00    TLMH-I:STS          58-012-14:07:01.502 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=59 DEST CLOSE command: file table index = 0
+21-236-12:21:05.154 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:05.156 00 SCX_CPU1_DS_MO/616      if (UT_TW_Status = UT_Success) then
+21-236-12:21:05.156 00 SCX_CPU1_DS_MO/617        write "<*> Passed (1004;5002) - DS Close File command sent properly."
+21-236-12:21:05.156 00     SPR-I:OPRO         <*> Passed (1004;5002) - DS Close File command sent properly.
+21-236-12:21:05.157 00 SCX_CPU1_DS_MO/618        ut_setrequirements DS_1004, "P"
+21-236-12:21:05.160 00 SCX_CPU1_DS_MO/619        ut_setrequirements DS_5002, "P"
+21-236-12:21:05.163 00 SCX_CPU1_DS_MO/624      endif
+21-236-12:21:05.163 00 SCX_CPU1_DS_MO/625      
+21-236-12:21:05.163 00 SCX_CPU1_DS_MO/627      ut_tlmwait  SCX_CPU1_find_event[1].num_found_messages, 1
+21-236-12:21:05.172 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:05.175 00 SCX_CPU1_DS_MO/628      if (UT_TW_Status = UT_Success) then
+21-236-12:21:05.176 00 SCX_CPU1_DS_MO/629        write "<*> Passed (1004;5002) - Expected Event Msg ",DS_CLOSE_CMD_EID," rcv'd."
+21-236-12:21:05.176 00     SPR-I:OPRO         <*> Passed (1004;5002) - Expected Event Msg 59 rcv'd.
+21-236-12:21:05.176 00 SCX_CPU1_DS_MO/630        ut_setrequirements DS_1004, "P"
+21-236-12:21:05.177 00 SCX_CPU1_DS_MO/631        ut_setrequirements DS_5002, "P"
+21-236-12:21:05.178 00 SCX_CPU1_DS_MO/636      endif
+21-236-12:21:05.178 00 SCX_CPU1_DS_MO/637      
+21-236-12:21:05.178 00 SCX_CPU1_DS_MO/638      wait 5
+21-236-12:21:05.178 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:21:10.182 00 SCX_CPU1_DS_MO/639      
+21-236-12:21:10.182 00 SCX_CPU1_DS_MO/640      write ";***********************************************************************"
+21-236-12:21:10.182 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.182 00 SCX_CPU1_DS_MO/641      write ";  Step 2.3.2: Send the TST_DS_SendMessage command using a message type "
+21-236-12:21:10.182 00     SPR-I:OPRO         ;  Step 2.3.2: Send the TST_DS_SendMessage command using a message type 
+21-236-12:21:10.182 00 SCX_CPU1_DS_MO/642      write ";  that exceeds the size of the destination file entry."
+21-236-12:21:10.182 00     SPR-I:OPRO         ;  that exceeds the size of the destination file entry.
+21-236-12:21:10.182 00 SCX_CPU1_DS_MO/643      write ";***********************************************************************"
+21-236-12:21:10.182 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.182 00 SCX_CPU1_DS_MO/645      ut_setupevents "SCX", "CPU1", "TST_DS", TST_DS_MSG5_SENT_INF_EID, "INFO", 1
+21-236-12:21:10.184 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.184 00     SPR-I:OPRO         ; Setup event 1 with TST_DS INFO 9
+21-236-12:21:10.184 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.184 00 SCX_CPU1_DS_MO/646      
+21-236-12:21:10.184 00 SCX_CPU1_DS_MO/648      /SCX_CPU1_TST_DS_SENDMESSAGE MsgID=seqMsgID MsgType=5 Pattern=x'A5'
+21-236-12:21:10.196 00 SCX_CPU1_DS_MO/649      
+21-236-12:21:10.196 00 SCX_CPU1_DS_MO/651      ut_tlmwait  SCX_CPU1_find_event[1].num_found_messages, 1
+21-236-12:21:10.199 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:10.207 00    TLMH-I:STS          58-012-14:07:09.508 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=9 Sent Message Size 1516 to MID 0x00000900
+21-236-12:21:11.200 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:11.200 00 SCX_CPU1_DS_MO/652      if (UT_TW_Status = UT_Success) then
+21-236-12:21:11.200 00 SCX_CPU1_DS_MO/653        write "<*> Passed - Expected Event Msg ",TST_DS_MSG5_SENT_INF_EID," rcv'd."
+21-236-12:21:11.200 00     SPR-I:OPRO         <*> Passed - Expected Event Msg 9 rcv'd.
+21-236-12:21:11.200 00 SCX_CPU1_DS_MO/656      endif
+21-236-12:21:11.200 00 SCX_CPU1_DS_MO/657      
+21-236-12:21:11.200 00 SCX_CPU1_DS_MO/659      cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:11.201 00 SCX_CPU1_DS_MO/660      
+21-236-12:21:11.201 00 SCX_CPU1_DS_MO/661      /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:11.202 00 SCX_CPU1_DS_MO/662      
+21-236-12:21:11.202 00 SCX_CPU1_DS_MO/663      ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:11.205 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:11.709 00    TLMH-I:STS          58-012-14:07:11.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:13.206 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:13.207 00 SCX_CPU1_DS_MO/664      
+21-236-12:21:13.207 00 SCX_CPU1_DS_MO/667      local fileName3 = ""
+21-236-12:21:13.207 00 SCX_CPU1_DS_MO/668      if (SCX_CPU1_DS_FileState[seqFileEntry].FileName <> "") then
+21-236-12:21:13.207 00 SCX_CPU1_DS_MO/669        fileName3 = SCX_CPU1_DS_FileState[seqFileEntry].FileName
+21-236-12:21:13.207 00 SCX_CPU1_DS_MO/670        write "<*> Passed (3000;3000.1;3000.1.1) - A file was created with name '",fileName3,"'"
+21-236-12:21:13.207 00     SPR-I:OPRO         <*> Passed (3000;3000.1;3000.1.1) - A file was created with name '/ram/seq100000102.dat'
+21-236-12:21:13.207 00 SCX_CPU1_DS_MO/671        ut_setrequirements DS_3000, "P"
+21-236-12:21:13.208 00 SCX_CPU1_DS_MO/672        ut_setrequirements DS_30001, "A"
+21-236-12:21:13.209 00 SCX_CPU1_DS_MO/673        ut_setrequirements DS_300011, "A"
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/674      
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/675        slashLoc = %locate(fileName3,"/")
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/677        while (slashLoc <> 0) do
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/678          fileName3 = %substring(fileName3,slashLoc+1,%length(fileName3))
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/679          slashLoc = %locate(fileName3,"/")
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/680        enddo
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/678          fileName3 = %substring(fileName3,slashLoc+1,%length(fileName3))
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/679          slashLoc = %locate(fileName3,"/")
+21-236-12:21:13.210 00 SCX_CPU1_DS_MO/680        enddo
+21-236-12:21:13.211 00 SCX_CPU1_DS_MO/681      
+21-236-12:21:13.211 00 SCX_CPU1_DS_MO/682        write "==> FileName3 filename only = '",fileName3,"'"
+21-236-12:21:13.211 00     SPR-I:OPRO         ==> FileName3 filename only = 'seq100000102.dat'
+21-236-12:21:13.211 00 SCX_CPU1_DS_MO/683      
+21-236-12:21:13.211 00 SCX_CPU1_DS_MO/684        if (SCX_CPU1_DS_FileState[seqFileEntry].OpenState = DS_OPEN) then
+21-236-12:21:13.211 00 SCX_CPU1_DS_MO/685          write "<*> Passed (3001) - The file is marked 'OPEN'"
+21-236-12:21:13.211 00     SPR-I:OPRO         <*> Passed (3001) - The file is marked 'OPEN'
+21-236-12:21:13.216 00 SCX_CPU1_DS_MO/686          ut_setrequirements DS_3001, "P"
+21-236-12:21:13.217 00 SCX_CPU1_DS_MO/687        endif
+21-236-12:21:13.217 00 SCX_CPU1_DS_MO/688      
+21-236-12:21:13.217 00 SCX_CPU1_DS_MO/689        if (fileName2 <> fileName3) then
+21-236-12:21:13.217 00 SCX_CPU1_DS_MO/690          write "<*> Passed (3001.1) - A new file was opened"
+21-236-12:21:13.217 00     SPR-I:OPRO         <*> Passed (3001.1) - A new file was opened
+21-236-12:21:13.217 00 SCX_CPU1_DS_MO/691          ut_setrequirements DS_30011, "P"
+21-236-12:21:13.218 00 SCX_CPU1_DS_MO/692          ut_setrequirements DS_30012, "A"
+21-236-12:21:13.219 00 SCX_CPU1_DS_MO/697        endif
+21-236-12:21:13.219 00 SCX_CPU1_DS_MO/698      
+21-236-12:21:13.219 00 SCX_CPU1_DS_MO/701        /SCX_CPU1_FM_DirListTlm DirName=pathName Offset=0 GetStatFlag=0
+21-236-12:21:13.231 00 SCX_CPU1_DS_MO/702        wait 10
+21-236-12:21:13.231 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/703      
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.243 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.244 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/706          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/709          endif
+21-236-12:21:23.245 00 SCX_CPU1_DS_MO/710        enddo
+21-236-12:21:23.246 00 SCX_CPU1_DS_MO/705        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:23.246 00 SCX_CPU1_DS_MO/711      
+21-236-12:21:23.246 00 SCX_CPU1_DS_MO/713        /SCX_CPU1_FM_DirListTlm DirName=moveDirName Offset=0 GetStatFlag=0
+21-236-12:21:23.257 00 SCX_CPU1_DS_MO/714        wait 10
+21-236-12:21:23.257 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:21:33.266 00 SCX_CPU1_DS_MO/715      
+21-236-12:21:33.266 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.266 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.266 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.266 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.266 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.267 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.268 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.268 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.268 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.268 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.268 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.268 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.269 00 SCX_CPU1_DS_MO/719            write "<*> Passed - File '",fileName2,"' is contained in directory '",moveDirName,"' as expected."
+21-236-12:21:33.269 00     SPR-I:OPRO         <*> Passed - File 'seq100000101.dat' is contained in directory '/ram/movedir/' as expected.
+21-236-12:21:33.269 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.269 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.269 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.269 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.270 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.270 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.270 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.270 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.270 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.270 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/718          if (fileName2 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/720          endif
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/721        enddo
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/717        for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/728      endif
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/729      
+21-236-12:21:33.271 00 SCX_CPU1_DS_MO/730      write ";***********************************************************************"
+21-236-12:21:33.271 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:33.272 00 SCX_CPU1_DS_MO/731      write ";  Step 2.4: Wait for the file created above to exceed its maximum age."
+21-236-12:21:33.272 00     SPR-I:OPRO         ;  Step 2.4: Wait for the file created above to exceed its maximum age.
+21-236-12:21:33.272 00 SCX_CPU1_DS_MO/732      write ";***********************************************************************"
+21-236-12:21:33.272 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:33.272 00 SCX_CPU1_DS_MO/735      local fileAge = SCX_CPU1_DS_DF_TBL[seqFileEntry].FileAge
+21-236-12:21:33.272 00 SCX_CPU1_DS_MO/736      local reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:33.272 00 SCX_CPU1_DS_MO/737      local waitTime = fileAge - reportedAge
+21-236-12:21:33.272 00 SCX_CPU1_DS_MO/738      local originalAge = reportedAge
+21-236-12:21:33.273 00 SCX_CPU1_DS_MO/739      
+21-236-12:21:33.273 00 SCX_CPU1_DS_MO/740      fileName1 = SCX_CPU1_DS_FileState[seqFileEntry].FileName
+21-236-12:21:33.273 00 SCX_CPU1_DS_MO/741      
+21-236-12:21:33.273 00 SCX_CPU1_DS_MO/742      while (waitTime > 0) do
+21-236-12:21:33.273 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:33.274 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:33.274 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:33.287 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:33.287 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:33.296 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:33.708 00    TLMH-I:STS          58-012-14:07:33.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:37.304 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:37.306 00 SCX_CPU1_DS_MO/749      
+21-236-12:21:37.306 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:37.306 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:21:37.307 00     SPR-I:OPRO         new file age = 24
+21-236-12:21:37.307 00 SCX_CPU1_DS_MO/752      
+21-236-12:21:37.307 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:21:37.307 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:21:37.310 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:21:37.313 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:21:37.314 00 SCX_CPU1_DS_MO/758      
+21-236-12:21:37.314 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:21:37.314 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:21:37.314 00     SPR-I:OPRO         timeout calculation = 76
+21-236-12:21:37.314 00 SCX_CPU1_DS_MO/761      
+21-236-12:21:37.314 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:21:37.314 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:21:37.315 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:21:37.315 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:21:37.315 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:37.316 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:37.316 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:37.331 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:37.331 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:37.340 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:37.710 00    TLMH-I:STS          58-012-14:07:37.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:38.602 00     SPR-I:OPRI     --> page SCX_CPU1_DS_FILE_HK
+21-236-12:21:41.459 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:41.461 00 SCX_CPU1_DS_MO/749      
+21-236-12:21:41.461 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:41.461 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:21:41.461 00     SPR-I:OPRO         new file age = 28
+21-236-12:21:41.462 00 SCX_CPU1_DS_MO/752      
+21-236-12:21:41.462 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:21:41.462 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:21:41.464 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/758      
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:21:41.466 00     SPR-I:OPRO         timeout calculation = 72
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/761      
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:41.466 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:41.467 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:41.478 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:41.478 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:41.482 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:41.711 00    TLMH-I:STS          58-012-14:07:41.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:45.492 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:45.494 00 SCX_CPU1_DS_MO/749      
+21-236-12:21:45.494 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:45.494 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:21:45.494 00     SPR-I:OPRO         new file age = 32
+21-236-12:21:45.495 00 SCX_CPU1_DS_MO/752      
+21-236-12:21:45.495 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:21:45.495 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:21:45.497 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:21:45.498 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:21:45.498 00 SCX_CPU1_DS_MO/758      
+21-236-12:21:45.498 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:21:45.498 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:21:45.498 00     SPR-I:OPRO         timeout calculation = 68
+21-236-12:21:45.498 00 SCX_CPU1_DS_MO/761      
+21-236-12:21:45.498 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:21:45.499 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:21:45.499 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:21:45.499 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:21:45.503 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:45.503 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:45.503 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:45.514 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:45.514 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:45.520 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:45.707 00    TLMH-I:STS          58-012-14:07:45.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:49.525 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:49.525 00 SCX_CPU1_DS_MO/749      
+21-236-12:21:49.525 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:49.526 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:21:49.526 00     SPR-I:OPRO         new file age = 36
+21-236-12:21:49.526 00 SCX_CPU1_DS_MO/752      
+21-236-12:21:49.526 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:21:49.526 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:21:49.526 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/758      
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:21:49.527 00     SPR-I:OPRO         timeout calculation = 64
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/761      
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:21:49.527 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:21:49.531 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:49.531 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:49.531 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:49.542 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:49.543 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:49.546 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:49.712 00    TLMH-I:STS          58-012-14:07:49.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:53.551 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:53.552 00 SCX_CPU1_DS_MO/749      
+21-236-12:21:53.552 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:53.553 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:21:53.553 00     SPR-I:OPRO         new file age = 40
+21-236-12:21:53.553 00 SCX_CPU1_DS_MO/752      
+21-236-12:21:53.553 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:21:53.553 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:21:53.556 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:21:53.557 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/758      
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:21:53.558 00     SPR-I:OPRO         timeout calculation = 60
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/761      
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:21:53.558 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:21:53.564 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:53.564 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:53.564 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:53.578 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:53.579 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:53.583 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:53.709 00    TLMH-I:STS          58-012-14:07:53.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:57.588 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:57.590 00 SCX_CPU1_DS_MO/749      
+21-236-12:21:57.590 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:21:57.590 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:21:57.590 00     SPR-I:OPRO         new file age = 44
+21-236-12:21:57.590 00 SCX_CPU1_DS_MO/752      
+21-236-12:21:57.590 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:21:57.591 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:21:57.593 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/758      
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:21:57.594 00     SPR-I:OPRO         timeout calculation = 56
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/761      
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:21:57.594 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:21:57.595 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:21:57.595 00 SCX_CPU1_DS_MO/745      
+21-236-12:21:57.595 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:21:57.606 00 SCX_CPU1_DS_MO/747      
+21-236-12:21:57.606 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:21:57.610 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:57.711 00    TLMH-I:STS          58-012-14:07:57.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:01.614 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:01.616 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:01.616 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:01.616 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:01.616 00     SPR-I:OPRO         new file age = 48
+21-236-12:22:01.616 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:01.617 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:01.617 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:01.619 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:01.620 00     SPR-I:OPRO         timeout calculation = 52
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:01.620 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:01.624 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:01.624 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:01.624 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:01.635 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:01.635 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:01.639 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:01.714 00    TLMH-I:STS          58-012-14:08:01.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:05.644 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:05.646 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:05.646 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:05.646 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:05.646 00     SPR-I:OPRO         new file age = 52
+21-236-12:22:05.646 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:05.646 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:05.647 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:05.650 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:05.651 00     SPR-I:OPRO         timeout calculation = 48
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:05.651 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:05.655 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:05.656 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:05.656 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:05.667 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:05.667 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:05.670 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:05.708 00    TLMH-I:STS          58-012-14:08:05.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:09.675 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:09.676 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:09.676 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:09.677 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:09.677 00     SPR-I:OPRO         new file age = 56
+21-236-12:22:09.677 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:09.677 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:09.677 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:09.680 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:09.681 00     SPR-I:OPRO         timeout calculation = 44
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:09.681 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:09.682 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:09.689 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:09.689 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:09.689 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:09.701 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:09.701 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:09.707 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:10.211 00    TLMH-I:STS          58-012-14:08:09.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:12.710 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:12.710 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:12.711 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:12.711 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:12.711 00     SPR-I:OPRO         new file age = 60
+21-236-12:22:12.711 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:12.711 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:12.711 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:12.712 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:12.713 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:12.713 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:12.714 00     SPR-I:OPRO         timeout calculation = 40
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:12.714 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:12.719 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:12.719 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:12.719 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:12.731 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:12.731 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:12.735 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:13.214 00    TLMH-I:STS          58-012-14:08:12.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:16.739 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:16.740 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:16.741 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:16.741 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:16.741 00     SPR-I:OPRO         new file age = 64
+21-236-12:22:16.741 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:16.741 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:16.742 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:16.744 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:16.745 00     SPR-I:OPRO         timeout calculation = 36
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:16.745 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:16.749 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:16.749 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:16.749 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:16.750 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:16.750 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:16.753 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:17.209 00    TLMH-I:STS          58-012-14:08:16.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:20.757 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:20.759 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:20.759 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:20.759 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:20.760 00     SPR-I:OPRO         new file age = 68
+21-236-12:22:20.760 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:20.760 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:20.760 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:20.762 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:20.763 00     SPR-I:OPRO         timeout calculation = 32
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:20.763 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:20.768 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:20.768 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:20.768 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:20.781 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:20.781 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:20.784 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:21.207 00    TLMH-I:STS          58-012-14:08:20.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:24.789 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:24.789 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:24.789 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:24.789 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:24.790 00     SPR-I:OPRO         new file age = 72
+21-236-12:22:24.790 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:24.790 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:24.790 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:24.791 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:24.792 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:24.793 00     SPR-I:OPRO         timeout calculation = 28
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:24.793 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:24.794 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:24.794 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:24.794 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:24.805 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:24.805 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:24.808 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:25.215 00    TLMH-I:STS          58-012-14:08:24.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:28.813 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:28.815 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:28.815 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:28.815 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:28.816 00     SPR-I:OPRO         new file age = 76
+21-236-12:22:28.816 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:28.816 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:28.816 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:28.820 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:28.823 00     SPR-I:OPRO         timeout calculation = 24
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:28.823 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:28.824 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:28.824 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:28.824 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:28.825 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:28.825 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:28.840 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:28.840 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:28.851 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:29.211 00    TLMH-I:STS          58-012-14:08:28.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:32.856 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:32.858 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:32.858 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:32.859 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:32.859 00     SPR-I:OPRO         new file age = 80
+21-236-12:22:32.859 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:32.859 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:32.859 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:32.863 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:32.869 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:32.869 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:32.869 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:32.870 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:32.870 00     SPR-I:OPRO         timeout calculation = 20
+21-236-12:22:32.870 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:32.870 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:32.870 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:32.871 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:32.871 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:32.871 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:32.872 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:32.872 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:32.878 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:32.878 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:32.890 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:33.214 00    TLMH-I:STS          58-012-14:08:32.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:36.895 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:36.897 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:36.897 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:36.897 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:36.897 00     SPR-I:OPRO         new file age = 84
+21-236-12:22:36.897 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:36.897 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:36.898 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:36.900 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:36.902 00     SPR-I:OPRO         timeout calculation = 16
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:36.902 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:36.907 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:36.908 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:36.908 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:36.922 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:36.922 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:36.926 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:37.215 00    TLMH-I:STS          58-012-14:08:36.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:40.930 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:40.932 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:40.932 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:40.932 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:40.932 00     SPR-I:OPRO         new file age = 88
+21-236-12:22:40.932 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:40.933 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:40.933 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:40.935 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:40.939 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:40.939 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:40.939 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:40.940 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:40.941 00     SPR-I:OPRO         timeout calculation = 12
+21-236-12:22:40.941 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:40.941 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:40.941 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:40.942 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:40.942 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:40.943 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:40.943 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:40.943 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:40.960 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:40.960 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:40.969 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:41.207 00    TLMH-I:STS          58-012-14:08:40.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:44.974 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:44.976 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:44.976 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:44.977 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:44.977 00     SPR-I:OPRO         new file age = 92
+21-236-12:22:44.977 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:44.977 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:44.978 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:44.981 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:44.984 00     SPR-I:OPRO         timeout calculation = 8
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:44.984 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:44.985 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:44.985 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:44.985 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:44.986 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:44.986 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:44.988 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:44.988 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:44.994 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:45.212 00    TLMH-I:STS          58-012-14:08:44.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:48.997 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:48.998 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:48.998 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:48.998 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:48.998 00     SPR-I:OPRO         new file age = 96
+21-236-12:22:48.998 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:48.998 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:48.998 00 SCX_CPU1_DS_MO/755          ut_setrequirements DS_3002, "P"
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/756          ut_setrequirements DS_30021, "P"
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:48.999 00     SPR-I:OPRO         timeout calculation = 4
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:48.999 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:49.000 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:49.000 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:49.000 00 SCX_CPU1_DS_MO/744        cmdCtr = SCX_CPU1_DS_CMDPC + 1
+21-236-12:22:49.000 00 SCX_CPU1_DS_MO/745      
+21-236-12:22:49.000 00 SCX_CPU1_DS_MO/746        /SCX_CPU1_DS_GetFileInfo
+21-236-12:22:49.011 00 SCX_CPU1_DS_MO/747      
+21-236-12:22:49.011 00 SCX_CPU1_DS_MO/748        ut_tlmwait SCX_CPU1_DS_CMDPC, {cmdCtr}
+21-236-12:22:49.014 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:49.207 00    TLMH-I:STS          58-012-14:08:48.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:53.017 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:53.017 00 SCX_CPU1_DS_MO/749      
+21-236-12:22:53.017 00 SCX_CPU1_DS_MO/750        reportedAge = SCX_CPU1_DS_FileState[seqFileEntry].FileAge
+21-236-12:22:53.017 00 SCX_CPU1_DS_MO/751        write "new file age = ",reportedAge
+21-236-12:22:53.017 00     SPR-I:OPRO         new file age = 0
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/752      
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/754        if (originalAge <> reportedAge) then
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/757        endif
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/758      
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/759        waitTime = fileAge - reportedAge
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/760        write "timeout calculation = ",waitTime
+21-236-12:22:53.018 00     SPR-I:OPRO         timeout calculation = 100
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/761      
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/764        if (SCX_CPU1_DS_FileState[seqFileEntry].FileName = "") AND ;;
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/765           (SCX_CPU1_DS_FileState[seqFileEntry].FileAge = 0) then
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/766          waitTime = 0
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/767          write "TLM reports the file is no longer open"
+21-236-12:22:53.018 00     SPR-I:OPRO         TLM reports the file is no longer open
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/768        endif
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/769      enddo
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/770      
+21-236-12:22:53.018 00 SCX_CPU1_DS_MO/771      wait 5
+21-236-12:22:53.018 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:22:58.021 00 SCX_CPU1_DS_MO/772      
+21-236-12:22:58.021 00 SCX_CPU1_DS_MO/775      /SCX_CPU1_FM_DirListTlm DirName=pathName Offset=0 GetStatFlag=0
+21-236-12:22:58.033 00 SCX_CPU1_DS_MO/776      wait 10
+21-236-12:22:58.033 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:23:08.039 00 SCX_CPU1_DS_MO/777      
+21-236-12:23:08.039 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.039 00 SCX_CPU1_DS_MO/780        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:08.039 00 SCX_CPU1_DS_MO/783        endif
+21-236-12:23:08.039 00 SCX_CPU1_DS_MO/784      enddo
+21-236-12:23:08.039 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/780        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/783        endif
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/784      enddo
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/780        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/783        endif
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/784      enddo
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/780        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/783        endif
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/784      enddo
+21-236-12:23:08.040 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/780        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/783        endif
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/784      enddo
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/780        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/783        endif
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/784      enddo
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/779      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/785      
+21-236-12:23:08.041 00 SCX_CPU1_DS_MO/787      /SCX_CPU1_FM_DirListTlm DirName=moveDirName Offset=0 GetStatFlag=0
+21-236-12:23:08.054 00 SCX_CPU1_DS_MO/788      wait 10
+21-236-12:23:08.054 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:23:12.318 00     SPR-I:OPRI     --> s display_next_page ( 20, 10, "NEXT", 140, "TLM")
+21-236-12:23:12.318 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/display_next_page.i
+21-236-12:23:12.319 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE started
+21-236-12:23:12.319 00 DISPLAY_NEXT_P/2        ;
+21-236-12:23:12.319 00 DISPLAY_NEXT_P/3        local logging = %liv (log_procedure)
+21-236-12:23:12.319 00 DISPLAY_NEXT_P/4        %liv (log_procedure) = FALSE
+21-236-12:23:12.321 00 DISPLAY_NEXT_P/85       
+21-236-12:23:12.321 00 DISPLAY_NEXT_P/86       ENDPROC
+21-236-12:23:12.321 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE completed
+21-236-12:23:15.083 00     SPR-I:OPRI     --> s display_next_page ( 20, 10, "PREV", 140, "TLM")
+21-236-12:23:15.083 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/display_next_page.i
+21-236-12:23:15.085 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE started
+21-236-12:23:15.086 00 DISPLAY_NEXT_P/2        ;
+21-236-12:23:15.086 00 DISPLAY_NEXT_P/3        local logging = %liv (log_procedure)
+21-236-12:23:15.086 00 DISPLAY_NEXT_P/4        %liv (log_procedure) = FALSE
+21-236-12:23:15.091 00 DISPLAY_NEXT_P/85       
+21-236-12:23:15.091 00 DISPLAY_NEXT_P/86       ENDPROC
+21-236-12:23:15.091 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE completed
+21-236-12:23:18.095 00 SCX_CPU1_DS_MO/789      
+21-236-12:23:18.095 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.095 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.096 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.096 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.096 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.097 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.097 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.097 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.097 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.098 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.098 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.098 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.099 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.099 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.099 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.099 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.100 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.100 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.101 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.101 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.101 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.101 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.102 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.102 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.102 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.103 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.103 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.104 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.104 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.105 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.105 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.105 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.106 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.106 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.106 00 SCX_CPU1_DS_MO/793          write "<*> Passed - File '",fileName3,"' is contained in directory '",moveDirName,"' as expected."
+21-236-12:23:18.107 00     SPR-I:OPRO         <*> Passed - File 'seq100000102.dat' is contained in directory '/ram/movedir/' as expected.
+21-236-12:23:18.107 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.107 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.108 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.108 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.109 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.109 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.110 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.110 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.111 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.111 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.111 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.112 00 SCX_CPU1_DS_MO/792        if (fileName3 = SCX_CPU1_FM_DirList[i].name) then
+21-236-12:23:18.112 00 SCX_CPU1_DS_MO/794        endif
+21-236-12:23:18.112 00 SCX_CPU1_DS_MO/795      enddo
+21-236-12:23:18.113 00 SCX_CPU1_DS_MO/791      for i = 1 to SCX_CPU1_FM_PktFiles do
+21-236-12:23:18.113 00 SCX_CPU1_DS_MO/796      
+21-236-12:23:18.113 00 SCX_CPU1_DS_MO/797      wait 5
+21-236-12:23:18.113 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:23:23.117 00 SCX_CPU1_DS_MO/798      
+21-236-12:23:23.118 00 SCX_CPU1_DS_MO/799      step3_0:
+21-236-12:23:23.118 00 SCX_CPU1_DS_MO/800      write ";***********************************************************************"
+21-236-12:23:23.118 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:23:23.118 00 SCX_CPU1_DS_MO/801      write ";  Step 3.0: Clean-up - Send the Processor Reset command in order to    "
+21-236-12:23:23.118 00     SPR-I:OPRO         ;  Step 3.0: Clean-up - Send the Processor Reset command in order to    
+21-236-12:23:23.118 00 SCX_CPU1_DS_MO/802      write ";  be able to retrieve files in RAM after this procedure completes. "
+21-236-12:23:23.118 00     SPR-I:OPRO         ;  be able to retrieve files in RAM after this procedure completes. 
+21-236-12:23:23.118 00 SCX_CPU1_DS_MO/803      write ";***********************************************************************"
+21-236-12:23:23.118 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:23:23.118 00 SCX_CPU1_DS_MO/804      /SCX_CPU1_ES_PROCESSORRESET
+21-236-12:23:23.134 00 SCX_CPU1_DS_MO/805      wait 10
+21-236-12:23:23.134 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:23:33.142 00 SCX_CPU1_DS_MO/806      
+21-236-12:23:33.142 00 SCX_CPU1_DS_MO/807      close_data_center
+21-236-12:23:33.143 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-12:23:33.143 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-12:23:33.143 00 CLEAR_SPACECRA/2        ;
+21-236-12:23:33.143 00 CLEAR_SPACECRA/3        local logging = %liv(log_procedure)
+21-236-12:23:33.143 00 CLEAR_SPACECRA/4        %liv (log_procedure) = FALSE
+21-236-12:23:33.147 00 CLEAR_SPACECRA/135      
+21-236-12:23:33.147 00 CLEAR_SPACECRA/136      endproc
+21-236-12:23:33.147 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-12:23:33.162 00 SCX_CPU1_DS_MO/808      wait 60
+21-236-12:23:33.162 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-12:24:33.212 00 SCX_CPU1_DS_MO/809      
+21-236-12:24:33.212 00 SCX_CPU1_DS_MO/810      cfe_startup {hostCPU}
+21-236-12:24:33.225 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:24:43.236 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:24:43.298 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-12:24:43.298 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-12:24:43.298 00 SEND_THAT_TO_C/2        ;
+21-236-12:24:43.298 00 SEND_THAT_TO_C/3        local logging = %liv (log_procedure)
+21-236-12:24:43.299 00 SEND_THAT_TO_C/4        %liv (log_procedure) = FALSE
+21-236-12:24:43.301 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-12:24:43.343 00 SEND_THAT_TO_C/83       
+21-236-12:24:43.343 00 SEND_THAT_TO_C/84       endproc
+21-236-12:24:43.343 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-12:24:43.343 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:24:44.235 00    TLMH-I:STS          58-012-14:09:49.600 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-12:24:46.348 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:24:46.348 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-12:24:46.350 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-12:24:46.350 00 FILL_IN_SPACEC/2        ;
+21-236-12:24:46.351 00 FILL_IN_SPACEC/3        local logging = %liv (log_procedure)
+21-236-12:24:46.351 00 FILL_IN_SPACEC/4        %liv (log_procedure) = FALSE
+21-236-12:24:46.355 00 FILL_IN_SPACEC/152      
+21-236-12:24:46.355 00 FILL_IN_SPACEC/153      endproc
+21-236-12:24:46.355 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-12:24:46.356 00 SCX_CPU1_DS_MO/811      wait 5
+21-236-12:24:46.356 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:24:51.360 00 SCX_CPU1_DS_MO/812      
+21-236-12:24:51.360 00 SCX_CPU1_DS_MO/813      write "**** Requirements Status Reporting"
+21-236-12:24:51.360 00     SPR-I:OPRO         **** Requirements Status Reporting
+21-236-12:24:51.360 00 SCX_CPU1_DS_MO/814                                                                                      
+21-236-12:24:51.360 00 SCX_CPU1_DS_MO/815      write "--------------------------"
+21-236-12:24:51.360 00     SPR-I:OPRO         --------------------------
+21-236-12:24:51.360 00 SCX_CPU1_DS_MO/816      write "   Requirement(s) Report"
+21-236-12:24:51.361 00     SPR-I:OPRO            Requirement(s) Report
+21-236-12:24:51.361 00 SCX_CPU1_DS_MO/817      write "--------------------------"
+21-236-12:24:51.361 00     SPR-I:OPRO         --------------------------
+21-236-12:24:51.361 00 SCX_CPU1_DS_MO/818      
+21-236-12:24:51.361 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.361 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.362 00     SPR-I:OPRO         FSW Requirement: DS_1004                          P/F: P
+21-236-12:24:51.363 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.363 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.364 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.365 00     SPR-I:OPRO         FSW Requirement: DS_3000                          P/F: P
+21-236-12:24:51.365 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.365 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.365 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.366 00     SPR-I:OPRO         FSW Requirement: DS_3000.1                        P/F: A
+21-236-12:24:51.366 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.366 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.366 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.366 00     SPR-I:OPRO         FSW Requirement: DS_3000.1.1                      P/F: A
+21-236-12:24:51.367 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.367 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.367 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.367 00     SPR-I:OPRO         FSW Requirement: DS_3001                          P/F: P
+21-236-12:24:51.372 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.372 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.372 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.372 00     SPR-I:OPRO         FSW Requirement: DS_3001.1                        P/F: P
+21-236-12:24:51.373 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.373 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.373 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.373 00     SPR-I:OPRO         FSW Requirement: DS_3001.2                        P/F: A
+21-236-12:24:51.373 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.373 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.374 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.374 00     SPR-I:OPRO         FSW Requirement: DS_3002                          P/F: P
+21-236-12:24:51.374 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.374 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.374 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.374 00     SPR-I:OPRO         FSW Requirement: DS_3002.1                        P/F: P
+21-236-12:24:51.380 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.380 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.380 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.380 00     SPR-I:OPRO         FSW Requirement: DS_5002                          P/F: P
+21-236-12:24:51.381 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.381 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.381 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.381 00     SPR-I:OPRO         FSW Requirement: DS_8000                          P/F: P
+21-236-12:24:51.381 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.381 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.381 00 SCX_CPU1_DS_MO/820        ut_pfindicate {cfe_requirements[i]} {ut_requirement[i]}
+21-236-12:24:51.382 00     SPR-I:OPRO         FSW Requirement: DS_9000                          P/F: P
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/821      ENDDO
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/819      FOR i = 0 to ut_req_array_size DO
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/822      
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/823      drop ut_requirement ; needed to clear global variables
+21-236-12:24:51.387 00     SPR-I:STS          Variable "UT_REQUIREMENT" deleted
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/824      drop ut_req_array_size ; needed to clear global variables
+21-236-12:24:51.387 00     SPR-I:STS          Variable "UT_REQ_ARRAY_SIZE" deleted
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/825      
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/826      write ";*********************************************************************"
+21-236-12:24:51.387 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:24:51.387 00 SCX_CPU1_DS_MO/827      write ";  End procedure SCX_CPU1_ds_movefile"
+21-236-12:24:51.387 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_movefile
+21-236-12:24:51.388 00 SCX_CPU1_DS_MO/828      write ";*********************************************************************"
+21-236-12:24:51.388 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:24:51.388 00 SCX_CPU1_DS_MO/829      ENDPROC
+21-236-12:24:51.388 00     SPR-I:STS          Procedure SCX_CPU1_DS_MOVEFILE completed
+21-236-12:24:51.392 00     UT_RUNPROC/249      
+21-236-12:24:51.392 00     UT_RUNPROC/264      #endif
+21-236-12:24:51.392 00     UT_RUNPROC/265      
+21-236-12:24:51.392 00     UT_RUNPROC/266      write "*** Telemetry Info ***"
+21-236-12:24:51.392 00     SPR-I:OPRO         *** Telemetry Info ***
+21-236-12:24:51.392 00     UT_RUNPROC/268      ;;; write "Pkt Loss Count: ", TO_PCKTSDISCARD
+21-236-12:24:51.392 00     UT_RUNPROC/269      write "Pkt Loss Count: N/A"
+21-236-12:24:51.392 00     SPR-I:OPRO         
+21-236-12:24:51.392 00     UT_RUNPROC/269      write "Pkt Loss Count: N/A"
+21-236-12:24:51.392 00     SPR-I:OPRO         Pkt Loss Count: N/A
+21-236-12:24:51.392 00     UT_RUNPROC/271      write "******************"
+21-236-12:24:51.392 00     SPR-I:OPRO         
+21-236-12:24:51.392 00     UT_RUNPROC/271      write "******************"
+21-236-12:24:51.392 00     SPR-I:OPRO         ******************
+21-236-12:24:51.392 00     UT_RUNPROC/273      
+21-236-12:24:51.392 00     SPR-I:OPRO         
+21-236-12:24:51.392 00     UT_RUNPROC/273      
+21-236-12:24:51.392 00     UT_RUNPROC/274      etime = %gmt
+21-236-12:24:51.392 00     UT_RUNPROC/275      write "Elapsed time:  ", etime-stime, " seconds"
+21-236-12:24:51.393 00     SPR-I:OPRO         Elapsed time:  502.646 seconds
+21-236-12:24:51.396 00     UT_RUNPROC/276      write "Elapsed time:  ", (etime-stime)/60, " minutes"
+21-236-12:24:51.396 00     SPR-I:OPRO         Elapsed time:  8.37744 minutes
+21-236-12:24:51.396 00     UT_RUNPROC/277      ;
+21-236-12:24:51.396 00     UT_RUNPROC/278      ; wait for completion of procedure
+21-236-12:24:51.396 00     UT_RUNPROC/279      ;
+21-236-12:24:51.396 00     UT_RUNPROC/280      wait(10)
+21-236-12:24:51.396 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:25:01.404 00     UT_RUNPROC/281      ;
+21-236-12:25:01.404 00     UT_RUNPROC/282      ; close the log to procedure log name for archive
+21-236-12:25:01.404 00     UT_RUNPROC/283      ;
+21-236-12:25:01.404 00     UT_RUNPROC/284      local test_log_string = "/test_logs/"
+21-236-12:25:01.404 00     UT_RUNPROC/285      if ((logoff_when_done = 0) and  (%length(opt_parm) <> 0)) then
+21-236-12:25:01.404 00     UT_RUNPROC/286        test_log_string = test_log_string & opt_parm & "/"
+21-236-12:25:01.404 00     UT_RUNPROC/287      endif
+21-236-12:25:01.404 00     UT_RUNPROC/288      
+21-236-12:25:01.404 00     UT_RUNPROC/289      write "Creating filtered log at " & %env("WORK") & test_log_string ;;
+21-236-12:25:01.404 00     UT_RUNPROC/290            & log_name & "f"
+21-236-12:25:01.404 00     SPR-I:OPRO         Creating filtered log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logf
+21-236-12:25:01.404 00     UT_RUNPROC/291      write "Creating filtered output log at " & %env("WORK") & test_log_string ;;
+21-236-12:25:01.404 00     UT_RUNPROC/292            & log_name & "p"
+21-236-12:25:01.404 00     SPR-I:OPRO         Creating filtered output log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logp
+21-236-12:25:01.404 00     UT_RUNPROC/293      write "Creating filtered output log (without SFDUs) at " & %env("WORK") ;;
+21-236-12:25:01.404 00     UT_RUNPROC/294            & test_log_string & log_name & "s"
+21-236-12:25:01.404 00     SPR-I:OPRO         Creating filtered output log (without SFDUs) at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logs
+21-236-12:25:01.404 00     UT_RUNPROC/295      write "Creating filtered event log at " & %env("WORK") & test_log_string ;;
+21-236-12:25:01.404 00     UT_RUNPROC/296            & log_name & "e"
+21-236-12:25:01.405 00     SPR-I:OPRO         Creating filtered event log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.loge
+21-236-12:25:01.405 00     UT_RUNPROC/297      write "Creating filtered requirements log at " & %env("WORK") ;;
+21-236-12:25:01.405 00     UT_RUNPROC/298            & test_log_string & log_name & "r"
+21-236-12:25:01.405 00     SPR-I:OPRO         Creating filtered requirements log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logr
+21-236-12:25:01.405 00     UT_RUNPROC/299      
+21-236-12:25:01.405 00     UT_RUNPROC/300      rstol_dir = "rstol 'newlog " & log_name & "'"
+21-236-12:25:01.405 00     UT_RUNPROC/301      native(rstol_dir)
+21-236-12:25:01.511 00     SPR-I:OPRI     --> newlog scx_cpu1_ds_movefile-2021-236-12h16m28s.log

@@ -1,0 +1,643 @@
+21-236-12:16:28.736 00     SPR-I:OPRO         ****************** FSW Configuration ******************
+21-236-12:16:28.737 00     SPR-I:OPRO                 Checksum:    29237
+21-236-12:16:28.737 00     SPR-I:OPRO                 cFE Version: 6.7.99.0
+21-236-12:16:28.737 00     SPR-I:OPRO                 OS Version:  5.0.0.255
+21-236-12:16:28.737 00     SPR-I:OPRO          
+21-236-12:16:28.742 00     SPR-I:OPRO                 Connection Status
+21-236-12:16:28.742 00     SPR-I:OPRO                 -----------------
+21-236-12:16:28.742 00     SPR-I:OPRO                 CFDP: DOWN
+21-236-12:16:28.742 00     SPR-I:OPRO                 UDP:  UP 
+21-236-12:16:28.742 00     SPR-I:OPRO                 SWTS:  UNK
+21-236-12:16:28.743 00     SPR-I:OPRO         
+21-236-12:16:28.743 00     SPR-I:OPRO                 CMD / TLM Path
+21-236-12:16:28.743 00     SPR-I:OPRO                 --------------
+21-236-12:16:28.743 00     SPR-I:OPRO                 UDP
+21-236-12:16:28.744 00     SPR-I:OPRO                 
+21-236-12:16:28.744 00     SPR-I:OPRO         
+21-236-12:16:28.745 00     SPR-I:OPRO                 ASIST / GDS Configuration
+21-236-12:16:28.745 00     SPR-I:OPRO                 -------------------------
+21-236-12:16:28.745 00     SPR-I:OPRO                 Workstation: GS582CFSLAB4
+21-236-12:16:28.745 00     SPR-I:OPRO                 Account: cfs_test
+21-236-12:16:28.745 00     SPR-I:OPRO                 Version: 21.0.7
+21-236-12:16:28.745 00     SPR-I:OPRO                 Tlm DB:  Version: 1.985  Date: 08-24-21  Time: 06:37:06 AM.
+21-236-12:16:28.745 00     SPR-I:OPRO                 Cmd DB:  Version: 1.51  Date: 08-24-21  Time: 06:47:31 AM.EDT
+21-236-12:16:28.745 00     SPR-I:OPRO         
+21-236-12:16:28.746 00     SPR-I:OPRO                 Telemetry Info
+21-236-12:16:28.746 00     SPR-I:OPRO                 --------------
+21-236-12:16:28.746 00     SPR-I:OPRO                 Pkt Loss Count: N/A
+21-236-12:16:28.746 00     SPR-I:OPRO         ****************  End FSW Configuration ***************
+21-236-12:16:28.746 00     SPR-I:OPRO         Starting Procedure.... scx_cpu1_ds_movefile
+21-236-12:16:28.881 00     SPR-I:OPRI     --> start scx_cpu1_ds_movefile
+21-236-12:16:28.881 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_movefile.i
+21-236-12:16:28.886 00     SPR-I:STS          Procedure SCX_CPU1_DS_MOVEFILE started
+21-236-12:16:28.991 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:16:28.991 00     SPR-I:OPRO         ;  Step 1.0: Data Storage Test Setup.
+21-236-12:16:28.991 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:16:28.991 00     SPR-I:OPRO         ;  Step 1.1: Command a Power-on Reset on CPU1.
+21-236-12:16:28.991 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:16:28.992 00     CMH-I:CMD              Command is /SCX_CPU1_ES_POWERONRESET  ;;; (SCX CPU1 ES Power-On Reset command code)
+21-236-12:16:28.992 00     CMH-I:CMD             Command SFDU received:<1806C000000302220002> from gs582cfslab4:SPR
+21-236-12:16:29.003 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:16:39.011 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-12:16:39.012 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-12:16:39.018 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-12:16:39.032 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-12:17:39.095 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:17:45.059 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-236-12:17:49.106 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:17:49.108 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_read C%03X 1235 packet_only" ;;; ( )
+21-236-12:17:49.124 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_write CPKT cpu3 1234 ascii_pkt" ;;; ( )
+21-236-12:17:49.167 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-12:17:49.167 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-12:17:49.169 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-12:17:49.170 00     CMH-I:CMD              Command is /SCX_CPU1_TO_OUTPUT_ENA   GS582CFSLAB4 ;;; (SCX CPU1 Enables TO output)
+21-236-12:17:49.170 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-236-12:17:49.221 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-12:17:49.221 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:17:49.720 00    TLMH-I:STS          58-012-14:03:48.517 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-12:17:53.226 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:17:53.226 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-12:17:53.228 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-12:17:53.233 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-12:17:53.233 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:17:58.237 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.237 00     SPR-I:OPRO         ;  Step 1.2: Upload the initial DS table load images to CPU1.
+21-236-12:17:58.238 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.238 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/scx_cpu1_ds_tbl4.i
+21-236-12:17:58.252 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL4 started
+21-236-12:17:58.318 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.318 00     SPR-I:OPRO         ;  Step 1.0: Define DS Destination File And Packet Filter Tables.
+21-236-12:17:58.319 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:17:58.324 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-12:17:58.324 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-12:17:58.326 00     SPR-I:OPRO         **********  ds_movefile.tbl  **********
+21-236-12:17:58.326 00     SPR-I:OPRO         
+21-236-12:17:58.326 00     SPR-I:OPRO                Content Type: cFE1
+21-236-12:17:58.326 00     SPR-I:OPRO                    Sub Type: 8
+21-236-12:17:58.326 00     SPR-I:OPRO                      Length: 12
+21-236-12:17:58.326 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-12:17:58.326 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-12:17:58.326 00     SPR-I:OPRO              Application Id: 3958
+21-236-12:17:58.327 00     SPR-I:OPRO            Create Time Secs: 1629807478
+21-236-12:17:58.327 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-12:17:58.327 00     SPR-I:OPRO            File Description: Move File Test File Table
+21-236-12:17:58.327 00     SPR-I:OPRO         
+21-236-12:17:58.327 00     SPR-I:OPRO         **********  DS.FILE_TBL  **********
+21-236-12:17:58.327 00     SPR-I:OPRO         
+21-236-12:17:58.327 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_DF_TBL_Description
+21-236-12:17:58.327 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-12:17:58.327 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_DF_TBL[7].SeqCnt
+21-236-12:17:58.327 00     SPR-I:OPRO             Number of Bytes: 1760
+21-236-12:17:58.327 00     SPR-I:OPRO         
+21-236-12:17:58.332 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-12:17:58.332 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-12:17:58.332 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 1875 P0F76 ds.file_tbl
+21-236-12:17:58.338 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-12:17:58.338 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_movefile.tbl.tmp ds.file_tbl > ds_movefile.tbl
+21-236-12:17:58.343 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.file_tbl ds_movefile.tbl.tmp
+21-236-12:17:58.346 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-12:17:58.829 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/create_tbl_file_from_cvt.i
+21-236-12:17:58.830 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT started
+21-236-12:17:58.831 00     SPR-I:OPRO         **********  ds_movefilter.tbl  **********
+21-236-12:17:58.831 00     SPR-I:OPRO         
+21-236-12:17:58.831 00     SPR-I:OPRO                Content Type: cFE1
+21-236-12:17:58.831 00     SPR-I:OPRO                    Sub Type: 8
+21-236-12:17:58.831 00     SPR-I:OPRO                      Length: 12
+21-236-12:17:58.832 00     SPR-I:OPRO               Spacecraft Id: SCX
+21-236-12:17:58.832 00     SPR-I:OPRO                Processor Id: CPU3
+21-236-12:17:58.832 00     SPR-I:OPRO              Application Id: 3959
+21-236-12:17:58.832 00     SPR-I:OPRO            Create Time Secs: 1629807478
+21-236-12:17:58.832 00     SPR-I:OPRO         Create Time Subsecs: 0
+21-236-12:17:58.832 00     SPR-I:OPRO            File Description: Move File Test Filter Table
+21-236-12:17:58.832 00     SPR-I:OPRO         
+21-236-12:17:58.832 00     SPR-I:OPRO         **********  DS.FILTER_TBL  **********
+21-236-12:17:58.832 00     SPR-I:OPRO         
+21-236-12:17:58.832 00     SPR-I:OPRO              Start Mnemonic: SCX_CPU1_DS_PF_TBL_Description
+21-236-12:17:58.832 00     SPR-I:OPRO                 Byte Offset: 0
+21-236-12:17:58.832 00     SPR-I:OPRO                End Mnemonic: SCX_CPU1_DS_PF_TBL[255].FilterParams[3].O_Value
+21-236-12:17:58.832 00     SPR-I:OPRO             Number of Bytes: 9248
+21-236-12:17:58.832 00     SPR-I:OPRO         
+21-236-12:17:58.839 00     SPR-I:STS          Loading file /s/opr/accounts/global/prc/partial_cvt_to_file_beta.i
+21-236-12:17:58.839 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA started
+21-236-12:17:58.839 00     SPR-I:OPRO         The unix command is cd /s/opr/accounts/cfs_test/image;cvt2file  -s 116 -e 9363 P0F77 ds.filter_tbl
+21-236-12:17:58.843 00     SPR-I:STS          Procedure PARTIAL_CVT_TO_FILE_BETA completed
+21-236-12:17:58.843 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;cat ds_movefilter.tbl.tmp ds.filter_tbl > ds_movefilter.tbl
+21-236-12:17:58.848 00     SPR-I:OPRO         cd /s/opr/accounts/cfs_test/image;rm ds.filter_tbl ds_movefilter.tbl.tmp
+21-236-12:17:58.854 00     SPR-I:STS          Procedure CREATE_TBL_FILE_FROM_CVT completed
+21-236-12:17:58.854 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:17:58.854 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_tbl4
+21-236-12:17:58.854 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:17:58.854 00     SPR-I:STS          Procedure SCX_CPU1_DS_TBL4 completed
+21-236-12:17:58.856 00     SPR-I:OPRO         ==> Default Destination File Table filename = 'ds_file_tbl.tbl'
+21-236-12:17:58.859 00     SPR-I:OPRO         ==> Default Filter Table filename = 'ds_filter_tbl.tbl'
+21-236-12:17:58.860 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-236-12:17:58.860 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-236-12:17:58.861 00     SPR-I:OPRO         Table Filename: ds_movefile.tbl
+21-236-12:17:58.862 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 ds_movefile.tbl RAM:0 3
+21-236-12:17:58.862 00     SPR-I:OPRO         
+21-236-12:17:59.005 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:17:59.005 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:04.009 00     SPR-I:OPRO         
+21-236-12:18:04.012 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/ds_movefile.tbl"
+21-236-12:18:04.014 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_LOAD  LFILENAME="/ram/ds_movefile.tbl" ;;; (SCX CPU1 TBL load table command)
+21-236-12:18:04.014 00     CMH-I:CMD             Command SFDU received:<1804C000004102152F72616D2F64735F6D6F766566696C652E74626C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:18:04.028 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:04.211 00    TLMH-I:STS          58-012-14:04:03.501 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_movefile.tbl' into 'DS.FILE_TBL' working buffer
+21-236-12:18:05.029 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:05.031 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-236-12:18:05.032 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:10.038 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_VALIDATE   INACTIVE VTABLENAME="DS.FILE_TBL" ;;; (SCX CPU1 TBL validate table command)
+21-236-12:18:10.039 00     CMH-I:CMD             Command SFDU received:<1804C000002B0436000044532E46494C455F54424C0000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:18:10.053 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:12.715 00    TLMH-I:STS          58-012-14:04:12.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=10 Destination file table verify results: desc text = OK, good entries = 8, bad = 0, unused = 8
+21-236-12:18:12.716 00    TLMH-I:STS          58-012-14:04:12.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 DS validation successful for Inactive 'DS.FILE_TBL'
+21-236-12:18:15.059 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_ACTIVATE  ATABLENAME="DS.FILE_TBL" ;;; (SCX CPU1 TBL activate table command)
+21-236-12:18:15.060 00     CMH-I:CMD             Command SFDU received:<1804C0000029053544532E46494C455F54424C0000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:18:15.073 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:16.718 00    TLMH-I:STS          58-012-14:04:16.003 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 DS Successfully Updated 'DS.FILE_TBL'
+21-236-12:18:20.080 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_table.i
+21-236-12:18:20.081 00     SPR-I:STS          Procedure LOAD_TABLE started
+21-236-12:18:20.085 00     SPR-I:OPRO         Table Filename: ds_movefilter.tbl
+21-236-12:18:20.087 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/table_ftp.pl 192.168.1.8 ds_movefilter.tbl RAM:0 3
+21-236-12:18:20.087 00     SPR-I:OPRO         
+21-236-12:18:20.219 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:18:20.220 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:25.224 00     SPR-I:OPRO         
+21-236-12:18:25.225 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_LOAD LFILENAME="/ram/ds_movefilter.tbl"
+21-236-12:18:25.225 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_LOAD  LFILENAME="/ram/ds_movefilter.tbl" ;;; (SCX CPU1 TBL load table command)
+21-236-12:18:25.225 00     CMH-I:CMD             Command SFDU received:<1804C000004102132F72616D2F64735F6D6F766566696C7465722E74626C000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:18:25.239 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:25.714 00    TLMH-I:STS          58-012-14:04:25.001 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=12 Successful load of '/ram/ds_movefilter.tbl' into 'DS.FILTER_TBL' working buffer
+21-236-12:18:29.243 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:29.245 00     SPR-I:STS          Procedure LOAD_TABLE completed
+21-236-12:18:29.246 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:34.252 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_VALIDATE   INACTIVE VTABLENAME="DS.FILTER_TBL" ;;; (SCX CPU1 TBL validate table command)
+21-236-12:18:34.253 00     CMH-I:CMD             Command SFDU received:<1804C000002B0430000044532E46494C5445525F54424C000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:18:34.265 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:36.716 00    TLMH-I:STS          58-012-14:04:36.004 INFO CPU=CPU1 APPNAME=DS EVENT ID=12 Filter table verify results: desc text = OK, good entries = 6, bad = 0, unused = 250
+21-236-12:18:36.717 00    TLMH-I:STS          58-012-14:04:36.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=36 DS validation successful for Inactive 'DS.FILTER_TBL'
+21-236-12:18:39.271 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_ACTIVATE  ATABLENAME="DS.FILTER_TBL" ;;; (SCX CPU1 TBL activate table command)
+21-236-12:18:39.272 00     CMH-I:CMD             Command SFDU received:<1804C0000029053344532E46494C5445525F54424C000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:18:39.284 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:40.720 00    TLMH-I:STS          58-012-14:04:40.004 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=37 DS Successfully Updated 'DS.FILTER_TBL'
+21-236-12:18:44.289 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.289 00     SPR-I:OPRO         ;  Step 1.3: Display the Housekeeping pages 
+21-236-12:18:44.289 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.393 00     DPD-I:STS          Page SCX_CPU1_DS_HK added (cid:1).
+21-236-12:18:44.467 00     DPD-I:STS          Page SCX_CPU1_TST_DS_HK added (cid:1).
+21-236-12:18:44.540 00     DPD-I:STS          Page SCX_CPU1_DS_FILTER_TBL added (cid:1).
+21-236-12:18:44.618 00     DPD-I:STS          Page SCX_CPU1_DS_FILE_TBL added (cid:1).
+21-236-12:18:44.769 00     DPD-I:STS          Page SCX_CPU1_FM_DIR_LIST added (cid:1).
+21-236-12:18:44.773 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.773 00     SPR-I:OPRO         ;  Step 1.4:  Start the Data Storage (DS) and Test Applications.     
+21-236-12:18:44.773 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:44.782 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:52.789 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:52.791 00     SPR-I:OPRO         <*> Passed (8000) - Housekeeping packet is being generated.
+21-236-12:18:52.797 00     SPR-I:OPRO         <*> Passed (9000) - Housekeeping telemetry initialized properly.
+21-236-12:18:52.803 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:57.807 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:18:57.807 00     SPR-I:OPRO         ;  Step 1.5: Start the File Manager (FM) Application 
+21-236-12:18:57.807 00     SPR-I:OPRO         ;********************************************************************
+21-236-12:18:57.812 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.812 00     SPR-I:OPRO         ; Setup event 1 with CFE_ES INFO 6
+21-236-12:18:57.813 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.814 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.815 00     SPR-I:OPRO         ; Setup event 2 with FM INFO 1
+21-236-12:18:57.815 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:18:57.815 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/load_start_app.i
+21-236-12:18:57.823 00     SPR-I:STS          Procedure LOAD_START_APP started
+21-236-12:18:57.824 00     SPR-I:OPRO         Application Filename: fm.o
+21-236-12:18:57.825 00     SPR-I:OPRO         The perl command is perl /s/opr/accounts/global/tools/fsw_ftp.pl 192.168.1.8 fm.o RAM:0 3
+21-236-12:18:57.955 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:18:57.958 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_ES_STARTAPP APPLICATION="FM" APP_ENTRY_PT="FM_AppMain" APP_FILE_NAME="/ram/fm.o" STACKSIZE=X'2000' PRIORITY=X'b7' RESTARTCPU 
+21-236-12:18:57.959 00     CMH-I:CMD              Command is /SCX_CPU1_ES_STARTAPP  APPLICATION="FM" APP_ENTRY_PT="FM_AppMain" APP_FILE_NAME="/ram/fm.o" STACKSIZE= 8192 (x2000)  RESTARTCPU PRIORITY= 183 (xB7) ;;; (SCX CPU1 ES load and start single application command code)
+21-236-12:18:57.960 00     CMH-I:CMD             Command SFDU received:<1806C000007104C3464D000000000000000000000000000000000000464D5F4170704D61696E000000000000000000002F72616D2F666D2E6F0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000100B7> from gs582cfslab4:SPR
+21-236-12:18:57.974 00     SPR-I:STS          Procedure LOAD_START_APP completed
+21-236-12:18:57.989 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:18:58.213 00    TLMH-I:STS          58-012-14:04:57.512 INFO CPU=CPU1 APPNAME=CFE_ES EVENT ID=6 Started FM from /ram/fm.o, AppID = 1114124
+21-236-12:18:58.719 00    TLMH-I:STS          58-012-14:04:57.565 INFO CPU=CPU1 APPNAME=FM EVENT ID=97 Free Space Table verify results: good entries = 2, bad = 0, unused = 6
+21-236-12:18:58.720 00    TLMH-I:STS          58-012-14:04:57.566 INFO CPU=CPU1 APPNAME=FM EVENT ID=1 Initialization complete: version 2.5.4.0
+21-236-12:18:58.722 00    TLMH-I:STS          58-012-14:04:57.600 INFO CPU=CPU1 APPNAME=FM EVENT ID=89 Child Task initialization complete
+21-236-12:18:58.990 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:18:58.991 00     SPR-I:OPRO         <*> Passed - FM Application Started
+21-236-12:18:58.993 00     CMH-I:CMD              Command is /SCX_CPU1_TO_ADDPACKET  STREAM= 2188 (x88C) PKT_SIZE= 0 (x0)[ PRIORITY= 0 (x0) RELIABILITY= 0 (x0)] BUFLIMIT= 4 (x4) ;;; (SCX CPU1 TO Add Packet command code)
+21-236-12:18:58.993 00     CMH-I:CMD             Command SFDU received:<1880C0000008022D088C0000000004> from gs582cfslab4:SPR
+21-236-12:18:59.005 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:18:59.715 00    TLMH-I:STS          58-012-14:04:58.517 ERROR CPU=CPU1 APPNAME=CFE_SB EVENT ID=6 Subscribe Err:Bad Arg,MsgId 0x88c0000,PipeId 1441800,app TO_LAB_APP,scope 0
+21-236-12:18:59.716 00    TLMH-I:STS          58-012-14:04:58.517 ERROR CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=10 L481 TO Can't subscribe 0x88c0000 status -905969661
+21-236-12:19:04.008 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:04.008 00     SPR-I:OPRO         ;  Step 1.6: Enable DEBUG Event Messages 
+21-236-12:19:04.008 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:04.009 00     CMH-I:CMD              Command is /SCX_CPU1_EVS_ENAAPPEVTTYPE  APPLICATION="DS"  DEBUG ;;; (SCX CPU1 EVS Enable Event Type for the App)
+21-236-12:19:04.009 00     CMH-I:CMD          Or  Command is /SCX_CPU1_EVS_ENAAPPEVTTYPEMASK  APPLICATION="DS" BITMASK= 1 (x1) ;;; (SCX CPU1 EVS Enable Event Type for the App (mask))
+21-236-12:19:04.009 00     CMH-I:CMD             Command SFDU received:<1801C0000017052244530000000000000000000000000000000000000100> from gs582cfslab4:SPR
+21-236-12:19:04.021 00     SPR-I:STTE         Wait mode - waiting 2 seconds ...
+21-236-12:19:06.024 00     CMH-I:CMD              Command is /SCX_CPU1_EVS_ENAAPPEVTTYPE  APPLICATION="CFE_TBL"  DEBUG ;;; (SCX CPU1 EVS Enable Event Type for the App)
+21-236-12:19:06.024 00     CMH-I:CMD          Or  Command is /SCX_CPU1_EVS_ENAAPPEVTTYPEMASK  APPLICATION="CFE_TBL" BITMASK= 1 (x1) ;;; (SCX CPU1 EVS Enable Event Type for the App (mask))
+21-236-12:19:06.024 00     CMH-I:CMD             Command SFDU received:<1801C000001705704346455F54424C000000000000000000000000000100> from gs582cfslab4:SPR
+21-236-12:19:06.041 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:19:09.045 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:19:09.047 00     SPR-I:OPRO         <*> Passed - Enable Debug events command sent properly.
+21-236-12:19:09.047 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.047 00     SPR-I:OPRO         ;  Step 2.0: File Creation Tests.
+21-236-12:19:09.048 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.048 00     SPR-I:OPRO         ;  Step 2.1: Utilizing the TST_DS application, send a message to the DS
+21-236-12:19:09.048 00     SPR-I:OPRO         ;  application that will pass the filtering algorithm and uses a 
+21-236-12:19:09.048 00     SPR-I:OPRO         ;  Destination File Table entry that specifies Sequence file type naming
+21-236-12:19:09.048 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.049 00     SPR-I:OPRO         ;  Step 2.1.1: Dump the Destination File and Packet Filter Tables
+21-236-12:19:09.056 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:19:09.057 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-236-12:19:09.059 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-236-12:19:09.078 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="DS.FILTER_TBL" DFILENAME="/ram/cpu1_filtertbl211"
+21-236-12:19:09.079 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_DUMP   ACTIVE DTABLENAME="DS.FILTER_TBL" DFILENAME="/ram/cpu1_filtertbl211" ;;; (SCX CPU1 TBL dump table command)
+21-236-12:19:09.079 00     CMH-I:CMD             Command SFDU received:<1804C000006B0348000144532E46494C5445525F54424C0000000000000000000000000000000000000000000000000000002F72616D2F637075315F66696C74657274626C323131000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:19:09.081 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:19:09.210 00    TLMH-I:STS          58-012-14:05:08.502 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'DS.FILTER_TBL' to '/ram/cpu1_filtertbl211'
+21-236-12:19:24.091 00     SPR-I:OPRO         
+21-236-12:19:24.091 00     SPR-I:OPRO            The TBLNAME is: DS.FILTER_TBL
+21-236-12:19:24.092 00     SPR-I:OPRO               The APID is: P0F77
+21-236-12:19:24.092 00     SPR-I:OPRO                The CPU is: CPU3
+21-236-12:19:24.092 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-236-12:19:24.095 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_filtertbl211 cpu1_filtertbl211 binary 192.168.1.8
+21-236-12:19:24.266 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:19:24.266 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:19:39.278 00     SPR-I:OPRO         
+21-236-12:19:39.324 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3959].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_filtertbl211`"
+21-236-12:19:39.324 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:19:44.329 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-236-12:19:44.331 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/get_tbl_to_cvt.i
+21-236-12:19:44.333 00     SPR-I:STS          Procedure GET_TBL_TO_CVT started
+21-236-12:19:44.353 00     SPR-I:OPRO         Sending Command: /SCX_CPU1_TBL_DUMP ACTIVE DTABLENAME="DS.FILE_TBL" DFILENAME="/ram/cpu1_filetbl211"
+21-236-12:19:44.354 00     CMH-I:CMD              Command is /SCX_CPU1_TBL_DUMP   ACTIVE DTABLENAME="DS.FILE_TBL" DFILENAME="/ram/cpu1_filetbl211" ;;; (SCX CPU1 TBL dump table command)
+21-236-12:19:44.355 00     CMH-I:CMD             Command SFDU received:<1804C000006B0348000144532E46494C455F54424C00000000000000000000000000000000000000000000000000000000002F72616D2F637075315F66696C6574626C3231310000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:19:44.368 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:19:44.718 00    TLMH-I:STS          58-012-14:05:44.002 INFO CPU=CPU1 APPNAME=CFE_TBL EVENT ID=14 Successfully dumped Table 'DS.FILE_TBL' to '/ram/cpu1_filetbl211'
+21-236-12:19:50.883 00     SPR-I:OPRI     --> page SCX_CPU1_DS_FILE_HK
+21-236-12:19:50.938 00     DPD-I:STS          Page SCX_CPU1_DS_FILE_HK added (cid:1).
+21-236-12:19:59.447 00     SPR-I:OPRO         
+21-236-12:19:59.447 00     SPR-I:OPRO            The TBLNAME is: DS.FILE_TBL
+21-236-12:19:59.447 00     SPR-I:OPRO               The APID is: P0F76
+21-236-12:19:59.447 00     SPR-I:OPRO                The CPU is: CPU3
+21-236-12:19:59.448 00     SPR-I:OPRO         The IP Address is: 192.168.1.8
+21-236-12:19:59.448 00     SPR-I:OPRO         The perl command is: perl /s/opr/accounts/global/tools/ftp.pl RAM:0 cpu1_filetbl211 cpu1_filetbl211 binary 192.168.1.8
+21-236-12:19:59.582 00     SPR-I:OPRO         Return code from ftp_file.pl: 0
+21-236-12:19:59.582 00     SPR-I:STTE         Wait mode - waiting 15 seconds ...
+21-236-12:20:14.595 00     SPR-I:OPRO         
+21-236-12:20:14.616 00     SPR-I:OPRO         The unix command is cvt -ws file_list[3958].file_write_time "`date +%y-%j-%T -r /s/opr/accounts/cfs_test/image/cpu1_filetbl211`"
+21-236-12:20:14.616 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:20:19.620 00     SPR-I:STS          Procedure GET_TBL_TO_CVT completed
+21-236-12:20:19.622 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.622 00     SPR-I:OPRO         ;  Step 2.1.2: Parse the tables to find a MessageID to use for the 
+21-236-12:20:19.622 00     SPR-I:OPRO         ;  Sequence file type naming entry.
+21-236-12:20:19.622 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.886 00     SPR-I:OPRO         ==> Found file entry at 0
+21-236-12:20:19.886 00     SPR-I:OPRO         ==> Found filter entry at 0
+21-236-12:20:19.886 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.886 00     SPR-I:OPRO         ;  Step 2.1.3: Create the directory where files will be moved when they 
+21-236-12:20:19.886 00     SPR-I:OPRO         ;  are closed by the DS application. 
+21-236-12:20:19.886 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:19.886 00     SPR-I:OPRO         ==> Creating File Move Directory =  /ram/movedir/
+21-236-12:20:19.887 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRCREATE  DIRNAME="/ram/movedir/" ;;; (SCX CPU1 FM Dircectory Create command code)
+21-236-12:20:19.887 00     CMH-I:CMD             Command SFDU received:<188CC00000410CD92F72616D2F6D6F76656469722F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:20:19.898 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:20:24.901 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  Step 2.1.4: Send the TST_DS command to send a message to DS using the
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  MessageID found above. Since the message being set will not exceed 
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  the file size constraint, the FileState HK should contain info about
+21-236-12:20:24.901 00     SPR-I:OPRO         ;  the file that was created. 
+21-236-12:20:24.901 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.903 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.903 00     SPR-I:OPRO         ; Setup event 1 with TST_DS INFO 5
+21-236-12:20:24.903 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:24.904 00     CMH-I:CMD              Command is /SCX_CPU1_TST_DS_SENDMESSAGE  MSGID= 2304 (x900) MSGTYPE= 1 (x1) PATTERN= 85 (x55) ;;; (SCX CPU1 TST_DS Send Message command code)
+21-236-12:20:24.904 00     CMH-I:CMD             Command SFDU received:<1943C000000903320000090001550000> from gs582cfslab4:SPR
+21-236-12:20:24.918 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:25.209 00    TLMH-I:STS          58-012-14:06:24.504 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=5 Sent Message Size 116 to MID 0x00000900
+21-236-12:20:25.919 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:25.919 00     SPR-I:OPRO         <*> Passed - Expected Event Msg 5 rcv'd.
+21-236-12:20:25.920 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:20:25.920 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:20:25.933 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:26.217 00    TLMH-I:STS          58-012-14:06:25.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:20:28.936 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:28.937 00     SPR-I:OPRO         <*> Passed (3000;3000.1;3000.1.1) - A file was created with name '/ram/seq100000100.dat'
+21-236-12:20:28.940 00     SPR-I:OPRO         ==> FileName1 filename only = 'seq100000100.dat'
+21-236-12:20:28.941 00     SPR-I:OPRO         <*> Passed (3001) - The file is marked 'OPEN'
+21-236-12:20:28.949 00     SPR-I:OPRO         <*> Passed - The file write and passed packet counters are correct.
+21-236-12:20:28.949 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:20:33.953 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.953 00     SPR-I:OPRO         ;  Step 2.2: Send the TST_DS command again using a message type that 
+21-236-12:20:33.953 00     SPR-I:OPRO         ;  will exceed the file size of the destination file entry.
+21-236-12:20:33.953 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.957 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.958 00     SPR-I:OPRO         ; Setup event 1 with TST_DS INFO 7
+21-236-12:20:33.958 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:20:33.961 00     CMH-I:CMD              Command is /SCX_CPU1_TST_DS_SENDMESSAGE  MSGID= 2304 (x900) MSGTYPE= 3 (x3) PATTERN= 170 (xAA) ;;; (SCX CPU1 TST_DS Send Message command code)
+21-236-12:20:33.961 00     CMH-I:CMD             Command SFDU received:<1943C000000903CF0000090003AA0000> from gs582cfslab4:SPR
+21-236-12:20:33.986 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:34.216 00    TLMH-I:STS          58-012-14:06:33.509 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=7 Sent Message Size 1016 to MID 0x00000900
+21-236-12:20:34.987 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:34.989 00     SPR-I:OPRO         <*> Passed - Expected Event Msg 7 rcv'd.
+21-236-12:20:34.991 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:20:34.992 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:20:35.024 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:20:35.208 00    TLMH-I:STS          58-012-14:06:34.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:20:37.026 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:20:37.029 00     SPR-I:OPRO         <*> Passed (3000;3000.1;3000.1.1) - A file was created with name '/ram/seq100000101.dat'
+21-236-12:20:37.045 00     SPR-I:OPRO         ==> FileName2 filename only = 'seq100000101.dat'
+21-236-12:20:37.045 00     SPR-I:OPRO         <*> Passed (3001) - The file is marked 'OPEN'
+21-236-12:20:37.068 00     SPR-I:OPRO         <*> Passed (3001.1) - A new file was opened
+21-236-12:20:37.070 00     SPR-I:OPRO         <*> Passed - The header update counter incremented as expected.
+21-236-12:20:37.077 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRLISTTLM  DIRNAME="/ram/" OFFSET= 0 (x0) GETSTATFLAG= 0 (x0) ;;; (SCX CPU1 FM Directory Listing to Telemetry command code)
+21-236-12:20:37.077 00     CMH-I:CMD             Command SFDU received:<188CC00000490F932F72616D2F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:20:37.089 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:20:47.105 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRLISTTLM  DIRNAME="/ram/movedir/" OFFSET= 0 (x0) GETSTATFLAG= 0 (x0) ;;; (SCX CPU1 FM Directory Listing to Telemetry command code)
+21-236-12:20:47.105 00     CMH-I:CMD             Command SFDU received:<188CC00000490FD22F72616D2F6D6F76656469722F0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:20:47.116 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:20:57.125 00     SPR-I:OPRO         <*> Passed - File 'seq100000100.dat' is contained in directory '/ram/movedir/' as expected.
+21-236-12:20:57.127 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:21:02.131 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.131 00     SPR-I:OPRO         ;  Step 2.3: Test that DS will store at least 1 message in a destination
+21-236-12:21:02.131 00     SPR-I:OPRO         ;  file even though the message will exceed the file size.
+21-236-12:21:02.131 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.131 00     SPR-I:OPRO         ;  Step 2.3.1: Send the Close command for the file created in Step 2.2.
+21-236-12:21:02.131 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.133 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.133 00     SPR-I:OPRO         ; Setup event 1 with DS DEBUG 59
+21-236-12:21:02.133 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:02.135 00     CMH-I:CMD              Command is /SCX_CPU1_DS_CLOSEFILE  FILEINDEX= 0 (x0) ;;; (SCX CPU1 DS Close Destination File command)
+21-236-12:21:02.135 00     CMH-I:CMD             Command SFDU received:<18BBC00000050E9700000000> from gs582cfslab4:SPR
+21-236-12:21:02.151 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:02.214 00    TLMH-I:STS          58-012-14:07:01.502 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=59 DEST CLOSE command: file table index = 0
+21-236-12:21:05.154 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:05.156 00     SPR-I:OPRO         <*> Passed (1004;5002) - DS Close File command sent properly.
+21-236-12:21:05.172 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:05.176 00     SPR-I:OPRO         <*> Passed (1004;5002) - Expected Event Msg 59 rcv'd.
+21-236-12:21:05.178 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:21:10.182 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.182 00     SPR-I:OPRO         ;  Step 2.3.2: Send the TST_DS_SendMessage command using a message type 
+21-236-12:21:10.182 00     SPR-I:OPRO         ;  that exceeds the size of the destination file entry.
+21-236-12:21:10.182 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.184 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.184 00     SPR-I:OPRO         ; Setup event 1 with TST_DS INFO 9
+21-236-12:21:10.184 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:10.185 00     CMH-I:CMD              Command is /SCX_CPU1_TST_DS_SENDMESSAGE  MSGID= 2304 (x900) MSGTYPE= 5 (x5) PATTERN= 165 (xA5) ;;; (SCX CPU1 TST_DS Send Message command code)
+21-236-12:21:10.185 00     CMH-I:CMD             Command SFDU received:<1943C000000903C60000090005A50000> from gs582cfslab4:SPR
+21-236-12:21:10.199 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:10.207 00    TLMH-I:STS          58-012-14:07:09.508 INFO CPU=CPU1 APPNAME=TST_DS EVENT ID=9 Sent Message Size 1516 to MID 0x00000900
+21-236-12:21:11.200 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:11.200 00     SPR-I:OPRO         <*> Passed - Expected Event Msg 9 rcv'd.
+21-236-12:21:11.201 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:11.201 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:11.205 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:11.709 00    TLMH-I:STS          58-012-14:07:11.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:13.206 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:13.207 00     SPR-I:OPRO         <*> Passed (3000;3000.1;3000.1.1) - A file was created with name '/ram/seq100000102.dat'
+21-236-12:21:13.211 00     SPR-I:OPRO         ==> FileName3 filename only = 'seq100000102.dat'
+21-236-12:21:13.211 00     SPR-I:OPRO         <*> Passed (3001) - The file is marked 'OPEN'
+21-236-12:21:13.217 00     SPR-I:OPRO         <*> Passed (3001.1) - A new file was opened
+21-236-12:21:13.220 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRLISTTLM  DIRNAME="/ram/" OFFSET= 0 (x0) GETSTATFLAG= 0 (x0) ;;; (SCX CPU1 FM Directory Listing to Telemetry command code)
+21-236-12:21:13.220 00     CMH-I:CMD             Command SFDU received:<188CC00000490F932F72616D2F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:21:13.231 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:21:23.246 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRLISTTLM  DIRNAME="/ram/movedir/" OFFSET= 0 (x0) GETSTATFLAG= 0 (x0) ;;; (SCX CPU1 FM Directory Listing to Telemetry command code)
+21-236-12:21:23.246 00     CMH-I:CMD             Command SFDU received:<188CC00000490FD22F72616D2F6D6F76656469722F0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:21:23.257 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:21:33.269 00     SPR-I:OPRO         <*> Passed - File 'seq100000101.dat' is contained in directory '/ram/movedir/' as expected.
+21-236-12:21:33.271 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:33.272 00     SPR-I:OPRO         ;  Step 2.4: Wait for the file created above to exceed its maximum age.
+21-236-12:21:33.272 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:21:33.275 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:33.275 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:33.296 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:33.708 00    TLMH-I:STS          58-012-14:07:33.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:37.304 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:37.307 00     SPR-I:OPRO         new file age = 24
+21-236-12:21:37.314 00     SPR-I:OPRO         timeout calculation = 76
+21-236-12:21:37.317 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:37.318 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:37.340 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:37.710 00    TLMH-I:STS          58-012-14:07:37.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:38.602 00     SPR-I:OPRI     --> page SCX_CPU1_DS_FILE_HK
+21-236-12:21:38.703 00     DPD-I:STS          Page SCX_CPU1_DS_FILE_HK added (cid:1).
+21-236-12:21:41.459 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:41.461 00     SPR-I:OPRO         new file age = 28
+21-236-12:21:41.466 00     SPR-I:OPRO         timeout calculation = 72
+21-236-12:21:41.467 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:41.467 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:41.482 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:41.711 00    TLMH-I:STS          58-012-14:07:41.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:42.947 00     DPD-I:STS          Deleting page SCX_CPU1_DS_FILE_HK
+21-236-12:21:45.492 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:45.494 00     SPR-I:OPRO         new file age = 32
+21-236-12:21:45.498 00     SPR-I:OPRO         timeout calculation = 68
+21-236-12:21:45.503 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:45.503 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:45.520 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:45.707 00    TLMH-I:STS          58-012-14:07:45.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:49.525 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:49.526 00     SPR-I:OPRO         new file age = 36
+21-236-12:21:49.527 00     SPR-I:OPRO         timeout calculation = 64
+21-236-12:21:49.532 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:49.532 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:49.546 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:49.712 00    TLMH-I:STS          58-012-14:07:49.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:53.551 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:53.553 00     SPR-I:OPRO         new file age = 40
+21-236-12:21:53.558 00     SPR-I:OPRO         timeout calculation = 60
+21-236-12:21:53.565 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:53.565 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:53.583 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:53.709 00    TLMH-I:STS          58-012-14:07:53.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:21:57.588 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:21:57.590 00     SPR-I:OPRO         new file age = 44
+21-236-12:21:57.594 00     SPR-I:OPRO         timeout calculation = 56
+21-236-12:21:57.595 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:21:57.595 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:21:57.610 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:21:57.711 00    TLMH-I:STS          58-012-14:07:57.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:01.614 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:01.616 00     SPR-I:OPRO         new file age = 48
+21-236-12:22:01.620 00     SPR-I:OPRO         timeout calculation = 52
+21-236-12:22:01.624 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:01.624 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:01.639 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:01.714 00    TLMH-I:STS          58-012-14:08:01.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:05.644 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:05.646 00     SPR-I:OPRO         new file age = 52
+21-236-12:22:05.651 00     SPR-I:OPRO         timeout calculation = 48
+21-236-12:22:05.656 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:05.656 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:05.670 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:05.708 00    TLMH-I:STS          58-012-14:08:05.001 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:09.675 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:09.677 00     SPR-I:OPRO         new file age = 56
+21-236-12:22:09.681 00     SPR-I:OPRO         timeout calculation = 44
+21-236-12:22:09.690 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:09.690 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:09.707 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:10.211 00    TLMH-I:STS          58-012-14:08:09.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:12.710 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:12.711 00     SPR-I:OPRO         new file age = 60
+21-236-12:22:12.714 00     SPR-I:OPRO         timeout calculation = 40
+21-236-12:22:12.720 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:12.720 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:12.735 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:13.214 00    TLMH-I:STS          58-012-14:08:12.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:16.739 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:16.741 00     SPR-I:OPRO         new file age = 64
+21-236-12:22:16.745 00     SPR-I:OPRO         timeout calculation = 36
+21-236-12:22:16.749 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:16.749 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:16.753 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:17.209 00    TLMH-I:STS          58-012-14:08:16.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:20.757 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:20.760 00     SPR-I:OPRO         new file age = 68
+21-236-12:22:20.763 00     SPR-I:OPRO         timeout calculation = 32
+21-236-12:22:20.769 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:20.769 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:20.784 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:21.207 00    TLMH-I:STS          58-012-14:08:20.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:24.789 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:24.790 00     SPR-I:OPRO         new file age = 72
+21-236-12:22:24.793 00     SPR-I:OPRO         timeout calculation = 28
+21-236-12:22:24.794 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:24.794 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:24.808 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:25.215 00    TLMH-I:STS          58-012-14:08:24.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:28.813 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:28.816 00     SPR-I:OPRO         new file age = 76
+21-236-12:22:28.823 00     SPR-I:OPRO         timeout calculation = 24
+21-236-12:22:28.826 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:28.827 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:28.851 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:29.211 00    TLMH-I:STS          58-012-14:08:28.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:32.856 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:32.859 00     SPR-I:OPRO         new file age = 80
+21-236-12:22:32.870 00     SPR-I:OPRO         timeout calculation = 20
+21-236-12:22:32.873 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:32.874 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:32.890 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:33.214 00    TLMH-I:STS          58-012-14:08:32.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:36.895 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:36.897 00     SPR-I:OPRO         new file age = 84
+21-236-12:22:36.902 00     SPR-I:OPRO         timeout calculation = 16
+21-236-12:22:36.908 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:36.908 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:36.926 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:37.215 00    TLMH-I:STS          58-012-14:08:36.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:40.930 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:40.932 00     SPR-I:OPRO         new file age = 88
+21-236-12:22:40.941 00     SPR-I:OPRO         timeout calculation = 12
+21-236-12:22:40.944 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:40.944 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:40.969 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:41.207 00    TLMH-I:STS          58-012-14:08:40.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:44.974 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:44.977 00     SPR-I:OPRO         new file age = 92
+21-236-12:22:44.984 00     SPR-I:OPRO         timeout calculation = 8
+21-236-12:22:44.987 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:44.987 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:44.994 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:45.212 00    TLMH-I:STS          58-012-14:08:44.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:48.997 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:48.998 00     SPR-I:OPRO         new file age = 96
+21-236-12:22:48.999 00     SPR-I:OPRO         timeout calculation = 4
+21-236-12:22:49.000 00     CMH-I:CMD              Command is /SCX_CPU1_DS_GETFILEINFO  ;;; (The Get File Info command)
+21-236-12:22:49.000 00     CMH-I:CMD             Command SFDU received:<18BBC00000010F92> from gs582cfslab4:SPR
+21-236-12:22:49.014 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:22:49.207 00    TLMH-I:STS          58-012-14:08:48.500 DEBUG CPU=CPU1 APPNAME=DS EVENT ID=62 GET FILE INFO command
+21-236-12:22:53.017 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:22:53.017 00     SPR-I:OPRO         new file age = 0
+21-236-12:22:53.018 00     SPR-I:OPRO         timeout calculation = 100
+21-236-12:22:53.018 00     SPR-I:OPRO         TLM reports the file is no longer open
+21-236-12:22:53.018 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:22:58.022 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRLISTTLM  DIRNAME="/ram/" OFFSET= 0 (x0) GETSTATFLAG= 0 (x0) ;;; (SCX CPU1 FM Directory Listing to Telemetry command code)
+21-236-12:22:58.022 00     CMH-I:CMD             Command SFDU received:<188CC00000490F932F72616D2F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:22:58.033 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:23:08.042 00     CMH-I:CMD              Command is /SCX_CPU1_FM_DIRLISTTLM  DIRNAME="/ram/movedir/" OFFSET= 0 (x0) GETSTATFLAG= 0 (x0) ;;; (SCX CPU1 FM Directory Listing to Telemetry command code)
+21-236-12:23:08.042 00     CMH-I:CMD             Command SFDU received:<188CC00000490FD22F72616D2F6D6F76656469722F0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000> from gs582cfslab4:SPR
+21-236-12:23:08.054 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:23:12.318 00     SPR-I:OPRI     --> s display_next_page ( 20, 10, "NEXT", 140, "TLM")
+21-236-12:23:12.318 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/display_next_page.i
+21-236-12:23:12.319 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE started
+21-236-12:23:12.321 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE completed
+21-236-12:23:15.083 00     SPR-I:OPRI     --> s display_next_page ( 20, 10, "PREV", 140, "TLM")
+21-236-12:23:15.083 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/display_next_page.i
+21-236-12:23:15.085 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE started
+21-236-12:23:15.091 00     SPR-I:STS          Procedure DISPLAY_NEXT_PAGE completed
+21-236-12:23:18.107 00     SPR-I:OPRO         <*> Passed - File 'seq100000102.dat' is contained in directory '/ram/movedir/' as expected.
+21-236-12:23:18.113 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:23:23.118 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:23:23.118 00     SPR-I:OPRO         ;  Step 3.0: Clean-up - Send the Processor Reset command in order to    
+21-236-12:23:23.118 00     SPR-I:OPRO         ;  be able to retrieve files in RAM after this procedure completes. 
+21-236-12:23:23.118 00     SPR-I:OPRO         ;***********************************************************************
+21-236-12:23:23.120 00     CMH-I:CMD              Command is /SCX_CPU1_ES_PROCESSORRESET  ;;; (SCX CPU1 ES Processor Reset command code)
+21-236-12:23:23.120 00     CMH-I:CMD             Command SFDU received:<1806C000000302210001> from gs582cfslab4:SPR
+21-236-12:23:23.134 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:23:30.373 00     DPD-I:STS          Deleting page SCX_CPU1_FM_DIR_LIST
+21-236-12:23:32.040 00     DPD-I:STS          Deleting page SCX_CPU1_DS_FILE_HK
+21-236-12:23:33.101 00     DPD-I:STS          Deleting page SCX_CPU1_DS_FILE_TBL
+21-236-12:23:33.143 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/clear_spacecraft_status.i
+21-236-12:23:33.143 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS started
+21-236-12:23:33.147 00     SPR-I:STS          Procedure CLEAR_SPACECRAFT_STATUS completed
+21-236-12:23:33.162 00     SPR-I:STTE         Wait mode - waiting 60 seconds ...
+21-236-12:23:34.763 00     DPD-I:STS          Deleting page SCX_CPU1_TST_DS_HK
+21-236-12:23:35.956 00     DPD-I:STS          Deleting page SCX_CPU1_DS_HK
+21-236-12:23:37.091 00     DPD-I:STS          Deleting page SCX_CPU1_DS_FILTER_TBL
+21-236-12:24:33.225 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:24:39.189 00     CMH-I:STS          Connected to FEDS:FEDS for commanding (internal ID 0). 
+21-236-12:24:43.236 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:24:43.238 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_read C%03X 1235 packet_only" ;;; ( )
+21-236-12:24:43.254 00     CMH-I:CMD              SFDU is /DDIR  DATA="open udp_write CPKT cpu3 1234 ascii_pkt" ;;; ( )
+21-236-12:24:43.298 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/send_that_to_command.i
+21-236-12:24:43.298 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND started
+21-236-12:24:43.301 00     SPR-I:OPRO         Sending: /SCX_CPU1_TO_OUTPUT_ENA gs582cfslab4
+21-236-12:24:43.302 00     CMH-I:CMD              Command is /SCX_CPU1_TO_OUTPUT_ENA   GS582CFSLAB4 ;;; (SCX CPU1 Enables TO output)
+21-236-12:24:43.302 00     CMH-I:CMD             Command SFDU received:<1880C0000011069A3139322E3136382E312E313031000000> from gs582cfslab4:SPR
+21-236-12:24:43.343 00     SPR-I:STS          Procedure SEND_THAT_TO_COMMAND completed
+21-236-12:24:43.343 00     SPR-I:STTE         Wait mode - WAIT UNTIL ...
+21-236-12:24:44.235 00    TLMH-I:STS          58-012-14:09:49.600 INFO CPU=CPU1 APPNAME=TO_LAB_APP EVENT ID=3 TO telemetry output enabled for IP 192.168.1.101
+21-236-12:24:46.348 00     SPR-I:STTE         WAIT UNTIL completed
+21-236-12:24:46.348 00     SPR-I:STS          Loading file /s/opr/accounts/cfs_test/prc/fill_in_spacecraft_status.i
+21-236-12:24:46.350 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS started
+21-236-12:24:46.355 00     SPR-I:STS          Procedure FILL_IN_SPACECRAFT_STATUS completed
+21-236-12:24:46.356 00     SPR-I:STTE         Wait mode - waiting 5 seconds ...
+21-236-12:24:51.360 00     SPR-I:OPRO         **** Requirements Status Reporting
+21-236-12:24:51.360 00     SPR-I:OPRO         --------------------------
+21-236-12:24:51.361 00     SPR-I:OPRO            Requirement(s) Report
+21-236-12:24:51.361 00     SPR-I:OPRO         --------------------------
+21-236-12:24:51.362 00     SPR-I:OPRO         FSW Requirement: DS_1004                          P/F: P
+21-236-12:24:51.365 00     SPR-I:OPRO         FSW Requirement: DS_3000                          P/F: P
+21-236-12:24:51.366 00     SPR-I:OPRO         FSW Requirement: DS_3000.1                        P/F: A
+21-236-12:24:51.366 00     SPR-I:OPRO         FSW Requirement: DS_3000.1.1                      P/F: A
+21-236-12:24:51.367 00     SPR-I:OPRO         FSW Requirement: DS_3001                          P/F: P
+21-236-12:24:51.372 00     SPR-I:OPRO         FSW Requirement: DS_3001.1                        P/F: P
+21-236-12:24:51.373 00     SPR-I:OPRO         FSW Requirement: DS_3001.2                        P/F: A
+21-236-12:24:51.374 00     SPR-I:OPRO         FSW Requirement: DS_3002                          P/F: P
+21-236-12:24:51.374 00     SPR-I:OPRO         FSW Requirement: DS_3002.1                        P/F: P
+21-236-12:24:51.380 00     SPR-I:OPRO         FSW Requirement: DS_5002                          P/F: P
+21-236-12:24:51.381 00     SPR-I:OPRO         FSW Requirement: DS_8000                          P/F: P
+21-236-12:24:51.382 00     SPR-I:OPRO         FSW Requirement: DS_9000                          P/F: P
+21-236-12:24:51.387 00     SPR-I:STS          Variable "UT_REQUIREMENT" deleted
+21-236-12:24:51.387 00     SPR-I:STS          Variable "UT_REQ_ARRAY_SIZE" deleted
+21-236-12:24:51.387 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:24:51.387 00     SPR-I:OPRO         ;  End procedure SCX_CPU1_ds_movefile
+21-236-12:24:51.388 00     SPR-I:OPRO         ;*********************************************************************
+21-236-12:24:51.388 00     SPR-I:STS          Procedure SCX_CPU1_DS_MOVEFILE completed
+21-236-12:24:51.392 00     SPR-I:OPRO         *** Telemetry Info ***
+21-236-12:24:51.392 00     SPR-I:OPRO         
+21-236-12:24:51.392 00     SPR-I:OPRO         Pkt Loss Count: N/A
+21-236-12:24:51.392 00     SPR-I:OPRO         
+21-236-12:24:51.392 00     SPR-I:OPRO         ******************
+21-236-12:24:51.392 00     SPR-I:OPRO         
+21-236-12:24:51.393 00     SPR-I:OPRO         Elapsed time:  502.646 seconds
+21-236-12:24:51.396 00     SPR-I:OPRO         Elapsed time:  8.37744 minutes
+21-236-12:24:51.396 00     SPR-I:STTE         Wait mode - waiting 10 seconds ...
+21-236-12:25:01.404 00     SPR-I:OPRO         Creating filtered log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logf
+21-236-12:25:01.404 00     SPR-I:OPRO         Creating filtered output log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logp
+21-236-12:25:01.404 00     SPR-I:OPRO         Creating filtered output log (without SFDUs) at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logs
+21-236-12:25:01.405 00     SPR-I:OPRO         Creating filtered event log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.loge
+21-236-12:25:01.405 00     SPR-I:OPRO         Creating filtered requirements log at /s/opr/accounts/cfs_test/test_logs/DS2.6.0/scx_cpu1_ds_movefile-2021-236-12h16m28s.logr
+21-236-12:25:01.511 00     SPR-I:OPRI     --> newlog scx_cpu1_ds_movefile-2021-236-12h16m28s.log

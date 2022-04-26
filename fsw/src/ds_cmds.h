@@ -1,22 +1,22 @@
 /************************************************************************
-** File: ds_cmds.h 
+** File: ds_cmds.h
 **
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
-**  application version 2.5.2” 
-**  
-**  Copyright © 2019 United States Government as represented by the Administrator 
-**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
+**  application version 2.5.2”
 **
-**  Licensed under the Apache License, Version 2.0 (the "License"); 
-**  you may not use this file except in compliance with the License. 
-**  You may obtain a copy of the License at 
-**  http://www.apache.org/licenses/LICENSE-2.0 
-**  Unless required by applicable law or agreed to in writing, software 
-**  distributed under the License is distributed on an "AS IS" BASIS, 
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-**  See the License for the specific language governing permissions and 
-**  limitations under the License. 
-**  
+**  Copyright © 2019 United States Government as represented by the Administrator
+**  of the National Aeronautics and Space Administration.  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**  http://www.apache.org/licenses/LICENSE-2.0
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
 ** Purpose:
 **  CFS Data Storage (DS) command handler header file
 **
@@ -27,7 +27,6 @@
 
 #include "cfe.h"
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* Prototypes for functions defined in ds_app.c                    */
@@ -36,7 +35,7 @@
 
 /*******************************************************************/
 /*  \brief NOOP command handler
-**  
+**
 **  \par Description
 **       The NOOP command performs no specific function (no operation)
 **       Validate command packet
@@ -46,17 +45,16 @@
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_NOOP_CC, #DS_NoopCmd_t
 */
-void DS_CmdNoop(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief RESET command handler
-**  
+**
 **  \par Description
 **       Reset housekeeping telemetry counters command
 **       Validate command packet
@@ -67,17 +65,16 @@ void DS_CmdNoop(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_RESET_CC, #DS_ResetCmd_t
 */
-void DS_CmdReset(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set application enable/disable state command handler
-**  
+**
 **  \par Description
 **       Set application enable/disable state command
 **       Validate command packet
@@ -89,17 +86,16 @@ void DS_CmdReset(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_APP_STATE_CC, #DS_AppStateCmd_t
 */
-void DS_CmdSetAppState(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set file index for filter table entry command handler
-**  
+**
 **  \par Description
 **       Set destination file index for filter table entry command
 **       Validate command packet
@@ -114,17 +110,16 @@ void DS_CmdSetAppState(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_FILTER_FILE_CC, #DS_FilterFileCmd_t
 */
-void DS_CmdSetFilterFile(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set filter type for filter table entry command handler
-**  
+**
 **  \par Description
 **       Set filter type for filter table entry command
 **       Validate command packet
@@ -139,17 +134,16 @@ void DS_CmdSetFilterFile(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_FILTER_TYPE_CC, #DS_FilterTypeCmd_t
 */
-void DS_CmdSetFilterType(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set filter parameters for filter table entry command handler
-**  
+**
 **  \par Description
 **       Set filter parameters for filter table entry command
 **       Validate command packet
@@ -164,17 +158,16 @@ void DS_CmdSetFilterType(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_FILTER_PARMS_CC, #DS_FilterParmsCmd_t
 */
-void DS_CmdSetFilterParms(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage filename type command handler
-**  
+**
 **  \par Description
 **       Modify the filename type for the selected entry in the
 **       destination file definitions table.
@@ -189,17 +182,16 @@ void DS_CmdSetFilterParms(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_TYPE_CC, #DS_DestTypeCmd_t
 */
-void DS_CmdSetDestType(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage enable/disable state command handler
-**  
+**
 **  \par Description
 **       Modify the enable/disable state for the selected entry
 **       in the destination file definitions table.
@@ -214,17 +206,16 @@ void DS_CmdSetDestType(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_STATE_CC, #DS_DestStateCmd_t
 */
-void DS_CmdSetDestState(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage file pathname command handler
-**  
+**
 **  \par Description
 **       Modify the path portion of the filename for the selected
 **       entry in the destination file definitions table.
@@ -239,17 +230,16 @@ void DS_CmdSetDestState(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_PATH_CC, #DS_DestPathCmd_t
 */
-void DS_CmdSetDestPath(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage file basename command handler
-**  
+**
 **  \par Description
 **       Modify the base portion of the filename for the selected
 **       entry in the destination file definitions table.
@@ -264,17 +254,16 @@ void DS_CmdSetDestPath(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_BASE_CC, #DS_DestBaseCmd_t
 */
-void DS_CmdSetDestBase(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage file extension command handler
-**  
+**
 **  \par Description
 **       Modify the extension portion of the filename for the
 **       selected entry in the destination file definitions table.
@@ -289,17 +278,16 @@ void DS_CmdSetDestBase(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_EXT_CC, #DS_DestExtCmd_t
 */
-void DS_CmdSetDestExt(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage file size limit command handler
-**  
+**
 **  \par Description
 **       Modify the max file size limit for the selected entry
 **       in the destination file definitions table.
@@ -314,17 +302,16 @@ void DS_CmdSetDestExt(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_SIZE_CC, #DS_DestSizeCmd_t
 */
-void DS_CmdSetDestSize(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage file age limit command handler
-**  
+**
 **  \par Description
 **       Modify the max file age limit for the selected entry
 **       in the destination file definitions table.
@@ -339,17 +326,16 @@ void DS_CmdSetDestSize(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_AGE_CC, #DS_DestAgeCmd_t
 */
-void DS_CmdSetDestAge(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Set data storage filename sequence count command handler
-**  
+**
 **  \par Description
 **       Modify the filename sequence count for the selected
 **       entry in the destination file definitions table.
@@ -364,17 +350,16 @@ void DS_CmdSetDestAge(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_SET_DEST_COUNT_CC, #DS_DestCountCmd_t
 */
-void DS_CmdSetDestCount(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Close data storage file command handler
-**  
+**
 **  \par Description
 **       Close the selected data storage file. If this destination
 **       is still enabled, another file will be opened upon receipt
@@ -388,17 +373,16 @@ void DS_CmdSetDestCount(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_CLOSE_FILE_CC, #DS_CloseFileCmd_t
 */
-void DS_CmdCloseFile(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Close all data storage files command handler
-**  
+**
 **  \par Description
 **       Close all open data storage files. If any open destination
 **       file is still enabled, another file will be opened upon receipt
@@ -411,17 +395,16 @@ void DS_CmdCloseFile(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_CLOSE_ALL_CC, #DS_CloseAllCmd_t
 */
-void DS_CmdCloseAll(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Get file information telemetry packet command handler
-**  
+**
 **  \par Description
 **       Create and send a telemetry packet containing the current
 **       status for all destination files.
@@ -433,17 +416,16 @@ void DS_CmdCloseAll(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_GET_FILE_INFO_CC, #DS_GetFileInfoCmd_t, #DS_FileInfoPkt_t
 */
-void DS_CmdGetFileInfo(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr);
 
 /*******************************************************************/
 /*  \brief Add Message ID to Packet Filter Table
-**  
+**
 **  \par Description
 **       Set MID selection for unused packet filter table entry
 **       Reject invalid commands
@@ -457,13 +439,12 @@ void DS_CmdGetFileInfo(CFE_SB_MsgPtr_t MessagePtr);
 **
 **  \par Assumptions, External Events, and Notes:
 **       (none)
-**       
-**  \param [in]  Software Bus message pointer (#CFE_SB_MsgPtr_t)
+**
+**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
 **
 **  \sa #DS_ADD_MID_CC, #DS_AddMidCmd_t
 */
-void DS_CmdAddMID(CFE_SB_MsgPtr_t MessagePtr);
-
+void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr);
 
 #endif /* _ds_cmds_h_ */
 

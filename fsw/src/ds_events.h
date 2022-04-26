@@ -1,24 +1,24 @@
 /************************************************************************
-** File: ds_events.h 
+** File: ds_events.h
 **
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS) 
-**  application version 2.5.2” 
-**  
-**  Copyright © 2019 United States Government as represented by the Administrator 
-**  of the National Aeronautics and Space Administration.  All Rights Reserved. 
+**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
+**  application version 2.5.2”
 **
-**  Licensed under the Apache License, Version 2.0 (the "License"); 
-**  you may not use this file except in compliance with the License. 
-**  You may obtain a copy of the License at 
-**  http://www.apache.org/licenses/LICENSE-2.0 
-**  Unless required by applicable law or agreed to in writing, software 
-**  distributed under the License is distributed on an "AS IS" BASIS, 
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-**  See the License for the specific language governing permissions and 
-**  limitations under the License. 
-**  
+**  Copyright © 2019 United States Government as represented by the Administrator
+**  of the National Aeronautics and Space Administration.  All Rights Reserved.
 **
-** Purpose: 
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**  http://www.apache.org/licenses/LICENSE-2.0
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+**
+**
+** Purpose:
 **  The CFS Data Storage (DS) Application event id header file
 **
 ** Notes:
@@ -26,7 +26,6 @@
 *************************************************************************/
 #ifndef _ds_events_h_
 #define _ds_events_h_
-
 
 /*************************************************************************
 ** Macro definitions
@@ -50,8 +49,7 @@
 **  The fourth \c \%d field contains the Mission Revision Number
 **  The \c 0x\%08X field contains the address of the global data structure (DS_AppData)
 */
-#define DS_INIT_EID              1
-
+#define DS_INIT_EID 1
 
 /**
 **  \brief <tt> 'Application Initialization Error' </tt>
@@ -70,8 +68,7 @@
 **  performing cFE initialization.  The value displayed is the return code
 **  from the function that failed.
 */
-#define DS_INIT_ERR_EID          2
-
+#define DS_INIT_ERR_EID 2
 
 /**
 **  \brief <tt> 'Application Termination Event' </tt>
@@ -91,8 +88,7 @@
 **  The value displayed is either zero (if cFE requested the termination) or
 **  the return code from the function that failed.
 */
-#define DS_EXIT_ERR_EID          3
-
+#define DS_EXIT_ERR_EID 3
 
 /**
 **  \brief <tt> 'Critical Data Store Access Error' </tt>
@@ -109,8 +105,7 @@
 **  This event indicates an error at startup as DS is initializing access
 **  to the Critical Data Store.  Subsequent CDS errors are ignored by DS.
 */
-#define DS_INIT_CDS_ERR_EID      6
-
+#define DS_INIT_CDS_ERR_EID 6
 
 /**
 **  \brief <tt> 'Table Restored From CDS' </tt>
@@ -127,8 +122,7 @@
 **  initialization events indicate that the table data has been restored from
 **  the Critical Data Store (CDS).
 */
-#define DS_INIT_TBL_CDS_EID      7
-
+#define DS_INIT_TBL_CDS_EID 7
 
 /**
 **  \brief <tt> 'Table Create Error' </tt>
@@ -147,14 +141,13 @@
 **  then load default table data for each of the files.  If DS is unable to
 **  create either table then the application will terminate.  If DS is able
 **  to create both tables and is then unable to load both tables then DS will
-**  operate in a reduced function mode - thus allowing table load error 
+**  operate in a reduced function mode - thus allowing table load error
 **  recovery via the cFE Table Services command interface.
 **
 **  The values displayed indicate the cFE Table Services API function return
 **  code and the table filename, if appropriate.
 */
-#define DS_INIT_TBL_ERR_EID      8
-
+#define DS_INIT_TBL_ERR_EID 8
 
 /**
 **  \brief <tt> 'Destination File Table Validation Results' </tt>
@@ -177,8 +170,7 @@
 **  verification test for the table description text.  Thus, the sum of good + bad
 **  + unused results will equal the number of table entries plus one.
 */
-#define DS_FIL_TBL_EID           10
-
+#define DS_FIL_TBL_EID 10
 
 /**
 **  \brief <tt> 'Destination File Validation Error' </tt>
@@ -208,8 +200,7 @@
 **  field is invalid then attempts to display the string could result in other
 **  errors.
 */
-#define DS_FIL_TBL_ERR_EID       11
-
+#define DS_FIL_TBL_ERR_EID 11
 
 /**
 **  \brief <tt> 'Filter Table Validation Results' </tt>
@@ -232,16 +223,16 @@
 **  verification test for the table description text.  Thus, the sum of good + bad
 **  + unused results will equal the number of table entries plus one.
 */
-#define DS_FLT_TBL_EID           12
-
+#define DS_FLT_TBL_EID 12
 
 /**
 **  \brief <tt> 'Filter Table Validation Error' </tt>
 **
 **  \event <tt> 'Filter table verify err: invalid descriptor text' </tt>
-**  \event <tt> 'Filter table verify err: MID = 0x\%04X, index = \%d, filter = \%d, file table index = \%d' </tt>
-**  \event <tt> 'Filter table verify err: MID = 0x\%04X, index = \%d, filter = \%d, filter type = \%d' </tt>
-**  \event <tt> 'Filter table verify err: MID = 0x\%04X, index = \%d, filter = \%d, filter parms N = \%d, X = \%d, O = \%d' </tt>
+**  \event <tt> 'Filter table verify err: MID = 0x\%08X, index = \%d, filter = \%d, file table index = \%d' </tt>
+**  \event <tt> 'Filter table verify err: MID = 0x\%08X, index = \%d, filter = \%d, filter type = \%d' </tt>
+**  \event <tt> 'Filter table verify err: MID = 0x\%08X, index = \%d, filter = \%d, filter parms N = \%d, X = \%d, O =
+*\%d' </tt>
 **
 **  \par Type: ERROR
 **
@@ -258,8 +249,7 @@
 **  non-string fields.  If a string field is invalid then attempts to display
 **  the string could result in other errors.
 */
-#define DS_FLT_TBL_ERR_EID       13
-
+#define DS_FLT_TBL_ERR_EID 13
 
 /**
 **  \brief <tt> 'Filename Create Error' </tt>
@@ -284,8 +274,7 @@
 **  destination to prevent the immediate re-occurrence of the error as more
 **  packets are written to this destination.
 */
-#define DS_FILE_NAME_ERR_EID     14
-
+#define DS_FILE_NAME_ERR_EID 14
 
 /**
 **  \brief <tt> 'File Create Error' </tt>
@@ -309,8 +298,7 @@
 **  to prevent the immediate re-occurrence of the error as more packets are
 **  written to this destination.
 */
-#define DS_CREATE_FILE_ERR_EID   15
-
+#define DS_CREATE_FILE_ERR_EID 15
 
 /**
 **  \brief <tt> 'File Write Error' </tt>
@@ -334,13 +322,12 @@
 **  disable the destination to prevent the immediate re-occurrence of the
 **  error as more packets are written to this destination.
 */
-#define DS_WRITE_FILE_ERR_EID    16
-
+#define DS_WRITE_FILE_ERR_EID 16
 
 /**
 **  \brief <tt> 'Invalid packet (command code)' </tt>
 **
-**  \event <tt> 'Invalid command code: MID = 0x\%04X, CC = \%d' </tt>
+**  \event <tt> 'Invalid command code: MID = 0x\%08X, CC = \%d' </tt>
 **
 **  \par Type: ERROR
 **
@@ -353,8 +340,7 @@
 **
 **  The event text will indicate the Message ID (MID) and command code.
 */
-#define DS_CMD_CODE_ERR_EID      21
-
+#define DS_CMD_CODE_ERR_EID 21
 
 /**
 **  \brief <tt> 'Housekeeping request (error)' </tt>
@@ -368,8 +354,7 @@
 **  This event signals the failed execution of a HK request command.
 **  The cause of the failure is an invalid command packet length.
 */
-#define DS_HK_REQUEST_ERR_EID    22
-
+#define DS_HK_REQUEST_ERR_EID 22
 
 /**
 **  \brief <tt> 'No-op command' </tt>
@@ -389,8 +374,7 @@
 **  The third \c \%d field contains the Revision Number
 **  The fourth \c \%d field contains the Mission Revision Number
 */
-#define DS_NOOP_CMD_EID          31
-
+#define DS_NOOP_CMD_EID 31
 
 /**
 **  \brief <tt> 'No-op command (error)' </tt>
@@ -404,8 +388,7 @@
 **  This event signals the failed execution of a NOOP command.
 **  The cause of the failure is an invalid command packet length.
 */
-#define DS_NOOP_CMD_ERR_EID      32
-
+#define DS_NOOP_CMD_ERR_EID 32
 
 /**
 **  \brief <tt> 'Reset Housekeeping Counters command' </tt>
@@ -420,8 +403,7 @@
 **  counters command.  The command is used primarily to clear counters
 **  that have already been examined.
 */
-#define DS_RESET_CMD_EID         33
-
+#define DS_RESET_CMD_EID 33
 
 /**
 **  \brief <tt> 'Reset Housekeeping Counters command (error)' </tt>
@@ -435,8 +417,7 @@
 **  This event signals the failed execution of a RESET command.
 **  The cause of the failure is an invalid command packet length.
 */
-#define DS_RESET_CMD_ERR_EID     34
-
+#define DS_RESET_CMD_ERR_EID 34
 
 /**
 **  \brief <tt> 'Set Application Enable/Disable State command' </tt>
@@ -455,8 +436,7 @@
 **  The event text will indicate the new setting for the application
 **  enable/disable state.
 */
-#define DS_ENADIS_CMD_EID        35
-
+#define DS_ENADIS_CMD_EID 35
 
 /**
 **  \brief <tt> 'Set Application Enable/Disable State command (error)' </tt>
@@ -475,13 +455,12 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_ENADIS_CMD_ERR_EID    36
-
+#define DS_ENADIS_CMD_ERR_EID 36
 
 /**
 **  \brief <tt> 'Set Filter File Index command' </tt>
 **
-**  \event <tt> 'FILTER FILE command: MID = 0x\%X, index = \%d, filter = \%d, file = \%d' </tt>
+**  \event <tt> 'FILTER FILE command: MID = 0x\%08X, index = \%d, filter = \%d, file = \%d' </tt>
 **
 **  \par Type: DEBUG
 **
@@ -496,7 +475,7 @@
 **
 **  File selections are expressed as an index into the Destination File
 **  Table.
-**  
+**
 **  This event signals the successful execution of a command to set the
 **  destination file index for a single filter entry in the Packet Filter
 **  Table.
@@ -504,8 +483,7 @@
 **  The event text will indicate the packet message ID, the filter table
 **  index, the filter array index and the new file table index selection.
 */
-#define DS_FILE_CMD_EID          37
-
+#define DS_FILE_CMD_EID 37
 
 /**
 **  \brief <tt> 'Set Filter File Index command (error)' </tt>
@@ -532,13 +510,12 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_FILE_CMD_ERR_EID      38
-
+#define DS_FILE_CMD_ERR_EID 38
 
 /**
 **  \brief <tt> 'Set Filter Type command' </tt>
 **
-**  \event <tt> 'FILTER TYPE command: MID = 0x\%04X, index = \%d, filter = \%d, type = \%d' </tt>
+**  \event <tt> 'FILTER TYPE command: MID = 0x\%08X, index = \%d, filter = \%d, type = \%d' </tt>
 **
 **  \par Type: DEBUG
 **
@@ -557,8 +534,7 @@
 **  The event text will indicate the packet message ID, the filter table
 **  index, the filter array index and the new filter type selection.
 */
-#define DS_FTYPE_CMD_EID         39
-
+#define DS_FTYPE_CMD_EID 39
 
 /**
 **  \brief <tt> 'Set Filter Type command (error)' </tt>
@@ -585,13 +561,12 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_FTYPE_CMD_ERR_EID     40
-
+#define DS_FTYPE_CMD_ERR_EID 40
 
 /**
 **  \brief <tt> 'Set Filter Parameters command' </tt>
 **
-**  \event <tt> 'FILTER PARMS command: MID = 0x\%04X, index = \%d, filter = \%d, N = \%d, X = \%d, O = \%d' </tt>
+**  \event <tt> 'FILTER PARMS command: MID = 0x\%08X, index = \%d, filter = \%d, N = \%d, X = \%d, O = \%d' </tt>
 **
 **  \par Type: DEBUG
 **
@@ -611,8 +586,7 @@
 **  The event text will indicate the packet message ID, the filter table
 **  index, the filter array index and the new filter parameters (N,X,O).
 */
-#define DS_PARMS_CMD_EID         41
-
+#define DS_PARMS_CMD_EID 41
 
 /**
 **  \brief <tt> 'Set Filter Parameters command (error)' </tt>
@@ -640,8 +614,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_PARMS_CMD_ERR_EID     42
-
+#define DS_PARMS_CMD_ERR_EID 42
 
 /**
 **  \brief <tt> 'Set Filename Type command' </tt>
@@ -658,8 +631,7 @@
 **  The event text will indicate the file table index, and the new
 **  filename type.
 */
-#define DS_NTYPE_CMD_EID         43
-
+#define DS_NTYPE_CMD_EID 43
 
 /**
 **  \brief <tt> 'Set Filename Type command (error)' </tt>
@@ -683,8 +655,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_NTYPE_CMD_ERR_EID     44
-
+#define DS_NTYPE_CMD_ERR_EID 44
 
 /**
 **  \brief <tt> 'Set File Enable/Disable State command' </tt>
@@ -701,8 +672,7 @@
 **  The event text will indicate the file table index, and the new
 **  file enable/disable state.
 */
-#define DS_STATE_CMD_EID         45
-
+#define DS_STATE_CMD_EID 45
 
 /**
 **  \brief <tt> 'Set File Enable/Disable State command (error)' </tt>
@@ -726,8 +696,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_STATE_CMD_ERR_EID     46
-
+#define DS_STATE_CMD_ERR_EID 46
 
 /**
 **  \brief <tt> 'Set Filename Path command' </tt>
@@ -744,8 +713,7 @@
 **  The event text will indicate the file table index, and the new
 **  filename path text.
 */
-#define DS_PATH_CMD_EID          47
-
+#define DS_PATH_CMD_EID 47
 
 /**
 **  \brief <tt> 'Set Filename Path command (error)' </tt>
@@ -769,8 +737,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_PATH_CMD_ERR_EID      48
-
+#define DS_PATH_CMD_ERR_EID 48
 
 /**
 **  \brief <tt> 'Set File Basename command' </tt>
@@ -787,8 +754,7 @@
 **  The event text will indicate the file table index, and the new
 **  file basename text.
 */
-#define DS_BASE_CMD_EID          49
-
+#define DS_BASE_CMD_EID 49
 
 /**
 **  \brief <tt> 'Set File Basename command (error)' </tt>
@@ -812,8 +778,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_BASE_CMD_ERR_EID      50
-
+#define DS_BASE_CMD_ERR_EID 50
 
 /**
 **  \brief <tt> 'Set Filename Extension command' </tt>
@@ -830,8 +795,7 @@
 **  The event text will indicate the file table index, and the new
 **  filename extension text.
 */
-#define DS_EXT_CMD_EID           51
-
+#define DS_EXT_CMD_EID 51
 
 /**
 **  \brief <tt> 'Set Filename Extension command (error)' </tt>
@@ -855,8 +819,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_EXT_CMD_ERR_EID       52
-
+#define DS_EXT_CMD_ERR_EID 52
 
 /**
 **  \brief <tt> 'Set Max File Size command' </tt>
@@ -873,8 +836,7 @@
 **  The event text will indicate the file table index, and the new
 **  file size limit.
 */
-#define DS_SIZE_CMD_EID          53
-
+#define DS_SIZE_CMD_EID 53
 
 /**
 **  \brief <tt> 'Set Max File Size command (error)' </tt>
@@ -898,8 +860,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_SIZE_CMD_ERR_EID      54
-
+#define DS_SIZE_CMD_ERR_EID 54
 
 /**
 **  \brief <tt> 'Set Max File Age command' </tt>
@@ -916,8 +877,7 @@
 **  The event text will indicate the file table index, and the new
 **  file age limit.
 */
-#define DS_AGE_CMD_EID           55
-
+#define DS_AGE_CMD_EID 55
 
 /**
 **  \brief <tt> 'Set Max File Age command (error)' </tt>
@@ -941,8 +901,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_AGE_CMD_ERR_EID       56
-
+#define DS_AGE_CMD_ERR_EID 56
 
 /**
 **  \brief <tt> 'Set Sequence Count command' </tt>
@@ -959,8 +918,7 @@
 **  The event text will indicate the file table index, and the new
 **  sequence count.
 */
-#define DS_SEQ_CMD_EID           57
-
+#define DS_SEQ_CMD_EID 57
 
 /**
 **  \brief <tt> 'Set Sequence Count command (error)' </tt>
@@ -984,8 +942,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_SEQ_CMD_ERR_EID       58
-
+#define DS_SEQ_CMD_ERR_EID 58
 
 /**
 **  \brief <tt> 'Close Destination File command' </tt>
@@ -1002,8 +959,7 @@
 **  This command will succeed if the file table index is valid,
 **  regardless of whether there was an open file.
 */
-#define DS_CLOSE_CMD_EID         59
-
+#define DS_CLOSE_CMD_EID 59
 
 /**
 **  \brief <tt> 'Close Destination File command (error)' </tt>
@@ -1017,12 +973,11 @@
 **
 **  This event signals the failed execution of a command to close the
 **  selected Destination File.  The cause of the failure may be an
-**  invalid command packet length or an invalid file table index.  
+**  invalid command packet length or an invalid file table index.
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_CLOSE_CMD_ERR_EID     60
-
+#define DS_CLOSE_CMD_ERR_EID 60
 
 /**
 **  \brief <tt> 'File Move Error' </tt>
@@ -1042,8 +997,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_MOVE_FILE_ERR_EID     61
-
+#define DS_MOVE_FILE_ERR_EID 61
 
 /**
 **  \brief <tt> 'Get File Info command' </tt>
@@ -1061,7 +1015,6 @@
 */
 #define DS_GET_FILE_INFO_CMD_EID 62
 
-
 /**
 **  \brief <tt> 'Get File Info command (error)' </tt>
 **
@@ -1073,17 +1026,16 @@
 **
 **  This event signals the failed execution of a command to get the
 **  file info diagnostic packet.  The cause of the failure is an
-**  invalid command packet length.  
+**  invalid command packet length.
 **
 **  The event text will indicate the expected and actual packet size.
 */
-#define DS_GET_FILE_INFO_CMD_ERR_EID     63
-
+#define DS_GET_FILE_INFO_CMD_ERR_EID 63
 
 /**
 **  \brief <tt> 'Add Message ID to Filter Table command' </tt>
 **
-**  \event <tt> 'ADD MID command: MID = 0x\%04X, filter index = \%d, hash index = \%d' </tt>
+**  \event <tt> 'ADD MID command: MID = 0x\%08X, filter index = \%d, hash index = \%d' </tt>
 **
 **  \par Type: DEBUG
 **
@@ -1096,16 +1048,15 @@
 **  available for adding the new message ID.  The new message ID must
 **  not be zero and must not already exist in the table.
 */
-#define DS_ADD_MID_CMD_EID       64
-
+#define DS_ADD_MID_CMD_EID 64
 
 /**
 **  \brief <tt> 'Add Message ID to Filter Table command (error)' </tt>
 **
 **  \event <tt> 'Invalid ADD MID command length: expected = \%d, actual = \%d' </tt>
-**  \event <tt> 'Invalid ADD MID command arg: invalid MID = 0x\%4X' </tt>
+**  \event <tt> 'Invalid ADD MID command arg: invalid MID = 0x\%08X' </tt>
 **  \event <tt> 'Invalid ADD MID command: filter table is not loaded' </tt>
-**  \event <tt> 'Invalid ADD MID command: MID = 0x\%4X is already in filter table at index = \%d' </tt>
+**  \event <tt> 'Invalid ADD MID command: MID = 0x\%08X is already in filter table at index = \%d' </tt>
 **  \event <tt> 'Invalid ADD MID command: filter table is full' </tt>
 **
 **  \par Type: ERROR
@@ -1123,8 +1074,7 @@
 **
 **  The event text will indicate the cause of the failure.
 */
-#define DS_ADD_MID_CMD_ERR_EID   65
-
+#define DS_ADD_MID_CMD_ERR_EID 65
 
 /**
 **  \brief <tt> 'Close All Destination Files command' </tt>
@@ -1140,8 +1090,7 @@
 **
 **  This command will succeed regardless of whether there was an open file.
 */
-#define DS_CLOSE_ALL_CMD_EID     66
-
+#define DS_CLOSE_ALL_CMD_EID 66
 
 /**
 **  \brief <tt> 'Close All Destination Files command (error)' </tt>
@@ -1165,17 +1114,16 @@
 **  \event <tt> 'FILE NAME error: Path empty. dest = %d, path = '%s'' </tt>
 **
 **  \par Type: ERROR
-** 
+**
 **  \par Cause:
 **
-**  This event is generated when DS_FileCreateName is invoked with an 
+**  This event is generated when DS_FileCreateName is invoked with an
 **  empty path name.
 **
 **  The dest field is the file index.
 **  The path field is the path name.
 */
-#define DS_FILE_CREATE_EMPTY_PATH_ERR_EID  68
-
+#define DS_FILE_CREATE_EMPTY_PATH_ERR_EID 68
 
 /**
  ** \brief <tt> 'Invalid filter tbl name in DS_AppProcessHK. Name=\%s,
@@ -1188,11 +1136,11 @@
  ** \par Cause:
  **
  ** This event is issued when an invalid filter table name is passed to
- ** the CFE_TBL_GetInfo.  
+ ** the CFE_TBL_GetInfo.
  **
- ** The "Name" field in the event text  is the table name passed to 
+ ** The "Name" field in the event text  is the table name passed to
  ** #CFE_TBL_GetInfo.
- ** The "Err" field in the event text is the error code returned from 
+ ** The "Err" field in the event text is the error code returned from
  ** #CFE_TBL_GetInfo.
  */
 #define DS_APPHK_FILTER_TBL_ERR_EID 68
@@ -1205,14 +1153,12 @@
  **
  ** \par Cause:
  **
- ** This event is issued when the filter table name is not successfully 
+ ** This event is issued when the filter table name is not successfully
  ** created (via snprintf) in the DS_AppProcessHK function.
  **
  ** The "Err" field in the event text is the value returned from snprintf.
  */
 #define DS_APPHK_FILTER_TBL_PRINT_ERR_EID 69
-
-
 
 #endif /* _ds_events_h_ */
 

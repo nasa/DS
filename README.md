@@ -4,9 +4,9 @@ core Flight System (cFS) Data Storage Application (DS)
 Open Source Release Readme
 ==========================
 
-DS Release 2.5.2
+DS Release 2.6.0
 
-Date: 10/5/2020
+Date: 8/30/2021
 
 Introduction
 -------------
@@ -20,26 +20,23 @@ Introduction
 
   The DS application is written in C and depends on the cFS Operating System
   Abstraction Layer (OSAL) and cFE components.  There is additional DS application
-  specific configuration information contained in the application user's guide
-  available in https://github.com/nasa/DS/tree/master/docs/users_guide
+  specific configuration information contained in the application user's guide.
 
   This software is licensed under the Apache 2.0 license.
 
+  Developer's guide information can be generated using Doxygen:
+  doxygen ds_doxygen_config.txt
 
 Software Included
 ------------------
 
-  Data Storage application (DS) 2.5.2
+  Data Storage application (DS) 2.6.0
 
 
 Software Required
 ------------------
 
- Operating System Abstraction Layer 5.0 or higher can be
- obtained at https://github.com/nasa/osal
-
- core Flight Executive 6.8.0 or higher can be obtained at
- https://github.com/nasa/cfe
+ cFS Caelum
 
  Note: An integrated bundle including the cFE, OSAL, and PSP can
  be obtained at https://github.com/nasa/cfs

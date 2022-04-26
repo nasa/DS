@@ -211,8 +211,8 @@ page SCX_CPU1_TST_DS_HK
 write ";***********************************************************************"
 write ";  Step 1.4:  Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("1.4")
-wait 5
+;s scx_cpu1_ds_start_apps("1.4")
+;wait 5
 
 ;; Verify the Housekeeping Packet is being generated
 local hkPktId = "p0B8"
@@ -338,8 +338,8 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 2.3: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("2.3")
-wait 5
+;s scx_cpu1_ds_start_apps("2.3")
+;wait 5
 
 ;; Check the DS state based upon the DS_CDS_ENABLE_STATE parameter 
 ;; If this parameter is set to 1, the DS Application State is preserved.
@@ -400,9 +400,9 @@ write ";  Step 2.5.1: Stop the DS and TST_DS Applications. "
 write ";*********************************************************************"
 local cmdCtr = SCX_CPU1_ES_CMDPC + 2
 
-/SCX_CPU1_ES_DELETEAPP Application="TST_DS"
+/SCX_CPU1_ES_RESTARTAPP Application="TST_DS"
 wait 4
-/SCX_CPU1_ES_DELETEAPP Application=DSAppName
+/SCX_CPU1_ES_RESTARTAPP Application=DSAppName
 wait 4
 
 ut_tlmwait SCX_CPU1_ES_CMDPC, {cmdCtr}
@@ -417,8 +417,8 @@ wait 5
 write ";*********************************************************************"
 write ";  Step 2.5.2: Start the DS and TST_DS Applications. "
 write ";*********************************************************************"
-s scx_cpu1_ds_start_apps("2.5.2")
-wait 5
+;s scx_cpu1_ds_start_apps("2.5.2")
+;wait 5
 
 write ";***********************************************************************"
 write ";  Step 2.6: Enable DEBUG Event Messages "

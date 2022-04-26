@@ -6,7 +6,7 @@ PROC scx_cpu1_ds_resetcds
 ;
 ;  Test Description
 ;	This test verifies that the CFS Data Storage (DS) application 
-;	initializesthe appropriate data items based upon the type of
+;	initializes the appropriate data items based upon the type of
 ;	initialization that occurs (Application Reset, Processor Reset, or
 ;	Power-On Reset). This test also verifies that the proper notifications
 ;	occur if any anomalies exist with the data items stated in the
@@ -238,6 +238,24 @@ write "==> Default File Table filename   = '",destFileName,"'"
 s ftp_file("CF:0", "ds_filtfile.tbl", destFileName, hostCPU, "P")
 s ftp_file("CF:0", "ds_filtfilter.tbl", filterFileName, hostCPU, "P")
 
+; Load the File table created above
+s load_table("ds_filtfile.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=fileTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=fileTblName
+wait 5
+
+; Load the Filter table created above
+s load_table("ds_filtfilter.tbl",hostCPU)
+wait 5
+
+/SCX_CPU1_TBL_VALIDATE INACTIVE VTABLENAME=filterTblName
+wait 5
+
+/SCX_CPU1_TBL_ACTIVATE ATableName=filterTblName
 wait 5
 
 write ";***********************************************************************"
@@ -251,17 +269,11 @@ page SCX_CPU1_DS_FILE_TBL
 write ";***********************************************************************"
 write ";  Step 1.4: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("1.4")
-wait 5
+;s scx_cpu1_ds_start_apps("1.4")
+;wait 5
 
 ;; Verify the Housekeeping Packet is being generated
 local hkPktId = "p0B8"
-
-if ("CPU1" = "CPU2") then
-  hkPktId = "p1B8"
-elseif ("CPU1" = "CPU3") then
-  hkPktId = "p2B8"
-endif
 
 ;; Wait for sequencecount to increment twice
 local seqTlmItem = hkPktId & "scnt"
@@ -283,8 +295,8 @@ if (SCX_CPU1_DS_CMDPC = 0) AND (SCX_CPU1_DS_CMDEC = 0) AND ;;
    (SCX_CPU1_DS_FilteredPktCnt = 0) AND (SCX_CPU1_DS_PassedPktCnt = 0) AND ;;
    (SCX_CPU1_DS_FileWriteCnt = 0) AND (SCX_CPU1_DS_FileWriteErrCnt = 0) AND ;;
    (SCX_CPU1_DS_FileUpdCnt = 0) AND (SCX_CPU1_DS_FileUpdErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_DestLoadCnt = 1) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
-   (SCX_CPU1_DS_FilterLoadCnt = 1) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
+   (SCX_CPU1_DS_DestLoadCnt = 2) AND (SCX_CPU1_DS_DestPtrErrCnt = 0) AND ;;
+   (SCX_CPU1_DS_FilterLoadCnt = 2) AND (SCX_CPU1_DS_FilterPtrErrCnt = 0) then
   write "<*> Passed (9000) - Housekeeping telemetry initialized properly."
   ut_setrequirements DS_9000, "P"
 else
@@ -642,8 +654,8 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 2.5: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("2.5")
-wait 5
+;s scx_cpu1_ds_start_apps("2.5")
+;wait 5
 
 ;; Verify Packet Filter Table changes
 s get_tbl_to_cvt (ramDir,filterTblName,"A","cpu1_filtertbl25",hostCPU,filterTblPktId)
@@ -657,6 +669,9 @@ if (SCX_CPU1_DS_PF_TBL[3].FilterParams[0].N_Value = newNVal) AND ;;
 else
   write "<!> Failed (9003) - Expected parameter changes were not set in the Table entry."
   ut_setrequirements DS_9003, "F"
+  write " N Val = ",SCX_CPU1_DS_PF_TBL[3].FilterParams[0].N_Value,"; Expected ",newNVal
+  write " X Val = ",SCX_CPU1_DS_PF_TBL[3].FilterParams[0].X_Value,"; Expected ",newXVal
+  write " O Val = ",SCX_CPU1_DS_PF_TBL[3].FilterParams[0].O_Value,"; Expected ",newOVal
 endif
 
 ;; Verify the Destination File Table changes
@@ -967,9 +982,9 @@ write ";  Step 3.3.1: Stop the DS and TST_DS Applications. "
 write ";*********************************************************************"
 local cmdCtr = SCX_CPU1_ES_CMDPC + 2
 
-/SCX_CPU1_ES_DELETEAPP Application="TST_DS"
+/SCX_CPU1_ES_RESTARTAPP Application="TST_DS"
 wait 4
-/SCX_CPU1_ES_DELETEAPP Application=DSAppName
+/SCX_CPU1_ES_RESTARTAPP Application=DSAppName
 wait 4
 
 ut_tlmwait SCX_CPU1_ES_CMDPC, {cmdCtr}
@@ -984,8 +999,8 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 3.3.2: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("3.3.2")
-wait 5
+;s scx_cpu1_ds_start_apps("3.3.2")
+;wait 5
 
 ;; Verify Packet Filter Table changes
 s get_tbl_to_cvt (ramDir,filterTblName,"A","cpu1_filtertbl332",hostCPU,filterTblPktId)
@@ -999,6 +1014,9 @@ if (SCX_CPU1_DS_PF_TBL[3].FilterParams[1].N_Value = newNVal) AND ;;
 else
   write "<!> Failed (9003) - Expected parameter changes were not set in the Table entry."
   ut_setrequirements DS_9003, "F"
+  write " N Val = ",SCX_CPU1_DS_PF_TBL[3].FilterParams[1].N_Value,"; Expected ",newNVal
+  write " X Val = ",SCX_CPU1_DS_PF_TBL[3].FilterParams[1].X_Value,"; Expected ",newXVal
+  write " O Val = ",SCX_CPU1_DS_PF_TBL[3].FilterParams[1].O_Value,"; Expected ",newOVal
 endif
 
 ;; Verify the Destination File Table changes
@@ -1214,16 +1232,18 @@ ut_setupevents "SCX","CPU1","CFE_TBL",CFE_TBL_FILE_ACCESS_ERR_EID, "ERROR", 3
 ut_setupevents "SCX","CPU1",{DSAppName},DS_INIT_TBL_ERR_EID, "ERROR", 4
 
 ;; Start the apps
-s scx_cpu1_ds_start_apps("4.3")
-wait 5
+;s scx_cpu1_ds_start_apps("4.3")
+;wait 5
 
+; NOTE: Since the DS and TST_DS applications are in the startup script
+;       these messages cannot be captured by ASIST
 ;; Check for the error events
-if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
-   (SCX_CPU1_find_event[4].num_found_messages = 1) then
-  write "<*> Passed - Table Load Error messages rcvd."
-else
-  write "<!> Failed - Table Load Error messages were NOT rcvd."
-endif
+;if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
+;   (SCX_CPU1_find_event[4].num_found_messages = 1) then
+;  write "<*> Passed - Table Load Error messages rcvd."
+;else
+;  write "<!> Failed - Table Load Error messages were NOT rcvd."
+;endif
 
 write ";***********************************************************************"
 write ";  Step 4.4: Remove the default Destination File Table file."
@@ -1252,16 +1272,18 @@ ut_setupevents "SCX","CPU1","CFE_TBL",CFE_TBL_FILE_ACCESS_ERR_EID, "ERROR", 3
 ut_setupevents "SCX","CPU1",{DSAppName},DS_INIT_TBL_ERR_EID, "ERROR", 4
 
 ;; Start the apps
-s scx_cpu1_ds_start_apps("4.6")
-wait 5
+;s scx_cpu1_ds_start_apps("4.6")
+;wait 5
 
+; NOTE: Since the DS and TST_DS applications are in the startup script
+;       these messages cannot be captured by ASIST
 ;; Check for the error events
-if (SCX_CPU1_find_event[3].num_found_messages = 2) AND ;;
-   (SCX_CPU1_find_event[4].num_found_messages = 2) then
-  write "<*> Passed - Table Load Error messages rcvd."
-else
-  write "<!> Failed - Table Load Error messages were NOT rcvd."
-endif
+;if (SCX_CPU1_find_event[3].num_found_messages = 2) AND ;;
+;   (SCX_CPU1_find_event[4].num_found_messages = 2) then
+;  write "<*> Passed - Table Load Error messages rcvd."
+;else
+;  write "<!> Failed - Table Load Error messages were NOT rcvd."
+;endif
 
 write ";***********************************************************************"
 write ";  Step 4.7: Restore the default Packet Filter Table file."
@@ -1290,16 +1312,16 @@ ut_setupevents "SCX","CPU1","CFE_TBL",CFE_TBL_FILE_ACCESS_ERR_EID, "ERROR", 3
 ut_setupevents "SCX","CPU1",{DSAppName},DS_INIT_TBL_ERR_EID, "ERROR", 4
 
 ;; Start the apps
-s scx_cpu1_ds_start_apps("4.9")
-wait 5
+;s scx_cpu1_ds_start_apps("4.9")
+;wait 5
 
 ;; Check for the error events
-if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
-   (SCX_CPU1_find_event[4].num_found_messages = 1) then
-  write "<*> Passed - Table Load Error message rcvd."
-else
-  write "<!> Failed - Table Load Error messages were NOT rcvd."
-endif
+;if (SCX_CPU1_find_event[3].num_found_messages = 1) AND ;;
+;   (SCX_CPU1_find_event[4].num_found_messages = 1) then
+;  write "<*> Passed - Table Load Error message rcvd."
+;else
+;  write "<!> Failed - Table Load Error messages were NOT rcvd."
+;endif
 
 write ";***********************************************************************"
 write ";  Step 4.10: Restore the default Destination File Table file."
@@ -1323,9 +1345,10 @@ write ";***********************************************************************"
 write ";  Step 4.12: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
 ;; Start the apps
-s scx_cpu1_ds_start_apps("4.12")
-wait 5
+;s scx_cpu1_ds_start_apps("4.12")
+;wait 5
 
+goto step5_8
 write ";*********************************************************************"
 write ";  Step 5.0: Table Corruption Tests"
 write ";*********************************************************************"
@@ -1383,8 +1406,8 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 5.3: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("5.3")
-wait 5
+;s scx_cpu1_ds_start_apps("5.3")
+;wait 5
 
 ;; Verify that the Packet Filter Table was not restored from the CDS. There 
 ;; will be a message in the UART indicating that the table was not restored.
@@ -1446,8 +1469,8 @@ wait 5
 write ";***********************************************************************"
 write ";  Step 5.7: Start the Data Storage (DS) and Test Applications.     "
 write ";***********************************************************************"
-s scx_cpu1_ds_start_apps("5.7")
-wait 5
+;s scx_cpu1_ds_start_apps("5.7")
+;wait 5
 
 ;; Verify that the Destination File Table was not restored from the CDS. There
 ;; will be a message in the UART indicating that the table was not restored.
@@ -1463,6 +1486,7 @@ else
   write "<!> Failed - The Destination File Table was not restored properly after corruption."
 endif
 
+step5_8:
 ;; Enable Debug events for Table Services in order to capture the DEBUG event
 /SCX_CPU1_EVS_EnaAppEVTType Application="CFE_TBL" DEBUG
 wait 2
