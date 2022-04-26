@@ -16,4 +16,4 @@
 INPUT                 += @MISSION_SOURCE_DIR@/cfe/cmake/sample_defs
 
 PROJECT_NAME           = "DS User's Guide"
-WARN_LOGFILE           = ds_usersguide_warnings.log
+WARN_LOGFILE           = ds-usersguide-warnings.log
