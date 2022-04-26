@@ -1,30 +1,27 @@
 /************************************************************************
-** File: ds_app.c
-**
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
-**  application version 2.5.2”
-**
-**  Copyright © 2019 United States Government as represented by the Administrator
-**  of the National Aeronautics and Space Administration.  All Rights Reserved.
-**
-**  Licensed under the Apache License, Version 2.0 (the "License");
-**  you may not use this file except in compliance with the License.
-**  You may obtain a copy of the License at
-**  http://www.apache.org/licenses/LICENSE-2.0
-**  Unless required by applicable law or agreed to in writing, software
-**  distributed under the License is distributed on an "AS IS" BASIS,
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-**  See the License for the specific language governing permissions and
-**  limitations under the License.
-**
-**
-** Purpose:
-**  The CFS Data Storage (DS) Application file containing the application
-**  initialization routines, the main routine and the command interface.
-**
-** Notes:
-**
-*************************************************************************/
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application file containing the application
+ *  initialization routines, the main routine and the command interface.
+ */
 
 #include "cfe.h"
 
@@ -45,7 +42,7 @@
 #include "ds_msgdefs.h"
 #include "ds_version.h"
 
-#include "string.h"
+#include <stdio.h>
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -191,11 +188,11 @@ int32 DS_AppInitialize(void)
     DS_AppData.AppEnableState = DS_DEF_ENABLE_STATE;
 
     /*
-    ** Mark files as closed (cFE uses zero as a valid file handle)...
+    ** Mark files as closed
     */
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
-        DS_AppData.FileStatus[i].FileHandle = DS_CLOSED_FILE_HANDLE;
+        DS_AppData.FileStatus[i].FileHandle = OS_OBJECT_ID_UNDEFINED;
     }
 
     /*
@@ -227,7 +224,7 @@ int32 DS_AppInitialize(void)
     */
     if (Result == CFE_SUCCESS)
     {
-        Result = CFE_SB_Subscribe(DS_SEND_HK_MID, DS_AppData.InputPipe);
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), DS_AppData.InputPipe);
 
         if (Result != CFE_SUCCESS)
         {
@@ -241,7 +238,7 @@ int32 DS_AppInitialize(void)
     */
     if (Result == CFE_SUCCESS)
     {
-        Result = CFE_SB_Subscribe(DS_CMD_MID, DS_AppData.InputPipe);
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_AppData.InputPipe);
 
         if (Result != CFE_SUCCESS)
         {
@@ -294,7 +291,7 @@ void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
 
     CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
 
-    switch (MessageID)
+    switch (CFE_SB_MsgIdToValue(MessageID))
     {
         /*
         ** DS application commands...
@@ -514,7 +511,7 @@ void DS_AppProcessHK(void)
     /*
     ** Initialize housekeeping packet...
     */
-    CFE_MSG_Init(&HkPacket.TlmHeader.Msg, DS_HK_TLM_MID, sizeof(DS_HkPacket_t));
+    CFE_MSG_Init(&HkPacket.TlmHeader.Msg, CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
 
     /*
     ** Process data storage file age limits...

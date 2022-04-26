@@ -1,58 +1,53 @@
 /************************************************************************
-** File: ds_msg.h
-**
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
-**  application version 2.5.2”
-**
-**  Copyright © 2019 United States Government as represented by the Administrator
-**  of the National Aeronautics and Space Administration.  All Rights Reserved.
-**
-**  Licensed under the Apache License, Version 2.0 (the "License");
-**  you may not use this file except in compliance with the License.
-**  You may obtain a copy of the License at
-**  http://www.apache.org/licenses/LICENSE-2.0
-**  Unless required by applicable law or agreed to in writing, software
-**  distributed under the License is distributed on an "AS IS" BASIS,
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-**  See the License for the specific language governing permissions and
-**  limitations under the License.
-**
-**
-** Purpose:
-**  The CFS Data Storage (DS) Application header file
-**
-** Notes:
-**
-*************************************************************************/
-#ifndef _ds_msg_h_
-#define _ds_msg_h_
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Message Definitions
+ */
+#ifndef DS_MSG_H
+#define DS_MSG_H
 
 #include "cfe.h"
-
 #include "ds_platform_cfg.h"
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* DS application command packet formats                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/**
+ * \defgroup cfsdscmdstructs CFS Data Storage Command Structures
+ * \{
+ */
 
-/*
-**  \brief No-Operation Command
-**
-**  For command details see #DS_NOOP_CC
-*/
+/**
+ *  \brief No-Operation Command
+ *
+ *  For command details see #DS_NOOP_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
 
 } DS_NoopCmd_t;
 
-/*
-**  \brief Reset Housekeeping Telemetry Command
-**
-**  For command details see #DS_RESET_CC
-*/
+/**
+ *  \brief Reset Housekeeping Telemetry Command
+ *
+ *  For command details see #DS_RESET_CC
+ */
 typedef struct
 {
 
@@ -60,11 +55,11 @@ typedef struct
 
 } DS_ResetCmd_t;
 
-/*
-**  \brief Set Ena/Dis State For DS Application
-**
-**  For command details see #DS_SET_APP_STATE_CC
-*/
+/**
+ *  \brief Set Ena/Dis State For DS Application
+ *
+ *  For command details see #DS_SET_APP_STATE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -74,11 +69,11 @@ typedef struct
 
 } DS_AppStateCmd_t;
 
-/*
-**  \brief Set File Selection For Packet Filter Table Entry
-**
-**  For command details see #DS_SET_FILTER_FILE_CC
-*/
+/**
+ *  \brief Set File Selection For Packet Filter Table Entry
+ *
+ *  For command details see #DS_SET_FILTER_FILE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -90,11 +85,11 @@ typedef struct
 
 } DS_FilterFileCmd_t;
 
-/*
-**  \brief Set Filter Type For Packet Filter Table Entry
-**
-**  For command details see #DS_SET_FILTER_TYPE_CC
-*/
+/**
+ *  \brief Set Filter Type For Packet Filter Table Entry
+ *
+ *  For command details see #DS_SET_FILTER_TYPE_CC
+ */
 typedef struct
 {
 
@@ -107,11 +102,11 @@ typedef struct
 
 } DS_FilterTypeCmd_t;
 
-/*
-**  \brief Set Filter Parameters For Packet Filter Table Entry
-**
-**  For command details see #DS_SET_FILTER_PARMS_CC
-*/
+/**
+ *  \brief Set Filter Parameters For Packet Filter Table Entry
+ *
+ *  For command details see #DS_SET_FILTER_PARMS_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -125,11 +120,11 @@ typedef struct
 
 } DS_FilterParmsCmd_t;
 
-/*
-**  \brief Set Filename Type For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_TYPE_CC
-*/
+/**
+ *  \brief Set Filename Type For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_TYPE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -139,11 +134,11 @@ typedef struct
 
 } DS_DestTypeCmd_t;
 
-/*
-**  \brief Set Ena/Dis State For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_STATE_CC
-*/
+/**
+ *  \brief Set Ena/Dis State For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_STATE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -153,11 +148,11 @@ typedef struct
 
 } DS_DestStateCmd_t;
 
-/*
-**  \brief Set Path Portion Of Filename For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_PATH_CC
-*/
+/**
+ *  \brief Set Path Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_PATH_CC
+ */
 typedef struct
 {
 
@@ -169,11 +164,11 @@ typedef struct
 
 } DS_DestPathCmd_t;
 
-/*
-**  \brief Set Base Portion Of Filename For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_BASE_CC
-*/
+/**
+ *  \brief Set Base Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_BASE_CC
+ */
 typedef struct
 {
 
@@ -185,11 +180,11 @@ typedef struct
 
 } DS_DestBaseCmd_t;
 
-/*
-**  \brief Set Extension Portion Of Filename For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_EXT_CC
-*/
+/**
+ *  \brief Set Extension Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_EXT_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -200,11 +195,11 @@ typedef struct
 
 } DS_DestExtCmd_t;
 
-/*
-**  \brief Set Max File Size For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_SIZE_CC
-*/
+/**
+ *  \brief Set Max File Size For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_SIZE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -215,11 +210,11 @@ typedef struct
 
 } DS_DestSizeCmd_t;
 
-/*
-**  \brief Set Max File Age For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_AGE_CC
-*/
+/**
+ *  \brief Set Max File Age For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_AGE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -231,11 +226,11 @@ typedef struct
 
 } DS_DestAgeCmd_t;
 
-/*
-**  \brief Set Sequence Portion Of Filename For Destination File Table Entry
-**
-**  For command details see #DS_SET_DEST_COUNT_CC
-*/
+/**
+ *  \brief Set Sequence Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_COUNT_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -247,11 +242,11 @@ typedef struct
 
 } DS_DestCountCmd_t;
 
-/*
-**  \brief Close Destination File
-**
-**  For command details see #DS_CLOSE_FILE_CC
-*/
+/**
+ *  \brief Close Destination File
+ *
+ *  For command details see #DS_CLOSE_FILE_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -261,11 +256,11 @@ typedef struct
 
 } DS_CloseFileCmd_t;
 
-/*
-**  \brief Close All Destination Files
-**
-**  For command details see #DS_CLOSE_ALL_CC
-*/
+/**
+ *  \brief Close All Destination Files
+ *
+ *  For command details see #DS_CLOSE_ALL_CC
+ */
 typedef struct
 {
 
@@ -273,11 +268,11 @@ typedef struct
 
 } DS_CloseAllCmd_t;
 
-/*
-**  \brief Get File Info Command
-**
-**  For command details see #DS_GET_FILE_INFO_CC
-*/
+/**
+ *  \brief Get File Info Command
+ *
+ *  For command details see #DS_GET_FILE_INFO_CC
+ */
 typedef struct
 {
 
@@ -285,11 +280,11 @@ typedef struct
 
 } DS_GetFileInfoCmd_t;
 
-/*
-**  \brief Add Message ID To Packet Filter Table
-**
-**  For command details see #DS_ADD_MID_CC
-*/
+/**
+ *  \brief Add Message ID To Packet Filter Table
+ *
+ *  For command details see #DS_ADD_MID_CC
+ */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
@@ -298,92 +293,69 @@ typedef struct
 
 } DS_AddMidCmd_t;
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* DS application telemetry formats                                */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/**\}*/
 
 /**
-**  \dstlm DS application housekeeping packet
-*/
+ * \defgroup cfsdstlm CFS Data Storage Telemetry
+ * \{
+ */
+
+/**
+ * \brief Application housekeeping packet
+ */
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE Software Bus telemetry message header */
 
-    uint8 CmdAcceptedCounter;   /**< \dstlmmnemonic \DS_CMDPC
-                                     \brief Count of valid commands received */
-    uint8 CmdRejectedCounter;   /**< \dstlmmnemonic \DS_CMDEC
-                                     \brief Count of invalid commands received */
-    uint8 DestTblLoadCounter;   /**< \dstlmmnemonic \DS_DESTLOADCNT
-                                     \brief Count of destination file table loads */
-    uint8 DestTblErrCounter;    /**< \dstlmmnemonic \DS_DESTPTRERRCNT
-                                     \brief Count of failed attempts to get table data pointer */
-    uint8 FilterTblLoadCounter; /**< \dstlmmnemonic \DS_FILTERLOADCNT
-                                     \brief Count of packet filter table loads */
-    uint8 FilterTblErrCounter;  /**< \dstlmmnemonic \DS_FILTERPTRERRCNT
-                                     \brief Count of failed attempts to get table data pointer */
-    uint8 AppEnableState;       /**< \dstlmmnemonic \DS_APPENASTATE
-                                     \brief Application enable/disable state */
-    uint8 Spare8;               /**< \brief Structure alignment padding */
-
-    uint16 FileWriteCounter;                 /**< \dstlmmnemonic \DS_FILEWRITECNT
-                                                  \brief Count of good destination file writes */
-    uint16 FileWriteErrCounter;              /**< \dstlmmnemonic \DS_FILEWRITEERRCNT
-                                                  \brief Count of bad destination file writes */
-    uint16 FileUpdateCounter;                /**< \dstlmmnemonic \DS_FILEUPDCNT
-                                                  \brief Count of good updates to secondary header */
-    uint16 FileUpdateErrCounter;             /**< \dstlmmnemonic \DS_FILEUPDERRCNT
-                                                  \brief Count of bad updates to secondary header */
-    uint32 DisabledPktCounter;               /**< \dstlmmnemonic \DS_DISABLEDPKTCNT
-                                                  \brief Count of packets discarded (DS was disabled) */
-    uint32 IgnoredPktCounter;                /**< \dstlmmnemonic \DS_IGNOREDPKTCNT
-                                                  \brief Count of packets discarded.  Incoming packets will be discarded when:
-                                                  <ul> <li> The File and/or Filter Table has failed to load </li>
-                                                       <li> A packet (that is not a DS HK or command packet) has been received that is
-                                                not                listed in the Filter Table </li> </ul> */
-    uint32 FilteredPktCounter;               /**< \dstlmmnemonic \DS_FILTEREDPKTCNT
-                                                  \brief Count of packets discarded (failed filter test) */
-    uint32 PassedPktCounter;                 /**< \dstlmmnemonic \DS_PASSEDPKTCNT
-                                                  \brief Count of packets that passed filter test */
-    char FilterTblFilename[OS_MAX_PATH_LEN]; /**< \dstlmmnemonic \DS_FILTERTBL
-                                                  \brief Name of filter table file */
+    uint8  CmdAcceptedCounter;                 /**< \brief Count of valid commands received */
+    uint8  CmdRejectedCounter;                 /**< \brief Count of invalid commands received */
+    uint8  DestTblLoadCounter;                 /**< \brief Count of destination file table loads */
+    uint8  DestTblErrCounter;                  /**< \brief Count of failed attempts to get table data pointer */
+    uint8  FilterTblLoadCounter;               /**< \brief Count of packet filter table loads */
+    uint8  FilterTblErrCounter;                /**< \brief Count of failed attempts to get table data pointer */
+    uint8  AppEnableState;                     /**< \brief Application enable/disable state */
+    uint8  Spare8;                             /**< \brief Structure alignment padding */
+    uint16 FileWriteCounter;                   /**< \brief Count of good destination file writes */
+    uint16 FileWriteErrCounter;                /**< \brief Count of bad destination file writes */
+    uint16 FileUpdateCounter;                  /**< \brief Count of good updates to secondary header */
+    uint16 FileUpdateErrCounter;               /**< \brief Count of bad updates to secondary header */
+    uint32 DisabledPktCounter;                 /**< \brief Count of packets discarded (DS was disabled) */
+    uint32 IgnoredPktCounter;                  /**< \brief Count of packets discarded
+                                                *
+                                                * Incoming packets will be discarded when:
+                                                *  - The File and/or Filter Table has failed to load
+                                                *  - A packet (that is not a DS HK or command packet) has been received
+                                                *    that is not listed in the Filter Table
+                                                */
+    uint32 FilteredPktCounter;                 /**< \brief Count of packets discarded (failed filter test) */
+    uint32 PassedPktCounter;                   /**< \brief Count of packets that passed filter test */
+    char   FilterTblFilename[OS_MAX_PATH_LEN]; /**< \brief Name of filter table file */
 } DS_HkPacket_t;
 
 /**
-** \brief Current state of destination files
-*/
+ * \brief Current state of destination files
+ */
 typedef struct
 {
-    uint32 FileAge;                        /**< \dstlmmnemonic \DS_FILEAGE
-                                                \brief Current file age in seconds */
-    uint32 FileSize;                       /**< \dstlmmnemonic \DS_FILESIZE
-                                                \brief Current file size in bytes */
-    uint32 FileRate;                       /**< \dstlmmnemonic \DS_FILERATE
-                                                \brief Current file data rate (avg since HK) */
-    uint32 SequenceCount;                  /**< \dstlmmnemonic \DS_FILESEQ
-                                                \brief Sequence count portion of filename */
-    uint16 EnableState;                    /**< \dstlmmnemonic \DS_ENABLESTATE
-                                                \brief Current file enable/disable state */
-    uint16 OpenState;                      /**< \dstlmmnemonic \DS_OPENSTATE
-                                                \brief Current file open/close state */
-    char FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \dstlmmnemonic \DS_FILENAME
-                                                \brief Current filename (path+base+seq+ext) */
+    uint32 FileAge;                          /**< \brief Current file age in seconds */
+    uint32 FileSize;                         /**< \brief Current file size in bytes */
+    uint32 FileRate;                         /**< \brief Current file data rate (avg since HK) */
+    uint32 SequenceCount;                    /**< \brief Sequence count portion of filename */
+    uint16 EnableState;                      /**< \brief Current file enable/disable state */
+    uint16 OpenState;                        /**< \brief Current file open/close state */
+    char   FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief Current filename (path+base+seq+ext) */
 } DS_FileInfo_t;
 
 /**
-**  \dstlm DS application file info packet
-*/
+ * \brief Application file info packet
+ */
 typedef struct
 {
     CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE Software Bus telemetry message header */
 
-    DS_FileInfo_t FileInfo[DS_DEST_FILE_CNT]; /**< \dstlmmnemonic \DS_FILEINFO
-                                                   \brief Current state of destination files */
+    DS_FileInfo_t FileInfo[DS_DEST_FILE_CNT]; /**< \brief Current state of destination files */
 } DS_FileInfoPkt_t;
 
-#endif /* _ds_msg_h_ */
+/**\}*/
 
-/************************/
-/*  End of File Comment */
-/************************/
+#endif

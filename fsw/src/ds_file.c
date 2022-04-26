@@ -1,31 +1,29 @@
 /************************************************************************
-** File: ds_file.c
-**
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
-**  application version 2.5.2”
-**
-**  Copyright © 2019 United States Government as represented by the Administrator
-**  of the National Aeronautics and Space Administration.  All Rights Reserved.
-**
-**  Licensed under the Apache License, Version 2.0 (the "License");
-**  you may not use this file except in compliance with the License.
-**  You may obtain a copy of the License at
-**  http://www.apache.org/licenses/LICENSE-2.0
-**  Unless required by applicable law or agreed to in writing, software
-**  distributed under the License is distributed on an "AS IS" BASIS,
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-**  See the License for the specific language governing permissions and
-**  limitations under the License.
-**
-** Purpose:
-**  CFS Data Storage (DS) file functions
-**
-*************************************************************************/
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) file functions
+ */
 
 #include "cfe.h"
 #include "cfe_fs.h"
-
-#include "cfs_utils.h"
 
 #include "ds_platform_cfg.h"
 #include "ds_verify.h"
@@ -38,7 +36,145 @@
 #include "ds_table.h"
 #include "ds_events.h"
 
-#include "string.h"
+#include <stdio.h>
+
+#define DS_PKT_SEQUENCE_BASED_FILTER_TYPE 1
+#define DS_PKT_TIME_BASED_FILTER_TYPE     2
+
+#define DS_16_MSB_SUBSECS_SHIFT 16
+#define DS_11_LSB_SECONDS_MASK  0x07FF
+#define DS_11_LSB_SECONDS_SHIFT 4
+#define DS_4_MSB_SUBSECS_MASK   0xF000
+#define DS_4_MSB_SUBSECS_SHIFT  12
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Apply common filter algorithm to Software Bus packet            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint16 Algorithm_N, uint16 Algorithm_X,
+                         uint16 Algorithm_O)
+{
+    /*
+    ** Algorithm_N = the filter will pass this many packets
+    ** Algorithm_X = out of every group of this many packets
+    ** Algorithm_O = starting at this offset within the group
+    */
+    bool                    PacketIsFiltered = false;
+    CFE_TIME_SysTime_t      PacketTime;
+    uint16                  PacketValue;
+    uint16                  Seconds;
+    uint16                  Subsecs;
+    CFE_MSG_SequenceCount_t SeqCnt;
+
+    /*
+    ** Verify input values (all errors = packet is filtered)...
+    */
+    if (Algorithm_X == 0)
+    {
+        /*
+        ** Group size of zero will result in divide by zero...
+        */
+        PacketIsFiltered = true;
+    }
+    else if (Algorithm_N == 0)
+    {
+        /*
+        ** Pass count of zero will result in zero packets...
+        */
+        PacketIsFiltered = true;
+    }
+    else if (Algorithm_N > Algorithm_X)
+    {
+        /*
+        ** Pass count cannot exceed group size...
+        */
+        PacketIsFiltered = true;
+    }
+    else if (Algorithm_O >= Algorithm_X)
+    {
+        /*
+        ** Group offset must be less than group size...
+        */
+        PacketIsFiltered = true;
+    }
+    else if ((FilterType != DS_PKT_TIME_BASED_FILTER_TYPE) && (FilterType != DS_PKT_SEQUENCE_BASED_FILTER_TYPE))
+    {
+        /*
+        ** Invalid - unknown filter type...
+        */
+        PacketIsFiltered = true;
+    }
+    else
+    {
+        if (FilterType == DS_PKT_SEQUENCE_BASED_FILTER_TYPE)
+        {
+            /*
+            ** Create packet filter value from packet sequence count...
+            */
+            CFE_MSG_GetSequenceCount(MessagePtr, &SeqCnt);
+            PacketValue = (uint16)SeqCnt;
+        }
+        else
+        {
+            /*
+            ** Create packet filter value from packet timestamp...
+            */
+            CFE_MSG_GetMsgTime(MessagePtr, &PacketTime);
+
+            /*
+            ** Get the least significant 11 bits of timestamp seconds...
+            */
+            Seconds = (uint16)PacketTime.Seconds;
+            Seconds = Seconds & DS_11_LSB_SECONDS_MASK;
+
+            /*
+            ** Get the most significant 4 bits of timestamp subsecs...
+            */
+            Subsecs = (uint16)(PacketTime.Subseconds >> DS_16_MSB_SUBSECS_SHIFT);
+            Subsecs = Subsecs & DS_4_MSB_SUBSECS_MASK;
+
+            /*
+            ** Shift seconds and subsecs to allow merge...
+            */
+            Seconds = Seconds << DS_11_LSB_SECONDS_SHIFT;
+            Subsecs = Subsecs >> DS_4_MSB_SUBSECS_SHIFT;
+
+            /*
+            ** Merge seconds and subsecs to create packet filter value...
+            */
+            PacketValue = Seconds | Subsecs;
+        }
+
+        /*
+        ** Apply the filter algorithm (common for both filter types)...
+        */
+        if (PacketValue < Algorithm_O)
+        {
+            /*
+            ** Value is less than offset of passed range...
+            */
+            PacketIsFiltered = true;
+        }
+        else if (((PacketValue - Algorithm_O) % Algorithm_X) < Algorithm_N)
+        {
+            /*
+            ** This packet was passed by the filter algorithm...
+            */
+            PacketIsFiltered = false;
+        }
+        else
+        {
+            /*
+            ** This packet was filtered by the filter algorithm...
+            */
+            PacketIsFiltered = true;
+        }
+    }
+
+    return (PacketIsFiltered);
+
+} /* End of DS_IsPacketFiltered() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -86,7 +222,6 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
             if ((FilterParms->Algorithm_N != DS_UNUSED) && (FilterParms->FileTableIndex < DS_DEST_FILE_CNT))
             {
                 FileIndex = FilterParms->FileTableIndex;
-
                 /*
                 ** Ignore disabled destination files...
                 */
@@ -95,9 +230,9 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
                     /*
                     ** Apply filter algorithm to the packet...
                     */
-                    FilterResult = CFS_IsPacketFiltered((CFE_MSG_Message_t *)BufPtr, FilterParms->FilterType,
-                                                        FilterParms->Algorithm_N, FilterParms->Algorithm_X,
-                                                        FilterParms->Algorithm_O);
+                    FilterResult = DS_IsPacketFiltered((CFE_MSG_Message_t *)BufPtr, FilterParms->FilterType,
+                                                       FilterParms->Algorithm_N, FilterParms->Algorithm_X,
+                                                       FilterParms->Algorithm_O);
                     if (FilterResult == false)
                     {
                         /*
@@ -145,7 +280,7 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
     */
     CFE_MSG_GetSize(&BufPtr->Msg, &PacketLength);
 
-    if (FileStatus->FileHandle == DS_CLOSED_FILE_HANDLE)
+    if (!OS_ObjectIdDefined(FileStatus->FileHandle))
     {
         /*
         ** 1st packet since destination enabled or file closed...
@@ -183,7 +318,7 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
         */
         DS_FileCreateDest(FileIndex);
 
-        if (FileStatus->FileHandle != DS_CLOSED_FILE_HANDLE)
+        if (OS_ObjectIdDefined(FileStatus->FileHandle))
         {
             /*
             ** By writing the first packet without first performing a size
@@ -356,7 +491,7 @@ void DS_FileCreateDest(uint32 FileIndex)
     DS_DestFileEntry_t *DestFile        = &DS_AppData.DestFileTblPtr->File[FileIndex];
     DS_AppFileStatus_t *FileStatus      = &DS_AppData.FileStatus[FileIndex];
     int32               Result          = CFE_SUCCESS;
-    osal_id_t           LocalFileHandle = 0;
+    osal_id_t           LocalFileHandle = OS_OBJECT_ID_UNDEFINED;
 
     /*
     ** Create filename from "path + base + sequence count + extension"...
@@ -406,7 +541,7 @@ void DS_FileCreateDest(uint32 FileIndex)
             /*
             ** Update sequence count if have one and write successful...
             */
-            if ((FileStatus->FileHandle != DS_CLOSED_FILE_HANDLE) && (DestFile->FileNameType == DS_BY_COUNT))
+            if (OS_ObjectIdDefined(FileStatus->FileHandle) && (DestFile->FileNameType == DS_BY_COUNT))
             {
                 FileStatus->FileCount++;
                 if (FileStatus->FileCount > DS_MAX_SEQUENCE_COUNT)
@@ -709,7 +844,7 @@ void DS_FileUpdateHeader(int32 FileIndex)
     CFE_TIME_SysTime_t  CurrentTime = CFE_TIME_GetTime();
     int32               Result      = CFE_SUCCESS;
 
-    Result = OS_lseek(FileStatus->FileHandle, sizeof(CFE_FS_Header_t), SEEK_SET);
+    Result = OS_lseek(FileStatus->FileHandle, sizeof(CFE_FS_Header_t), OS_SEEK_SET);
 
     if (Result == sizeof(CFE_FS_Header_t))
     {
@@ -833,7 +968,7 @@ void DS_FileCloseDest(int32 FileIndex)
     /*
     ** Reset status for this destination file...
     */
-    FileStatus->FileHandle = DS_CLOSED_FILE_HANDLE;
+    FileStatus->FileHandle = OS_OBJECT_ID_UNDEFINED;
     FileStatus->FileAge    = 0;
     FileStatus->FileSize   = 0;
 
@@ -868,7 +1003,7 @@ void DS_FileTestAge(uint32 ElapsedSeconds)
             /*
             ** Update age of open files...
             */
-            if (DS_AppData.FileStatus[FileIndex].FileHandle != DS_CLOSED_FILE_HANDLE)
+            if (OS_ObjectIdDefined(DS_AppData.FileStatus[FileIndex].FileHandle))
             {
                 DS_AppData.FileStatus[FileIndex].FileAge += ElapsedSeconds;
 

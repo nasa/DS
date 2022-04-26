@@ -18,22 +18,25 @@
  ************************************************************************/
 
 /**
- * @file
- *  The CFS Data Storage (DS) Application header file containing version number
- */
-#ifndef DS_VERSION_H
-#define DS_VERSION_H
-
-/**
- * \defgroup cfsdsversion CFS Data Storage Version
- * \ref cfsversions
- * \{
+ * \file
+ *   Coverage stub basic data types
  */
 
-#define DS_MAJOR_VERSION 2  /**< \brief Major version number */
-#define DS_MINOR_VERSION 6  /**< \brief Minor version number */
-#define DS_REVISION      99 /**< \brief Revision number */
+#ifndef STUB_BASETYPES_H
+#define STUB_BASETYPES_H
 
-/**\}*/
+/*
+ * NOTE: These header files are intentionally _not_ overridden
+ * in the replacement/override header directory, so this should
+ * pull in the actual (native system) version of these files.
+ *
+ * It is important to pull in these definitions first before any
+ * potential re-mapping (#define) statements are done.
+ */
+
+#include <stddef.h>  /* for correct size_t and ptrdiff_t types */
+#include <stdint.h>  /* for correct fixed-width integer types */
+#include <limits.h>  /* for correct INT_MAX, etc. */
+#include <stdbool.h> /* for correct boolean semantics */
 
 #endif

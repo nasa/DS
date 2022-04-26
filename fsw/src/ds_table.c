@@ -1,30 +1,28 @@
 /************************************************************************
-** File: ds_table.c
-**
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
-**  application version 2.5.2”
-**
-**  Copyright © 2019 United States Government as represented by the Administrator
-**  of the National Aeronautics and Space Administration.  All Rights Reserved.
-**
-**  Licensed under the Apache License, Version 2.0 (the "License");
-**  you may not use this file except in compliance with the License.
-**  You may obtain a copy of the License at
-**  http://www.apache.org/licenses/LICENSE-2.0
-**  Unless required by applicable law or agreed to in writing, software
-**  distributed under the License is distributed on an "AS IS" BASIS,
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-**  See the License for the specific language governing permissions and
-**  limitations under the License.
-**
-** Purpose:
-**  CFS Data Storage (DS) table management functions
-**
-*************************************************************************/
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) table management functions
+ */
 
 #include "cfe.h"
-
-#include "cfs_utils.h"
 
 #include "ds_msgids.h"
 
@@ -414,21 +412,6 @@ int32 DS_TableVerifyDestFile(const void *TableData)
     int32 CountUnused = 0;
 
     /*
-    ** Perform the following "per table" validation:
-    **
-    **   Descriptor = zero terminated text string (optional)
-    */
-    if (CFS_VerifyString(DestFileTable->Descriptor, DS_DESCRIPTOR_BUFSIZE, DS_STRING_OPTIONAL, DS_DESCRIPTIVE_TEXT) ==
-        false)
-    {
-        CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Destination file table verify err: invalid descriptor text");
-
-        DescResult = "bad";
-        Result     = DS_TABLE_VERIFY_ERR;
-    }
-
-    /*
     ** Each entry in table will be unused, good or bad
     */
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
@@ -473,10 +456,6 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableI
     /*
     ** Perform the following "per table entry" validation:
     **
-    **   Pathname  = zero terminated text string (required)
-    **   Basename  = zero terminated text string (optional)
-    **   Extension = zero terminated text string (optional)
-    **
     **  FileNameType = DS_BY_COUNT or DS_BY_TIME
     **  EnableState  = DS_ENABLED or DS_DISABLED
     **
@@ -484,36 +463,7 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableI
     **  MaxFileAge    = cannot be less than DS_FILE_MIN_AGE_LIMIT
     **  SequenceCount = may be zero, cannot exceed DS_MAX_SEQUENCE_COUNT
     */
-    if (CFS_VerifyString(DestFileEntry->Pathname, DS_PATHNAME_BUFSIZE, DS_STRING_REQUIRED, DS_FILENAME_TEXT) == false)
-    {
-        if (ErrorCount == 0)
-        {
-            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, invalid pathname text",
-                              CommonErrorText, TableIndex);
-        }
-        Result = false;
-    }
-    else if (CFS_VerifyString(DestFileEntry->Basename, DS_BASENAME_BUFSIZE, DS_STRING_OPTIONAL, DS_FILENAME_TEXT) ==
-             false)
-    {
-        if (ErrorCount == 0)
-        {
-            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, invalid basename text",
-                              CommonErrorText, TableIndex);
-        }
-        Result = false;
-    }
-    else if (CFS_VerifyString(DestFileEntry->Extension, DS_EXTENSION_BUFSIZE, DS_STRING_OPTIONAL, DS_FILENAME_TEXT) ==
-             false)
-    {
-        if (ErrorCount == 0)
-        {
-            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, invalid extension text",
-                              CommonErrorText, TableIndex);
-        }
-        Result = false;
-    }
-    else if (DS_TableVerifyType(DestFileEntry->FileNameType) == false)
+    if (DS_TableVerifyType(DestFileEntry->FileNameType) == false)
     {
         if (ErrorCount == 0)
         {
@@ -583,26 +533,15 @@ int32 DS_TableVerifyFilter(const void *TableData)
     /*
     ** Perform the following validation:
     **
-    **   Descriptor = zero terminated text string (may be empty)
-    **
     **   MessageID = unlimited, zero means unused
     */
-    if (CFS_VerifyString(FilterTable->Descriptor, DS_DESCRIPTOR_BUFSIZE, DS_STRING_OPTIONAL, DS_DESCRIPTIVE_TEXT) ==
-        false)
-    {
-        CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Filter table verify err: invalid descriptor text");
-
-        DescResult = "bad";
-        Result     = DS_TABLE_VERIFY_ERR;
-    }
 
     /*
     ** Each entry in table will be unused, good or bad
     */
     for (i = 0; i < DS_PACKETS_IN_FILTER_TABLE; i++)
     {
-        if (FilterTable->Packet[i].MessageID == DS_UNUSED)
+        if (!CFE_SB_IsValidMsgId(FilterTable->Packet[i].MessageID))
         {
             CountUnused++;
         }
@@ -669,9 +608,9 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
                 if (ErrorCount == 0)
                 {
                     CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "%s MID = 0x%08X, index = %d, filter = %d, file table index = %d",
-                                      CommonErrorText, PacketEntry->MessageID, (int)TableIndex, (int)i,
-                                      FilterParms->FileTableIndex);
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, file table index = %d",
+                                      CommonErrorText, (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
+                                      (int)TableIndex, (int)i, FilterParms->FileTableIndex);
                 }
                 Result = false;
             }
@@ -680,8 +619,9 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
                 if (ErrorCount == 0)
                 {
                     CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "%s MID = 0x%08X, index = %d, filter = %d, filter type = %d", CommonErrorText,
-                                      PacketEntry->MessageID, (int)TableIndex, (int)i, FilterParms->FilterType);
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, filter type = %d", CommonErrorText,
+                                      (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID), (int)TableIndex,
+                                      (int)i, FilterParms->FilterType);
                 }
                 Result = false;
             }
@@ -691,9 +631,10 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
                 if (ErrorCount == 0)
                 {
                     CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                                      "%s MID = 0x%08X, index = %d, filter = %d, filter parms N = %d, X = %d, O = %d",
-                                      CommonErrorText, PacketEntry->MessageID, (int)TableIndex, (int)i,
-                                      FilterParms->Algorithm_N, FilterParms->Algorithm_X, FilterParms->Algorithm_O);
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, filter parms N = %d, X = %d, O = %d",
+                                      CommonErrorText, (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
+                                      (int)TableIndex, (int)i, FilterParms->Algorithm_N, FilterParms->Algorithm_X,
+                                      FilterParms->Algorithm_O);
                 }
                 Result = false;
             }
@@ -887,7 +828,7 @@ bool DS_TableVerifyCount(uint32 SequenceCount)
 void DS_TableSubscribe(void)
 {
     DS_PacketEntry_t *FilterPackets = NULL;
-    CFE_SB_MsgId_t    MessageID     = 0;
+    CFE_SB_MsgId_t    MessageID     = CFE_SB_INVALID_MSG_ID;
     int32             i             = 0;
 
     FilterPackets = DS_AppData.FilterTblPtr->Packet;
@@ -902,7 +843,8 @@ void DS_TableSubscribe(void)
         /*
         ** Already subscribe to DS command packets...
         */
-        if ((MessageID != DS_UNUSED) && (MessageID != DS_CMD_MID) && (MessageID != DS_SEND_HK_MID))
+        if (CFE_SB_IsValidMsgId(MessageID) && (CFE_SB_MsgIdToValue(MessageID) != DS_CMD_MID) &&
+            (CFE_SB_MsgIdToValue(MessageID) != DS_SEND_HK_MID))
         {
             CFE_SB_SubscribeEx(MessageID, DS_AppData.InputPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
         }
@@ -921,7 +863,7 @@ void DS_TableSubscribe(void)
 void DS_TableUnsubscribe(void)
 {
     DS_PacketEntry_t *FilterPackets = NULL;
-    CFE_SB_MsgId_t    MessageID     = 0;
+    CFE_SB_MsgId_t    MessageID     = CFE_SB_INVALID_MSG_ID;
     int32             i             = 0;
 
     FilterPackets = DS_AppData.FilterTblPtr->Packet;
@@ -936,7 +878,8 @@ void DS_TableUnsubscribe(void)
         /*
         ** Do not un-subscribe to unused or DS command packets...
         */
-        if ((MessageID != DS_UNUSED) && (MessageID != DS_CMD_MID) && (MessageID != DS_SEND_HK_MID))
+        if (CFE_SB_IsValidMsgId(MessageID) && (CFE_SB_MsgIdToValue(MessageID) != DS_CMD_MID) &&
+            (CFE_SB_MsgIdToValue(MessageID) != DS_SEND_HK_MID))
         {
             CFE_SB_Unsubscribe(MessageID, DS_AppData.InputPipe);
         }
@@ -1109,7 +1052,7 @@ uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
     **   - matching linked list element has index into filter table
     **     (can now go directly to the correct filter table entry)
     */
-    return ((uint32)(MessageID & DS_HASH_TABLE_MASK));
+    return ((uint32)(CFE_SB_MsgIdToValue(MessageID) & DS_HASH_TABLE_MASK));
 
 } /* End of DS_TableHashFunction() */
 
@@ -1213,7 +1156,7 @@ int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
     while ((HashLink != (DS_HashLink_t *)NULL) && (FilterPackets != NULL))
     {
         /* Compare this linked list entry for matching MessageID */
-        if (FilterPackets[HashLink->Index].MessageID == MessageID)
+        if (CFE_SB_MsgIdToValue(FilterPackets[HashLink->Index].MessageID) == CFE_SB_MsgIdToValue(MessageID))
         {
             /* Stop the search - we found it */
             FilterTableIndex = HashLink->Index;

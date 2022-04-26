@@ -18,22 +18,34 @@
  ************************************************************************/
 
 /**
- * @file
- *  The CFS Data Storage (DS) Application header file containing version number
- */
-#ifndef DS_VERSION_H
-#define DS_VERSION_H
-
-/**
- * \defgroup cfsdsversion CFS Data Storage Version
- * \ref cfsversions
- * \{
+ * \file
+ *   Coverage stub replacement for stdio.h
  */
 
-#define DS_MAJOR_VERSION 2  /**< \brief Major version number */
-#define DS_MINOR_VERSION 6  /**< \brief Minor version number */
-#define DS_REVISION      99 /**< \brief Revision number */
+#ifndef OVERRIDE_STDIO_H
+#define OVERRIDE_STDIO_H
 
-/**\}*/
+#include "stub_stdio.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdio.h */
+/* ----------------------------------------- */
+
+#define FILE         stub_FILE
+#define fclose       stub_fclose
+#define fgets        stub_fgets
+#define fopen        stub_fopen
+#define fputs        stub_fputs
+#define remove       stub_remove
+#define rename       stub_rename
+#define snprintf     stub_snprintf
+#define vsnprintf    stub_vsnprintf
+#define printf(...)  stub_printf(__VA_ARGS__)
+#define fprintf(...) stub_fprintf(__VA_ARGS__)
+#define putchar      stub_putchar
+
+#define stdin  stub_stdin
+#define stdout stub_stdout
+#define stderr stub_stderr
 
 #endif

@@ -18,22 +18,32 @@
  ************************************************************************/
 
 /**
- * @file
- *  The CFS Data Storage (DS) Application header file containing version number
- */
-#ifndef DS_VERSION_H
-#define DS_VERSION_H
-
-/**
- * \defgroup cfsdsversion CFS Data Storage Version
- * \ref cfsversions
- * \{
+ * \file
+ *   Coverage stub replacement for stdarg.h
  */
 
-#define DS_MAJOR_VERSION 2  /**< \brief Major version number */
-#define DS_MINOR_VERSION 6  /**< \brief Minor version number */
-#define DS_REVISION      99 /**< \brief Revision number */
+#ifndef STUB_STDARG_H
+#define STUB_STDARG_H
 
-/**\}*/
+#include "stub_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdarg.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in stdarg.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    void *p;
+} stub_va_list;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdarg.h */
+/* ----------------------------------------- */
+
+#define stub_va_start(ap, last) ap.p = &last
+#define stub_va_end(ap)
 
 #endif

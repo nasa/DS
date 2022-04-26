@@ -1,31 +1,28 @@
 /************************************************************************
-** File: ds_app.h
-**
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
-**  application version 2.5.2”
-**
-**  Copyright © 2019 United States Government as represented by the Administrator
-**  of the National Aeronautics and Space Administration.  All Rights Reserved.
-**
-**  Licensed under the Apache License, Version 2.0 (the "License");
-**  you may not use this file except in compliance with the License.
-**  You may obtain a copy of the License at
-**  http://www.apache.org/licenses/LICENSE-2.0
-**  Unless required by applicable law or agreed to in writing, software
-**  distributed under the License is distributed on an "AS IS" BASIS,
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-**  See the License for the specific language governing permissions and
-**  limitations under the License.
-**
-**
-** Purpose:
-**  The CFS Data Storage (DS) Application header file
-**
-** Notes:
-**
-*************************************************************************/
-#ifndef _ds_app_h_
-#define _ds_app_h_
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application header file
+ */
+#ifndef DS_APP_H
+#define DS_APP_H
 
 #include "cfe.h"
 
@@ -42,18 +39,18 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
-** \brief Wakeup for DS
-**
-** \par Description
-**      Wakes up DS every 1 second for routine maintenance whether a
-**      message was received or not.
-*/
+ * \brief Wakeup for DS
+ *
+ * \par Description
+ *      Wakes up DS every 1 second for routine maintenance whether a
+ *      message was received or not.
+ */
 #define DS_SB_TIMEOUT       1000
 #define DS_SECS_PER_TIMEOUT (DS_SB_TIMEOUT / 1000)
 
-/*
-** \brief Current state of destination files
-*/
+/**
+ * \brief Current state of destination files
+ */
 typedef struct
 {
     osal_id_t FileHandle;                       /**< \brief Current file handle */
@@ -68,9 +65,9 @@ typedef struct
 
 } DS_AppFileStatus_t;
 
-/*
-**  \brief DS global data structure definition
-*/
+/**
+ *  \brief DS global data structure definition
+ */
 typedef struct
 {
     CFE_SB_PipeId_t InputPipe; /**< \brief Pipe Id for DS command pipe */
@@ -109,10 +106,8 @@ typedef struct
 
 } DS_AppData_t;
 
-/*
-**  \brief DS global data structure reference
-*/
-extern DS_AppData_t DS_AppData; /**< \brief External reference to DS global data */
+/** \brief DS global data structure reference */
+extern DS_AppData_t DS_AppData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -120,113 +115,99 @@ extern DS_AppData_t DS_AppData; /**< \brief External reference to DS global data
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/*******************************************************************/
-/*  \brief CFS Data Storage (DS) application entry point
-**
-**  \par Description
-**       DS application entry point and main process loop.
-**
-**  \par Assumptions, External Events, and Notes:
-**       None
-**/
+/**
+ *  \brief CFS Data Storage (DS) application entry point
+ *
+ *  \par Description
+ *       DS application entry point and main process loop.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ */
 void DS_AppMain(void);
 
-/*******************************************************************/
-/*  \brief Application initialization function
-**
-**  \par Description
-**       Performs the following startup initialization:
-**       - register DS application for cFE Event Services
-**       - create a cFE Software Bus message pipe
-**       - subscribe to DS commands via message pipe
-**       - register DS filter and file destination tables
-**       - load default filter and file destination tables
-**       - subscribe to packets referenced in DS filter table
-**       - generate startup initialization event message
-**
-**  \par Assumptions, External Events, and Notes:
-**       (none)
-**
-**  \returns
-**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
-**  \retstmt Return codes from #CFE_EVS_Register         \endcode
-**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
-**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
-**  \retstmt Return codes from #CFE_TBL_Register         \endcode
-**  \endreturns
-*/
+/**
+ *  \brief Application initialization function
+ *
+ *  \par Description
+ *       Performs the following startup initialization:
+ *       - register DS application for cFE Event Services
+ *       - create a cFE Software Bus message pipe
+ *       - subscribe to DS commands via message pipe
+ *       - register DS filter and file destination tables
+ *       - load default filter and file destination tables
+ *       - subscribe to packets referenced in DS filter table
+ *       - generate startup initialization event message
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
 int32 DS_AppInitialize(void);
 
-/*******************************************************************/
-/*  \brief Software Bus message handler
-**
-**  \par Description
-**       Process packets received via Software Bus message pipe
-**       - may call application housekeeping request command handler
-**       - may call 1Hz wakeup command handler (if enabled)
-**       - may call application ground command handler
-**       All packets are processed for possible data storage
-**
-**  \par Assumptions, External Events, and Notes:
-**       (none)
-**
-**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
-*/
+/**
+ *  \brief Software Bus message handler
+ *
+ *  \par Description
+ *       Process packets received via Software Bus message pipe
+ *       - may call application housekeeping request command handler
+ *       - may call 1Hz wakeup command handler (if enabled)
+ *       - may call application ground command handler
+ *       All packets are processed for possible data storage
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ */
 void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr);
 
-/*******************************************************************/
-/*  \brief Application ground command handler
-**
-**  \par Description
-**       Call command code specific DS command handler function
-**       Generate command error event for unknown command codes
-**
-**  \par Assumptions, External Events, and Notes:
-**       (none)
-**
-**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
-*/
+/**
+ *  \brief Application ground command handler
+ *
+ *  \par Description
+ *       Call command code specific DS command handler function
+ *       Generate command error event for unknown command codes
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ */
 void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr);
 
-/*
-** Process housekeeping request command...
-*/
-/*******************************************************************/
-/*  \brief Application housekeeping request command handler
-**
-**  \par Description
-**       Check with cFE Table Services for table updates
-**       Generate application housekeeping telemetry packet
-**
-**  \par Assumptions, External Events, and Notes:
-**       (none)
-**
-**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
-**
-**  \sa #DS_HkPacket_t
-*/
+/**
+ *  \brief Application housekeeping request command handler
+ *
+ *  \par Description
+ *       Check with cFE Table Services for table updates
+ *       Generate application housekeeping telemetry packet
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_HkPacket_t
+ */
 void DS_AppProcessHK(void);
 
-/*******************************************************************/
-/*  \brief Application packet storage pre-processor
-**
-**  \par Description
-**       This function verifies that DS storage is enabled and that
-**       both DS tables (filter and file) are loaded before calling
-**       the file storage function (#DS_FileStorePacket).
-**
-**  \par Assumptions, External Events, and Notes:
-**       (none)
-**
-**  \param [in]  Message ID (extracted from message pointer)
-**  \param [in]  Software Bus message pointer (#CFE_SB_Buffer_t*)
-**
-**  \sa #CFE_SB_Buffer_t*
-*/
+/**
+ *  \brief Application packet storage pre-processor
+ *
+ *  \par Description
+ *       This function verifies that DS storage is enabled and that
+ *       both DS tables (filter and file) are loaded before calling
+ *       the file storage function (#DS_FileStorePacket).
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MessageID Message ID
+ *  \param[in] BufPtr    Software Bus message pointer
+ *
+ *  \sa #CFE_SB_Buffer_t*
+ */
 void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr);
 
-#endif /* _ds_app_h_ */
-
-/************************/
-/*  End of File Comment */
-/************************/
+#endif

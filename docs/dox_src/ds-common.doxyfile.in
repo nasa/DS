@@ -1,0 +1,9 @@
+#---------------------------------------------------------------------------
+# Common doxygen configuration items
+#---------------------------------------------------------------------------
+
+# Include front material followed by everything in fsw
+INPUT      += @ds_MISSION_DIR@/docs/dox_src/cfs_ds.dox
+INPUT      += @ds_MISSION_DIR@/fsw
+
+IMAGE_PATH += @ds_MISSION_DIR@/docs/dox_src

@@ -1,30 +1,28 @@
 /************************************************************************
-** File: ds_cmds.c
-**
-**  NASA Docket No. GSC-18448-1, and identified as "cFS Data Storage (DS)
-**  application version 2.5.2”
-**
-**  Copyright © 2019 United States Government as represented by the Administrator
-**  of the National Aeronautics and Space Administration.  All Rights Reserved.
-**
-**  Licensed under the Apache License, Version 2.0 (the "License");
-**  you may not use this file except in compliance with the License.
-**  You may obtain a copy of the License at
-**  http://www.apache.org/licenses/LICENSE-2.0
-**  Unless required by applicable law or agreed to in writing, software
-**  distributed under the License is distributed on an "AS IS" BASIS,
-**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-**  See the License for the specific language governing permissions and
-**  limitations under the License.
-**
-** Purpose:
-**  CFS Data Storage (DS) command handler functions
-**
-*************************************************************************/
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.0”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) command handler functions
+ */
 
 #include "cfe.h"
-
-#include "cfs_utils.h"
 
 #include "ds_platform_cfg.h"
 #include "ds_verify.h"
@@ -40,7 +38,7 @@
 #include "ds_events.h"
 #include "ds_version.h"
 
-#include "string.h"
+#include <stdio.h>
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -229,7 +227,7 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
                           "Invalid FILTER FILE command length: expected = %d, actual = %d", (int)ExpectedLength,
                           (int)ActualLength);
     }
-    else if (DS_FilterFileCmd->MessageID == DS_UNUSED)
+    else if (!CFE_SB_IsValidMsgId(DS_FilterFileCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
@@ -237,7 +235,8 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdRejectedCounter++;
 
         CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER FILE command arg: invalid messageID = 0x%08X", DS_FilterFileCmd->MessageID);
+                          "Invalid FILTER FILE command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID));
     }
     else if (DS_FilterFileCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
     {
@@ -285,8 +284,8 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdRejectedCounter++;
 
             CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid FILTER FILE command: Message ID 0x%08X is not in filter table",
-                              DS_FilterFileCmd->MessageID);
+                              "Invalid FILTER FILE command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID));
         }
         else
         {
@@ -306,9 +305,9 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdAcceptedCounter++;
 
             CFE_EVS_SendEvent(DS_FILE_CMD_EID, CFE_EVS_EventType_DEBUG,
-                              "FILTER FILE command: MID = 0x%08X, index = %d, filter = %d, file = %d",
-                              DS_FilterFileCmd->MessageID, (int)FilterTableIndex, DS_FilterFileCmd->FilterParmsIndex,
-                              DS_FilterFileCmd->FileTableIndex);
+                              "FILTER FILE command: MID = 0x%08lX, index = %d, filter = %d, file = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID), (int)FilterTableIndex,
+                              DS_FilterFileCmd->FilterParmsIndex, DS_FilterFileCmd->FileTableIndex);
         }
     }
 
@@ -344,7 +343,7 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
                           "Invalid FILTER TYPE command length: expected = %d, actual = %d", (int)ExpectedLength,
                           (int)ActualLength);
     }
-    else if (DS_FilterTypeCmd->MessageID == DS_UNUSED)
+    else if (!CFE_SB_IsValidMsgId(DS_FilterTypeCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
@@ -352,7 +351,8 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdRejectedCounter++;
 
         CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER TYPE command arg: invalid messageID = 0x%08X", DS_FilterTypeCmd->MessageID);
+                          "Invalid FILTER TYPE command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID));
     }
     else if (DS_FilterTypeCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
     {
@@ -400,8 +400,8 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdRejectedCounter++;
 
             CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid FILTER TYPE command: Message ID 0x%08X is not in filter table",
-                              DS_FilterTypeCmd->MessageID);
+                              "Invalid FILTER TYPE command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID));
         }
         else
         {
@@ -421,9 +421,9 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdAcceptedCounter++;
 
             CFE_EVS_SendEvent(DS_FTYPE_CMD_EID, CFE_EVS_EventType_DEBUG,
-                              "FILTER TYPE command: MID = 0x%08X, index = %d, filter = %d, type = %d",
-                              DS_FilterTypeCmd->MessageID, (int)FilterTableIndex, DS_FilterTypeCmd->FilterParmsIndex,
-                              DS_FilterTypeCmd->FilterType);
+                              "FILTER TYPE command: MID = 0x%08lX, index = %d, filter = %d, type = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID), (int)FilterTableIndex,
+                              DS_FilterTypeCmd->FilterParmsIndex, DS_FilterTypeCmd->FilterType);
         }
     }
 
@@ -459,7 +459,7 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
                           "Invalid FILTER PARMS command length: expected = %d, actual = %d", (int)ExpectedLength,
                           (int)ActualLength);
     }
-    else if (DS_FilterParmsCmd->MessageID == DS_UNUSED)
+    else if (!CFE_SB_IsValidMsgId(DS_FilterParmsCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
@@ -467,7 +467,8 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdRejectedCounter++;
 
         CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER PARMS command arg: invalid messageID = 0x%08X", DS_FilterParmsCmd->MessageID);
+                          "Invalid FILTER PARMS command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID));
     }
     else if (DS_FilterParmsCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
     {
@@ -517,8 +518,8 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdRejectedCounter++;
 
             CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid FILTER PARMS command: Message ID 0x%08X is not in filter table",
-                              DS_FilterParmsCmd->MessageID);
+                              "Invalid FILTER PARMS command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID));
         }
         else
         {
@@ -540,9 +541,10 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdAcceptedCounter++;
 
             CFE_EVS_SendEvent(DS_PARMS_CMD_EID, CFE_EVS_EventType_DEBUG,
-                              "FILTER PARMS command: MID = 0x%08X, index = %d, filter = %d, N = %d, X = %d, O = %d",
-                              DS_FilterParmsCmd->MessageID, (int)FilterTableIndex, DS_FilterParmsCmd->FilterParmsIndex,
-                              pFilterParms->Algorithm_N, pFilterParms->Algorithm_X, pFilterParms->Algorithm_O);
+                              "FILTER PARMS command: MID = 0x%08lX, index = %d, filter = %d, N = %d, X = %d, O = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID), (int)FilterTableIndex,
+                              DS_FilterParmsCmd->FilterParmsIndex, pFilterParms->Algorithm_N, pFilterParms->Algorithm_X,
+                              pFilterParms->Algorithm_O);
         }
     }
 
@@ -745,16 +747,6 @@ void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid DEST PATH command arg: file table index = %d", (int)DS_DestPathCmd->FileTableIndex);
     }
-    else if (CFS_VerifyString(DS_DestPathCmd->Pathname, DS_PATHNAME_BUFSIZE, DS_STRING_REQUIRED, DS_FILENAME_TEXT) ==
-             false)
-    {
-        /*
-        ** Invalid destination pathname...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid DEST PATH command arg: pathname");
-    }
     else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
     {
         /*
@@ -825,16 +817,6 @@ void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid DEST BASE command arg: file table index = %d", (int)DS_DestBaseCmd->FileTableIndex);
     }
-    else if (CFS_VerifyString(DS_DestBaseCmd->Basename, DS_BASENAME_BUFSIZE, DS_STRING_OPTIONAL, DS_FILENAME_TEXT) ==
-             false)
-    {
-        /*
-        ** Invalid destination base filename...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid DEST BASE command arg: base filename");
-    }
     else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
     {
         /*
@@ -904,16 +886,6 @@ void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid DEST EXT command arg: file table index = %d", (int)DS_DestExtCmd->FileTableIndex);
-    }
-    else if (CFS_VerifyString(DS_DestExtCmd->Extension, DS_EXTENSION_BUFSIZE, DS_STRING_OPTIONAL, DS_FILENAME_TEXT) ==
-             false)
-    {
-        /*
-        ** Invalid destination filename extension...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid DEST EXT command arg: extension");
     }
     else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
     {
@@ -1243,7 +1215,7 @@ void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Close destination file (if the file was open)...
         */
-        if (DS_AppData.FileStatus[DS_CloseFileCmd->FileTableIndex].FileHandle != DS_CLOSED_FILE_HANDLE)
+        if (OS_ObjectIdDefined(DS_AppData.FileStatus[DS_CloseFileCmd->FileTableIndex].FileHandle))
         {
             DS_FileUpdateHeader(DS_CloseFileCmd->FileTableIndex);
             DS_FileCloseDest(DS_CloseFileCmd->FileTableIndex);
@@ -1291,7 +1263,7 @@ void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
         */
         for (i = 0; i < DS_DEST_FILE_CNT; i++)
         {
-            if (DS_AppData.FileStatus[i].FileHandle != DS_CLOSED_FILE_HANDLE)
+            if (OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
             {
                 DS_FileUpdateHeader(i);
                 DS_FileCloseDest(i);
@@ -1345,7 +1317,7 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Initialize file info telemetry packet...
         */
-        CFE_MSG_Init(&DS_FileInfoPkt.TlmHeader.Msg, DS_DIAG_TLM_MID, sizeof(DS_FileInfoPkt_t));
+        CFE_MSG_Init(&DS_FileInfoPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(DS_DIAG_TLM_MID), sizeof(DS_FileInfoPkt_t));
 
         /*
         ** Process array of destination file info data...
@@ -1383,7 +1355,7 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
             /*
             ** Set file open/closed state...
             */
-            if (DS_AppData.FileStatus[i].FileHandle == DS_CLOSED_FILE_HANDLE)
+            if (!OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
             {
                 DS_FileInfoPkt.FileInfo[i].OpenState = DS_CLOSED;
             }
@@ -1439,7 +1411,7 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
                           "Invalid ADD MID command length: expected = %d, actual = %d", (int)ExpectedLength,
                           (int)ActualLength);
     }
-    else if (DS_AddMidCmd->MessageID == DS_UNUSED)
+    else if (!CFE_SB_IsValidMsgId(DS_AddMidCmd->MessageID))
     {
         /*
         ** Invalid packet message ID - can be anything but unused...
@@ -1447,7 +1419,8 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdRejectedCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid ADD MID command arg: invalid MID = 0x%08X", DS_AddMidCmd->MessageID);
+                          "Invalid ADD MID command arg: invalid MID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID));
     }
     else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
     {
@@ -1467,10 +1440,10 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdRejectedCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid ADD MID command: MID = 0x%08X is already in filter table at index = %d",
-                          DS_AddMidCmd->MessageID, (int)FilterTableIndex);
+                          "Invalid ADD MID command: MID = 0x%08lX is already in filter table at index = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID), (int)FilterTableIndex);
     }
-    else if ((FilterTableIndex = DS_TableFindMsgID(DS_UNUSED)) == DS_INDEX_NONE)
+    else if ((FilterTableIndex = DS_TableFindMsgID(CFE_SB_INVALID_MSG_ID)) == DS_INDEX_NONE)
     {
         /*
         ** Packet filter table has no unused entries...
@@ -1513,8 +1486,9 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdAcceptedCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_EID, CFE_EVS_EventType_DEBUG,
-                          "ADD MID command: MID = 0x%08X, filter index = %d, hash index = %d", DS_AddMidCmd->MessageID,
-                          (int)FilterTableIndex, (int)HashTableIndex);
+                          "ADD MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID), (int)FilterTableIndex,
+                          (int)HashTableIndex);
     }
 
     return;
