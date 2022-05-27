@@ -1069,8 +1069,8 @@ void DS_TableCreateHash(void)
     /*
     ** Initialize global hash table structures...
     */
-    CFE_PSP_MemSet(DS_AppData.HashLinks, 0, (sizeof(DS_HashLink_t) * DS_PACKETS_IN_FILTER_TABLE));
-    CFE_PSP_MemSet(DS_AppData.HashTable, 0, (sizeof(DS_HashLink_t *) * DS_HASH_TABLE_ENTRIES));
+    memset(DS_AppData.HashLinks, 0, sizeof(DS_AppData.HashLinks));
+    memset(DS_AppData.HashTable, 0, sizeof(DS_AppData.HashTable));
 
     for (FilterIndex = 0; FilterIndex < DS_PACKETS_IN_FILTER_TABLE; FilterIndex++)
     {

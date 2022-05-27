@@ -183,7 +183,7 @@ int32 DS_AppInitialize(void)
     /*
     ** Initialize global data structure...
     */
-    CFE_PSP_MemSet(&DS_AppData, 0, sizeof(DS_AppData_t));
+    memset(&DS_AppData, 0, sizeof(DS_AppData));
 
     DS_AppData.AppEnableState = DS_DEF_ENABLE_STATE;
 
@@ -588,7 +588,7 @@ void DS_AppProcessHK(void)
             CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
                               "Invalid filter tbl name in DS_AppProcessHK. Name=%s, Err=0x%08X", FilterTblName, Status);
 
-            CFE_PSP_MemSet(HkPacket.FilterTblFilename, 0, OS_MAX_PATH_LEN);
+            memset(HkPacket.FilterTblFilename, 0, sizeof(HkPacket.FilterTblFilename));
         }
     }
     else
@@ -598,7 +598,7 @@ void DS_AppProcessHK(void)
         CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Filter tbl name copy fail in DS_AppProcessHK. Err=%d", (int)Status);
 
-        CFE_PSP_MemSet(HkPacket.FilterTblFilename, 0, OS_MAX_PATH_LEN);
+        memset(HkPacket.FilterTblFilename, 0, sizeof(HkPacket.FilterTblFilename));
     }
 
     /*

@@ -203,7 +203,7 @@ void DS_AppInitialize_Test_Nominal(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Application initialized, version %%d.%%d.%%d.%%d, data at %%p");
 
-    CFE_PSP_MemSet(&DS_AppData, 1, sizeof(DS_AppData_t));
+    memset(&DS_AppData, 1, sizeof(DS_AppData));
 
     /* Execute the function being tested */
     Result = DS_AppInitialize();
@@ -215,7 +215,7 @@ void DS_AppInitialize_Test_Nominal(void)
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileHandle));
 
-    /* Note: not verifying that CFE_PSP_MemSet set the rest of DS_AppData to 0, because some elements of DS_AppData
+    /* Note: not verifying the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
 
     UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -250,7 +250,7 @@ void DS_AppInitialize_Test_EVSRegisterError(void)
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileHandle));
 
-    /* Note: not verifying that CFE_PSP_MemSet set the rest of DS_AppData to 0, because some elements of DS_AppData
+    /* Note: not verifying that rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
     /*
         UtAssert_True
@@ -281,7 +281,7 @@ void DS_AppInitialize_Test_SBCreatePipeError(void)
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileHandle));
 
-    /* Note: not verifying that CFE_PSP_MemSet set the rest of DS_AppData to 0, because some elements of DS_AppData
+    /* Note: not verifying that the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
 
     /*UtAssert_True
@@ -313,7 +313,7 @@ void DS_AppInitialize_Test_SBSubscribeHKError(void)
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileHandle));
 
-    /* Note: not verifying that CFE_PSP_MemSet set the rest of DS_AppData to 0, because some elements of DS_AppData
+    /* Note: not verifying that the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
     /*
         UtAssert_True
@@ -345,7 +345,7 @@ void DS_AppInitialize_Test_SBSubscribeDSError(void)
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileHandle));
 
-    /* Note: not verifying that CFE_PSP_MemSet set the rest of DS_AppData to 0, because some elements of DS_AppData
+    /* Note: not verifying that the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
 
     /*   UtAssert_True
