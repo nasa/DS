@@ -43,7 +43,7 @@ DS2002.1,DS2002.1,Destination files shall be created when the first message is r
 DS2003,DS2003,The input argument to the filter algorithm shall be determined by the Filter Type indicator.,
 DS2003.1,DS2003.1,If Filter Type indicates Sequence based filtering then the algorithm input argument is a value equal to the packet sequence count.,
 DS2003.2,DS2003.2,If Filter Type indicates Time based filtering then the algorithm input argument is a value created from the lower 11 bits of packet timestamp seconds plus the high 4 bits of timestamp subseconds.,
-DS3000,DS3000,DS shall construct filenames based on the following definitions provided in the Destination File Table:,
+DS3000,DS3000,DS shall construct unique filenames using either sequence count or time as selected within the Destination File Table.,Specifies operational control via table of unique data file name generation method.
 DS3000.1,DS3000.1,If Filename Type indicates naming based on Sequence the constructed filename will include a character representation of the Sequence Count value from the Destination File Table.,
 DS3000.1.1,DS3000.1.1,If Filename Type indicates naming based on Sequence the value of Sequence Count shall be incremented each time a file is created.,
 DS3000.2,DS3000.2,If Filename Type indicates naming based on Time the constructed filename will include a character representation of the packet timestamp.,
@@ -71,7 +71,7 @@ DS3005,DS3005,"For every file write error, DS shall:
 a) Send an event message
 b) Increment total number of file write errors
 c) Close the destination file
-d) Disable the destination",Notify operators of error and prevent ongoing future errors caused be writing to the same destination file.
+d) Disable the destination",Notify operators of error and prevent ongoing future errors caused by writing to the same destination file.
 DS5000,DS5000,"Upon receipt of a Disable command, DS shall stop filtering and storing messages.
 Note: This command will set the Packet Processing State to DISABLED.",
 DS5001,DS5001,"Upon receipt of an Enable command, DS shall begin filtering and storing messages.
@@ -126,12 +126,13 @@ c) Packets discarded (DS was disabled) Counter
 d) Packets discarded (pkt has no filter) Counter
 e) Packets discarded (failed filter test) Counter
 f) Packets that passed filter test Counter
-g) Good destination file I/O Counter h) Bad destination file I/O Counter
+g) Good destination file I/O Counter 
+h) Bad destination file I/O Counter
 i) Good updates to secondary header Counter
 j) Bad updates to secondary header Counter
 k) Destination file table loads Counter
 l) Failed attempts to get table data pointer Counter
-m)Packet filter table loads Counter
+m) Packet filter table loads Counter
 n) Failed attempts to get table data pointer Counter","Start from a known ""clean"" state."
 DS9001,DS9001,Upon cFE Power-On DS shall initialize the DS tables from the default files.,"Start from a known ""good"" state."
 DS9002,DS9002,"Upon a cFE Processor Reset or DS Application Reset, DS shall close all files.",Orderly shutdown of files in a reset.
@@ -148,7 +149,7 @@ a) table descriptor text for each packet entry:
 b) message ID (0 = unused, else ok)
 c) destination file table index
 d) filter type (time/sequence)
-e) filter parms (N,X,O)",Valid the items that can be validated when an table is updated (some items cannot be validated until runtime). 
+e) filter parms (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
 DS9006,DS9006,"Upon any initialization and/or Packet Filter Table Update, DS shall subscribe to the messages defined in the Data Storage Packet Filter Table.",Must subscribe to all of the messages defined in the Data Storage Packet Filter Table after any reset.
 DS9007,DS9007,"Upon any initialization and/or Destination File Table Update, DS will validate the Destination File Table:
 a) table descriptor text for each destination file entry
