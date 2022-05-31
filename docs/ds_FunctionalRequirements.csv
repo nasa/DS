@@ -152,13 +152,9 @@ d) filter type (time/sequence)
 e) filter parms (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
 DS9006,DS9006,"Upon any initialization and/or Packet Filter Table Update, DS shall subscribe to the messages defined in the Data Storage Packet Filter Table.",Must subscribe to all of the messages defined in the Data Storage Packet Filter Table after any reset.
 DS9007,DS9007,"Upon any initialization and/or Destination File Table Update, DS will validate the Destination File Table:
-a) table descriptor text for each destination file entry
-b) pathname
-c) basename
-d) extension
-e) filename type
-f) file enable/disable state
-g) max file size  
-h) max file age  
-i) sequence count",Valid the items that can be validated when a table is updated (some items cannot be validated until runtime). 
+a) filename type
+b) file enable/disable state
+c) max file size
+d) max file age
+e) sequence count",Valid the items that can be validated when a table is updated (some items cannot be validated until runtime).
 DS9008,DS9008,Upon cFE Power-On DS shall set the Packet Processing State to the <PLATFORM_DEFINED> state (ENABLED or DISABLED).,
