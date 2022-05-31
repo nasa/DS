@@ -145,11 +145,10 @@ DS9004,DS9004,"Upon a cFE Processor Reset or DS Application Reset ,  DS shall re
 a)       File Sequence Counters
 b)       <PLATFORM_DEFINED> Packet Processing State",
 DS9005,DS9005,"Upon any initialization and/or Packet Filter Table Update, DS shall validate the Packet Filter Table:
-a) table descriptor text for each packet entry:
-b) message ID (0 = unused, else ok)
-c) destination file table index
-d) filter type (time/sequence)
-e) filter parms (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
+a) message ID
+b) destination file table index
+c) filter type (time/sequence)
+d) filter parms (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
 DS9006,DS9006,"Upon any initialization and/or Packet Filter Table Update, DS shall subscribe to the messages defined in the Data Storage Packet Filter Table.",Must subscribe to all of the messages defined in the Data Storage Packet Filter Table after any reset.
 DS9007,DS9007,"Upon any initialization and/or Destination File Table Update, DS will validate the Destination File Table:
 a) filename type
