@@ -508,6 +508,8 @@ void DS_AppProcessHK(void)
     char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
     CFE_TBL_Info_t FilterTblInfo;
 
+    memset(&HkPacket, 0, sizeof(HkPacket));
+
     /*
     ** Initialize housekeeping packet...
     */

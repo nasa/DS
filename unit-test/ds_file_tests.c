@@ -1014,6 +1014,8 @@ void DS_FileCreateSequence_Test_ByCount(void)
 
     char Sequence[DS_TOTAL_FNAME_BUFSIZE];
 
+    memset(Sequence, 0, sizeof(Sequence));
+
     DS_AppData.DestFileTblPtr = &DestFileTable;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
@@ -1085,6 +1087,8 @@ void DS_FileCreateSequence_Test_BadFilenameType(void)
     DS_DestFileTable_t DestFileTable;
 
     char Sequence[DS_TOTAL_FNAME_BUFSIZE];
+
+    memset(Sequence, 0xFF, sizeof(Sequence));
 
     DS_AppData.DestFileTblPtr = &DestFileTable;
 
@@ -1487,6 +1491,8 @@ void DS_IsPacketFiltered_Test_SeqFilter(void)
     uint16                  Alg_X      = 1;
     uint16                  Alg_O      = 0;
 
+    memset(&Message, 0, sizeof(Message));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSequenceCount), &SeqCnt, sizeof(SeqCnt), false);
 
     /* Execute the function being tested */
@@ -1505,6 +1511,8 @@ void DS_IsPacketFiltered_Test_TimeFilter1(void)
     uint16             Alg_N      = 1;
     uint16             Alg_X      = 1;
     uint16             Alg_O      = 0;
+
+    memset(&Message, 0, sizeof(Message));
 
     PacketTime.Seconds    = 1;
     PacketTime.Subseconds = 1;
@@ -1529,6 +1537,8 @@ void DS_IsPacketFiltered_Test_TimeFilter2(void)
     uint16             Alg_X      = 2;
     uint16             Alg_O      = 1;
 
+    memset(&Message, 0, sizeof(Message));
+
     /* Value is less than offset of passed range, this packet will be filtered */
     PacketTime.Seconds    = 0;
     PacketTime.Subseconds = 0;
@@ -1551,6 +1561,8 @@ void DS_IsPacketFiltered_Test_TimeFilter3(void)
     uint16             Alg_N      = 3;
     uint16             Alg_X      = 4;
     uint16             Alg_O      = 1;
+
+    memset(&Message, 0, sizeof(Message));
 
     /* This packet will be filtered by the filter algorithm */
     PacketTime.Seconds    = 3;

@@ -637,12 +637,14 @@ void DS_CmdSetFilterType_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_FILTER_TYPE_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "FILTER TYPE command: MID = 0x%%08lX, index = %%d, filter = %%d, type = %%d");
 
@@ -927,12 +929,14 @@ void DS_CmdSetFilterParms_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_FILTER_PARMS_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "FILTER PARMS command: MID = 0x%%08lX, index = %%d, filter = %%d, N = %%d, X = %%d, O = %%d");
 
@@ -1237,12 +1241,14 @@ void DS_CmdSetDestType_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_TYPE_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST TYPE command: file table index = %%d, filename type = %%d");
 
@@ -1441,12 +1447,14 @@ void DS_CmdSetDestState_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_STATE_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST STATE command: file table index = %%d, file state = %%d");
 
@@ -1646,17 +1654,19 @@ void DS_CmdSetDestPath_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_PATH_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST PATH command: file table index = %%d, pathname = '%%s'");
 
     UT_CmdBuf.DestPathCmd.FileTableIndex = 1;
-    strncpy(UT_CmdBuf.DestPathCmd.Pathname, "pathname", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.DestPathCmd.Pathname, "pathname", sizeof(UT_CmdBuf.DestPathCmd.Pathname) - 1);
 
     DS_AppData.DestFileTblPtr = &DestFileTable;
 
@@ -1669,10 +1679,9 @@ void DS_CmdSetDestPath_Test_Nominal(void)
     UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[UT_CmdBuf.DestPathCmd.FileTableIndex].Pathname, "pathname",
-                          OS_MAX_PATH_LEN) == 0,
+                          sizeof(DestFileTable.File[0].Pathname)) == 0,
                   "strncmp (DS_AppData.DestFileTblPtr->File[UT_CmdBuf.DestPathCmd.FileTableIndex].Pathname, "
-                  "'pathname', OS_MAX_PATH_LEN) == "
-                  "0");
+                  "'pathname', sizeof(DestFileTable.File[0].Pathname) - 1) == 0");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
@@ -1768,17 +1777,17 @@ void DS_CmdSetDestPath_Test_FileTableNotLoaded(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_PATH_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Invalid DEST PATH command: destination file table is not loaded");
 
     UT_CmdBuf.DestPathCmd.FileTableIndex = 1;
-    strncpy(UT_CmdBuf.DestPathCmd.Pathname, "pathname", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.DestPathCmd.Pathname, "pathname", sizeof(UT_CmdBuf.DestPathCmd.Pathname) - 1);
 
     DS_AppData.DestFileTblPtr = 0;
 
@@ -1811,17 +1820,19 @@ void DS_CmdSetDestBase_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_BASE_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST BASE command: file table index = %%d, base filename = '%%s'");
 
     UT_CmdBuf.DestBaseCmd.FileTableIndex = 1;
-    strncpy(UT_CmdBuf.DestBaseCmd.Basename, "base", OS_MAX_PATH_LEN);
+    strncpy(UT_CmdBuf.DestBaseCmd.Basename, "base", sizeof(UT_CmdBuf.DestBaseCmd.Basename) - 1);
 
     DS_AppData.DestFileTblPtr = &DestFileTable;
 
@@ -1834,9 +1845,9 @@ void DS_CmdSetDestBase_Test_Nominal(void)
     UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[UT_CmdBuf.DestBaseCmd.FileTableIndex].Basename, "base",
-                          OS_MAX_PATH_LEN) == 0,
+                          sizeof(DestFileTable.File[0].Basename)) == 0,
                   "strncmp (DS_AppData.DestFileTblPtr->File[UT_CmdBuf.DestBaseCmd.FileTableIndex].Basename, 'base', "
-                  "OS_MAX_PATH_LEN) == 0");
+                  "sizeof(DestFileTable.File[0].Basename)) == 0");
 
     call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
@@ -1975,12 +1986,14 @@ void DS_CmdSetDestExt_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_EXT_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST EXT command: file table index = %%d, extension = '%%s'");
 
@@ -2140,12 +2153,14 @@ void DS_CmdSetDestSize_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_SIZE_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST SIZE command: file table index = %%d, size limit = %%d");
 
@@ -2350,12 +2365,14 @@ void DS_CmdSetDestAge_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_AGE_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST AGE command: file table index = %%d, age limit = %%d");
 
@@ -2559,12 +2576,14 @@ void DS_CmdSetDestCount_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_COUNT_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "DEST COUNT command: file table index = %%d, sequence count = %%d");
 
@@ -3071,7 +3090,7 @@ void DS_CmdGetFileInfo_Test_EnabledOpen(void)
         DS_AppData.FileStatus[i].FileCount  = 4;
         DS_AppData.FileStatus[i].FileState  = 5;
         DS_AppData.FileStatus[i].FileHandle = DS_UT_OBJID_1;
-        strncpy(DS_AppData.FileStatus[i].FileName, "filename", OS_MAX_PATH_LEN);
+        strncpy(DS_AppData.FileStatus[i].FileName, "filename", sizeof(DS_AppData.FileStatus[i].FileName) - 1);
     }
 
     /* Execute the function being tested */
@@ -3120,7 +3139,7 @@ void DS_CmdGetFileInfo_Test_DisabledClosed(void)
         DS_AppData.FileStatus[i].FileCount  = 4;
         DS_AppData.FileStatus[i].FileState  = 5;
         DS_AppData.FileStatus[i].FileHandle = OS_OBJECT_ID_UNDEFINED;
-        strncpy(DS_AppData.FileStatus[i].FileName, "filename", OS_MAX_PATH_LEN);
+        strncpy(DS_AppData.FileStatus[i].FileName, "filename", sizeof(DS_AppData.FileStatus[i].FileName) - 1);
     }
 
     /* Execute the function being tested */
@@ -3190,12 +3209,14 @@ void DS_CmdAddMID_Test_Nominal(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_ADD_MID_CC;
 
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "ADD MID command: MID = 0x%%08lX, filter index = %%d, hash index = %%d");
 

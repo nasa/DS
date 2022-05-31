@@ -65,7 +65,9 @@ bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint1
     uint16                  PacketValue;
     uint16                  Seconds;
     uint16                  Subsecs;
-    CFE_MSG_SequenceCount_t SeqCnt;
+    CFE_MSG_SequenceCount_t SeqCnt = 0;
+
+    memset(&PacketTime, 0, sizeof(PacketTime));
 
     /*
     ** Verify input values (all errors = packet is filtered)...
