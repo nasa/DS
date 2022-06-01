@@ -79,20 +79,6 @@ int32 UT_DS_TABLE_TEST_CFE_TBL_GetStatusHook(void *UserObj, int32 StubRetcode, u
     return CFE_TBL_INFO_UPDATE_PENDING;
 } /* end UT_DS_TABLE_TEST_CFE_TBL_GetStatusHook */
 
-typedef struct
-{
-    void *             RestoreToMemory;
-    CFE_ES_CDSHandle_t Handle;
-} CFE_ES_RestoreFromCDS_context_t;
-
-int32 UT_DS_TABLE_TEST_CFE_ES_RestoreFromCDSHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
-                                                 const UT_StubContext_t *Context)
-{
-    CFE_ES_RestoreFromCDS_context_t *HookContext = (CFE_ES_RestoreFromCDS_context_t *)Context;
-    memset(HookContext->RestoreToMemory, 0, (DS_DEST_FILE_CNT + 1) * 4);
-    return CFE_SUCCESS;
-} /* end UT_DS_TABLE_TEST_CFE_ES_RestoreFromCDSHook */
-
 uint8 call_count_CFE_EVS_SendEvent;
 
 /*
@@ -591,8 +577,6 @@ void DS_TableVerifyDestFile_Test_Nominal(void)
 {
     int32              Result;
     DS_DestFileTable_t DestFileTable;
-    uint32             FileIndex = 0;
-    uint32             i;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
@@ -602,28 +586,15 @@ void DS_TableVerifyDestFile_Test_Nominal(void)
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Destination file table verify results: desc text = %%s, good entries = %%d, bad = %%d, unused = %%d");
 
-    /*
-    DestFileTable.File[FileIndex].FileNameType  = DS_BY_TIME;
-    DestFileTable.File[FileIndex].EnableState   = DS_ENABLED;
-    DestFileTable.File[FileIndex].MaxFileSize   = 2048;
-    DestFileTable.File[FileIndex].MaxFileAge    = 100;
-    DestFileTable.File[FileIndex].SequenceCount = 1;
-    */
-
-    strncpy(DestFileTable.File[FileIndex].Pathname, "path", DS_PATHNAME_BUFSIZE);
-    strncpy(DestFileTable.File[FileIndex].Basename, "basename", DS_BASENAME_BUFSIZE);
-    strncpy(DestFileTable.File[FileIndex].Extension, "ext", DS_EXTENSION_BUFSIZE);
+    strncpy(DestFileTable.File[0].Pathname, "path", DS_PATHNAME_BUFSIZE);
+    strncpy(DestFileTable.File[0].Basename, "basename", DS_BASENAME_BUFSIZE);
+    strncpy(DestFileTable.File[0].Extension, "ext", DS_EXTENSION_BUFSIZE);
 
     DestFileTable.File[0].FileNameType  = DS_BY_COUNT;
     DestFileTable.File[0].EnableState   = DS_DISABLED;
     DestFileTable.File[0].MaxFileSize   = DS_FILE_MIN_SIZE_LIMIT;
     DestFileTable.File[0].MaxFileAge    = DS_FILE_MIN_AGE_LIMIT;
     DestFileTable.File[0].SequenceCount = DS_MAX_SEQUENCE_COUNT - 1;
-
-    for (i = 1; i < DS_DEST_FILE_CNT; i++)
-    {
-        memset(&DestFileTable.File[i], DS_UNUSED, sizeof(DS_DestFileEntry_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyDestFile(&DestFileTable);
@@ -647,32 +618,29 @@ void DS_TableVerifyDestFile_Test_DestFileTableVerificationError(void)
 {
     int32              Result;
     DS_DestFileTable_t DestFileTable;
-    uint32             FileIndex = 0;
     uint32             i;
     int32              strCmpResult;
     char               ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     char               ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Destination file table verify err: invalid descriptor text");
 
     snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Destination file table verify results: desc text = %%s, good entries = %%d, bad = %%d, unused = %%d");
 
-    memset(&DestFileTable.File[0], 1, sizeof(DS_DestFileEntry_t));
-    DestFileTable.File[FileIndex].FileNameType  = DS_BY_TIME;
-    DestFileTable.File[FileIndex].EnableState   = DS_ENABLED;
-    DestFileTable.File[FileIndex].MaxFileSize   = 2048;
-    DestFileTable.File[FileIndex].MaxFileAge    = 100;
-    DestFileTable.File[FileIndex].SequenceCount = 1;
+    memset(&DestFileTable.File[0], 1, sizeof(DestFileTable.File[0]));
+    DestFileTable.File[0].FileNameType  = DS_BY_TIME;
+    DestFileTable.File[0].EnableState   = DS_ENABLED;
+    DestFileTable.File[0].MaxFileSize   = 2048;
+    DestFileTable.File[0].MaxFileAge    = 100;
+    DestFileTable.File[0].SequenceCount = 1;
 
-    strncpy(DestFileTable.File[FileIndex].Pathname, "path", DS_PATHNAME_BUFSIZE);
-    strncpy(DestFileTable.File[FileIndex].Basename, "basename", DS_BASENAME_BUFSIZE);
-    strncpy(DestFileTable.File[FileIndex].Extension, "ext", DS_EXTENSION_BUFSIZE);
-
-    for (i = 1; i < DS_DEST_FILE_CNT; i++)
-    {
-        memset(&DestFileTable.File[i], DS_UNUSED, sizeof(DS_DestFileEntry_t));
-    }
+    strncpy(DestFileTable.File[0].Pathname, "path", DS_PATHNAME_BUFSIZE);
+    strncpy(DestFileTable.File[0].Basename, "basename", DS_BASENAME_BUFSIZE);
+    strncpy(DestFileTable.File[0].Extension, "ext", DS_EXTENSION_BUFSIZE);
 
     for (i = 0; i < DS_DESCRIPTOR_BUFSIZE; i++)
     {
@@ -709,30 +677,27 @@ void DS_TableVerifyDestFile_Test_CountBad(void)
 {
     int32              Result;
     DS_DestFileTable_t DestFileTable;
-    uint32             FileIndex = 0;
-    uint32             i;
     int32              strCmpResult;
     char               ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Destination file table verify results: desc text = %%s, good entries = %%d, bad = %%d, unused = %%d");
 
     strncpy(DestFileTable.Descriptor, "descriptor", DS_DESCRIPTOR_BUFSIZE);
 
-    DestFileTable.File[FileIndex].FileNameType  = DS_BY_TIME;
-    DestFileTable.File[FileIndex].EnableState   = DS_ENABLED;
-    DestFileTable.File[FileIndex].MaxFileSize   = 2048;
-    DestFileTable.File[FileIndex].MaxFileAge    = 100;
-    DestFileTable.File[FileIndex].SequenceCount = 1;
+    DestFileTable.File[0].FileNameType  = DS_BY_TIME;
+    DestFileTable.File[0].EnableState   = DS_ENABLED;
+    DestFileTable.File[0].MaxFileSize   = 2048;
+    DestFileTable.File[0].MaxFileAge    = 100;
+    DestFileTable.File[0].SequenceCount = 1;
 
-    strncpy(DestFileTable.File[FileIndex].Pathname, "path", DS_PATHNAME_BUFSIZE);
-    strncpy(DestFileTable.File[FileIndex].Basename, "basename", DS_BASENAME_BUFSIZE);
-    strncpy(DestFileTable.File[FileIndex].Extension, "1234567", DS_EXTENSION_BUFSIZE);
+    strncpy(DestFileTable.File[0].Pathname, "path", DS_PATHNAME_BUFSIZE);
+    strncpy(DestFileTable.File[0].Basename, "basename", DS_BASENAME_BUFSIZE);
+    strncpy(DestFileTable.File[0].Extension, "1234567", DS_EXTENSION_BUFSIZE);
 
-    memset(&DestFileTable.File[0], 1, sizeof(DS_DestFileEntry_t));
-    for (i = 1; i < DS_DEST_FILE_CNT; i++)
-    {
-        memset(&DestFileTable.File[i], DS_UNUSED, sizeof(DS_DestFileEntry_t));
-    }
+    memset(&DestFileTable.File[0], 1, sizeof(DestFileTable.File[0]));
 
     /* Execute the function being tested */
     Result = DS_TableVerifyDestFile(&DestFileTable);
@@ -1208,6 +1173,9 @@ void DS_TableVerifyFilter_Test_Nominal(void)
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Filter table verify results: desc text = %%s, good entries = %%d, bad = %%d, unused = %%d");
 
@@ -1220,11 +1188,6 @@ void DS_TableVerifyFilter_Test_Nominal(void)
     DS_AppData.FileStatus[0].FileState             = DS_ENABLED;
 
     strncpy(FilterTable.Descriptor, "descriptor", DS_DESCRIPTOR_BUFSIZE);
-
-    for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&FilterTable.Packet[0].Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     for (i = 1; i < 256; i++)
     {
@@ -1259,6 +1222,9 @@ void DS_TableVerifyFilter_Test_FilterTableVerificationError(void)
     int32 strCmpResult;
     char  ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
     char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
     snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s MID = 0x%%08lX, index = %%d, filter = %%d, filter type = %%d");
 
@@ -1275,11 +1241,6 @@ void DS_TableVerifyFilter_Test_FilterTableVerificationError(void)
     for (i = 0; i < DS_DESCRIPTOR_BUFSIZE; i++)
     {
         FilterTable.Descriptor[i] = '*';
-    }
-
-    for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&FilterTable.Packet[0].Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
     }
 
     for (i = 1; i < 256; i++)
@@ -1324,6 +1285,9 @@ void DS_TableVerifyFilter_Test_CountBad(void)
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "Filter table verify results: desc text = %%s, good entries = %%d, bad = %%d, unused = %%d");
 
@@ -1336,11 +1300,6 @@ void DS_TableVerifyFilter_Test_CountBad(void)
     DS_AppData.FileStatus[0].FileState             = DS_ENABLED;
 
     strncpy(FilterTable.Descriptor, "descriptor", DS_DESCRIPTOR_BUFSIZE);
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&FilterTable.Packet[0].Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     for (i = 1; i < 256; i++)
     {
@@ -1373,7 +1332,8 @@ void DS_TableVerifyFilterEntry_Test_Unused(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 0;
-    uint32           i;
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
 
     PacketEntry.MessageID                = DS_UT_MID_1;
     PacketEntry.Filter[0].FileTableIndex = 0;
@@ -1382,11 +1342,6 @@ void DS_TableVerifyFilterEntry_Test_Unused(void)
     PacketEntry.Filter[0].Algorithm_O    = 0;
     PacketEntry.Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1405,7 +1360,8 @@ void DS_TableVerifyFilterEntry_Test_Nominal(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 0;
-    uint32           i;
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
 
     PacketEntry.MessageID                = DS_UT_MID_1;
     PacketEntry.Filter[0].FileTableIndex = 0;
@@ -1414,11 +1370,6 @@ void DS_TableVerifyFilterEntry_Test_Nominal(void)
     PacketEntry.Filter[0].Algorithm_O    = 0;
     PacketEntry.Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1437,10 +1388,12 @@ void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrZero(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 0;
-    uint32           i;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s MID = 0x%%08lX, index = %%d, filter = %%d, file table index = %%d");
 
@@ -1451,11 +1404,6 @@ void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrZero(void)
     PacketEntry.Filter[0].Algorithm_O    = 0;
     PacketEntry.Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1482,10 +1430,12 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 0;
-    uint32           i;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s MID = 0x%%08lX, index = %%d, filter = %%d, filter type = %%d");
 
@@ -1496,11 +1446,6 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero(void)
     PacketEntry.Filter[0].Algorithm_O    = 0;
     PacketEntry.Filter[0].FilterType     = 99;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1527,10 +1472,12 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 0;
-    uint32           i;
 
     int32 strCmpResult;
     char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
+
     snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
              "%%s MID = 0x%%08lX, index = %%d, filter = %%d, filter parms N = %%d, X = %%d, O = %%d");
 
@@ -1541,11 +1488,6 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero(void)
     PacketEntry.Filter[0].Algorithm_O    = 99;
     PacketEntry.Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1572,7 +1514,8 @@ void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrNonZero(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 1;
-    uint32           i;
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
 
     PacketEntry.MessageID                = DS_UT_MID_1;
     PacketEntry.Filter[0].FileTableIndex = DS_DEST_FILE_CNT + 1;
@@ -1581,11 +1524,6 @@ void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrNonZero(void)
     PacketEntry.Filter[0].Algorithm_O    = 0;
     PacketEntry.Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1604,7 +1542,8 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 1;
-    uint32           i;
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
 
     PacketEntry.MessageID                = DS_UT_MID_1;
     PacketEntry.Filter[0].FileTableIndex = 0;
@@ -1613,11 +1552,6 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero(void)
     PacketEntry.Filter[0].Algorithm_O    = 0;
     PacketEntry.Filter[0].FilterType     = 99;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1636,7 +1570,8 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero(void)
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
     uint32           ErrorCount = 1;
-    uint32           i;
+
+    memset(&PacketEntry, 0, sizeof(PacketEntry));
 
     PacketEntry.MessageID                = DS_UT_MID_1;
     PacketEntry.Filter[0].FileTableIndex = 0;
@@ -1645,11 +1580,6 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero(void)
     PacketEntry.Filter[0].Algorithm_O    = 99;
     PacketEntry.Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState   = DS_ENABLED;
-
-    for (i = 1; i < DS_FILTERS_PER_PACKET; i++)
-    {
-        memset(&PacketEntry.Filter[i], DS_UNUSED, sizeof(DS_FilterParms_t));
-    }
 
     /* Execute the function being tested */
     Result = DS_TableVerifyFilterEntry(&PacketEntry, TableIndex, ErrorCount);
@@ -1667,10 +1597,10 @@ void DS_TableEntryUnused_Test_Nominal(void)
     int32              Result;
     DS_DestFileEntry_t DestFileEntry;
 
-    memset(&DestFileEntry, DS_UNUSED, sizeof(DS_DestFileEntry_t));
+    memset(&DestFileEntry, DS_UNUSED, sizeof(DestFileEntry));
 
     /* Execute the function being tested */
-    Result = DS_TableEntryUnused(&DestFileEntry, sizeof(DS_DestFileEntry_t));
+    Result = DS_TableEntryUnused(&DestFileEntry, sizeof(DestFileEntry));
 
     /* Verify results */
     UtAssert_True(Result == true, "Result == true");
@@ -1685,10 +1615,10 @@ void DS_TableEntryUnused_Test_Fail(void)
     int32              Result;
     DS_DestFileEntry_t DestFileEntry;
 
-    memset(&DestFileEntry, 99, sizeof(DS_DestFileEntry_t));
+    memset(&DestFileEntry, 99, sizeof(DestFileEntry));
 
     /* Execute the function being tested */
-    Result = DS_TableEntryUnused(&DestFileEntry, sizeof(DS_DestFileEntry_t));
+    Result = DS_TableEntryUnused(&DestFileEntry, sizeof(DestFileEntry));
 
     /* Verify results */
     UtAssert_True(Result == false, "Result == false");

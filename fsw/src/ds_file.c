@@ -395,7 +395,7 @@ void DS_FileWriteHeader(int32 FileIndex)
     /*
     ** Initialize selected parts of the cFE file header...
     */
-    CFE_PSP_MemSet(&CFE_FS_Header, 0, sizeof(CFE_FS_Header_t));
+    memset(&CFE_FS_Header, 0, sizeof(CFE_FS_Header));
     CFE_FS_Header.SubType = DS_FILE_HDR_SUBTYPE;
     strcpy(CFE_FS_Header.Description, DS_FILE_HDR_DESCRIPTION);
 
@@ -417,7 +417,7 @@ void DS_FileWriteHeader(int32 FileIndex)
         /*
         ** Initialize the DS file header...
         */
-        CFE_PSP_MemSet(&DS_FileHeader, 0, sizeof(DS_FileHeader_t));
+        memset(&DS_FileHeader, 0, sizeof(DS_FileHeader));
         DS_FileHeader.FileTableIndex = FileIndex;
         DS_FileHeader.FileNameType   = DestFile->FileNameType;
         strcpy(DS_FileHeader.FileName, FileStatus->FileName);
@@ -519,7 +519,7 @@ void DS_FileCreateDest(uint32 FileIndex)
                               "FILE CREATE error: result = %d, dest = %d, name = '%s'", (int)Result, (int)FileIndex,
                               FileStatus->FileName);
 
-            CFE_PSP_MemSet(FileStatus->FileName, 0, DS_TOTAL_FNAME_BUFSIZE);
+            memset(FileStatus->FileName, 0, sizeof(FileStatus->FileName));
 
             /*
             ** Something needs to get fixed before we try again...
@@ -977,7 +977,7 @@ void DS_FileCloseDest(int32 FileIndex)
     /*
     ** Remove previous filename from status data...
     */
-    CFE_PSP_MemSet(FileStatus->FileName, 0, DS_TOTAL_FNAME_BUFSIZE);
+    memset(FileStatus->FileName, 0, sizeof(FileStatus->FileName));
 
     return;
 
