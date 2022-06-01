@@ -19,14 +19,14 @@ a “clean slate”."
 DS1002,DS1002,"For all DS commands, if the length contained in the message header is not equal to the expected length, DS shall reject the command and issue an event message.",Basic command verification in the event of SEU or memory corruption
 DS1004,DS1004,"If DS accepts any command as valid, DS shall execute the command, increment the DS Valid Command Counter and issue an event message.",Operators require feedback on command execution.
 DS1005,DS1005,"If DS rejects any command, DS shall abort the command execution, increment the DS Command Rejected Counter and issue an error event message.",Operators require feedback on command execution.
-DS2000,DS2000,"Upon receipt of a message, if the Packet Processing State is ENABLED, DS shall determine if the message shall be stored based on the contents of the Packet Filter Table and the Destination File Table.",
+DS2000,DS2000,"Upon receipt of a message, if the Packet Processing State is ENABLED, DS shall determine if the message shall be stored based on the contents of the Packet Filter Table and the Destination File Table.",Specifies source for message storage criteria configuration
 DS2000.1,DS2000.1,"The Packet Filter Table contents shall include:
 a) Message ID
 b) Destination file table index
 c) Filter type (time/sequence count)
 d) Algorithm N value
 e) Algorithm X value 
-f) Algorithm O value",
+f) Algorithm O value",Specifies minimum packet filter table contents which support operational configuration management
 DS2000.2,DS2000.2,"The Destination File Table contents shall include:
 a) Pathname
 b) Basename
@@ -35,24 +35,24 @@ d) Filename type (time/sequence)
 e) Default Destination enable state
 f) Max file size (in bytes)
 g) Max file age (in seconds) 
-h) Initial Sequence Count",
-DS2001,DS2001,"DS shall store ""N of X"" messages starting at offset O.",
+h) Initial Sequence Count",Specifies minimum Destination File Table contents which support operational configuration management
+DS2001,DS2001,"DS shall store ""N of X"" messages starting at offset O.",Specifies storage filtering method
 DS2001.1,DS2001.1,"If either the X value or the N value is zero, then the message shall not be stored.","Gracefully handle ""0"" parameters and provide a way to specify no storage."
-DS2002,DS2002,DS shall store each message in up to <PLATFORM_DEFINED> different destination files.,
+DS2002,DS2002,DS shall store each message in up to <PLATFORM_DEFINED> different destination files.,Support platform configuration of maximum number of files to store a message to
 DS2002.1,DS2002.1,Destination files shall be created when the first message is received that is passed by the filter algorithm for that particular message and selects that particular destination file.,Preserve space and create files only as needed.
-DS2003,DS2003,The input argument to the filter algorithm shall be determined by the Filter Type indicator.,
-DS2003.1,DS2003.1,If Filter Type indicates Sequence based filtering then the algorithm input argument is a value equal to the packet sequence count.,
-DS2003.2,DS2003.2,If Filter Type indicates Time based filtering then the algorithm input argument is a value created from the lower 11 bits of packet timestamp seconds plus the high 4 bits of timestamp subseconds.,
-DS3000,DS3000,DS shall construct filenames based on the following definitions provided in the Destination File Table:,
-DS3000.1,DS3000.1,If Filename Type indicates naming based on Sequence the constructed filename will include a character representation of the Sequence Count value from the Destination File Table.,
-DS3000.1.1,DS3000.1.1,If Filename Type indicates naming based on Sequence the value of Sequence Count shall be incremented each time a file is created.,
-DS3000.2,DS3000.2,If Filename Type indicates naming based on Time the constructed filename will include a character representation of the packet timestamp.,
-DS3000.2.1,DS3000.2.1,"If Filename Type indicates naming based on Time the file date and time shall be represented in the following format: ""YYYYDDDHHMMSS"".",
-DS3001,DS3001,"Prior to writing a packet to an existing destination file, DS shall verify that the resulting file size (after the write) shall not exceed the file size limit as defined in the Destination File Table.",
-DS3001.1,DS3001.1,If the resulting file size would exceed the file size limit then DS shall close the existing file and open another file.,
+DS2003,DS2003,The input argument to the filter algorithm shall be determined by the Filter Type indicator.,Supports selectable filter type with unique input arguments
+DS2003.1,DS2003.1,If Filter Type indicates Sequence based filtering then the algorithm input argument is a value equal to the packet sequence count.,Specifies sequence based filtering input argument
+DS2003.2,DS2003.2,If Filter Type indicates Time based filtering then the algorithm input argument is a value created from the lower 11 bits of packet timestamp seconds plus the high 4 bits of timestamp subseconds.,Specifies time based filtering input argument
+DS3000,DS3000,DS shall construct unique filenames using either sequence count or time as selected within the Destination File Table.,Specifies operational control via table of unique data file name generation method.
+DS3000.1,DS3000.1,If Filename Type indicates naming based on Sequence the constructed filename will include a character representation of the Sequence Count value from the Destination File Table.,Unique file name generation using the file sequence count
+DS3000.1.1,DS3000.1.1,If Filename Type indicates naming based on Sequence the value of Sequence Count shall be incremented each time a file is created.,Sequence count behavior based on file creation
+DS3000.2,DS3000.2,If Filename Type indicates naming based on Time the constructed filename will include a character representation of the packet timestamp.,Unique file name construction based on time
+DS3000.2.1,DS3000.2.1,"If Filename Type indicates naming based on Time the file date and time shall be represented in the following format: ""YYYYDDDHHMMSS"".",Time format for unique file name creation
+DS3001,DS3001,"Prior to writing a packet to an existing destination file, DS shall verify that the resulting file size (after the write) shall not exceed the file size limit as defined in the Destination File Table.",Destination file size limit enforcement method
+DS3001.1,DS3001.1,If the resulting file size would exceed the file size limit then DS shall close the existing file and open another file.,Specifies behavior when reaching the destination file size limit
 DS3001.2,DS3001.2,A minimum of one packet shall be written to a file,Preserve space and create files only as needed.
-DS3002,DS3002,"Periodically, DS shall test the age of all open destination files. If any file age exceeds the maximum age defined for that file in the Destination File Table, then DS shall close the file.",
-DS3002.1,DS3002.1,DS shall update file age and test age limits every time DS processes its housekeeping telemetry request command.,
+DS3002,DS3002,"Periodically, DS shall test the age of all open destination files. If any file age exceeds the maximum age defined for that file in the Destination File Table, then DS shall close the file.",Destination file age limit enforcement
+DS3002.1,DS3002.1,DS shall update file age and test age limits every time DS processes its housekeeping telemetry request command.,Specifies rate for destination file age limit check
 DS3003,DS3003,"Each DS destination file shall contain a primary cFE file header with the following information: 
 a) Content Type 
 b) SubType 
@@ -66,34 +66,34 @@ DS3004,DS3004,"Each DS destination file shall contain a secondary file header wi
 a) File close time (seconds)
 b) File close time (sub-seconds)
 c) File table index
-d) Qualified Filename",
+d) Qualified Filename",Destination file secondary file header contents
 DS3005,DS3005,"For every file write error, DS shall:
 a) Send an event message
 b) Increment total number of file write errors
 c) Close the destination file
-d) Disable the destination",Notify operators of error and prevent ongoing future errors caused be writing to the same destination file.
+d) Disable the destination",Notify operators of error and prevent ongoing future errors caused by writing to the same destination file.
 DS5000,DS5000,"Upon receipt of a Disable command, DS shall stop filtering and storing messages.
-Note: This command will set the Packet Processing State to DISABLED.",
+Note: This command will set the Packet Processing State to DISABLED.",Operational control of packet processing state (message storage)
 DS5001,DS5001,"Upon receipt of an Enable command, DS shall begin filtering and storing messages.
-Note: This command will set the Packet Processing State to ENABLED.",
-DS5002,DS5002,"Upon receipt of a Close File Command, DS shall close the command-specified files.",
-DS5003,DS5003,"Upon receipt of a Set File Basename command, DS shall set the file basename for the command-specified destination file.",
-DS5004,DS5004,"Upon receipt of a Set Next File Sequence Counter command, DS shall set the command-specified  file counter for the command-specified Destination File.",
-DS5005,DS5005,"Upon receipt of an Enable Destination File command, DS shall enable file collection for the command-specified Destination File.",
-DS5006,DS5006,"Upon receipt of a Disable Destination File command, DS disable file collection for the command-specified Destination File.",
-DS5008,DS5008,"Upon receipt of a Set File Index for a Packet Filter Table entry command, DS shall update the destination file index.",
-DS5009,DS5009,"Upon receipt of a Set Filter Type for a Packet Filter Table entry command, DS shall update the filter type to the command-specified filter type.",
+Note: This command will set the Packet Processing State to ENABLED.",Operational control of packet processing state (message storage)
+DS5002,DS5002,"Upon receipt of a Close File Command, DS shall close the command-specified files.",Operational interface to manually close a destination file
+DS5003,DS5003,"Upon receipt of a Set File Basename command, DS shall set the file basename for the command-specified destination file.",Operational support to manually set file basename
+DS5004,DS5004,"Upon receipt of a Set Next File Sequence Counter command, DS shall set the command-specified  file counter for the command-specified Destination File.",Operational support for manual control of the file counter
+DS5005,DS5005,"Upon receipt of an Enable Destination File command, DS shall enable file collection for the command-specified Destination File.",Operational control for managing destination file collection state
+DS5006,DS5006,"Upon receipt of a Disable Destination File command, DS disable file collection for the command-specified Destination File.",Operational control for managing destination file collection state
+DS5008,DS5008,"Upon receipt of a Set File Index for a Packet Filter Table entry command, DS shall update the destination file index.",Operational support for setting Packet Filter Table destination file index
+DS5009,DS5009,"Upon receipt of a Set Filter Type for a Packet Filter Table entry command, DS shall update the filter type to the command-specified filter type.",Operational support for setting Packet Filter Table entry filter type
 DS5010,DS5010,"Upon receipt of a Set Filter Parameter for a Packet Filter Table entry command, DS shall update the N, X, O Parameters to the command-specified values",Allow on-orbit modification of filtering parameters without requiring a table update.
-DS5011,DS5011,"Upon receipt of a Set Destination Type for a destination file type command, DS shall update the Destination type to the command-specified destination type.",
-DS5012,DS5012,"Upon receipt of a Set Path for a destination filename command, DS shall update the path to the command-specified path.",
-DS5013,DS5013,"Upon receipt of a Set Extension for destination filename command, DS shall update the file extension to the command-specified extension.",
-DS5014,DS5014,"Upon receipt of a Set Maximum Size for a destination file command, DS shall update the maximum file size to the command-specified maximum",
-DS5015,DS5015,"Upon receipt of a Set Maximum Age for a destination file command, DS shall update the maximum destination file age to the command-specified maximum age.",
+DS5011,DS5011,"Upon receipt of a Set Destination Type for a destination file type command, DS shall update the Destination type to the command-specified destination type.",Operational support for setting file destination type
+DS5012,DS5012,"Upon receipt of a Set Path for a destination filename command, DS shall update the path to the command-specified path.",Operational support to manually set the destination filename path
+DS5013,DS5013,"Upon receipt of a Set Extension for destination filename command, DS shall update the file extension to the command-specified extension.",Operational support to manually set the destination filename extension
+DS5014,DS5014,"Upon receipt of a Set Maximum Size for a destination file command, DS shall update the maximum file size to the command-specified maximum",Operational support to manually set the destination file maximum size
+DS5015,DS5015,"Upon receipt of a Set Maximum Age for a destination file command, DS shall update the maximum destination file age to the command-specified maximum age.",Operational support to manually set destination file maximum age limit
 DS5016,DS5016,"Upon receipt of an Add Message ID to Packet Filter Table command, DS shall add the command-specified Message ID to the next unused entry in the Packet Filter Table.",Allow on-orbit modification of Packet Filter Table without requiring a table update.
-DS5016.1,DS5016.1,If the command-specified Message ID is invalid DS will reject the command and send an event message.,
-DS5016.2,DS5016.2,If the Packet Filter table is not loaded DS will reject the command and send an event message.,
-DS5016.3,DS5016.3,If the command-specified Message ID is already specified in the Packet Filter Table DS will reject the command and send an event message,
-DS5016.4,DS5016.4,If there are no unused entries in the Packet Filter Table DS will reject the command and send an event message,
+DS5016.1,DS5016.1,If the command-specified Message ID is invalid DS will reject the command and send an event message.,Response to invalid message id in command
+DS5016.2,DS5016.2,If the Packet Filter table is not loaded DS will reject the command and send an event message.,Response to command without a loaded Packet Filter table
+DS5016.3,DS5016.3,If the command-specified Message ID is already specified in the Packet Filter Table DS will reject the command and send an event message,Response to commanding an already specified message ID in the Packet Filter Table
+DS5016.4,DS5016.4,If there are no unused entries in the Packet Filter Table DS will reject the command and send an event message,Response to a command to add an entry to a full Packet Filter Table
 DS5017,DS5017,"Upon Receipt of a Get File Info command, DS shall generate a telemetry packet containing the following information for each destination file:
      1) File age
      2) File size
@@ -126,38 +126,34 @@ c) Packets discarded (DS was disabled) Counter
 d) Packets discarded (pkt has no filter) Counter
 e) Packets discarded (failed filter test) Counter
 f) Packets that passed filter test Counter
-g) Good destination file I/O Counter h) Bad destination file I/O Counter
+g) Good destination file I/O Counter 
+h) Bad destination file I/O Counter
 i) Good updates to secondary header Counter
 j) Bad updates to secondary header Counter
 k) Destination file table loads Counter
 l) Failed attempts to get table data pointer Counter
-m)Packet filter table loads Counter
+m) Packet filter table loads Counter
 n) Failed attempts to get table data pointer Counter","Start from a known ""clean"" state."
 DS9001,DS9001,Upon cFE Power-On DS shall initialize the DS tables from the default files.,"Start from a known ""good"" state."
 DS9002,DS9002,"Upon a cFE Processor Reset or DS Application Reset, DS shall close all files.",Orderly shutdown of files in a reset.
 DS9003,DS9003,"Upon a cFE Processor Reset or DS Application Reset ,  DS shall restore the following if the associated <PLATFORM_DEFINED> Preserve Flag is set to TRUE:
-a)       Packet Filter Table
-b)       Destination File Table
-c)       File Sequence number for all Destination File Sets
-d)       Packet Processing State (ENABLED or DISABLED)",
+a) Packet Filter Table
+b) Destination File Table
+c) File Sequence number for all Destination File Sets
+d) Packet Processing State (ENABLED or DISABLED)",Processor or application reset behavior when preserve flag is set to TRUE
 DS9004,DS9004,"Upon a cFE Processor Reset or DS Application Reset ,  DS shall restore the following if the associated <PLATFORM_DEFINED> Preserve Flag is set to FALSE:
-a)       File Sequence Counters
-b)       <PLATFORM_DEFINED> Packet Processing State",
+a) File Sequence Counters
+b) <PLATFORM_DEFINED> Packet Processing State",Processor or Application reset behavior when Preserve Flag is set to FALSE
 DS9005,DS9005,"Upon any initialization and/or Packet Filter Table Update, DS shall validate the Packet Filter Table:
-a) table descriptor text for each packet entry:
-b) message ID (0 = unused, else ok)
-c) destination file table index
-d) filter type (time/sequence)
-e) filter parms (N,X,O)",Valid the items that can be validated when an table is updated (some items cannot be validated until runtime). 
+a) message ID
+b) destination file table index
+c) filter type (time/sequence)
+d) filter parms (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
 DS9006,DS9006,"Upon any initialization and/or Packet Filter Table Update, DS shall subscribe to the messages defined in the Data Storage Packet Filter Table.",Must subscribe to all of the messages defined in the Data Storage Packet Filter Table after any reset.
 DS9007,DS9007,"Upon any initialization and/or Destination File Table Update, DS will validate the Destination File Table:
-a) table descriptor text for each destination file entry
-b) pathname
-c) basename
-d) extension
-e) filename type
-f) file enable/disable state
-g) max file size  
-h) max file age  
-i) sequence count",Valid the items that can be validated when a table is updated (some items cannot be validated until runtime). 
-DS9008,DS9008,Upon cFE Power-On DS shall set the Packet Processing State to the <PLATFORM_DEFINED> state (ENABLED or DISABLED).,
+a) filename type
+b) file enable/disable state
+c) max file size
+d) max file age
+e) sequence count",Valid the items that can be validated when a table is updated (some items cannot be validated until runtime).
+DS9008,DS9008,Upon cFE Power-On DS shall set the Packet Processing State to the <PLATFORM_DEFINED> state (ENABLED or DISABLED).,Power-on reset Packet Processing State behavior
