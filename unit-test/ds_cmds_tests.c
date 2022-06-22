@@ -3028,6 +3028,34 @@ void DS_CmdCloseAll_Test_Nominal(void)
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseAllCmd_t), "DS_CloseAllCmd_t is 32-bit aligned");
 } /* end DS_CmdCloseAll_Test_Nominal */
 
+void DS_CmdCloseAll_Test_CloseAll(void)
+{
+    uint32 i;
+    size_t forced_Size = sizeof(DS_CloseAllCmd_t);
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileHandle = DS_UT_OBJID_1;
+    }
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_CmdCloseAll(&UT_CmdBuf.Buf));
+
+    /* Verify results */
+    UtAssert_INT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(DS_FileUpdateHeader, DS_DEST_FILE_CNT);
+    UtAssert_STUB_COUNT(DS_FileCloseDest, DS_DEST_FILE_CNT);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_ALL_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
+    UtAssert_BOOL_TRUE(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseAllCmd_t));
+
+} /* end DS_CmdCloseAll_Test_CloseAll */
+
 void DS_CmdCloseAll_Test_InvalidCommandLength(void)
 {
 
@@ -3660,6 +3688,7 @@ void UtTest_Setup(void)
                "DS_CmdCloseFile_Test_InvalidFileTableIndex");
 
     UtTest_Add(DS_CmdCloseAll_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdCloseAll_Test_Nominal");
+    UtTest_Add(DS_CmdCloseAll_Test_CloseAll, DS_Test_Setup, DS_Test_TearDown, "DS_CmdCloseAll_Test_CloseAll");
     UtTest_Add(DS_CmdCloseAll_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
                "DS_CmdCloseAll_Test_InvalidCommandLength");
 
