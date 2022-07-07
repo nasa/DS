@@ -1153,7 +1153,7 @@ int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
     HashLink = DS_AppData.HashTable[HashTableIndex];
 
     /* NULL when list is empty or end of list */
-    while ((HashLink != (DS_HashLink_t *)NULL) && (FilterPackets != NULL))
+    while (HashLink != (DS_HashLink_t *)NULL)
     {
         /* Compare this linked list entry for matching MessageID */
         if (CFE_SB_MsgIdToValue(FilterPackets[HashLink->Index].MessageID) == CFE_SB_MsgIdToValue(MessageID))
