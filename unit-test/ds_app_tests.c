@@ -964,14 +964,14 @@ void DS_AppProcessHK_Test_SnprintfFail(void)
     UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0,
                   "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0");
 
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg)), 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t), "DS_HkPacket_t is 32-bit aligned");
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_APPHK_FILTER_TBL_PRINT_ERR_EID);
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }
 
 void DS_AppProcessHK_Test_TblFail(void)
@@ -1176,8 +1176,7 @@ void UtTest_Setup(void)
                "DS_AppProcessCmd_Test_InvalidCommandCode");
 
     UtTest_Add(DS_AppProcessHK_Test, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessHK_Test");
-    /* UtTest_Add(DS_AppProcessHK_Test_SnprintfFail, DS_Test_Setup, DS_Test_TearDown,
-     * "DS_AppProcessHK_Test_SnprintfFail"); */
+    UtTest_Add(DS_AppProcessHK_Test_SnprintfFail, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessHK_Test_SnprintfFail");
     UtTest_Add(DS_AppProcessHK_Test_TblFail, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessHK_Test_TblFail");
 
     UtTest_Add(DS_AppStorePacket_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_AppStorePacket_Test_Nominal");
