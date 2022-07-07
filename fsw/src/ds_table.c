@@ -1083,7 +1083,7 @@ void DS_TableCreateHash(void)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_TableFindMsgID() - get filter table index for MID            */
+/* DS_TableAddMsgID() - get hash table index for MID               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
