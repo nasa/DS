@@ -413,23 +413,23 @@ void DS_FileSetupWrite_Test_FileHandleClosed(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    UT_SetHandlerFunction(UT_KEY(OS_OpenCreate), &UT_OS_write_SuccessHandler, NULL);
 
-    DS_AppData.FileStatus[FileIndex].FileHandle = OS_OBJECT_ID_UNDEFINED;
-
-    DS_AppData.DestFileTblPtr = &DestFileTable;
-
+    DS_AppData.DestFileTblPtr                              = &DestFileTable;
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileSize = 100;
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
+    DS_AppData.FileStatus[FileIndex].FileHandle             = OS_OBJECT_ID_UNDEFINED;
     DS_AppData.FileStatus[FileIndex].FileCount              = 0;
     DS_AppData.FileStatus[FileIndex].FileSize               = 3;
 
     /* Execute the function being tested */
-    DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(DS_FileWriteData, 0);
+    UtAssert_STUB_COUNT(OS_OpenCreate, 1);
 } /* end DS_FileSetupWrite_Test_FileHandleClosed */
 
 void DS_FileSetupWrite_Test_MaxFileSizeExceeded(void)
@@ -726,6 +726,24 @@ void DS_FileCreateDest_Test_Nominal(void)
 
 } /* end DS_FileCreateDest_Test_Nominal */
 
+void DS_FileCreateDest_Test_StringTerminate(void)
+{
+    uint32             FileIndex = 0;
+    DS_DestFileTable_t DestFileTable;
+
+    /* Setup for DS_FileCreateName to succeed */
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    DS_AppData.FileStatus[FileIndex].FileName[0] = DS_STRING_TERMINATOR;
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(OS_OpenCreate, 0);
+
+} /* end DS_FileCreateDest_Test_StringTerminate */
+
 void DS_FileCreateDest_Test_NominalRollover(void)
 {
     uint32             FileIndex = 0;
@@ -1006,6 +1024,123 @@ void DS_FileCreateName_Test_Error(void)
 
 } /* end DS_FileCreateName_Test_Error */
 
+void DS_FileCreateName_Test_MaxPathnameLength(void)
+{
+    int32              FileIndex = 0;
+    DS_DestFileTable_t DestFileTable;
+    int32              WorknameLen = 2 * DS_TOTAL_FNAME_BUFSIZE;
+    int32              i;
+
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
+
+    /* Set to fail the condition "if (TotalLength != (WorknameLen - 1))" */
+    for (i = 0; i < WorknameLen - 1; i++)
+    {
+        DS_AppData.DestFileTblPtr->File[FileIndex].Pathname[i] = 'a';
+    }
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
+
+    /* Verify results */
+    UtAssert_INT32_EQ(strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname), WorknameLen - 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
+
+} /* end DS_FileCreateName_Test_MaxPathnameLength */
+
+void DS_FileCreateName_Test_PathBaseSeqTooLarge(void)
+{
+    int32              FileIndex = 0;
+    DS_DestFileTable_t DestFileTable;
+
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
+    DS_AppData.FileStatus[FileIndex].FileCount              = 1;
+
+    /* Set to fail the condition "if ((strlen(Workname) + strlen(Sequence)) < DS_TOTAL_FNAME_BUFSIZE)" */
+    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "PathnamePathnamePathnamePat",
+            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname));
+    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, "BasenameBasenameBasenameBase",
+            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Basename));
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
+
+    /* Verify results */
+    UtAssert_INT32_EQ(strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname) +
+                          strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Basename) + DS_SEQUENCE_DIGITS +
+                          strlen("/"),
+                      DS_TOTAL_FNAME_BUFSIZE);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
+
+} /* end DS_FileCreateName_Test_PathBaseSeqTooLarge */
+
+void DS_FileCreateName_Test_PathBaseSeqExtTooLarge(void)
+{
+    int32              FileIndex = 0;
+    DS_DestFileTable_t DestFileTable;
+
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
+    DS_AppData.FileStatus[FileIndex].FileCount              = 1;
+
+    /* Set to fail the condition "if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)" */
+    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "PathnamePathnamePathname",
+            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname));
+    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, "BasenameBasenameBasenameBase",
+            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Basename));
+    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Extension, "ext",
+            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Extension));
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
+
+    /* Verify results */
+    UtAssert_INT32_EQ(strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname) +
+                          strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Basename) +
+                          strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Extension) + DS_SEQUENCE_DIGITS +
+                          strlen("/"),
+                      DS_TOTAL_FNAME_BUFSIZE);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
+
+} /* end DS_FileCreateName_Test_PathBaseSeqExtTooLarge */
+
+void DS_FileCreateName_Test_ExtensionZero(void)
+{
+    int32              FileIndex = 0;
+    DS_DestFileTable_t DestFileTable;
+    char               StrCompare[] = "path/base00000001";
+
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
+
+    DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
+    DS_AppData.FileStatus[FileIndex].FileCount              = 1;
+
+    /* Set to fail the condition "if (strlen(DestFile->Extension) > 0)" */
+    DS_AppData.DestFileTblPtr->File[FileIndex].Extension[0] = '\0';
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
+
+    /* Verify results */
+    UtAssert_STRINGBUF_EQ(DS_AppData.FileStatus[FileIndex].FileName, sizeof(DS_AppData.FileStatus[FileIndex].FileName),
+                          StrCompare, sizeof(StrCompare));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+} /* end DS_FileCreateName_Test_ExtensionZero */
+
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
 void DS_FileCreateSequence_Test_ByCount(void)
 {
@@ -1277,6 +1412,33 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge(void)
     UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
 } /* end DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge */
+#endif
+
+#if (DS_MOVE_FILES == true)
+void DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameNull(void)
+{
+    int32              FileIndex = 0;
+    DS_DestFileTable_t DestFileTable;
+
+    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    DS_AppData.DestFileTblPtr = &DestFileTable;
+
+    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Movename, "directory2/movename",
+            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileCloseDest(FileIndex));
+
+    /* Verify results */
+    UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[FileIndex].FileHandle));
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileAge, 0);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileSize, 0);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileName[0], 0);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_MOVE_FILE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+
+} /* end DS_FileCloseDest_Test_PlatformConfigMoveFiles_Null */
 #endif
 
 #if (DS_MOVE_FILES == false)
@@ -1612,7 +1774,8 @@ void UtTest_Setup(void)
 #endif
 
     UtTest_Add(DS_FileCreateDest_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateDest_Test_Nominal");
-
+    UtTest_Add(DS_FileCreateDest_Test_StringTerminate, DS_Test_Setup, DS_Test_TearDown,
+               "DS_FileCreateDest_Test_StringTerminate");
     UtTest_Add(DS_FileCreateDest_Test_NominalRollover, DS_Test_Setup, DS_Test_TearDown,
                "DS_FileCreateDest_Test_NominalRollover");
     UtTest_Add(DS_FileCreateDest_Test_Error, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateDest_Test_Error");
@@ -1629,6 +1792,14 @@ void UtTest_Setup(void)
                "DS_FileCreateName_Test_NominalWithPeriod");
     UtTest_Add(DS_FileCreateName_Test_EmptyPath, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateName_Test_EmptyPath");
     UtTest_Add(DS_FileCreateName_Test_Error, DS_Test_Setup, DS_Test_TearDown, "DS_FileCreateName_Test_Error");
+    UtTest_Add(DS_FileCreateName_Test_MaxPathnameLength, DS_Test_Setup, DS_Test_TearDown,
+               "DS_FileCreateName_Test_MaxPathnameLength");
+    UtTest_Add(DS_FileCreateName_Test_PathBaseSeqTooLarge, DS_Test_Setup, DS_Test_TearDown,
+               "DS_FileCreateName_Test_PathBaseSeqTooLarge");
+    UtTest_Add(DS_FileCreateName_Test_PathBaseSeqExtTooLarge, DS_Test_Setup, DS_Test_TearDown,
+               "DS_FileCreateName_Test_PathBaseSeqExtTooLarge");
+    UtTest_Add(DS_FileCreateName_Test_ExtensionZero, DS_Test_Setup, DS_Test_TearDown,
+               "DS_FileCreateName_Test_ExtensionZero");
 
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
     UtTest_Add(DS_FileCreateSequence_Test_ByCount, DS_Test_Setup, DS_Test_TearDown,
@@ -1654,6 +1825,8 @@ void UtTest_Setup(void)
                "DS_FileCloseDest_Test_PlatformConfigMoveFiles_MoveError");
     UtTest_Add(DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge, DS_Test_Setup, DS_Test_TearDown,
                "DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge");
+    UtTest_Add(DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameNull, DS_Test_Setup, DS_Test_TearDown,
+               "DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameNull");
 #else
     UtTest_Add(DS_FileCloseDest_Test_MoveFilesFalse, DS_Test_Setup, DS_Test_TearDown,
                "DS_FileCloseDest_Test_MoveFilesFalse");
