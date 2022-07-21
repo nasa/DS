@@ -41,6 +41,7 @@
 
 #define DS_HK_TLM_MID   0x08B8 /**< \brief DS Hk Telemetry Message ID ****/
 #define DS_DIAG_TLM_MID 0x08B9 /**< \brief DS File Info Telemetry Message ID ****/
+#define DS_COMP_TLM_MID 0x08BA /**< \brief DS Completed File Info Telemetry Message ID ****/
 
 /**\}*/
 

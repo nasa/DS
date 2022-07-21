@@ -1739,6 +1739,37 @@ void DS_IsPacketFiltered_Test_TimeFilter3(void)
     UtAssert_BOOL_TRUE(Result);
 }
 
+void DS_FileTransmit_Test_Nominal(void)
+{
+    DS_FileCompletePktBuf_t  PktBuf;
+    DS_FileCompletePktBuf_t *PktBufPtr = &PktBuf;
+
+    /* setup for a call to CFE_SB_AllocateMessageBuffer() */
+    memset(PktBufPtr, 0, sizeof(*PktBufPtr));
+    UT_SetDataBuffer(UT_KEY(CFE_SB_AllocateMessageBuffer), &PktBufPtr, sizeof(PktBufPtr), true);
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileTransmit(&DS_AppData.FileStatus[0]));
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_SB_AllocateMessageBuffer, 1);
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 1);
+}
+
+void DS_FileTransmit_Test_NoBuf(void)
+{
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_FileTransmit(&DS_AppData.FileStatus[0]));
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_SB_AllocateMessageBuffer, 1);
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 0);
+    UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 0);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 0);
+}
+
 void UtTest_Setup(void)
 {
     UtTest_Add(DS_FileStorePacket_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_FileStorePacket_Test_Nominal");
@@ -1854,6 +1885,9 @@ void UtTest_Setup(void)
                "DS_IsPacketFiltered_Test_TimeFilter2");
     UtTest_Add(DS_IsPacketFiltered_Test_TimeFilter3, DS_Test_Setup, DS_Test_TearDown,
                "DS_IsPacketFiltered_Test_TimeFilter3");
+
+    UtTest_Add(DS_FileTransmit_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_FileTransmit_Test_Nominal");
+    UtTest_Add(DS_FileTransmit_Test_NoBuf, DS_Test_Setup, DS_Test_TearDown, "DS_FileTransmit_Test_NoBuf");
 
 } /* end DS_File_Test_AddTestCases */
 
