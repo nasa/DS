@@ -72,6 +72,7 @@ a) Send an event message
 b) Increment total number of file write errors
 c) Close the destination file
 d) Disable the destination",Notify operators of error and prevent ongoing future errors caused by writing to the same destination file.
+DS3006,DS3006,DS shall send a file information telemetry message when closing a data storage file.,Provides file information telemetry packet containing the current status for a closed destination file.
 DS5000,DS5000,"Upon receipt of a Disable command, DS shall stop filtering and storing messages.
 Note: This command will set the Packet Processing State to DISABLED.",Operational control of packet processing state (message storage)
 DS5001,DS5001,"Upon receipt of an Enable command, DS shall begin filtering and storing messages.

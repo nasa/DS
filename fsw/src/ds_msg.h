@@ -356,6 +356,28 @@ typedef struct
     DS_FileInfo_t FileInfo[DS_DEST_FILE_CNT]; /**< \brief Current state of destination files */
 } DS_FileInfoPkt_t;
 
+/**
+ * \brief Single application file info packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief cFE Software Bus telemetry message header */
+
+    DS_FileInfo_t FileInfo; /**< \brief Current state of destination file */
+} DS_FileCompletePkt_t;
+
+/**
+ * \brief Single application file info packet buffer
+ *
+ * This typedef supports CFE_SB_AllocateMessageBuffer use with a DS_FileCompletePkt_t
+ * that compiles with the alignment constraints of a CFE_SB_Buffer_t
+ */
+typedef union
+{
+    CFE_SB_Buffer_t      SBBuf; /**< \brief Message buffer for alignment */
+    DS_FileCompletePkt_t Pkt;   /**< \brief Single application file info packet */
+} DS_FileCompletePktBuf_t;
+
 /**\}*/
 
 #endif

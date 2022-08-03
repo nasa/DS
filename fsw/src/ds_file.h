@@ -289,6 +289,22 @@ void DS_FileCloseDest(int32 FileIndex);
 void DS_FileTestAge(uint32 ElapsedSeconds);
 
 /**
+ *  \brief Transmit file information telemetry handler
+ *
+ *  \par Description
+ *       Create and send a telemetry packet containing the current
+ *       status for a closed destination file.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileStatus Current state of destination file
+ *
+ *  \sa #DS_FileCompletePktBuf_t
+ */
+void DS_FileTransmit(DS_AppFileStatus_t *FileStatus);
+
+/**
  * \brief Determine whether Software Bus message packet is filtered
  *
  *  \par Description

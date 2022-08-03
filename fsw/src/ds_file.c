@@ -29,6 +29,7 @@
 #include "ds_verify.h"
 
 #include "ds_appdefs.h"
+#include "ds_msgids.h"
 
 #include "ds_msg.h"
 #include "ds_app.h"
@@ -960,12 +961,22 @@ void DS_FileCloseDest(int32 FileIndex)
                               "FILE MOVE error: dir name = '%s', filename = '%s'", PathName, FileName);
         }
     }
+
+    /*
+    ** Get the directory name...
+    */
+    strncpy(FileStatus->FileName, PathName, sizeof(PathName));
 #else
     /*
     ** Close the file...
     */
     OS_close(FileStatus->FileHandle);
 #endif
+
+    /*
+    ** Transmit file information telemetry...
+    */
+    DS_FileTransmit(FileStatus);
 
     /*
     ** Reset status for this destination file...
@@ -1024,6 +1035,65 @@ void DS_FileTestAge(uint32 ElapsedSeconds)
     return;
 
 } /* End of DS_FileTestAge() */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS_FileTransmit() - transmit file info                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
+{
+    DS_FileCompletePktBuf_t *PktBuf;
+
+    /*
+    ** Get a Message block of memory and initialize it
+    */
+    PktBuf = (DS_FileCompletePktBuf_t *)CFE_SB_AllocateMessageBuffer(sizeof(*PktBuf));
+
+    /*
+    ** Process destination file info data...
+    */
+    if (PktBuf != NULL)
+    {
+        CFE_MSG_Init(&PktBuf->Pkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(*PktBuf));
+
+        /*
+        ** Set file age and size...
+        */
+        PktBuf->Pkt.FileInfo.FileAge  = FileStatus->FileAge;
+        PktBuf->Pkt.FileInfo.FileSize = FileStatus->FileSize;
+        /*
+        ** Set file growth rate (computed when process last HK request)...
+        */
+        PktBuf->Pkt.FileInfo.FileRate = FileStatus->FileRate;
+        /*
+        ** Set current filename sequence count...
+        */
+        PktBuf->Pkt.FileInfo.SequenceCount = FileStatus->FileCount;
+        /*
+        ** Set file enable/disable state...
+        */
+        PktBuf->Pkt.FileInfo.EnableState = FileStatus->FileState;
+        /*
+        ** Set file closed state...
+        */
+        PktBuf->Pkt.FileInfo.OpenState = DS_CLOSED;
+        /*
+        ** Set current open filename...
+        */
+        strcpy(PktBuf->Pkt.FileInfo.FileName, FileStatus->FileName);
+
+        /*
+        ** Timestamp and send file info telemetry...
+        */
+        CFE_SB_TimeStampMsg(&PktBuf->Pkt.TlmHeader.Msg);
+        CFE_SB_TransmitBuffer(&PktBuf->SBBuf, true);
+    }
+
+    return;
+
+} /* End of DS_CmdGetCompleteFileInfo() */
 
 /************************/
 /*  End of File Comment */
