@@ -64,7 +64,6 @@ DS_AppData_t DS_AppData;
 
 void DS_AppMain(void)
 {
-    printf("Inside DS_AppMain stub\n");
     UT_DEFAULT_IMPL(DS_AppMain);
 } /* End of DS_AppMain() */
 
