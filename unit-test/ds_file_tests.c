@@ -1172,23 +1172,17 @@ void DS_FileCreateSequence_Test_ByCount(void)
 #endif
 
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
-/**
- * TODO: Need to find the correct way to force the output of CFE_TIME_GetTime.
- */
 void DS_FileCreateSequence_Test_ByTime(void)
 {
     int32              FileIndex = 0;
     DS_DestFileTable_t DestFileTable;
     CFE_TIME_SysTime_t FakeTime;
 
-    char timeBuf[CFE_TIME_PRINTED_STRING_SIZE];
-
     char Sequence[DS_TOTAL_FNAME_BUFSIZE];
 
-    snprintf(timeBuf, sizeof(timeBuf), "1980-001-00:00:00.00000");
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+    memset(&FakeTime, 0, sizeof(FakeTime));
 
-    FakeTime.Seconds    = 0;
-    FakeTime.Subseconds = 0;
     UT_SetDataBuffer(UT_KEY(CFE_TIME_GetTime), &FakeTime, sizeof(FakeTime), false);
 
     DS_AppData.DestFileTblPtr = &DestFileTable;
@@ -1198,19 +1192,15 @@ void DS_FileCreateSequence_Test_ByTime(void)
     DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     UT_SetHandlerFunction(UT_KEY(CFE_TIME_Print), &UT_CFE_TIME_Print_CustomHandler, NULL);
-    // UT_SetDataBuffer(UT_KEY(CFE_TIME_Print), &timeBuf, sizeof(timeBuf), false);
 
     /* Execute the function being tested */
-    DS_FileCreateSequence(Sequence, DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType,
-                          DS_AppData.FileStatus[FileIndex].FileCount);
+    UtAssert_VOIDCALL(DS_FileCreateSequence(Sequence, DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType,
+                                            DS_AppData.FileStatus[FileIndex].FileCount));
 
     /* Verify results */
-    printf("sequence = %s\n", Sequence);
-    UtAssert_True(strncmp(Sequence, "1980001000000", DS_TOTAL_FNAME_BUFSIZE) == 0,
-                  "strncmp(Sequence, '1980001000000', DS_TOTAL_FNAME_BUFSIZE) == 0");
+    UtAssert_INT32_EQ(strncmp(Sequence, "1980001000000", DS_TOTAL_FNAME_BUFSIZE), 0);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_FileCreateSequence_Test_ByTime */
 #endif
