@@ -76,6 +76,9 @@ void UT_Handler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const
 
 void DS_Test_Setup(void)
 {
+    static DS_FilterTable_t   FilterTable;
+    static DS_DestFileTable_t DestFileTable;
+
     /* initialize test environment to default state for every test */
     UT_ResetState(0);
 
@@ -83,6 +86,12 @@ void DS_Test_Setup(void)
     memset(context_CFE_EVS_SendEvent, 0, sizeof(context_CFE_EVS_SendEvent));
     memset(&context_CFE_ES_WriteToSysLog, 0, sizeof(context_CFE_ES_WriteToSysLog));
     memset(&UT_CmdBuf, 0, sizeof(UT_CmdBuf));
+    memset(&FilterTable, 0, sizeof(FilterTable));
+    memset(&DestFileTable, 0, sizeof(DestFileTable));
+
+    /* Set up the default table pointers */
+    DS_AppData.FilterTblPtr   = &FilterTable;
+    DS_AppData.DestFileTblPtr = &DestFileTable;
 
     /* Register custom handlers */
     UT_SetVaHandlerFunction(UT_KEY(CFE_EVS_SendEvent), UT_Handler_CFE_EVS_SendEvent, NULL);

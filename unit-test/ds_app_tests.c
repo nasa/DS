@@ -34,7 +34,6 @@
 #include "ds_events.h"
 #include "ds_version.h"
 #include "ds_test_utils.h"
-/*#include "ut_utils_lib.h"*/
 #include "ds_cmds.h"
 #include "ds_file.h"
 
@@ -79,23 +78,12 @@ void DS_AppMain_Test_Nominal(void)
     DS_AppMain();
 
     /* Verify results */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    call_count_CFE_ES_WriteToSysLog = UT_GetStubCount(UT_KEY(CFE_ES_WriteToSysLog));
-    UtAssert_INT32_EQ(call_count_CFE_ES_WriteToSysLog, 0);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 0);
 } /* end DS_AppMain_Test_Nominal */
 
 void DS_AppMain_Test_AppInitializeError(void)
 {
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Application terminating, err = 0x%%08X");
-
-    char ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "DS application terminating, err = 0x%%08X\n");
-
     /* Set to exit loop after first run */
     UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 2, false);
 
@@ -110,37 +98,15 @@ void DS_AppMain_Test_AppInitializeError(void)
     DS_AppMain();
 
     /* Verify results */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_EXIT_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_CRITICAL);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
-
-    call_count_CFE_ES_WriteToSysLog = UT_GetStubCount(UT_KEY(CFE_ES_WriteToSysLog));
-    UtAssert_INT32_EQ(call_count_CFE_ES_WriteToSysLog, 1);
-
-    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
-
+    UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
 } /* end DS_AppMain_Test_AppInitializeError */
 
 void DS_AppMain_Test_SBError(void)
 {
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Application terminating, err = 0x%%08X");
-
-    char ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "DS application terminating, err = 0x%%08X\n");
-
     /* Set to exit loop after first run */
     UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), true);
     UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 2, false);
@@ -152,26 +118,11 @@ void DS_AppMain_Test_SBError(void)
     DS_AppMain();
 
     /* Verify results */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
-
-    /* Generates 1 event message we don't care about in this test */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_EXIT_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_CRITICAL);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
-
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
-
-    call_count_CFE_ES_WriteToSysLog = UT_GetStubCount(UT_KEY(CFE_ES_WriteToSysLog));
-    UtAssert_INT32_EQ(call_count_CFE_ES_WriteToSysLog, 1);
-    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
-
+    UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
 } /* end DS_AppMain_Test_SBError */
 
 void DS_AppMain_Test_SBTimeout(void)
@@ -187,29 +138,20 @@ void DS_AppMain_Test_SBTimeout(void)
     DS_AppMain();
 
     /* Verify results */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
-
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_FileTestAge)), 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_STUB_COUNT(DS_FileTestAge, 1);
 
 } /* end DS_AppMain_Test_SBTimeout */
 
 void DS_AppInitialize_Test_Nominal(void)
 {
-    int32 Result;
-    int32 strCmpResult;
-
-    char ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Application initialized, version %%d.%%d.%%d.%%d, data at %%p");
-
     memset(&DS_AppData, 1, sizeof(DS_AppData));
 
     /* Execute the function being tested */
-    Result = DS_AppInitialize();
+    UtAssert_INT32_EQ(DS_AppInitialize(), CFE_SUCCESS);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE, "DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE");
+    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -218,33 +160,21 @@ void DS_AppInitialize_Test_Nominal(void)
     /* Note: not verifying the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
 
-    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
 } /* end DS_AppInitialize_Test_Nominal */
 
 void DS_AppInitialize_Test_EVSRegisterError(void)
 {
-    int32 Result;
-
     /* Set to generate error message DS_INIT_ERR_EID for EVS services */
     UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
 
     /* Execute the function being tested */
-    Result = DS_AppInitialize();
+    UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE, "DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE");
+    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -252,30 +182,22 @@ void DS_AppInitialize_Test_EVSRegisterError(void)
 
     /* Note: not verifying that rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
-    /*
-        UtAssert_True
-            (Ut_CFE_EVS_EventSent(DS_INIT_ERR_EID, CFE_EVS_ERROR, "Unable to register for EVS services, err =
-       0xFFFFFFFF"), "Unable to register for EVS services, err = 0xFFFFFFFF");
-    */
-    UtAssert_True(Result == -1, "Result == -1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
 } /* end DS_AppInitialize_Test_EVSRegisterError */
 
 void DS_AppInitialize_Test_SBCreatePipeError(void)
 {
-    int32 Result;
-
     /* Set to generate error message DS_INIT_ERR_EID for input pipe */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_CreatePipe), 1, -1);
 
     /* Execute the function being tested */
-    Result = DS_AppInitialize();
+    UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE, "DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE");
+    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -283,31 +205,22 @@ void DS_AppInitialize_Test_SBCreatePipeError(void)
 
     /* Note: not verifying that the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
-
-    /*UtAssert_True
-        (Ut_CFE_EVS_EventSent(DS_INIT_ERR_EID, CFE_EVS_ERROR, "Unable to create input pipe, err = 0xFFFFFFFF"),
-        "Unable to create input pipe, err = 0xFFFFFFFF");
-*/
-
-    UtAssert_True(Result == -1, "Result == -1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
 } /* end DS_AppInitialize_Test_SBCreatePipeError */
 
 void DS_AppInitialize_Test_SBSubscribeHKError(void)
 {
-    int32 Result;
-
     /* Set to generate error message DS_INIT_ERR_EID for HK request */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 1, -1);
 
     /* Execute the function being tested */
-    Result = DS_AppInitialize();
+    UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE, "DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE");
+    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -315,31 +228,22 @@ void DS_AppInitialize_Test_SBSubscribeHKError(void)
 
     /* Note: not verifying that the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
-    /*
-        UtAssert_True
-            (Ut_CFE_EVS_EventSent(DS_INIT_ERR_EID, CFE_EVS_ERROR, "Unable to subscribe to HK request, err =
-       0xFFFFFFFF"), "Unable to subscribe to HK request, err = 0xFFFFFFFF");
-    */
-
-    UtAssert_True(Result == -1, "Result == -1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
 } /* end DS_AppInitialize_Test_SBSubscribeHKError */
 
 void DS_AppInitialize_Test_SBSubscribeDSError(void)
 {
-    int32 Result;
-
     /* Set to generate error message DS_INIT_ERR_EID for DS commands */
     UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, -1);
 
     /* Execute the function being tested */
-    Result = DS_AppInitialize();
+    UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE, "DS_AppData.AppEnableState == DS_DEF_ENABLE_STATE");
+    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -347,22 +251,15 @@ void DS_AppInitialize_Test_SBSubscribeDSError(void)
 
     /* Note: not verifying that the rest of DS_AppData is set to 0, because some elements of DS_AppData
      * are modified by subfunctions, which we're not testing here */
-
-    /*   UtAssert_True
-           (Ut_CFE_EVS_EventSent(DS_INIT_ERR_EID, CFE_EVS_ERROR, "Unable to subscribe to DS commands, err =
-       0xFFFFFFFF"), "Unable to subscribe to DS commands, err = 0xFFFFFFFF");
-   */
-    UtAssert_True(Result == -1, "Result == -1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
 } /* end DS_AppInitialize_Test_SBSubscribeDSError */
 
 void DS_AppProcessMsg_Test_CmdStore(void)
 {
     DS_HashLink_t     HashLink;
-    DS_FilterTable_t  FilterTable;
     size_t            forced_Size    = sizeof(DS_NoopCmd_t);
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_NOOP_CC;
@@ -371,7 +268,6 @@ void DS_AppProcessMsg_Test_CmdStore(void)
 
     DS_AppData.HashTable[187]                  = &HashLink;
     HashLink.Index                             = 0;
-    DS_AppData.FilterTblPtr                    = &FilterTable;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
@@ -384,9 +280,7 @@ void DS_AppProcessMsg_Test_CmdStore(void)
     DS_AppProcessMsg(&UT_CmdBuf.Buf);
 
     /* Verify results */
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
     /* Verifying that the DisabledPktCounter == 1 confirms that an attempt was
      * made to store this packet (setting AppEnableState to DS_DISABLED forces
@@ -401,7 +295,6 @@ void DS_AppProcessMsg_Test_CmdStore(void)
 void DS_AppProcessMsg_Test_CmdNoStore(void)
 {
     DS_HashLink_t     HashLink;
-    DS_FilterTable_t  FilterTable;
     size_t            forced_Size    = sizeof(DS_NoopCmd_t);
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_NOOP_CC;
@@ -410,7 +303,6 @@ void DS_AppProcessMsg_Test_CmdNoStore(void)
 
     DS_AppData.HashTable[187]                  = &HashLink;
     HashLink.Index                             = 0;
-    DS_AppData.FilterTblPtr                    = &FilterTable;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
@@ -423,9 +315,7 @@ void DS_AppProcessMsg_Test_CmdNoStore(void)
     DS_AppProcessMsg(&UT_CmdBuf.Buf);
 
     /* Verify results */
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
     /* Verifying that the DisabledPktCounter == 0 confirms that no attempt was
      * made to store this packet (setting AppEnableState to DS_DISABLED forces
@@ -439,16 +329,14 @@ void DS_AppProcessMsg_Test_CmdNoStore(void)
 
 void DS_AppProcessMsg_Test_HKStore(void)
 {
-    DS_HashLink_t    HashLink;
-    DS_FilterTable_t FilterTable;
-    size_t           forced_Size  = sizeof(DS_NoopCmd_t);
-    CFE_SB_MsgId_t   forced_MsgID = CFE_SB_ValueToMsgId(DS_SEND_HK_MID);
+    DS_HashLink_t  HashLink;
+    size_t         forced_Size  = sizeof(DS_NoopCmd_t);
+    CFE_SB_MsgId_t forced_MsgID = CFE_SB_ValueToMsgId(DS_SEND_HK_MID);
 
     DS_AppData.AppEnableState = DS_DISABLED;
 
     DS_AppData.HashTable[188]                  = &HashLink;
     HashLink.Index                             = 0;
-    DS_AppData.FilterTblPtr                    = &FilterTable;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
@@ -460,7 +348,7 @@ void DS_AppProcessMsg_Test_HKStore(void)
     DS_AppProcessMsg(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg)), 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
     /* verifying a sent message indirectly verifies that DS_AppProcessHK was
      * called */
 
@@ -469,23 +357,20 @@ void DS_AppProcessMsg_Test_HKStore(void)
      * this counter to increment when the attempt is made). */
     UtAssert_INT32_EQ(DS_AppData.DisabledPktCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_AppProcessMsg_Test_HKStore */
 
 void DS_AppProcessMsg_Test_HKNoStore(void)
 {
-    DS_HashLink_t    HashLink;
-    DS_FilterTable_t FilterTable;
-    size_t           forced_Size  = sizeof(DS_NoopCmd_t);
-    CFE_SB_MsgId_t   forced_MsgID = CFE_SB_ValueToMsgId(DS_SEND_HK_MID);
+    DS_HashLink_t  HashLink;
+    size_t         forced_Size  = sizeof(DS_NoopCmd_t);
+    CFE_SB_MsgId_t forced_MsgID = CFE_SB_ValueToMsgId(DS_SEND_HK_MID);
 
     DS_AppData.AppEnableState = DS_DISABLED;
 
     DS_AppData.HashTable[188]                  = &HashLink;
     HashLink.Index                             = 0;
-    DS_AppData.FilterTblPtr                    = &FilterTable;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
@@ -497,7 +382,7 @@ void DS_AppProcessMsg_Test_HKNoStore(void)
     DS_AppProcessMsg(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg)), 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
     /* verifying a sent message indirectly verifies that DS_AppProcessHK was
      * called */
 
@@ -506,8 +391,7 @@ void DS_AppProcessMsg_Test_HKNoStore(void)
      * this counter to increment when the attempt is made). */
     UtAssert_INT32_EQ(DS_AppData.DisabledPktCounter, 0);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_AppProcessMsg_Test_HKNoStore */
 
@@ -524,12 +408,9 @@ void DS_AppProcessMsg_Test_HKInvalidRequest(void)
     DS_AppProcessMsg(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    /*UtAssert_True
-        (Ut_CFE_EVS_EventSent(DS_HK_REQUEST_ERR_EID, CFE_EVS_ERROR, "Invalid HK request length: expected = 8, actual =
-       0"), "Invalid HK request length: expected = 8, actual = 0");
-*/
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_HK_REQUEST_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 
 } /* end DS_AppProcessMsg_Test_HKInvalidRequest */
 
@@ -546,8 +427,7 @@ void DS_AppProcessMsg_Test_UnknownMID(void)
     DS_AppProcessMsg(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_AppProcessMsg_Test_UnknownMID */
 
@@ -565,7 +445,7 @@ void DS_AppProcessCmd_Test_Noop(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdNoop)), 1);
+    UtAssert_STUB_COUNT(DS_CmdNoop, 1);
 
 } /* end DS_AppProcessCmd_Test_Noop */
 
@@ -583,7 +463,7 @@ void DS_AppProcessCmd_Test_Reset(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdReset)), 1);
+    UtAssert_STUB_COUNT(DS_CmdReset, 1);
 
 } /* end DS_AppProcessCmd_Test_Reset */
 
@@ -601,7 +481,7 @@ void DS_AppProcessCmd_Test_SetAppState(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetAppState)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetAppState, 1);
 } /* end DS_AppProcessCmd_Test_SetAppState */
 
 void DS_AppProcessCmd_Test_SetFilterFile(void)
@@ -618,7 +498,7 @@ void DS_AppProcessCmd_Test_SetFilterFile(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetFilterFile)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetFilterFile, 1);
 } /* end DS_AppProcessCmd_Test_SetFilterFile */
 
 void DS_AppProcessCmd_Test_SetFilterType(void)
@@ -635,7 +515,7 @@ void DS_AppProcessCmd_Test_SetFilterType(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetFilterType)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetFilterType, 1);
 
 } /* end DS_AppProcessCmd_Test_SetFilterType */
 
@@ -653,7 +533,7 @@ void DS_AppProcessCmd_Test_SetFilterParms(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetFilterParms)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetFilterParms, 1);
 } /* end DS_AppProcessCmd_Test_SetFilterParms */
 
 void DS_AppProcessCmd_Test_SetDestType(void)
@@ -670,7 +550,7 @@ void DS_AppProcessCmd_Test_SetDestType(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestType)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestType, 1);
 } /* end DS_AppProcessCmd_Test_SetDestType */
 
 void DS_AppProcessCmd_Test_SetDestState(void)
@@ -687,7 +567,7 @@ void DS_AppProcessCmd_Test_SetDestState(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestState)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestState, 1);
 } /* end DS_AppProcessCmd_Test_SetDestState */
 
 void DS_AppProcessCmd_Test_SetDestPath(void)
@@ -704,7 +584,7 @@ void DS_AppProcessCmd_Test_SetDestPath(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestPath)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestPath, 1);
 } /* end DS_AppProcessCmd_Test_SetDestPath */
 
 void DS_AppProcessCmd_Test_SetDestBase(void)
@@ -721,7 +601,7 @@ void DS_AppProcessCmd_Test_SetDestBase(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestBase)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestBase, 1);
 } /* end DS_AppProcessCmd_Test_SetDestBase */
 
 void DS_AppProcessCmd_Test_SetDestExt(void)
@@ -738,7 +618,7 @@ void DS_AppProcessCmd_Test_SetDestExt(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestExt)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestExt, 1);
 
 } /* end DS_AppProcessCmd_Test_SetDestExt */
 
@@ -756,7 +636,7 @@ void DS_AppProcessCmd_Test_SetDestSize(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestSize)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestSize, 1);
 } /* end DS_AppProcessCmd_Test_SetDestSize */
 
 void DS_AppProcessCmd_Test_SetDestAge(void)
@@ -773,7 +653,7 @@ void DS_AppProcessCmd_Test_SetDestAge(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestAge)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestAge, 1);
 } /* end DS_AppProcessCmd_Test_SetDestAge */
 
 void DS_AppProcessCmd_Test_SetDestCount(void)
@@ -790,7 +670,7 @@ void DS_AppProcessCmd_Test_SetDestCount(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdSetDestCount)), 1);
+    UtAssert_STUB_COUNT(DS_CmdSetDestCount, 1);
 } /* end DS_AppProcessCmd_Test_SetDestCount */
 
 void DS_AppProcessCmd_Test_CloseFile(void)
@@ -813,7 +693,7 @@ void DS_AppProcessCmd_Test_CloseFile(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdCloseFile)), 1);
+    UtAssert_STUB_COUNT(DS_CmdCloseFile, 1);
 } /* end DS_AppProcessCmd_Test_CloseFile */
 
 void DS_AppProcessCmd_Test_GetFileInfo(void)
@@ -830,7 +710,7 @@ void DS_AppProcessCmd_Test_GetFileInfo(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdGetFileInfo)), 1);
+    UtAssert_STUB_COUNT(DS_CmdGetFileInfo, 1);
 } /* end DS_AppProcessCmd_Test_GetFileInfo */
 
 void DS_AppProcessCmd_Test_AddMID(void)
@@ -847,7 +727,7 @@ void DS_AppProcessCmd_Test_AddMID(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdAddMID)), 1);
+    UtAssert_STUB_COUNT(DS_CmdAddMID, 1);
 } /* end DS_AppProcessCmd_Test_AddMID */
 
 void DS_AppProcessCmd_Test_CloseAll(void)
@@ -870,7 +750,7 @@ void DS_AppProcessCmd_Test_CloseAll(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_CmdCloseAll)), 1);
+    UtAssert_STUB_COUNT(DS_CmdCloseAll, 1);
 } /* end DS_AppProcessCmd_Test_CloseAll */
 
 void DS_AppProcessCmd_Test_InvalidCommandCode(void)
@@ -887,10 +767,9 @@ void DS_AppProcessCmd_Test_InvalidCommandCode(void)
     DS_AppProcessCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 
 } /* end DS_AppProcessCmd_Test_InvalidCommandCode */
 
@@ -909,27 +788,21 @@ void DS_AppProcessHK_Test(void)
     DS_AppProcessHK();
 
     /* Verify results */
-    UtAssert_True(DS_AppData.FileStatus[0].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[0].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[0].FileGrowth == 0, "DS_AppData.FileStatus[0].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
 
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT/2].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth == 0,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT/2].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
 
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
 
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg)), 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t), "DS_HkPacket_t is 32-bit aligned");
+    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_AppProcessHK_Test */
 
@@ -950,24 +823,19 @@ void DS_AppProcessHK_Test_SnprintfFail(void)
     DS_AppProcessHK();
 
     /* Verify results */
-    UtAssert_True(DS_AppData.FileStatus[0].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[0].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[0].FileGrowth == 0, "DS_AppData.FileStatus[0].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
 
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT/2].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth == 0,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT/2].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
 
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
 
     UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t), "DS_HkPacket_t is 32-bit aligned");
+    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
 
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_APPHK_FILTER_TBL_PRINT_ERR_EID);
 
@@ -991,58 +859,45 @@ void DS_AppProcessHK_Test_TblFail(void)
     DS_AppProcessHK();
 
     /* Verify results */
-    UtAssert_True(DS_AppData.FileStatus[0].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[0].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[0].FileGrowth == 0, "DS_AppData.FileStatus[0].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
 
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT/2].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth == 0,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT/2].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
 
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate == 99 / DS_SECS_PER_HK_CYCLE,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate == 99 / DS_SECS_PER_HK_CYCLE");
-    UtAssert_True(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0,
-                  "DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth == 0");
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
 
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_SB_TransmitMsg)), 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t), "DS_HkPacket_t is 32-bit aligned");
+    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }
 
 void DS_AppStorePacket_Test_Nominal(void)
 {
-    CFE_SB_MsgId_t     MessageID = DS_UT_MID_1;
-    DS_DestFileTable_t destTable;
-    DS_FilterTable_t   filterTable;
-    size_t             forced_Size    = sizeof(DS_CloseAllCmd_t);
-    CFE_SB_MsgId_t     forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t  forced_CmdCode = 99;
+    CFE_SB_MsgId_t    MessageID      = DS_UT_MID_1;
+    size_t            forced_Size    = sizeof(DS_CloseAllCmd_t);
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = 99;
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     DS_AppData.AppEnableState = DS_ENABLED;
-    DS_AppData.DestFileTblPtr = &destTable;
-    DS_AppData.FilterTblPtr   = &filterTable;
 
     /* Execute the function being tested */
     DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
 
     /* Verify results -- IgnoredPktCounter increments in call to DS_FileStorePacket() */
-    UtAssert_True(DS_AppData.IgnoredPktCounter == 0, "DS_AppData.IgnoredPktCounter == 0");
+    UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.DisabledPktCounter, 0);
 
-    UtAssert_True(DS_AppData.DisabledPktCounter == 0, "DS_AppData.DisabledPktCounter == 0");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-
-    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(DS_FileStorePacket)), 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(DS_FileStorePacket, 1);
 } /* end DS_AppStorePacket_Test_Nominal */
 
 void DS_AppStorePacket_Test_DSDisabled(void)
@@ -1062,44 +917,15 @@ void DS_AppStorePacket_Test_DSDisabled(void)
     DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.DisabledPktCounter == 1, "DS_AppData.DisabledPktCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.DisabledPktCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_AppStorePacket_Test_DSDisabled */
 
 void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
 {
-    CFE_SB_MsgId_t     MessageID = DS_UT_MID_1;
-    DS_DestFileTable_t destTable;
-    size_t             forced_Size    = sizeof(DS_CloseAllCmd_t);
-    CFE_SB_MsgId_t     forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t  forced_CmdCode = 99;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    DS_AppData.AppEnableState = DS_ENABLED;
-    DS_AppData.DestFileTblPtr = &destTable; /* force to non-zero so filter table is tested */
-    DS_AppData.FilterTblPtr   = 0;
-
-    /* Execute the function being tested */
-    DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.IgnoredPktCounter == 1, "DS_AppData.IgnoredPktCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppStorePacket_Test_FilterTableNotLoaded */
-
-void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
-{
-    CFE_SB_MsgId_t    MessageID = DS_UT_MID_1;
-    DS_FilterTable_t  filterTable;
+    CFE_SB_MsgId_t    MessageID      = DS_UT_MID_1;
     size_t            forced_Size    = sizeof(DS_CloseAllCmd_t);
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = 99;
@@ -1109,82 +935,90 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     DS_AppData.AppEnableState = DS_ENABLED;
-    DS_AppData.FilterTblPtr   = &filterTable; /* Force to non-zero so destination table is tested */
+    DS_AppData.FilterTblPtr   = 0;
+
+    /* Execute the function being tested */
+    DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+} /* end DS_AppStorePacket_Test_FilterTableNotLoaded */
+
+void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
+{
+    CFE_SB_MsgId_t    MessageID      = DS_UT_MID_1;
+    size_t            forced_Size    = sizeof(DS_CloseAllCmd_t);
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = 99;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+
+    DS_AppData.AppEnableState = DS_ENABLED;
     DS_AppData.DestFileTblPtr = 0;
 
     /* Execute the function being tested */
     DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.IgnoredPktCounter == 1, "DS_AppData.IgnoredPktCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
 } /* end DS_AppStorePacket_Test_DestFileTableNotLoaded */
 
 void UtTest_Setup(void)
 {
-    UtTest_Add(DS_AppMain_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_AppMain_Test_Nominal");
-    UtTest_Add(DS_AppMain_Test_AppInitializeError, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppMain_Test_AppInitializeError");
-    UtTest_Add(DS_AppMain_Test_SBError, DS_Test_Setup, DS_Test_TearDown, "DS_AppMain_Test_SBError");
-    UtTest_Add(DS_AppMain_Test_SBTimeout, DS_Test_Setup, DS_Test_TearDown, "DS_AppMain_Test_SBTimeout");
+    UT_DS_TEST_ADD(DS_AppMain_Test_Nominal);
+    UT_DS_TEST_ADD(DS_AppMain_Test_AppInitializeError);
+    UT_DS_TEST_ADD(DS_AppMain_Test_SBError);
+    UT_DS_TEST_ADD(DS_AppMain_Test_SBTimeout);
 
-    UtTest_Add(DS_AppInitialize_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_AppInitialize_Test_Nominal");
-    UtTest_Add(DS_AppInitialize_Test_EVSRegisterError, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppInitialize_Test_EVSRegisterError");
-    UtTest_Add(DS_AppInitialize_Test_SBCreatePipeError, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppInitialize_Test_SBCreatePipeError");
-    UtTest_Add(DS_AppInitialize_Test_SBSubscribeHKError, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppInitialize_Test_SBSubscribeHKError");
-    UtTest_Add(DS_AppInitialize_Test_SBSubscribeDSError, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppInitialize_Test_SBSubscribeDSError");
+    UT_DS_TEST_ADD(DS_AppInitialize_Test_Nominal);
+    UT_DS_TEST_ADD(DS_AppInitialize_Test_EVSRegisterError);
+    UT_DS_TEST_ADD(DS_AppInitialize_Test_SBCreatePipeError);
+    UT_DS_TEST_ADD(DS_AppInitialize_Test_SBSubscribeHKError);
+    UT_DS_TEST_ADD(DS_AppInitialize_Test_SBSubscribeDSError);
 
-    UtTest_Add(DS_AppProcessMsg_Test_CmdStore, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessMsg_Test_CmdStore");
-    UtTest_Add(DS_AppProcessMsg_Test_CmdNoStore, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessMsg_Test_CmdNoStore");
-    UtTest_Add(DS_AppProcessMsg_Test_HKStore, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessMsg_Test_HKStore");
-    UtTest_Add(DS_AppProcessMsg_Test_HKNoStore, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessMsg_Test_HKNoStore");
-    UtTest_Add(DS_AppProcessMsg_Test_HKInvalidRequest, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessMsg_Test_HKInvalidRequest");
-    UtTest_Add(DS_AppProcessMsg_Test_UnknownMID, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessMsg_Test_UnknownMID");
+    UT_DS_TEST_ADD(DS_AppProcessMsg_Test_CmdStore);
+    UT_DS_TEST_ADD(DS_AppProcessMsg_Test_CmdNoStore);
+    UT_DS_TEST_ADD(DS_AppProcessMsg_Test_HKStore);
+    UT_DS_TEST_ADD(DS_AppProcessMsg_Test_HKNoStore);
+    UT_DS_TEST_ADD(DS_AppProcessMsg_Test_HKInvalidRequest);
+    UT_DS_TEST_ADD(DS_AppProcessMsg_Test_UnknownMID);
 
-    UtTest_Add(DS_AppProcessCmd_Test_Noop, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_Noop");
-    UtTest_Add(DS_AppProcessCmd_Test_Reset, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_Reset");
-    UtTest_Add(DS_AppProcessCmd_Test_SetAppState, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetAppState");
-    UtTest_Add(DS_AppProcessCmd_Test_SetFilterFile, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessCmd_Test_SetFilterFile");
-    UtTest_Add(DS_AppProcessCmd_Test_SetFilterType, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessCmd_Test_SetFilterType");
-    UtTest_Add(DS_AppProcessCmd_Test_SetFilterParms, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessCmd_Test_SetFilterParms");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestType, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetDestType");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestState, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessCmd_Test_SetDestState");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestPath, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetDestPath");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestBase, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetDestBase");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestExt, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetDestExt");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestSize, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetDestSize");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestAge, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_SetDestAge");
-    UtTest_Add(DS_AppProcessCmd_Test_SetDestCount, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessCmd_Test_SetDestCount");
-    UtTest_Add(DS_AppProcessCmd_Test_CloseFile, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_CloseFile");
-    UtTest_Add(DS_AppProcessCmd_Test_GetFileInfo, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_GetFileInfo");
-    UtTest_Add(DS_AppProcessCmd_Test_AddMID, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_AddMID");
-    UtTest_Add(DS_AppProcessCmd_Test_CloseAll, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessCmd_Test_CloseAll");
-    UtTest_Add(DS_AppProcessCmd_Test_InvalidCommandCode, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppProcessCmd_Test_InvalidCommandCode");
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_Noop);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_Reset);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetAppState);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterFile);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterType);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterParms);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestType);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestState);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestPath);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestBase);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestExt);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestSize);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestAge);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestCount);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_CloseFile);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_GetFileInfo);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_AddMID);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_CloseAll);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_InvalidCommandCode);
 
-    UtTest_Add(DS_AppProcessHK_Test, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessHK_Test");
-    UtTest_Add(DS_AppProcessHK_Test_SnprintfFail, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessHK_Test_SnprintfFail");
-    UtTest_Add(DS_AppProcessHK_Test_TblFail, DS_Test_Setup, DS_Test_TearDown, "DS_AppProcessHK_Test_TblFail");
+    UT_DS_TEST_ADD(DS_AppProcessHK_Test);
+    UT_DS_TEST_ADD(DS_AppProcessHK_Test_SnprintfFail);
+    UT_DS_TEST_ADD(DS_AppProcessHK_Test_TblFail);
 
-    UtTest_Add(DS_AppStorePacket_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_AppStorePacket_Test_Nominal");
-    UtTest_Add(DS_AppStorePacket_Test_DSDisabled, DS_Test_Setup, DS_Test_TearDown, "DS_AppStorePacket_Test_DSDisabled");
-    UtTest_Add(DS_AppStorePacket_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppStorePacket_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_AppStorePacket_Test_DestFileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_AppStorePacket_Test_DestFileTableNotLoaded");
+    UT_DS_TEST_ADD(DS_AppStorePacket_Test_Nominal);
+    UT_DS_TEST_ADD(DS_AppStorePacket_Test_DSDisabled);
+    UT_DS_TEST_ADD(DS_AppStorePacket_Test_FilterTableNotLoaded);
+    UT_DS_TEST_ADD(DS_AppStorePacket_Test_DestFileTableNotLoaded);
 } /* end UtTest_Setup */
 
 /************************/
