@@ -49,9 +49,8 @@
 
 #define DS_INDEX_NONE -1 /**< \brief Packet filter table look-up = not found */
 
-#define DS_PATH_SEPARATOR    '/'  /**< \brief File system path separator */
-#define DS_EMPTY_STRING      ""   /**< \brief Empty string buffer entries in DS tables */
-#define DS_STRING_TERMINATOR '\0' /**< \brief ASCIIZ string terminator character */
+#define DS_PATH_SEPARATOR '/' /**< \brief File system path separator */
+#define DS_EMPTY_STRING   ""  /**< \brief Empty string buffer entries in DS tables */
 
 #define DS_TABLE_VERIFY_ERR 0xFFFFFFFF /**< \brief Table verification error return value */
 

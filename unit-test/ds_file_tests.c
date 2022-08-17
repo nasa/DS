@@ -620,8 +620,6 @@ void DS_FileCreateDest_Test_StringTerminate(void)
 {
     uint32 FileIndex = 0;
 
-    DS_AppData.FileStatus[FileIndex].FileName[0] = DS_STRING_TERMINATOR;
-
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
@@ -843,7 +841,7 @@ void DS_FileCreateName_Test_Error(void)
         DS_AppData.DestFileTblPtr->File[FileIndex].Basename[i] = 'a';
     }
 
-    DS_AppData.DestFileTblPtr->File[FileIndex].Basename[DS_TOTAL_FNAME_BUFSIZE - 1] = DS_STRING_TERMINATOR;
+    DS_AppData.DestFileTblPtr->File[FileIndex].Basename[DS_TOTAL_FNAME_BUFSIZE - 1] = '\0';
 
     /* Execute the function being tested */
     DS_FileCreateName(FileIndex);
@@ -855,31 +853,6 @@ void DS_FileCreateName_Test_Error(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
 
 } /* end DS_FileCreateName_Test_Error */
-
-void DS_FileCreateName_Test_MaxPathnameLength(void)
-{
-    int32 FileIndex   = 0;
-    int32 WorknameLen = 2 * DS_TOTAL_FNAME_BUFSIZE;
-    int32 i;
-
-    UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
-
-    /* Set to fail the condition "if (TotalLength != (WorknameLen - 1))" */
-    for (i = 0; i < WorknameLen - 1; i++)
-    {
-        DS_AppData.DestFileTblPtr->File[FileIndex].Pathname[i] = 'a';
-    }
-
-    /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
-
-    /* Verify results */
-    UtAssert_INT32_EQ(strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname), WorknameLen - 1);
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
-
-} /* end DS_FileCreateName_Test_MaxPathnameLength */
 
 void DS_FileCreateName_Test_PathBaseSeqTooLarge(void)
 {
@@ -1536,7 +1509,6 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_FileCreateName_Test_NominalWithPeriod);
     UT_DS_TEST_ADD(DS_FileCreateName_Test_EmptyPath);
     UT_DS_TEST_ADD(DS_FileCreateName_Test_Error);
-    UT_DS_TEST_ADD(DS_FileCreateName_Test_MaxPathnameLength);
     UT_DS_TEST_ADD(DS_FileCreateName_Test_PathBaseSeqTooLarge);
     UT_DS_TEST_ADD(DS_FileCreateName_Test_PathBaseSeqExtTooLarge);
     UT_DS_TEST_ADD(DS_FileCreateName_Test_ExtensionZero);
