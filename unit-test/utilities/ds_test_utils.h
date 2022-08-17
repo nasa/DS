@@ -77,7 +77,7 @@ extern UT_CmdBuf_t UT_CmdBuf;
 /*
  * Macro to add a test case to the list of tests to execute
  */
-#define ADD_TEST(test) UtTest_Add((Test_##test), DS_UT_Setup, DS_UT_TearDown, #test)
+#define UT_DS_TEST_ADD(test) UtTest_Add(test, DS_Test_Setup, DS_Test_TearDown, #test)
 
 /* Unit test MID */
 #define DS_UT_MID_1 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 1)
