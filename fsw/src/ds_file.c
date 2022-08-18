@@ -906,12 +906,10 @@ void DS_FileCloseDest(int32 FileIndex)
             CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
                               "FILE MOVE error: dir name = '%s', filename = '%s'", PathName, FileName);
         }
-    }
 
-    /*
-    ** Get the directory name...
-    */
-    strncpy(FileStatus->FileName, PathName, sizeof(PathName));
+        /* Update the path name for reporting */
+        strncpy(FileStatus->FileName, PathName, sizeof(PathName));
+    }
 #else
     /*
     ** Close the file...
