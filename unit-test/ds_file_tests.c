@@ -45,65 +45,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-int32 TestDataLength = 10;
-
-/* Some minimal hooks for OS functions for which the usual stubs have too much
- * implementation */
-void UT_OS_CLOSE_SuccessHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    // UT_Stub_SetReturnValue(FuncKey, OS_SUCCESS);
-    int32 status = OS_SUCCESS;
-    UT_Stub_GetInt32StatusCode(Context, &status);
-} /* end UT_OS_CLOSE_SuccessHandler */
-
-void UT_OS_CLOSE_FailHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    // return OS_ERROR;
-    int32 status = OS_ERROR;
-    UT_Stub_GetInt32StatusCode(Context, &status);
-
-} /* end UT_OS_CLOSE_FailHandler */
-
-void UT_CFE_FS_WriteHeader_FailHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    // return -1;
-    int32 status = -1;
-    UT_Stub_GetInt32StatusCode(Context, &status);
-
-} /* end UT_CFE_FS_WriteHeader_FailHandler */
-
-void UT_CFE_FS_WriteHeader_SuccessHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    // return sizeof(CFE_FS_Header_t);
-    int32 status = sizeof(CFE_FS_Header_t);
-    UT_Stub_GetInt32StatusCode(Context, &status);
-
-} /* end UT_CFE_FS_WriteHeader_SuccessHandler */
-
-void UT_OS_write_FailHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    // return -1;
-    int32 status = -1;
-    UT_Stub_GetInt32StatusCode(Context, &status);
-
-} /* end UT_OS_write_FailHandler */
-
-void UT_OS_write_SuccessHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    // return sizeof(DS_FileHeader_t);
-    int32 status = sizeof(DS_FileHeader_t);
-    UT_Stub_GetInt32StatusCode(Context, &status);
-
-} /* end UT_OS_write_SuccessHandler */
-
-void UT_OS_write_DataHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
-{
-    //  return 10;
-    int32 status = TestDataLength;
-    UT_Stub_GetInt32StatusCode(Context, &status);
-
-} /* end UT_OS_write_DataHandler */
-
 void UT_CFE_TIME_Print_CustomHandler(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
 {
     char *PrintBuffer = UT_Hook_GetArgValueByName(Context, "PrintBuffer", char *);
@@ -112,28 +53,7 @@ void UT_CFE_TIME_Print_CustomHandler(void *UserObj, UT_EntryKey_t FuncKey, const
 }
 /*
  * Helper Functions
- *
- * This file ds_file.c has several functions which call other functions within
- * the same file.  This section includes utilities used to complete the setup
- * steps which require the called functions to succeed.
  */
-
-void UT_DS_SetupFileUpdateHeaderSuccess(void)
-{
-#if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
-    UT_SetDefaultReturnValue(UT_KEY(OS_lseek), sizeof(CFE_FS_Header_t));
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(CFE_TIME_SysTime_t));
-#endif
-}
-
-void UT_DS_SetupFileCloseDestSuccess(void)
-{
-
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
-#if (DS_MOVE_FILES == true)
-    UT_SetDefaultReturnValue(UT_KEY(OS_mv), OS_SUCCESS);
-#endif
-}
 
 void UT_DS_SetDestFileEntry(DS_DestFileEntry_t *DestFileEntryPtr)
 {
@@ -322,8 +242,6 @@ void DS_FileSetupWrite_Test_Nominal(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
-
     DS_AppData.FileStatus[FileIndex].FileHandle = DS_UT_OBJID_1;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileSize = 100;
@@ -348,9 +266,6 @@ void DS_FileSetupWrite_Test_FileHandleClosed(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
-    UT_SetHandlerFunction(UT_KEY(OS_OpenCreate), &UT_OS_write_SuccessHandler, NULL);
-
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileSize = 100;
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
@@ -358,12 +273,15 @@ void DS_FileSetupWrite_Test_FileHandleClosed(void)
     DS_AppData.FileStatus[FileIndex].FileCount              = 0;
     DS_AppData.FileStatus[FileIndex].FileSize               = 3;
 
+    /* Fail writing the header so the data won't write */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), -1);
+
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-    UtAssert_STUB_COUNT(DS_FileWriteData, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1); /* Don't care about subroutine event */
+    UtAssert_STUB_COUNT(OS_write, 0);
     UtAssert_STUB_COUNT(OS_OpenCreate, 1);
 } /* end DS_FileSetupWrite_Test_FileHandleClosed */
 
@@ -374,9 +292,8 @@ void DS_FileSetupWrite_Test_MaxFileSizeExceeded(void)
 
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
-
-    DS_AppData.FileStatus[FileIndex].FileHandle = DS_UT_OBJID_1;
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileSize = 5;
     DS_AppData.FileStatus[FileIndex].FileSize              = 10;
@@ -384,9 +301,6 @@ void DS_FileSetupWrite_Test_MaxFileSizeExceeded(void)
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "directory1/",
             sizeof(DS_AppData.FileStatus[FileIndex].FileName));
-
-    /* Set to prevent an error message that we don't care about in this test */
-    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), sizeof(CFE_FS_Header_t));
 
 #if (DS_MOVE_FILES == true)
     strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Movename, "directory2/movename/",
@@ -404,7 +318,6 @@ void DS_FileSetupWrite_Test_MaxFileSizeExceeded(void)
 void DS_FileWriteData_Test_Nominal(void)
 {
     int32             FileIndex      = 0;
-    uint32            DataLength     = TestDataLength;
     size_t            forced_Size    = sizeof(DS_NoopCmd_t);
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_NOOP_CC;
@@ -413,18 +326,13 @@ void DS_FileWriteData_Test_Nominal(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    /* Set to return DataLength to satisfy condition "if (Result == DataLength)" */
-    // UT_SetHandlerFunction(UT_KEY(OS_write), &UT_OS_write_DataHandler, NULL);
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), DataLength);
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
-
     /* Execute the function being tested */
-    DS_FileWriteData(FileIndex, &UT_CmdBuf.Buf, DataLength);
+    DS_FileWriteData(FileIndex, &UT_CmdBuf.Buf, sizeof(UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileWriteCounter, 1);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileSize, 10);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileGrowth, 10);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileSize, sizeof(UT_CmdBuf.Buf));
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileGrowth, sizeof(UT_CmdBuf.Buf));
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
@@ -439,13 +347,15 @@ void DS_FileWriteData_Test_Error(void)
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
     CFE_MSG_FcnCode_t forced_CmdCode = DS_NOOP_CC;
 
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
+
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     /* Set to reach error case being tested (DS_FileWriteError) */
     UT_SetDefaultReturnValue(UT_KEY(OS_write), -1);
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
 
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "directory1/",
             sizeof(DS_AppData.FileStatus[FileIndex].FileName));
@@ -468,12 +378,6 @@ void DS_FileWriteHeader_Test_PlatformConfigCFE_Nominal(void)
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = 1;
 
-    /* Set to satisfy condition "if (Result == sizeof(CFE_FS_Header_t))" */
-    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), sizeof(CFE_FS_Header_t));
-
-    /* Set to satisfy condition "if (Result == sizeof(DS_FileHeader_t))" */
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(DS_FileHeader_t));
-
     /* Execute the function being tested */
     DS_FileWriteHeader(FileIndex);
 
@@ -492,13 +396,13 @@ void DS_FileWriteHeader_Test_PrimaryHeaderError(void)
 {
     int32 FileIndex = 0;
 
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
+
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = 1;
     DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0]  = '\0';
     /* Set to generate primary header error */
     UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), -1);
-
-    /* Handle closure in response to the error */
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
 
     /* Execute the function being tested */
     DS_FileWriteHeader(FileIndex);
@@ -515,18 +419,14 @@ void DS_FileWriteHeader_Test_SecondaryHeaderError(void)
 {
     int32 FileIndex = 0;
 
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
+
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = 1;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0] = '\0';
-    /* Set to satisfy condition "if (Result == sizeof(CFE_FS_Header_t))" */
-    // UT_SetHandlerFunction(UT_KEY(CFE_FS_WriteHeader), &UT_CFE_FS_WriteHeader_SuccessHandler, NULL);
-    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), sizeof(CFE_FS_Header_t));
-
-    /* Handle closure in response to the error */
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
 
     /* Set to generate secondary header error */
-    // UT_SetHandlerFunction(UT_KEY(OS_write), &UT_OS_write_FailHandler, NULL);
     UT_SetDefaultReturnValue(UT_KEY(OS_write), -1);
 
     /* Execute the function being tested */
@@ -546,12 +446,13 @@ void DS_FileWriteError_Test(void)
     uint32 DataLength  = 10;
     int32  WriteResult = -1;
 
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
+
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = 1;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0] = '\0';
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "filename", sizeof(DS_AppData.FileStatus[FileIndex].FileName));
-
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
 
     /* Execute the function being tested */
     DS_FileWriteError(FileIndex, DataLength, WriteResult);
@@ -576,22 +477,8 @@ void DS_FileCreateDest_Test_Nominal(void)
     DS_AppData.FileStatus[FileIndex].FileCount  = 1;
     DS_AppData.FileStatus[FileIndex].FileHandle = DS_UT_OBJID_1;
 
-    /* Setup for DS_FileWriteHeader to succeed */
-#if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
-    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), sizeof(CFE_FS_Header_t));
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(DS_FileHeader_t));
-#endif
-
     /* Set to fail the condition "if (Result < 0)" */
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), OS_SUCCESS);
-
-    /* Set to prevent error messages in subfunction DS_FileWriteHeader that we don't care about in this test */
-    UT_SetHandlerFunction(UT_KEY(CFE_FS_WriteHeader), &UT_CFE_FS_WriteHeader_SuccessHandler, NULL);
-
-#if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
-    /* Set to prevent error messages in subfunction DS_FileWriteHeader that we don't care about in this test */
-    UT_SetHandlerFunction(UT_KEY(OS_write), &UT_OS_write_SuccessHandler, NULL);
-#endif
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
 
@@ -638,22 +525,8 @@ void DS_FileCreateDest_Test_NominalRollover(void)
     DS_AppData.FileStatus[FileIndex].FileCount  = DS_MAX_SEQUENCE_COUNT;
     DS_AppData.FileStatus[FileIndex].FileHandle = DS_UT_OBJID_1;
 
-    /* Setup for DS_FileWriteHeader to succeed */
-#if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
-    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), sizeof(CFE_FS_Header_t));
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(DS_FileHeader_t));
-#endif
-
     /* Set to fail the condition "if (Result < 0)" */
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), OS_SUCCESS);
-
-    /* Set to prevent error messages in subfunction DS_FileWriteHeader that we don't care about in this test */
-    UT_SetHandlerFunction(UT_KEY(CFE_FS_WriteHeader), &UT_CFE_FS_WriteHeader_SuccessHandler, NULL);
-
-#if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
-    /* Set to prevent error messages in subfunction DS_FileWriteHeader that we don't care about in this test */
-    UT_SetHandlerFunction(UT_KEY(OS_write), &UT_OS_write_SuccessHandler, NULL);
-#endif
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType  = DS_BY_COUNT;
     DS_AppData.DestFileTblPtr->File[FileIndex].SequenceCount = 3;
@@ -706,8 +579,7 @@ void DS_FileCreateDest_Test_Error(void)
 
 void DS_FileCreateDest_Test_ClosedFileHandle(void)
 {
-    int32     FileIndex       = 0;
-    osal_id_t LocalFileHandle = OS_OBJECT_ID_UNDEFINED;
+    int32 FileIndex = 0;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].SequenceCount = 5;
 
@@ -715,19 +587,12 @@ void DS_FileCreateDest_Test_ClosedFileHandle(void)
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "filename", sizeof(DS_AppData.FileStatus[FileIndex].FileName));
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
-    DS_AppData.FileStatus[FileIndex].FileHandle             = DS_UT_OBJID_1;
     DS_AppData.FileStatus[FileIndex].FileCount              = 1;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0] = '\0';
 
-    /* Set to fail the condition "if (Result < 0)" */
-    UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), OS_SUCCESS);
-    UT_SetDataBuffer(UT_KEY(OS_OpenCreate), &LocalFileHandle, sizeof(osal_id_t), false);
-    /* Set to prevent error messages in subfunction DS_FileWriteHeader that we don't care about in this test */
-    UT_SetHandlerFunction(UT_KEY(CFE_FS_WriteHeader), &UT_CFE_FS_WriteHeader_SuccessHandler, NULL);
-
-    /* Set to prevent error messages in subfunction DS_FileWriteHeader that we don't care about in this test */
-    UT_SetHandlerFunction(UT_KEY(OS_write), &UT_OS_write_SuccessHandler, NULL);
+    /* Set to fail header write, which will call OS_close and clear the handle */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), -1);
 
     /* Execute the function being tested */
     DS_FileCreateDest(FileIndex);
@@ -1015,12 +880,6 @@ void DS_FileUpdateHeader_Test_PlatformConfigCFE_Nominal(void)
 {
     int32 FileIndex = 0;
 
-    /* Set to satisfy condition "if (Result == sizeof(CFE_FS_Header_t))" */
-    UT_SetDefaultReturnValue(UT_KEY(OS_lseek), sizeof(CFE_FS_Header_t));
-
-    /* Set to satisfy condition "if (Result == sizeof(CFE_TIME_SysTime_t))" */
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), sizeof(CFE_TIME_SysTime_t));
-
     /* Execute the function being tested */
     DS_FileUpdateHeader(FileIndex);
 
@@ -1034,9 +893,6 @@ void DS_FileUpdateHeader_Test_PlatformConfigCFE_Nominal(void)
 void DS_FileUpdateHeader_Test_WriteError(void)
 {
     int32 FileIndex = 0;
-
-    /* Set to satisfy condition "if (Result == sizeof(CFE_FS_Header_t))" */
-    UT_SetDefaultReturnValue(UT_KEY(OS_lseek), sizeof(CFE_FS_Header_t));
 
     /* Set to fail condition "if (Result == sizeof(CFE_TIME_SysTime_t))" */
     UT_SetDefaultReturnValue(UT_KEY(OS_write), -1);
@@ -1073,7 +929,8 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_Nominal(void)
 {
     int32 FileIndex = 0;
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "directory1/filename",
             sizeof(DS_AppData.FileStatus[FileIndex].FileName));
@@ -1098,12 +955,13 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_MoveError(void)
 {
     int32 FileIndex = 0;
 
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
+
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "directory1/filename",
             sizeof(DS_AppData.FileStatus[FileIndex].FileName));
     strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Movename, "directory2/movename/",
             sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
-
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
 
     /* Set to generate error message DS_MOVE_FILE_ERR_EID */
     UT_SetDefaultReturnValue(UT_KEY(OS_mv), -1);
@@ -1126,7 +984,9 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge(void)
 {
     int32 FileIndex = 0;
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
+
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "directory1/filenamefilenamefilenamefilenamefilenamefilename",
             sizeof(DS_AppData.FileStatus[FileIndex].FileName));
     strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Movename, "directory2/movename/",
@@ -1150,7 +1010,8 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameNull(void)
 {
     int32 FileIndex = 0;
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
     strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Movename, "directory2/movename",
             sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
@@ -1175,7 +1036,8 @@ void DS_FileCloseDest_Test_MoveFilesFalse(void)
 {
     int32 FileIndex = 0;
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
     /* Execute the function being tested */
     DS_FileCloseDest(FileIndex);
@@ -1195,14 +1057,14 @@ void DS_FileTestAge_Test_Nominal(void)
     uint32 ElapsedSeconds = 2;
     uint32 i;
 
-    UT_SetHandlerFunction(UT_KEY(OS_close), &UT_OS_CLOSE_SuccessHandler, NULL);
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
         strncpy(DS_AppData.FileStatus[i].FileName, "directory1/filename", sizeof(DS_AppData.FileStatus[i].FileName));
     }
 
-    DS_AppData.FileStatus[FileIndex].FileHandle           = DS_UT_OBJID_1;
     DS_AppData.FileStatus[FileIndex].FileAge              = 0;
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileAge = 3;
 
@@ -1233,11 +1095,10 @@ void DS_FileTestAge_Test_ExceedMaxAge(void)
     int32  FileIndex      = 0;
     uint32 ElapsedSeconds = 2;
 
-    DS_AppData.FileStatus[FileIndex].FileHandle           = DS_UT_OBJID_1;
-    DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileAge = 1;
+    /* Set up the handle */
+    OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
-    UT_DS_SetupFileUpdateHeaderSuccess();
-    UT_DS_SetupFileCloseDestSuccess();
+    DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileAge = 1;
 
     /* Execute the function being tested */
     DS_FileTestAge(ElapsedSeconds);
