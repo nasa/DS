@@ -964,7 +964,7 @@ void DS_FileCreateSequence_Test_ByTime(void)
     int32              FileIndex = 0;
     CFE_TIME_SysTime_t FakeTime;
 
-    char Sequence[DS_TOTAL_FNAME_BUFSIZE];
+    char Sequence[DS_TOTAL_FNAME_BUFSIZE] = "";
 
     memset(&FakeTime, 0, sizeof(FakeTime));
 

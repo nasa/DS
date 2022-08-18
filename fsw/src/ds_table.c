@@ -828,8 +828,8 @@ bool DS_TableVerifyCount(uint32 SequenceCount)
 void DS_TableSubscribe(void)
 {
     DS_PacketEntry_t *FilterPackets = NULL;
-    CFE_SB_MsgId_t    MessageID     = CFE_SB_INVALID_MSG_ID;
-    int32             i             = 0;
+    CFE_SB_MsgId_t    MessageID;
+    int32             i;
 
     FilterPackets = DS_AppData.FilterTblPtr->Packet;
 
@@ -863,8 +863,8 @@ void DS_TableSubscribe(void)
 void DS_TableUnsubscribe(void)
 {
     DS_PacketEntry_t *FilterPackets = NULL;
-    CFE_SB_MsgId_t    MessageID     = CFE_SB_INVALID_MSG_ID;
-    int32             i             = 0;
+    CFE_SB_MsgId_t    MessageID;
+    int32             i;
 
     FilterPackets = DS_AppData.FilterTblPtr->Packet;
 
