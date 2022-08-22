@@ -84,12 +84,12 @@ DS_DestFileTable_t DS_DestFileTable =
 #if (DS_MOVE_FILES == TRUE)
       /* .Movename      = */ DS_EMPTY_STRING,
 #endif
-      /* .Pathname      = */ "set_by_cmd_b4_enable",
+      /* .Pathname      = */ "/cf/set_by_cmd_b4_enable",
       /* .Basename      = */ "events",
       /* .Extension     = */ ".dat",
 
       /* .FileNameType  = */ DS_BY_COUNT,
-      /* .EnableState   = */ DS_DISABLED,
+      /* .EnableState   = */ DS_ENABLED,
       /* .MaxFileSize   = */ (1024 * 32),               /* 32 K-bytes */
       /* .MaxFileAge    = */ (60 * 45),                 /* 45 minutes */
       /* .SequenceCount = */ 1000,
@@ -309,15 +309,15 @@ DS_DestFileTable_t DS_DestFileTable =
 #if (DS_MOVE_FILES == TRUE)
       /* .Movename      = */ DS_EMPTY_STRING,
 #endif
-      /* .Pathname      = */ DS_EMPTY_STRING,
-      /* .Basename      = */ DS_EMPTY_STRING,
-      /* .Extension     = */ DS_EMPTY_STRING,
+      /* .Pathname      = */ "/cf/set_by_cmd_b4_enable",
+      /* .Basename      = */ "pose_mid",
+      /* .Extension     = */ "tlm",
 
-      /* .FileNameType  = */ DS_UNUSED,
-      /* .EnableState   = */ DS_UNUSED,
-      /* .MaxFileSize   = */ DS_UNUSED,
-      /* .MaxFileAge    = */ DS_UNUSED,
-      /* .SequenceCount = */ DS_UNUSED,
+      /* .FileNameType  = */ DS_BY_COUNT,
+      /* .EnableState   = */ DS_ENABLED,
+      /* .MaxFileSize   = */ (1024 * 1024 * 2),         /* 2 M-bytes */
+      /* .MaxFileAge    = */ (60 * 60 * 2),             /* 2 hours */
+      /* .SequenceCount = */ 5000,
     },
   }
 };
@@ -325,7 +325,7 @@ DS_DestFileTable_t DS_DestFileTable =
 /*
 ** Sample Destination File Table Header
 */
-CFE_TBL_FILEDEF(DS_DestFileTable, DS.FILE_TBL, DS Destination File Table,ds_file_tbl.tbl)
+CFE_TBL_FILEDEF(DS_DestFileTable, DS_APP.FILE_TBL, DS Destination File Table,ds_file_tbl.tbl)
 
 
 /************************/

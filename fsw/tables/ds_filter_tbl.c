@@ -41,6 +41,7 @@
 #include "ds_appdefs.h"
 #include "ds_app.h"
 #include "ds_msg.h"
+#include "moonranger_msgids.h"
 
 /*
 ** Note: Include header files that define the message ID's for the
@@ -81,7 +82,7 @@
 
 #define FILE_CFE_APP_HK_PKTS  4
 #define FILE_CFE_APP_TLM_PKTS 5
-
+#define MOONRANGER_POSE_FILE_INDEX 15
 
 /*
 ** Sample packet filter table data
@@ -273,12 +274,12 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 015 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_POSE_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_POSE_FILE_INDEX,  DS_BY_COUNT, 1, 1, 0 },
+        { FILE_ALL_APP_TLM_PKTS, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
       }
@@ -3169,7 +3170,7 @@ DS_FilterTable_t DS_FilterTable =
 /*
 ** Sample packet filter table header
 */
-CFE_TBL_FILEDEF(DS_FilterTable, DS.FILTER_TBL, DS Packet Filter Table,ds_filter_tbl.tbl)
+CFE_TBL_FILEDEF(DS_FilterTable, DS_APP.FILTER_TBL, DS Packet Filter Table,ds_filter_tbl.tbl)
 
 
 /************************/

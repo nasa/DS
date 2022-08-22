@@ -74,7 +74,7 @@
 **       The number must be greater than zero but there is no upper
 **       enforced limit for this parameter.
 */
-#define DS_DEST_FILE_CNT                16
+#define DS_DEST_FILE_CNT                17
 
 
 /**
@@ -355,7 +355,7 @@
 **		 The value must be greater than zero and cannot exceed the
 **       definition of #CFE_SB_MAX_PIPE_DEPTH.
 */
-#define DS_APP_PIPE_DEPTH               256
+#define DS_APP_PIPE_DEPTH               32
 
 
 /**
@@ -487,7 +487,7 @@
 **		 The value must be greater than zero and cannot exceed the
 **       definition of #DS_APP_PIPE_DEPTH.
 */
-#define DS_PER_PACKET_PIPE_LIMIT        50
+#define DS_PER_PACKET_PIPE_LIMIT        8
 
 
 #endif /* _ds_platform_cfg_h_ */
