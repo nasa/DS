@@ -763,7 +763,7 @@ void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
         ** Set path portion of destination table filename...
         */
         pDest = &DS_AppData.DestFileTblPtr->File[DS_DestPathCmd->FileTableIndex];
-        strcpy(pDest->Pathname, DS_DestPathCmd->Pathname);
+        strncpy(pDest->Pathname, DS_DestPathCmd->Pathname, sizeof(pDest->Pathname));
 
         /*
         ** Notify cFE that we have modified the table data...
@@ -833,7 +833,7 @@ void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
         ** Set base portion of destination table filename...
         */
         pDest = &DS_AppData.DestFileTblPtr->File[DS_DestBaseCmd->FileTableIndex];
-        strcpy(pDest->Basename, DS_DestBaseCmd->Basename);
+        strncpy(pDest->Basename, DS_DestBaseCmd->Basename, sizeof(pDest->Basename));
 
         /*
         ** Notify cFE that we have modified the table data...
@@ -903,7 +903,7 @@ void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
         ** Set extension portion of destination table filename...
         */
         pDest = &DS_AppData.DestFileTblPtr->File[DS_DestExtCmd->FileTableIndex];
-        strcpy(pDest->Extension, DS_DestExtCmd->Extension);
+        strncpy(pDest->Extension, DS_DestExtCmd->Extension, sizeof(pDest->Extension));
 
         /*
         ** Notify cFE that we have modified the table data...
@@ -1366,7 +1366,8 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
                 /*
                 ** Set current open filename...
                 */
-                strcpy(DS_FileInfoPkt.FileInfo[i].FileName, DS_AppData.FileStatus[i].FileName);
+                strncpy(DS_FileInfoPkt.FileInfo[i].FileName, DS_AppData.FileStatus[i].FileName,
+                        sizeof(DS_FileInfoPkt.FileInfo[i].FileName));
             }
         }
 

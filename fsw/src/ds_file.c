@@ -398,7 +398,7 @@ void DS_FileWriteHeader(int32 FileIndex)
     */
     memset(&CFE_FS_Header, 0, sizeof(CFE_FS_Header));
     CFE_FS_Header.SubType = DS_FILE_HDR_SUBTYPE;
-    strcpy(CFE_FS_Header.Description, DS_FILE_HDR_DESCRIPTION);
+    strncpy(CFE_FS_Header.Description, DS_FILE_HDR_DESCRIPTION, sizeof(CFE_FS_Header.Description));
 
     /*
     ** Let cFE finish the init and write the primary header...
@@ -421,7 +421,7 @@ void DS_FileWriteHeader(int32 FileIndex)
         memset(&DS_FileHeader, 0, sizeof(DS_FileHeader));
         DS_FileHeader.FileTableIndex = FileIndex;
         DS_FileHeader.FileNameType   = DestFile->FileNameType;
-        strcpy(DS_FileHeader.FileName, FileStatus->FileName);
+        strncpy(DS_FileHeader.FileName, FileStatus->FileName, sizeof(DS_FileHeader.FileName));
 
         /*
         ** Manually write the secondary header...
@@ -501,7 +501,7 @@ void DS_FileCreateDest(uint32 FileIndex)
     */
     DS_FileCreateName(FileIndex);
 
-    if (FileStatus->FileName[0] != DS_STRING_TERMINATOR)
+    if (FileStatus->FileName[0] != 0)
     {
         /*
         ** Success - create a new destination file...
@@ -574,127 +574,72 @@ void DS_FileCreateName(uint32 FileIndex)
     DS_DestFileEntry_t *DestFile    = &DS_AppData.DestFileTblPtr->File[FileIndex];
     DS_AppFileStatus_t *FileStatus  = &DS_AppData.FileStatus[FileIndex];
     int32               TotalLength = 0;
-    int32               WorknameLen = 2 * DS_TOTAL_FNAME_BUFSIZE;
 
-    char Workname[WorknameLen];
+    char Workname[2 * DS_TOTAL_FNAME_BUFSIZE];
     char Sequence[DS_TOTAL_FNAME_BUFSIZE];
 
-    Workname[0] = DS_STRING_TERMINATOR;
-    Sequence[0] = DS_STRING_TERMINATOR;
+    /* Copy in path */
+    CFE_SB_MessageStringGet(Workname, DestFile->Pathname, NULL, sizeof(Workname), sizeof(DestFile->Pathname));
+    TotalLength = strlen(Workname);
 
-    /*
-    ** Start with the path portion of the filename...
-    */
-    strncpy(Workname, DestFile->Pathname, WorknameLen - 1);
-    Workname[WorknameLen - 1] = '\0';
-    TotalLength               = strlen(Workname);
-
-    /*
-    ** Add a path separator (if needed) before appending the base name...
-    */
     if (TotalLength > 0)
     {
+        /* Add separator if needed */
         if (Workname[TotalLength - 1] != DS_PATH_SEPARATOR)
         {
-            /* if there's room, write the path separator and a new terminating
-               character.  If there's not room, this will be caught by the
-               next condition */
-            if (TotalLength != (WorknameLen - 1))
+            /* There's always space since Workname is twice the size of Pathname */
+            Workname[TotalLength++] = DS_PATH_SEPARATOR;
+        }
+
+        /* Add base name */
+        CFE_SB_MessageStringGet(&Workname[TotalLength], DestFile->Basename, NULL, sizeof(Workname) - TotalLength,
+                                sizeof(DestFile->Basename));
+        TotalLength = strlen(Workname);
+
+        /* Create the sequence portion of the filename */
+        DS_FileCreateSequence(Sequence, DestFile->FileNameType, FileStatus->FileCount);
+
+        /* Sequence is always null terminated so can use strncat */
+        strncat(&Workname[TotalLength], Sequence, sizeof(Workname) - TotalLength - 1);
+        TotalLength = strlen(Workname);
+
+        /* Only add extension if not empty */
+        if (DestFile->Extension[0] != '\0')
+        {
+            /* Add a "." character (if needed) before appending the extension */
+            if (DestFile->Extension[0] != '.')
             {
-                Workname[TotalLength]     = DS_PATH_SEPARATOR;
-                Workname[TotalLength + 1] = DS_STRING_TERMINATOR;
+                strncat(Workname, ".", sizeof(Workname) - strlen(Workname) - 1);
+                TotalLength++;
             }
+
+            /* Append the extension portion to the path/base+sequence portion */
+            CFE_SB_MessageStringGet(&Workname[TotalLength], DestFile->Extension, NULL, sizeof(Workname) - TotalLength,
+                                    sizeof(DestFile->Extension));
+        }
+
+        /* Confirm working name fits */
+        if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)
+        {
+            /* Success - copy workname to filename buffer */
+            strcpy(FileStatus->FileName, Workname);
+        }
+        else
+        {
+            /* Error - send event and disable destination */
+            CFE_EVS_SendEvent(DS_FILE_NAME_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "FILE NAME error: dest = %d, path = '%s', base = '%s', seq = '%s', ext = '%s'",
+                              (int)FileIndex, DestFile->Pathname, DestFile->Basename, Sequence, DestFile->Extension);
+            DS_AppData.FileStatus[FileIndex].FileState = DS_DISABLED;
         }
     }
     else
     {
-        /* If path name is empty, start with the path separator.  This should
-         * not happen because the path name is verified as non-empty in
-         * DS_TableVerifyDestFileEntry */
+        /* Send event and disable for invalid path */
         CFE_EVS_SendEvent(DS_FILE_CREATE_EMPTY_PATH_ERR_EID, CFE_EVS_EventType_ERROR,
                           "FILE NAME error: Path empty. dest = %d, path = '%s'", (int)FileIndex, DestFile->Pathname);
-
-        /*
-        ** Something needs to get fixed before we try again...
-        */
-        DS_AppData.FileStatus[FileIndex].FileState = DS_DISABLED;
-
-        return;
-    }
-
-    /*
-    ** Verify that the path plus the base portion is not too large...
-    */
-    if ((strlen(Workname) + strlen(DestFile->Basename)) < DS_TOTAL_FNAME_BUFSIZE)
-    {
-        /*
-        ** Append the base portion to the path portion...
-        */
-        strcat(Workname, DestFile->Basename);
-
-        /*
-        ** Create the sequence portion of the filename...
-        */
-        DS_FileCreateSequence(Sequence, DestFile->FileNameType, FileStatus->FileCount);
-
-        /*
-        ** Verify that the path/base plus the sequence portion is not too large...
-        */
-        if ((strlen(Workname) + strlen(Sequence)) < DS_TOTAL_FNAME_BUFSIZE)
-        {
-            /*
-            ** Append the sequence portion to the path/base portion...
-            */
-            strcat(Workname, Sequence);
-
-            /*
-            ** Check for an optional file extension...
-            */
-            if (strlen(DestFile->Extension) > 0)
-            {
-                /*
-                ** Add a "." character (if needed) before appending the extension...
-                */
-                if (DestFile->Extension[0] != '.')
-                {
-                    strcat(Workname, ".");
-                }
-
-                /*
-                ** Append the extension portion to the path/base+sequence portion...
-                */
-                strcat(Workname, DestFile->Extension);
-            }
-
-            /*
-            ** Final test - is "path/base+sequence.extension" length valid?...
-            */
-            if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)
-            {
-                /*
-                ** Success - copy workname to filename buffer...
-                */
-                strcpy(FileStatus->FileName, Workname);
-            }
-        }
-    }
-
-    if (FileStatus->FileName[0] == DS_STRING_TERMINATOR)
-    {
-        /*
-        ** Error - send event and disable destination...
-        */
-        CFE_EVS_SendEvent(DS_FILE_NAME_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "FILE NAME error: dest = %d, path = '%s', base = '%s', seq = '%s', ext = '%s'",
-                          (int)FileIndex, DestFile->Pathname, DestFile->Basename, Sequence, DestFile->Extension);
-
-        /*
-        ** Something needs to get fixed before we try again...
-        */
         DS_AppData.FileStatus[FileIndex].FileState = DS_DISABLED;
     }
-
-    return;
 
 } /* End of DS_FileCreateName() */
 
@@ -742,7 +687,7 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
         /*
         ** Add string terminator...
         */
-        Buffer[DS_SEQUENCE_DIGITS] = DS_STRING_TERMINATOR;
+        Buffer[DS_SEQUENCE_DIGITS] = '\0';
     }
     else if (Type == DS_BY_TIME)
     {
@@ -817,14 +762,14 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
         /*
         ** Step 7: Add string terminator...
         */
-        Buffer[DS_TERM_INDEX] = DS_STRING_TERMINATOR;
+        Buffer[DS_TERM_INDEX] = '\0';
     }
     else
     {
         /*
         ** Bad filename type, init buffer as empty...
         */
-        Buffer[0] = DS_STRING_TERMINATOR;
+        Buffer[0] = '\0';
     }
 
     return;
@@ -903,7 +848,8 @@ void DS_FileCloseDest(int32 FileIndex)
         /*
         ** Make sure directory name does not end with slash character...
         */
-        strcpy(PathName, DS_AppData.DestFileTblPtr->File[FileIndex].Movename);
+        CFE_SB_MessageStringGet(PathName, DS_AppData.DestFileTblPtr->File[FileIndex].Movename, NULL, sizeof(PathName),
+                                sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
         PathLength = strlen(PathName);
         if (PathName[PathLength - 1] == '/')
         {
@@ -960,12 +906,10 @@ void DS_FileCloseDest(int32 FileIndex)
             CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
                               "FILE MOVE error: dir name = '%s', filename = '%s'", PathName, FileName);
         }
-    }
 
-    /*
-    ** Get the directory name...
-    */
-    strncpy(FileStatus->FileName, PathName, sizeof(PathName));
+        /* Update the path name for reporting */
+        strncpy(FileStatus->FileName, PathName, sizeof(PathName));
+    }
 #else
     /*
     ** Close the file...
@@ -1082,7 +1026,7 @@ void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
         /*
         ** Set current open filename...
         */
-        strcpy(PktBuf->Pkt.FileInfo.FileName, FileStatus->FileName);
+        strncpy(PktBuf->Pkt.FileInfo.FileName, FileStatus->FileName, sizeof(PktBuf->Pkt.FileInfo.FileName));
 
         /*
         ** Timestamp and send file info telemetry...
