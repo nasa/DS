@@ -396,9 +396,7 @@ void DS_FileWriteHeader(int32 FileIndex)
     /*
     ** Initialize selected parts of the cFE file header...
     */
-    memset(&CFE_FS_Header, 0, sizeof(CFE_FS_Header));
-    CFE_FS_Header.SubType = DS_FILE_HDR_SUBTYPE;
-    strncpy(CFE_FS_Header.Description, DS_FILE_HDR_DESCRIPTION, sizeof(CFE_FS_Header.Description));
+    CFE_FS_InitHeader(&CFE_FS_Header, DS_FILE_HDR_DESCRIPTION, DS_FILE_HDR_SUBTYPE);
 
     /*
     ** Let cFE finish the init and write the primary header...
