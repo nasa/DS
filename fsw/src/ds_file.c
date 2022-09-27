@@ -175,7 +175,7 @@ bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint1
         }
     }
 
-    return (PacketIsFiltered);
+    return PacketIsFiltered;
 
 } /* End of DS_IsPacketFiltered() */
 

@@ -173,7 +173,7 @@ int32 DS_TableInit(void)
         DS_TableManageFilter();
     }
 
-    return (Result1);
+    return Result1;
 
 } /* End of DS_TableInit() */
 
@@ -438,7 +438,7 @@ int32 DS_TableVerifyDestFile(const void *TableData)
                       "Destination file table verify results: desc text = %s, good entries = %d, bad = %d, unused = %d",
                       DescResult, (int)CountGood, (int)CountBad, (int)CountUnused);
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyDestFile() */
 
@@ -509,7 +509,7 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableI
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyDestFileEntry() */
 
@@ -563,7 +563,7 @@ int32 DS_TableVerifyFilter(const void *TableData)
                       "Filter table verify results: desc text = %s, good entries = %d, bad = %d, unused = %d",
                       DescResult, (int)CountGood, (int)CountBad, (int)CountUnused);
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyFilter() */
 
@@ -641,7 +641,7 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
         }
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyFilterEntry() */
 
@@ -666,7 +666,7 @@ bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
         }
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableEntryUnused() */
 
@@ -685,7 +685,7 @@ bool DS_TableVerifyFileIndex(uint16 FileTableIndex)
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyFileIndex() */
 
@@ -720,7 +720,7 @@ bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorith
         }
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyParms() */
 
@@ -739,7 +739,7 @@ bool DS_TableVerifyType(uint16 TimeVsCount)
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyType() */
 
@@ -758,7 +758,7 @@ bool DS_TableVerifyState(uint16 EnableState)
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyState() */
 
@@ -777,7 +777,7 @@ bool DS_TableVerifySize(uint32 MaxFileSize)
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifySize() */
 
@@ -796,7 +796,7 @@ bool DS_TableVerifyAge(uint32 MaxFileAge)
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyAge() */
 
@@ -815,7 +815,7 @@ bool DS_TableVerifyCount(uint32 SequenceCount)
         Result = false;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableVerifyCount() */
 
@@ -957,7 +957,7 @@ int32 DS_TableCreateCDS(void)
         Result = CFE_SUCCESS;
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_TableCreateCDS() */
 
@@ -1123,7 +1123,7 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
         LinkList->Next = NewLink;
     }
 
-    return (HashIndex);
+    return HashIndex;
 
 } /* End of DS_TableAddMsgID() */
 
@@ -1167,7 +1167,7 @@ int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
         HashLink = HashLink->Next;
     }
 
-    return (FilterTableIndex);
+    return FilterTableIndex;
 
 } /* End of DS_TableFindMsgID() */
 
