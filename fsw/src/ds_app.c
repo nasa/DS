@@ -468,6 +468,13 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             break;
 
         /*
+        ** Remove message ID from filter table...
+        */
+        case DS_REMOVE_MID_CC:
+            DS_CmdRemoveMID(BufPtr);
+            break;
+
+        /*
         ** Close all destination files (next packet will re-open)...
         */
         case DS_CLOSE_ALL_CC:

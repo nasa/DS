@@ -444,4 +444,26 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr);
  */
 void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr);
 
+/**
+ *  \brief Remove Message ID from Packet Filter Table
+ *
+ *  \par Description
+ *       Remove used packet filter table entry
+ *       Reject invalid commands
+ *       - generate error event if invalid command packet length
+ *       - generate error event if MID argument is invalid (cannot be zero)
+ *       - generate error event if packet filter table is not loaded
+ *       - generate error event if MID is not in packet filter table
+ *       Accept valid commands
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_REMOVE_MID_CC, #DS_RemoveMidCmd_t
+ */
+void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr);
+
 #endif

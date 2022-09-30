@@ -296,7 +296,7 @@ void DS_TableCreateHash(void)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Get filter table index for MID                                  */
+/* DS_TableAddMsgID() - get filter table index for MID             */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -309,7 +309,7 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Get filter table index for MID                                  */
+/* DS_TableFindMsgID() - get filter table index for MID            */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 

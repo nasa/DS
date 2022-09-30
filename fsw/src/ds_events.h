@@ -850,6 +850,39 @@
  */
 #define DS_APPHK_FILTER_TBL_PRINT_ERR_EID 70
 
+/**
+ *  \brief DS Remove Message ID from Filter Table Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to remove
+ *  a message ID from the Packet Filter Table.
+ *
+ *  The Packet Filter Table must be loaded and have a used entry
+ *  for removing the message ID.  The message ID must not be zero
+ *  and must already exist in the table.
+ */
+#define DS_REMOVE_MID_CMD_EID 71
+
+/**
+ *  \brief DS Remove Message ID from Filter Table Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to remove a
+ *  message ID from the Packet Filter Table.  The cause of the failure
+ *  may be an invalid command packet length or an invalid message ID.
+ *
+ *  The failure may also result from not having a Packet Filter Table
+ *  loaded at the time the command was invoked.  The loaded table
+ *  must have an entry with the indicated message ID.
+ */
+#define DS_REMOVE_MID_CMD_ERR_EID 72
+
 /**@}*/
 
 #endif

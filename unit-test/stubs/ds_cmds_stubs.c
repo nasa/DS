@@ -259,4 +259,21 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdAddMID), BufPtr);
     UT_DEFAULT_IMPL(DS_CmdAddMID);
-}
+} /* End of DS_CmdAddMID() */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS_CmdRemoveMID() - remove message ID from packet filter table  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdRemoveMID), BufPtr);
+    UT_DEFAULT_IMPL(DS_CmdRemoveMID);
+
+} /* End of DS_CmdRemoveMID() */
+
+/************************/
+/*  End of File Comment */
+/************************/

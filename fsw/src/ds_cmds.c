@@ -1441,3 +1441,113 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
                           (int)HashTableIndex);
     }
 }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS_CmdRemoveMID() - remove message ID from packet filter table  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
+{
+    DS_RemoveMidCmd_t *DS_RemoveMidCmd  = (DS_RemoveMidCmd_t *)BufPtr;
+    size_t             ActualLength     = 0;
+    size_t             ExpectedLength   = sizeof(DS_RemoveMidCmd_t);
+    DS_PacketEntry_t * pPacketEntry     = NULL;
+    DS_FilterParms_t * pFilterParms     = NULL;
+    int32              FilterTableIndex = 0;
+    int32              HashTableIndex   = 0;
+    int32              i                = 0;
+
+    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
+    FilterTableIndex = DS_TableFindMsgID(DS_RemoveMidCmd->MessageID);
+
+    if (ExpectedLength != ActualLength)
+    {
+        /*
+        ** Invalid command packet length...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command length: expected = %d, actual = %d", (int)ExpectedLength,
+                          (int)ActualLength);
+    }
+    else if (!CFE_SB_IsValidMsgId(DS_RemoveMidCmd->MessageID))
+    {
+        /*
+        ** Invalid packet message ID - can be anything but unused...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command arg: invalid MID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID));
+    }
+    else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid packet filter table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command: filter table is not loaded");
+    }
+    else if (FilterTableIndex == DS_INDEX_NONE)
+    {
+        /*
+        ** Message ID is not in packet filter table...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command: MID = 0x%08lX is not in filter table",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID));
+    }
+    else
+    {
+        /* Convert MID into hash table index */
+        HashTableIndex = DS_TableHashFunction(DS_RemoveMidCmd->MessageID);
+
+        /*
+        ** Reset used packet filter entry for used message ID...
+        */
+        pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+
+        pPacketEntry->MessageID = CFE_SB_INVALID_MSG_ID;
+
+        /* Create new hash table as well */
+        DS_TableCreateHash();
+
+        for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
+        {
+            pFilterParms = &pPacketEntry->Filter[i];
+
+            pFilterParms->FileTableIndex = 0;
+            pFilterParms->FilterType     = DS_BY_COUNT;
+
+            pFilterParms->Algorithm_N = 0;
+            pFilterParms->Algorithm_X = 0;
+            pFilterParms->Algorithm_O = 0;
+        }
+
+        CFE_SB_Unsubscribe(DS_RemoveMidCmd->MessageID, DS_AppData.InputPipe);
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.FilterTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_EID, CFE_EVS_EventType_DEBUG,
+                          "REMOVE MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID), (int)FilterTableIndex,
+                          (int)HashTableIndex);
+    }
+}
+
+/************************/
+/*  End of File Comment */
+/************************/
