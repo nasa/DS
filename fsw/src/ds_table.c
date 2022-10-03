@@ -282,9 +282,6 @@ void DS_TableManageDestFile(void)
             DS_TableUpdateCDS();
         }
     }
-
-    return;
-
 } /* End of DS_TableManageDestFile() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -389,9 +386,6 @@ void DS_TableManageFilter(void)
             DS_TableCreateHash();
         }
     }
-
-    return;
-
 } /* End of DS_TableManageFilter() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -849,9 +843,6 @@ void DS_TableSubscribe(void)
             CFE_SB_SubscribeEx(MessageID, DS_AppData.InputPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
         }
     }
-
-    return;
-
 } /* End of DS_TableSubscribe() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -884,9 +875,6 @@ void DS_TableUnsubscribe(void)
             CFE_SB_Unsubscribe(MessageID, DS_AppData.InputPipe);
         }
     }
-
-    return;
-
 } /* End of DS_TableUnsubscribe() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1008,9 +996,6 @@ void DS_TableUpdateCDS(void)
             DS_AppData.DataStoreHandle = CFE_ES_CDS_BAD_HANDLE;
         }
     }
-
-    return;
-
 } /* End of DS_TableUpdateCDS() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1076,9 +1061,6 @@ void DS_TableCreateHash(void)
     {
         DS_TableAddMsgID(DS_AppData.FilterTblPtr->Packet[FilterIndex].MessageID, FilterIndex);
     }
-
-    return;
-
 } /* End of DS_TableCreateHash() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

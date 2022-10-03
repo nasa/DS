@@ -260,9 +260,6 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.FilteredPktCounter++;
         }
     }
-
-    return;
-
 } /* End of DS_FileStorePacket() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -336,8 +333,6 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
     ** If the write did not occur due to I/O error (create or write)
     **   then current state = file closed and destination disabled...
     */
-    return;
-
 } /* End of DS_FileSetupWrite() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -372,9 +367,6 @@ void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
         */
         DS_FileWriteError(FileIndex, DataLength, Result);
     }
-
-    return;
-
 } /* End of DS_FileWriteData() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -452,8 +444,6 @@ void DS_FileWriteHeader(int32 FileIndex)
         DS_FileWriteError(FileIndex, sizeof(CFE_FS_Header_t), Result);
     }
 #endif
-    return;
-
 } /* End of DS_FileWriteHeader() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -477,9 +467,6 @@ void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
     DS_FileCloseDest(FileIndex);
 
     FileStatus->FileState = DS_DISABLED;
-
-    return;
-
 } /* End of DS_FileWriteError() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -557,9 +544,6 @@ void DS_FileCreateDest(uint32 FileIndex)
             }
         }
     }
-
-    return;
-
 } /* End of DS_FileCreateDest() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -769,9 +753,6 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
         */
         Buffer[0] = '\0';
     }
-
-    return;
-
 } /* End of DS_FileCreateSequence() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -811,8 +792,6 @@ void DS_FileUpdateHeader(int32 FileIndex)
         DS_AppData.FileUpdateErrCounter++;
     }
 #endif
-    return;
-
 } /* End of DS_FileUpdateHeader() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -931,9 +910,6 @@ void DS_FileCloseDest(int32 FileIndex)
     ** Remove previous filename from status data...
     */
     memset(FileStatus->FileName, 0, sizeof(FileStatus->FileName));
-
-    return;
-
 } /* End of DS_FileCloseDest() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -973,9 +949,6 @@ void DS_FileTestAge(uint32 ElapsedSeconds)
             }
         }
     }
-
-    return;
-
 } /* End of DS_FileTestAge() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1032,9 +1005,6 @@ void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
         CFE_SB_TimeStampMsg(&PktBuf->Pkt.TlmHeader.Msg);
         CFE_SB_TransmitBuffer(&PktBuf->SBBuf, true);
     }
-
-    return;
-
 } /* End of DS_CmdGetCompleteFileInfo() */
 
 /************************/

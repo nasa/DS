@@ -334,9 +334,6 @@ void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
             DS_AppStorePacket(MessageID, BufPtr);
             break;
     }
-
-    return;
-
 } /* End of DS_AppProcessMsg() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -489,9 +486,6 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdRejectedCounter++;
             break;
     }
-
-    return;
-
 } /* End of DS_AppProcessCmd() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -606,9 +600,6 @@ void DS_AppProcessHK(void)
     */
     CFE_SB_TimeStampMsg(&HkPacket.TlmHeader.Msg);
     CFE_SB_TransmitMsg(&HkPacket.TlmHeader.Msg, true);
-
-    return;
-
 } /* End of DS_AppProcessHK() */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -642,9 +633,6 @@ void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         */
         DS_FileStorePacket(MessageID, BufPtr);
     }
-
-    return;
-
 } /* End of DS_AppStorePacket() */
 
 /************************/
