@@ -273,7 +273,7 @@ int32 DS_AppInitialize(void)
                           DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV, (void *)&DS_AppData);
     }
 
-    return (Result);
+    return Result;
 
 } /* End of DS_AppInitialize() */
 
