@@ -47,7 +47,6 @@ typedef struct
     uint16 FileNameType;   /**< \brief Filename type - count vs time */
 
     char FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief On-board filename */
-
 } DS_FileHeader_t;
 #endif
 

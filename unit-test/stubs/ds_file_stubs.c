@@ -45,7 +45,7 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileStorePacket() - store packet in file(s)                  */
+/* Store packet in file(s)                                         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -54,11 +54,11 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileStorePacket), MessageID);
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileStorePacket), BufPtr);
     UT_DEFAULT_IMPL(DS_FileStorePacket);
-} /* End of DS_FileStorePacket() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileSetupWrite() - prepare to write packet data to file      */
+/* Prepare to write packet data to file                            */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -67,12 +67,11 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileSetupWrite), FileIndex);
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileSetupWrite), BufPtr);
     UT_DEFAULT_IMPL(DS_FileSetupWrite);
-
-} /* End of DS_FileSetupWrite() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileWriteData() - write data to destination file             */
+/* Write data to destination file                                  */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -82,12 +81,11 @@ void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteData), FileData);
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteData), DataLength);
     UT_DEFAULT_IMPL(DS_FileWriteData);
-
-} /* End of DS_FileWriteData() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileWriteHeader() - write header to destination file         */
+/* Write header to destination file                                */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -95,12 +93,11 @@ void DS_FileWriteHeader(int32 FileIndex)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteHeader), FileIndex);
     UT_DEFAULT_IMPL(DS_FileWriteHeader);
-
-} /* End of DS_FileWriteHeader() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileWriteError() - file write error handler                  */
+/* File write error handler                                        */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
@@ -109,19 +106,18 @@ void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteError), DataLength);
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteError), WriteResult);
     UT_DEFAULT_IMPL(DS_FileWriteError);
-
-} /* End of DS_FileWriteError() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileCreateDest() - create destination file                   */
+/* Create destination file                                         */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileCreateDest(uint32 FileIndex)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateDest), FileIndex);
     UT_DEFAULT_IMPL(DS_FileCreateDest);
-} /* End of DS_FileCreateDest() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -132,12 +128,11 @@ void DS_FileCreateName(uint32 FileIndex)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateName), FileIndex);
     UT_DEFAULT_IMPL(DS_FileCreateName);
-
-} /* End of DS_FileCreateName() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileCreateSequence() - set text from count or time           */
+/* Set text from count or time                                     */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
@@ -146,12 +141,11 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateSequence), Type);
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateSequence), Count);
     UT_DEFAULT_IMPL(DS_FileCreateSequence);
-
-} /* End of DS_FileCreateSequence() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileUpdateHeader() - update destination file header          */
+/* Update destination file header                                  */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -159,33 +153,26 @@ void DS_FileUpdateHeader(int32 FileIndex)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileUpdateHeader), FileIndex);
     UT_DEFAULT_IMPL(DS_FileUpdateHeader);
-
-} /* End of DS_FileUpdateHeader() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileCloseDest() - close destination file                     */
+/* Close destination file                                          */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileCloseDest(int32 FileIndex)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCloseDest), FileIndex);
     UT_DEFAULT_IMPL(DS_FileCloseDest);
-
-} /* End of DS_FileCloseDest() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_FileTestAge() -- file age processor                          */
+/* File age processor                                              */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileTestAge(uint32 ElapsedSeconds)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileTestAge), ElapsedSeconds);
     UT_DEFAULT_IMPL(DS_FileTestAge);
-
-} /* End of DS_FileTestAge() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

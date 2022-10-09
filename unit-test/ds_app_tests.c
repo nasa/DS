@@ -80,7 +80,7 @@ void DS_AppMain_Test_Nominal(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 0);
-} /* end DS_AppMain_Test_Nominal */
+}
 
 void DS_AppMain_Test_AppInitializeError(void)
 {
@@ -103,7 +103,7 @@ void DS_AppMain_Test_AppInitializeError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_CRITICAL);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
     UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
-} /* end DS_AppMain_Test_AppInitializeError */
+}
 
 void DS_AppMain_Test_SBError(void)
 {
@@ -123,7 +123,7 @@ void DS_AppMain_Test_SBError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_CRITICAL);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
     UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
-} /* end DS_AppMain_Test_SBError */
+}
 
 void DS_AppMain_Test_SBTimeout(void)
 {
@@ -140,8 +140,7 @@ void DS_AppMain_Test_SBTimeout(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
     UtAssert_STUB_COUNT(DS_FileTestAge, 1);
-
-} /* end DS_AppMain_Test_SBTimeout */
+}
 
 void DS_AppInitialize_Test_Nominal(void)
 {
@@ -163,7 +162,7 @@ void DS_AppInitialize_Test_Nominal(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
-} /* end DS_AppInitialize_Test_Nominal */
+}
 
 void DS_AppInitialize_Test_EVSRegisterError(void)
 {
@@ -185,8 +184,7 @@ void DS_AppInitialize_Test_EVSRegisterError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_AppInitialize_Test_EVSRegisterError */
+}
 
 void DS_AppInitialize_Test_SBCreatePipeError(void)
 {
@@ -208,8 +206,7 @@ void DS_AppInitialize_Test_SBCreatePipeError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_AppInitialize_Test_SBCreatePipeError */
+}
 
 void DS_AppInitialize_Test_SBSubscribeHKError(void)
 {
@@ -231,8 +228,7 @@ void DS_AppInitialize_Test_SBSubscribeHKError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_AppInitialize_Test_SBSubscribeHKError */
+}
 
 void DS_AppInitialize_Test_SBSubscribeDSError(void)
 {
@@ -254,8 +250,7 @@ void DS_AppInitialize_Test_SBSubscribeDSError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_AppInitialize_Test_SBSubscribeDSError */
+}
 
 void DS_AppProcessMsg_Test_CmdStore(void)
 {
@@ -289,8 +284,7 @@ void DS_AppProcessMsg_Test_CmdStore(void)
 
     /* event message that would normally be sent by noop in production code is
      * stubbed out for the purposes of this test */
-
-} /* end DS_AppProcessMsg_Test_CmdStore */
+}
 
 void DS_AppProcessMsg_Test_CmdNoStore(void)
 {
@@ -324,8 +318,7 @@ void DS_AppProcessMsg_Test_CmdNoStore(void)
 
     /* event message that would normally be sent by noop in production code is
      * stubbed out for the purposes of this test */
-
-} /* end DS_AppProcessMsg_Test_CmdNoStore */
+}
 
 void DS_AppProcessMsg_Test_HKStore(void)
 {
@@ -358,8 +351,7 @@ void DS_AppProcessMsg_Test_HKStore(void)
     UtAssert_INT32_EQ(DS_AppData.DisabledPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppProcessMsg_Test_HKStore */
+}
 
 void DS_AppProcessMsg_Test_HKNoStore(void)
 {
@@ -392,12 +384,10 @@ void DS_AppProcessMsg_Test_HKNoStore(void)
     UtAssert_INT32_EQ(DS_AppData.DisabledPktCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppProcessMsg_Test_HKNoStore */
+}
 
 void DS_AppProcessMsg_Test_HKInvalidRequest(void)
 {
-
     size_t         forced_Size  = 0;
     CFE_SB_MsgId_t forced_MsgID = CFE_SB_ValueToMsgId(DS_SEND_HK_MID);
 
@@ -411,12 +401,10 @@ void DS_AppProcessMsg_Test_HKInvalidRequest(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_HK_REQUEST_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_AppProcessMsg_Test_HKInvalidRequest */
+}
 
 void DS_AppProcessMsg_Test_UnknownMID(void)
 {
-
     size_t         forced_Size  = 0;
     CFE_SB_MsgId_t forced_MsgID = DS_UT_MID_1;
 
@@ -428,8 +416,7 @@ void DS_AppProcessMsg_Test_UnknownMID(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppProcessMsg_Test_UnknownMID */
+}
 
 void DS_AppProcessCmd_Test_Noop(void)
 {
@@ -446,8 +433,7 @@ void DS_AppProcessCmd_Test_Noop(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdNoop, 1);
-
-} /* end DS_AppProcessCmd_Test_Noop */
+}
 
 void DS_AppProcessCmd_Test_Reset(void)
 {
@@ -464,8 +450,7 @@ void DS_AppProcessCmd_Test_Reset(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdReset, 1);
-
-} /* end DS_AppProcessCmd_Test_Reset */
+}
 
 void DS_AppProcessCmd_Test_SetAppState(void)
 {
@@ -482,7 +467,7 @@ void DS_AppProcessCmd_Test_SetAppState(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetAppState, 1);
-} /* end DS_AppProcessCmd_Test_SetAppState */
+}
 
 void DS_AppProcessCmd_Test_SetFilterFile(void)
 {
@@ -499,7 +484,7 @@ void DS_AppProcessCmd_Test_SetFilterFile(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetFilterFile, 1);
-} /* end DS_AppProcessCmd_Test_SetFilterFile */
+}
 
 void DS_AppProcessCmd_Test_SetFilterType(void)
 {
@@ -516,8 +501,7 @@ void DS_AppProcessCmd_Test_SetFilterType(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetFilterType, 1);
-
-} /* end DS_AppProcessCmd_Test_SetFilterType */
+}
 
 void DS_AppProcessCmd_Test_SetFilterParms(void)
 {
@@ -534,7 +518,7 @@ void DS_AppProcessCmd_Test_SetFilterParms(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetFilterParms, 1);
-} /* end DS_AppProcessCmd_Test_SetFilterParms */
+}
 
 void DS_AppProcessCmd_Test_SetDestType(void)
 {
@@ -551,7 +535,7 @@ void DS_AppProcessCmd_Test_SetDestType(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestType, 1);
-} /* end DS_AppProcessCmd_Test_SetDestType */
+}
 
 void DS_AppProcessCmd_Test_SetDestState(void)
 {
@@ -568,7 +552,7 @@ void DS_AppProcessCmd_Test_SetDestState(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestState, 1);
-} /* end DS_AppProcessCmd_Test_SetDestState */
+}
 
 void DS_AppProcessCmd_Test_SetDestPath(void)
 {
@@ -585,7 +569,7 @@ void DS_AppProcessCmd_Test_SetDestPath(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestPath, 1);
-} /* end DS_AppProcessCmd_Test_SetDestPath */
+}
 
 void DS_AppProcessCmd_Test_SetDestBase(void)
 {
@@ -602,7 +586,7 @@ void DS_AppProcessCmd_Test_SetDestBase(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestBase, 1);
-} /* end DS_AppProcessCmd_Test_SetDestBase */
+}
 
 void DS_AppProcessCmd_Test_SetDestExt(void)
 {
@@ -619,8 +603,7 @@ void DS_AppProcessCmd_Test_SetDestExt(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestExt, 1);
-
-} /* end DS_AppProcessCmd_Test_SetDestExt */
+}
 
 void DS_AppProcessCmd_Test_SetDestSize(void)
 {
@@ -637,7 +620,7 @@ void DS_AppProcessCmd_Test_SetDestSize(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestSize, 1);
-} /* end DS_AppProcessCmd_Test_SetDestSize */
+}
 
 void DS_AppProcessCmd_Test_SetDestAge(void)
 {
@@ -654,7 +637,7 @@ void DS_AppProcessCmd_Test_SetDestAge(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestAge, 1);
-} /* end DS_AppProcessCmd_Test_SetDestAge */
+}
 
 void DS_AppProcessCmd_Test_SetDestCount(void)
 {
@@ -671,7 +654,7 @@ void DS_AppProcessCmd_Test_SetDestCount(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdSetDestCount, 1);
-} /* end DS_AppProcessCmd_Test_SetDestCount */
+}
 
 void DS_AppProcessCmd_Test_CloseFile(void)
 {
@@ -694,7 +677,7 @@ void DS_AppProcessCmd_Test_CloseFile(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdCloseFile, 1);
-} /* end DS_AppProcessCmd_Test_CloseFile */
+}
 
 void DS_AppProcessCmd_Test_GetFileInfo(void)
 {
@@ -711,7 +694,7 @@ void DS_AppProcessCmd_Test_GetFileInfo(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdGetFileInfo, 1);
-} /* end DS_AppProcessCmd_Test_GetFileInfo */
+}
 
 void DS_AppProcessCmd_Test_AddMID(void)
 {
@@ -728,7 +711,7 @@ void DS_AppProcessCmd_Test_AddMID(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdAddMID, 1);
-} /* end DS_AppProcessCmd_Test_AddMID */
+}
 
 void DS_AppProcessCmd_Test_CloseAll(void)
 {
@@ -751,7 +734,7 @@ void DS_AppProcessCmd_Test_CloseAll(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CmdCloseAll, 1);
-} /* end DS_AppProcessCmd_Test_CloseAll */
+}
 
 void DS_AppProcessCmd_Test_InvalidCommandCode(void)
 {
@@ -770,8 +753,7 @@ void DS_AppProcessCmd_Test_InvalidCommandCode(void)
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-
-} /* end DS_AppProcessCmd_Test_InvalidCommandCode */
+}
 
 void DS_AppProcessHK_Test(void)
 {
@@ -803,8 +785,7 @@ void DS_AppProcessHK_Test(void)
     UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppProcessHK_Test */
+}
 
 void DS_AppProcessHK_Test_SnprintfFail(void)
 {
@@ -898,7 +879,7 @@ void DS_AppStorePacket_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(DS_FileStorePacket, 1);
-} /* end DS_AppStorePacket_Test_Nominal */
+}
 
 void DS_AppStorePacket_Test_DSDisabled(void)
 {
@@ -920,8 +901,7 @@ void DS_AppStorePacket_Test_DSDisabled(void)
     UtAssert_UINT32_EQ(DS_AppData.DisabledPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppStorePacket_Test_DSDisabled */
+}
 
 void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
 {
@@ -944,8 +924,7 @@ void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
     UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppStorePacket_Test_FilterTableNotLoaded */
+}
 
 void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
 {
@@ -968,8 +947,7 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
     UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_AppStorePacket_Test_DestFileTableNotLoaded */
+}
 
 void UtTest_Setup(void)
 {
@@ -1019,8 +997,4 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_AppStorePacket_Test_DSDisabled);
     UT_DS_TEST_ADD(DS_AppStorePacket_Test_FilterTableNotLoaded);
     UT_DS_TEST_ADD(DS_AppStorePacket_Test_DestFileTableNotLoaded);
-} /* end UtTest_Setup */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

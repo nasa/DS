@@ -44,7 +44,6 @@ typedef struct DS_HashTag
     uint16         Index;     /**< \brief DS filter table entry index */
 
     struct DS_HashTag *Next; /**< \brief Next hash table linked list element */
-
 } DS_HashLink_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -62,7 +61,6 @@ typedef struct
     uint16 Algorithm_N; /**< \brief Algorithm value N (pass this many) */
     uint16 Algorithm_X; /**< \brief Algorithm value X (out of this many) */
     uint16 Algorithm_O; /**< \brief Algorithm value O (at this offset) */
-
 } DS_FilterParms_t;
 
 /** \brief DS Filter Table Packet Entry */
@@ -71,7 +69,6 @@ typedef struct
     CFE_SB_MsgId_t MessageID; /**< \brief Packet MessageID (may be cmd or tlm) */
 
     DS_FilterParms_t Filter[DS_FILTERS_PER_PACKET]; /**< \brief One entry for each packet destination */
-
 } DS_PacketEntry_t;
 
 /** \brief DS Filter Table */
@@ -79,7 +76,6 @@ typedef struct
 {
     char             Descriptor[DS_DESCRIPTOR_BUFSIZE];  /**< \brief Description such as "Safehold Filter Table" */
     DS_PacketEntry_t Packet[DS_PACKETS_IN_FILTER_TABLE]; /**< \brief One entry for each filtered packet */
-
 } DS_FilterTable_t;
 
 /**
@@ -105,7 +101,6 @@ typedef struct
     uint32 MaxFileAge;  /**< \brief Max file age (seconds) */
 
     uint32 SequenceCount; /**< \brief Sequence count portion of filename */
-
 } DS_DestFileEntry_t;
 
 /** \brief DS Destination File Table */
@@ -113,7 +108,6 @@ typedef struct
 {
     char               Descriptor[DS_DESCRIPTOR_BUFSIZE]; /**< \brief Description such as "HK Telemetry File" */
     DS_DestFileEntry_t File[DS_DEST_FILE_CNT];            /**< \brief One entry for each destination data file */
-
 } DS_DestFileTable_t;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
