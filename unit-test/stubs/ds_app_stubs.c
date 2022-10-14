@@ -50,7 +50,7 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppData -- application global data structure                 */
+/* Application global data structure                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -58,29 +58,29 @@ DS_AppData_t DS_AppData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppMain() -- application entry point and main process loop   */
+/* Application entry point and main process loop                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 void DS_AppMain(void)
 {
     UT_DEFAULT_IMPL(DS_AppMain);
-} /* End of DS_AppMain() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppInitialize() -- application initialization                */
+/* Application initialization                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 int32 DS_AppInitialize(void)
 {
     return UT_DEFAULT_IMPL(DS_AppInitialize);
-} /* End of DS_AppInitialize() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppProcessMsg() -- process Software Bus messages             */
+/* Process Software Bus messages                                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -88,12 +88,11 @@ void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppProcessMsg), BufPtr);
     UT_DEFAULT_IMPL(DS_AppProcessMsg);
-
-} /* End of DS_AppProcessMsg() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppProcessCmd() -- process application commands              */
+/* Process application commands                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -101,23 +100,22 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppProcessCmd), BufPtr);
     UT_DEFAULT_IMPL(DS_AppProcessCmd);
-
-} /* End of DS_AppProcessCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppProcessHK() -- process hk request command                 */
+/* Process hk request command                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 void DS_AppProcessHK(void)
 {
     UT_DEFAULT_IMPL(DS_AppProcessHK);
-} /* End of DS_AppProcessHK() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppStorePacket() -- packet storage pre-processor             */
+/* Packet storage pre-processor                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -126,9 +124,4 @@ void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppStorePacket), MessageID);
     UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppStorePacket), BufPtr);
     UT_DEFAULT_IMPL(DS_AppStorePacket);
-
-} /* End of DS_AppStorePacket() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

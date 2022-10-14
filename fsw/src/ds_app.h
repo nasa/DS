@@ -62,7 +62,6 @@ typedef struct
     uint16    FileState;                        /**< \brief Current file enable/disable state */
     uint16    Unused;                           /**< \brief Unused - structure padding */
     char      FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief Current filename (path+base+seq+ext) */
-
 } DS_AppFileStatus_t;
 
 /**
@@ -103,7 +102,6 @@ typedef struct
 
     DS_HashLink_t  HashLinks[DS_PACKETS_IN_FILTER_TABLE]; /**< \brief Hash table linked list elements */
     DS_HashLink_t *HashTable[DS_HASH_TABLE_ENTRIES];      /**< \brief Each hash table entry is a linked list */
-
 } DS_AppData_t;
 
 /** \brief DS global data structure reference */

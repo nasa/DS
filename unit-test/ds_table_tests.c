@@ -57,7 +57,7 @@ void DS_TableInit_Test_Nominal(void)
     UtAssert_INT32_EQ(DS_TableInit(), CFE_SUCCESS);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-} /* end DS_TableInit_Test_Nominal */
+}
 
 void DS_TableInit_Test_TableInfoRecovered(void)
 {
@@ -76,8 +76,7 @@ void DS_TableInit_Test_TableInfoRecovered(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_INIT_TBL_CDS_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_DEBUG);
-
-} /* end DS_TableInit_Test_TableInfoRecovered */
+}
 
 void DS_TableInit_Test_RegisterDestTableError(void)
 {
@@ -94,8 +93,7 @@ void DS_TableInit_Test_RegisterDestTableError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableInit_Test_RegisterDestTableError */
+}
 
 void DS_TableInit_Test_RegisterFilterTableError(void)
 {
@@ -112,8 +110,7 @@ void DS_TableInit_Test_RegisterFilterTableError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableInit_Test_RegisterFilterTableError */
+}
 
 void DS_TableInit_Test_LoadDestTableError(void)
 {
@@ -127,8 +124,7 @@ void DS_TableInit_Test_LoadDestTableError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableInit_Test_LoadDestTableError */
+}
 
 void DS_TableInit_Test_LoadFilterTableError(void)
 {
@@ -146,8 +142,7 @@ void DS_TableInit_Test_LoadFilterTableError(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableInit_Test_LoadFilterTableError */
+}
 
 void DS_TableManageDestFile_Test_TableInfoUpdated(void)
 {
@@ -180,8 +175,7 @@ void DS_TableManageDestFile_Test_TableInfoUpdated(void)
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileCount, DS_DEST_FILE_CNT - 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageDestFile_Test_TableInfoUpdated */
+}
 
 void DS_TableManageDestFile_Test_TableNeverLoaded(void)
 {
@@ -196,8 +190,7 @@ void DS_TableManageDestFile_Test_TableNeverLoaded(void)
     UtAssert_ADDRESS_EQ(DS_AppData.DestFileTblPtr, NULL);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageDestFile_Test_TableNeverLoaded */
+}
 
 void DS_TableManageDestFile_Test_TableInfoDumpPending(void)
 {
@@ -209,8 +202,7 @@ void DS_TableManageDestFile_Test_TableInfoDumpPending(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageDestFile_Test_TableInfoDumpPending */
+}
 
 void DS_TableManageDestFile_Test_TableInfoValidationPending(void)
 {
@@ -222,8 +214,7 @@ void DS_TableManageDestFile_Test_TableInfoValidationPending(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageDestFile_Test_TableInfoValidationPending */
+}
 
 void DS_TableManageDestFile_Test_TableInfoUpdatePending(void)
 {
@@ -254,8 +245,7 @@ void DS_TableManageDestFile_Test_TableInfoUpdatePending(void)
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileCount, DS_DEST_FILE_CNT - 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageDestFile_Test_TableInfoUpdatePending */
+}
 
 void DS_TableManageDestFile_Test_TableSuccess(void)
 {
@@ -286,8 +276,7 @@ void DS_TableManageDestFile_Test_TableSuccess(void)
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileCount, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageDestFile_Test_TableInfoUpdatePending */
+}
 
 void DS_TableManageFilter_Test_TableInfoUpdated(void)
 {
@@ -303,8 +292,7 @@ void DS_TableManageFilter_Test_TableInfoUpdated(void)
     UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageFilter_Test_TableInfoUpdated */
+}
 
 void DS_TableManageFilter_Test_TableNeverLoaded(void)
 {
@@ -320,8 +308,7 @@ void DS_TableManageFilter_Test_TableNeverLoaded(void)
     UtAssert_ADDRESS_EQ(DS_AppData.FilterTblPtr, NULL);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageFilter_Test_TableNeverLoaded */
+}
 
 void DS_TableManageFilter_Test_TableInfoDumpPending(void)
 {
@@ -333,8 +320,7 @@ void DS_TableManageFilter_Test_TableInfoDumpPending(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageFilter_Test_TableInfoDumpPending */
+}
 
 void DS_TableManageFilter_Test_TableInfoValidationPending(void)
 {
@@ -346,12 +332,10 @@ void DS_TableManageFilter_Test_TableInfoValidationPending(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageFilter_Test_TableInfoValidationPending */
+}
 
 void DS_TableManageFilter_Test_TableInfoUpdatePending(void)
 {
-
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetStatus), CFE_TBL_INFO_UPDATE_PENDING);
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
 
@@ -362,12 +346,10 @@ void DS_TableManageFilter_Test_TableInfoUpdatePending(void)
     UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageFilter_Test_TableInfoUpdatePending */
+}
 
 void DS_TableManageFilter_Test_TableSuccess(void)
 {
-
     /* Returns CFE_TBL_INFO_UPDATED to satisfy condition "if (Result == CFE_TBL_INFO_UPDATE_PENDING)", and sets
      * DS_AppData.DestFileTblPtr to the address of a local table defined globally in this file, to prevent segmentation
      * fault */
@@ -381,8 +363,7 @@ void DS_TableManageFilter_Test_TableSuccess(void)
     UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableManageFilter_Test_TableInfoUpdatePending */
+}
 
 void DS_TableVerifyDestFile_Test_Nominal(void)
 {
@@ -407,8 +388,7 @@ void DS_TableVerifyDestFile_Test_Nominal(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
-
-} /* end DS_TableVerifyDestFile_Test_Nominal */
+}
 
 void DS_TableVerifyDestFile_Test_DestFileTableVerificationError(void)
 {
@@ -442,8 +422,7 @@ void DS_TableVerifyDestFile_Test_DestFileTableVerificationError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_FIL_TBL_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-} /* end DS_TableVerifyDestFile_Test_DestFileTableVerificationError */
+}
 
 void DS_TableVerifyDestFile_Test_CountBad(void)
 {
@@ -473,8 +452,7 @@ void DS_TableVerifyDestFile_Test_CountBad(void)
     /* this generates 1 event message we don't care about for this test */
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_FIL_TBL_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-} /* end DS_TableVerifyDestFile_Test_CountBad */
+}
 
 void DS_TableVerifyDestFileEntry_Test_NominalErrZero(void)
 {
@@ -497,8 +475,7 @@ void DS_TableVerifyDestFileEntry_Test_NominalErrZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyDestFileEntry_Test_NominalErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidPathnameErrZero(void)
 {
@@ -523,8 +500,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidPathnameErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidPathnameErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidBasenameErrZero(void)
 {
@@ -549,8 +525,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidBasenameErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidBasenameErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrZero(void)
 {
@@ -575,8 +550,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidFileEnableStateErrZero(void)
 {
@@ -601,8 +575,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidFileEnableStateErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidFileEnableStateErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidSizeErrZero(void)
 {
@@ -627,8 +600,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidSizeErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidSizeErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidAgeErrZero(void)
 {
@@ -653,8 +625,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidAgeErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidAgeErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidSequenceCountErrZero(void)
 {
@@ -679,8 +650,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidSequenceCountErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidSequenceCountErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrNonZero(void)
 {
@@ -703,8 +673,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidFileEnableStateErrNonZero(void)
 {
@@ -727,8 +696,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidFileEnableStateErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidFileEnableStateErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidSizeErrNonZero(void)
 {
@@ -751,8 +719,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidSizeErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidSizeErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidAgeErrNonZero(void)
 {
@@ -775,8 +742,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidAgeErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidAgeErrZero */
+}
 
 void DS_TableVerifyDestFileEntry_Test_InvalidSequenceCountErrNonZero(void)
 {
@@ -799,8 +765,7 @@ void DS_TableVerifyDestFileEntry_Test_InvalidSequenceCountErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyDestFileEntry_Test_InvalidSequenceCountErrZero */
+}
 
 void DS_TableVerifyFilter_Test_Nominal(void)
 {
@@ -831,8 +796,7 @@ void DS_TableVerifyFilter_Test_Nominal(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FLT_TBL_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
-
-} /* end DS_TableVerifyFilter_Test_Nominal */
+}
 
 void DS_TableVerifyFilter_Test_FilterTableVerificationError(void)
 {
@@ -869,8 +833,7 @@ void DS_TableVerifyFilter_Test_FilterTableVerificationError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_FLT_TBL_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-} /* end DS_TableVerifyFilter_Test_FilterTableVerificationError */
+}
 
 void DS_TableVerifyFilter_Test_CountBad(void)
 {
@@ -902,8 +865,7 @@ void DS_TableVerifyFilter_Test_CountBad(void)
     /* this generates 1 event message we don't care about for this test */
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_FLT_TBL_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-
-} /* end DS_TableVerifyFilter_Test_CountBad */
+}
 
 void DS_TableVerifyFilterEntry_Test_Unused(void)
 {
@@ -926,8 +888,7 @@ void DS_TableVerifyFilterEntry_Test_Unused(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFilterEntry_Test_Unused */
+}
 
 void DS_TableVerifyFilterEntry_Test_Nominal(void)
 {
@@ -950,8 +911,7 @@ void DS_TableVerifyFilterEntry_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFilterEntry_Test_Nominal */
+}
 
 void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrZero(void)
 {
@@ -976,8 +936,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FLT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrZero */
+}
 
 void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero(void)
 {
@@ -1002,8 +961,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FLT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero */
+}
 
 void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero(void)
 {
@@ -1028,8 +986,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FLT_TBL_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero */
+}
 
 void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrNonZero(void)
 {
@@ -1052,8 +1009,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrNonZero */
+}
 
 void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero(void)
 {
@@ -1076,8 +1032,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero */
+}
 
 void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero(void)
 {
@@ -1100,8 +1055,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero */
+}
 
 void DS_TableEntryUnused_Test_Nominal(void)
 {
@@ -1114,8 +1068,7 @@ void DS_TableEntryUnused_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableEntryUnused_Test_Nominal */
+}
 
 void DS_TableEntryUnused_Test_Fail(void)
 {
@@ -1128,8 +1081,7 @@ void DS_TableEntryUnused_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableEntryUnused_Test_Fail */
+}
 
 void DS_TableVerifyFileIndex_Test_Nominal(void)
 {
@@ -1140,8 +1092,7 @@ void DS_TableVerifyFileIndex_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFileIndex_Test_Nominal */
+}
 
 void DS_TableVerifyFileIndex_Test_Fail(void)
 {
@@ -1152,8 +1103,7 @@ void DS_TableVerifyFileIndex_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyFileIndex_Test_Fail */
+}
 
 void DS_TableVerifyParms_Test_NominalOnlyXNonZero(void)
 {
@@ -1166,8 +1116,7 @@ void DS_TableVerifyParms_Test_NominalOnlyXNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyParms_Test_NominalOnlyXNonZero */
+}
 
 void DS_TableVerifyParms_Test_NGreaterThanXOnlyNNonZero(void)
 {
@@ -1180,8 +1129,7 @@ void DS_TableVerifyParms_Test_NGreaterThanXOnlyNNonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyParms_Test_NGreaterThanXOnlyNNonZero */
+}
 
 void DS_TableVerifyParms_Test_OGreaterThanXOnlyONonZero(void)
 {
@@ -1194,8 +1142,7 @@ void DS_TableVerifyParms_Test_OGreaterThanXOnlyONonZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyParms_Test_OGreaterThanXOnlyONonZero */
+}
 
 void DS_TableVerifyParms_Test_AllZero(void)
 {
@@ -1208,8 +1155,7 @@ void DS_TableVerifyParms_Test_AllZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyParms_Test_AllZero */
+}
 
 void DS_TableVerifyType_Test_Nominal(void)
 {
@@ -1220,8 +1166,7 @@ void DS_TableVerifyType_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyType_Test_Nominal */
+}
 
 void DS_TableVerifyType_Test_Fail(void)
 {
@@ -1232,8 +1177,7 @@ void DS_TableVerifyType_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyType_Test_Fail */
+}
 
 void DS_TableVerifyState_Test_NominalEnabled(void)
 {
@@ -1244,8 +1188,7 @@ void DS_TableVerifyState_Test_NominalEnabled(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyState_Test_NominalEnabled */
+}
 
 void DS_TableVerifyState_Test_NominalDisabled(void)
 {
@@ -1256,8 +1199,7 @@ void DS_TableVerifyState_Test_NominalDisabled(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyState_Test_NominalDisabled */
+}
 
 void DS_TableVerifyState_Test_Fail(void)
 {
@@ -1268,8 +1210,7 @@ void DS_TableVerifyState_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyState_Test_Fail */
+}
 
 void DS_TableVerifySize_Test_Nominal(void)
 {
@@ -1280,8 +1221,7 @@ void DS_TableVerifySize_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifySize_Test_Nominal */
+}
 
 void DS_TableVerifySize_Test_Fail(void)
 {
@@ -1292,8 +1232,7 @@ void DS_TableVerifySize_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifySize_Test_Fail */
+}
 
 void DS_TableVerifyAge_Test_Nominal(void)
 {
@@ -1304,8 +1243,7 @@ void DS_TableVerifyAge_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyAge_Test_Nominal */
+}
 
 void DS_TableVerifyAge_Test_Fail(void)
 {
@@ -1316,8 +1254,7 @@ void DS_TableVerifyAge_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyAge_Test_Fail */
+}
 
 void DS_TableVerifyCount_Test_Nominal(void)
 {
@@ -1328,8 +1265,7 @@ void DS_TableVerifyCount_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyCount_Test_Nominal */
+}
 
 void DS_TableVerifyCount_Test_Fail(void)
 {
@@ -1340,20 +1276,17 @@ void DS_TableVerifyCount_Test_Fail(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableVerifyCount_Test_Fail */
+}
 
 void DS_TableSubscribe_Test_Unused(void)
 {
-
     /* Execute the function being tested */
     DS_TableSubscribe();
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_SubscribeEx, 0);
-
-} /* end DS_TableSubscribe_Test_Unused */
+}
 
 void DS_TableSubscribe_Test_Cmd(void)
 {
@@ -1365,8 +1298,7 @@ void DS_TableSubscribe_Test_Cmd(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_SubscribeEx, 0);
-
-} /* end DS_TableSubscribe_Test_Cmd */
+}
 
 void DS_TableSubscribe_Test_SendHk(void)
 {
@@ -1378,8 +1310,7 @@ void DS_TableSubscribe_Test_SendHk(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_SubscribeEx, 0);
-
-} /* end DS_TableSubscribe_Test_SendHk*/
+}
 
 void DS_TableSubscribe_Test_Data(void)
 {
@@ -1391,8 +1322,7 @@ void DS_TableSubscribe_Test_Data(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_SubscribeEx, 1);
-
-} /* end DS_TableSubscribe_Test_Data */
+}
 
 void DS_TableUnsubscribe_Test_Unused(void)
 {
@@ -1402,8 +1332,7 @@ void DS_TableUnsubscribe_Test_Unused(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_Unsubscribe, 0);
-
-} /* end DS_TableUnsubscribe_Test_Unused */
+}
 
 void DS_TableUnsubscribe_Test_Cmd(void)
 {
@@ -1415,8 +1344,7 @@ void DS_TableUnsubscribe_Test_Cmd(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_Unsubscribe, 0);
-
-} /* end DS_TableUnsubscribe_Test_Cmd */
+}
 
 void DS_TableUnsubscribe_Test_SendHk(void)
 {
@@ -1428,8 +1356,7 @@ void DS_TableUnsubscribe_Test_SendHk(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_Unsubscribe, 0);
-
-} /* end DS_TableUnsubscribe_Test_SendHk */
+}
 
 void DS_TableUnsubscribe_Test_Data(void)
 {
@@ -1441,8 +1368,7 @@ void DS_TableUnsubscribe_Test_Data(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(CFE_SB_Unsubscribe, 1);
-
-} /* end DS_TableUnsubscribe_Test_Data */
+}
 
 void DS_TableCreateCDS_Test_NewCDSArea(void)
 {
@@ -1451,8 +1377,7 @@ void DS_TableCreateCDS_Test_NewCDSArea(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableCreateCDS_Test_NewCDSArea */
+}
 
 void DS_TableCreateCDS_Test_PreExistingCDSArea(void)
 {
@@ -1475,8 +1400,7 @@ void DS_TableCreateCDS_Test_PreExistingCDSArea(void)
 #endif
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableCreateCDS_Test_PreExistingCDSArea */
+}
 
 void DS_TableCreateCDS_Test_RestoreFail(void)
 {
@@ -1494,8 +1418,7 @@ void DS_TableCreateCDS_Test_RestoreFail(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_CDS_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableCreateCDS_Test_RestoreFail */
+}
 
 void DS_TableCreateCDS_Test_Error(void)
 {
@@ -1511,8 +1434,7 @@ void DS_TableCreateCDS_Test_Error(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_CDS_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableCreateCDS_Test_Error */
+}
 
 void DS_TableUpdateCDS_Test_Nominal(void)
 {
@@ -1523,8 +1445,7 @@ void DS_TableUpdateCDS_Test_Nominal(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableUpdateCDS_Test_Nominal */
+}
 
 void DS_TableUpdateCDS_Test_Error(void)
 {
@@ -1540,8 +1461,7 @@ void DS_TableUpdateCDS_Test_Error(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_CDS_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-} /* end DS_TableUpdateCDS_Test_Error */
+}
 
 void DS_TableHashFunction_Test(void)
 {
@@ -1551,8 +1471,7 @@ void DS_TableHashFunction_Test(void)
     UtAssert_UINT32_LT(DS_TableHashFunction(MessageID), DS_HASH_TABLE_ENTRIES);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableHashFunction_Test */
+}
 
 void DS_TableCreateHash_Test_Nominal(void)
 {
@@ -1570,8 +1489,7 @@ void DS_TableCreateHash_Test_Nominal(void)
     UtAssert_ADDRESS_EQ(DS_AppData.HashTable[HashIndex], &DS_AppData.HashLinks[0]);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableCreateHash_Test_Nominal */
+}
 
 void DS_TableFindMsgID_Test(void)
 {
@@ -1589,8 +1507,7 @@ void DS_TableFindMsgID_Test(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableFindMsgID_Test */
+}
 
 void DS_TableFindMsgID_Test_NullTable(void)
 {
@@ -1606,8 +1523,7 @@ void DS_TableFindMsgID_Test_NullTable(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableFindMsgID_Test_NullTable */
+}
 
 void DS_TableFindMsgID_Test_Mismatch(void)
 {
@@ -1628,8 +1544,7 @@ void DS_TableFindMsgID_Test_Mismatch(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-
-} /* end DS_TableFindMsgID_Test_Mismatch */
+}
 
 void UtTest_Setup(void)
 {
@@ -1736,8 +1651,4 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_TableFindMsgID_Test_NullTable);
 
     UT_DS_TEST_ADD(DS_TableFindMsgID_Test_Mismatch);
-} /* end DS_Table_Test_AddTestCases */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

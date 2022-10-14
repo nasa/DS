@@ -40,7 +40,6 @@
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
-
 } DS_NoopCmd_t;
 
 /**
@@ -50,9 +49,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
-
 } DS_ResetCmd_t;
 
 /**
@@ -66,7 +63,6 @@ typedef struct
 
     uint16 EnableState; /**< \brief Application enable/disable state */
     uint16 Padding;     /**< \brief Structure Padding on 32-bit boundaries */
-
 } DS_AppStateCmd_t;
 
 /**
@@ -82,7 +78,6 @@ typedef struct
                                    \details DS defines Message ID zero to be unused */
     uint16 FilterParmsIndex;  /**< \brief Index into Filter Parms Array */
     uint16 FileTableIndex;    /**< \brief Index into Destination File Table */
-
 } DS_FilterFileCmd_t;
 
 /**
@@ -92,14 +87,12 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
 
     CFE_SB_MsgId_t MessageID; /**< \brief Message ID of existing entry in Packet Filter Table
                                    \details DS defines Message ID zero to be unused */
     uint16 FilterParmsIndex;  /**< \brief Index into Filter Parms Array */
     uint16 FilterType;        /**< \brief Filter type (packet count or time) */
-
 } DS_FilterTypeCmd_t;
 
 /**
@@ -117,7 +110,6 @@ typedef struct
     uint16 Algorithm_N;       /**< \brief Algorithm value N (pass this many) */
     uint16 Algorithm_X;       /**< \brief Algorithm value X (out of this many) */
     uint16 Algorithm_O;       /**< \brief Algorithm value O (at this offset) */
-
 } DS_FilterParmsCmd_t;
 
 /**
@@ -131,7 +123,6 @@ typedef struct
 
     uint16 FileTableIndex; /**< \brief Index into Destination File Table */
     uint16 FileNameType;   /**< \brief Filename type - count vs time */
-
 } DS_DestTypeCmd_t;
 
 /**
@@ -145,7 +136,6 @@ typedef struct
 
     uint16 FileTableIndex; /**< \brief Index into Destination File Table */
     uint16 EnableState;    /**< \brief File enable/disable state */
-
 } DS_DestStateCmd_t;
 
 /**
@@ -155,13 +145,11 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
 
     uint16 FileTableIndex;                /**< \brief Index into Destination File Table */
     uint16 Padding;                       /**< \brief Structure Padding on 32-bit boundaries */
     char   Pathname[DS_PATHNAME_BUFSIZE]; /**< \brief Path portion of filename */
-
 } DS_DestPathCmd_t;
 
 /**
@@ -171,13 +159,11 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
 
     uint16 FileTableIndex;                /**< \brief Index into Destination File Table */
     uint16 Padding;                       /**< \brief Structure Padding on 32-bit boundaries */
     char   Basename[DS_BASENAME_BUFSIZE]; /**< \brief Base portion of filename */
-
 } DS_DestBaseCmd_t;
 
 /**
@@ -192,7 +178,6 @@ typedef struct
     uint16 FileTableIndex;                  /**< \brief Index into Destination File Table */
     uint16 Padding;                         /**< \brief Structure Padding on 32-bit boundaries */
     char   Extension[DS_EXTENSION_BUFSIZE]; /**< \brief Extension portion of filename */
-
 } DS_DestExtCmd_t;
 
 /**
@@ -207,7 +192,6 @@ typedef struct
     uint16 FileTableIndex; /**< \brief Index into Destination File Table */
     uint16 Padding;        /**< \brief Structure Padding on 32-bit boundaries */
     uint32 MaxFileSize;    /**< \brief Max file size (bytes) before re-open */
-
 } DS_DestSizeCmd_t;
 
 /**
@@ -223,7 +207,6 @@ typedef struct
     uint16 Padding;        /**< \brief Structure Padding on 32-bit boundaries */
 
     uint32 MaxFileAge; /**< \brief Max file age (seconds) */
-
 } DS_DestAgeCmd_t;
 
 /**
@@ -239,7 +222,6 @@ typedef struct
     uint16 Padding;        /**< \brief Structure Padding on 32-bit boundaries */
 
     uint32 SequenceCount; /**< \brief Sequence count portion of filename */
-
 } DS_DestCountCmd_t;
 
 /**
@@ -253,7 +235,6 @@ typedef struct
 
     uint16 FileTableIndex; /**< \brief Index into Destination File Table */
     uint16 Padding;        /**< \brief Structure Padding on 32-bit boundaries */
-
 } DS_CloseFileCmd_t;
 
 /**
@@ -263,9 +244,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
-
 } DS_CloseAllCmd_t;
 
 /**
@@ -275,9 +254,7 @@ typedef struct
  */
 typedef struct
 {
-
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
-
 } DS_GetFileInfoCmd_t;
 
 /**
@@ -290,7 +267,6 @@ typedef struct
     CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
 
     CFE_SB_MsgId_t MessageID; /**< \brief Message ID to add to Packet Filter Table */
-
 } DS_AddMidCmd_t;
 
 /**\}*/

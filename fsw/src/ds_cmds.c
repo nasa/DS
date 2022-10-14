@@ -42,7 +42,7 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdNoop() - NOOP command                                     */
+/* NOOP command                                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -74,11 +74,11 @@ void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
                           DS_MAJOR_VERSION, DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV);
     }
-} /* End of DS_CmdNoop() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdReset() - reset hk telemetry counters command             */
+/* Reset hk telemetry counters command                             */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -134,11 +134,11 @@ void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
     }
-} /* End of DS_CmdReset() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetAppState() - set application ena/dis state             */
+/* Set application ena/dis state                                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -188,11 +188,11 @@ void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_ENADIS_CMD_EID, CFE_EVS_EventType_DEBUG, "APP STATE command: state = %d",
                           DS_AppStateCmd->EnableState);
     }
-} /* End of DS_CmdSetAppState() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetFilterFile() - set packet filter file index            */
+/* Set packet filter file index                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -301,11 +301,11 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
                               DS_FilterFileCmd->FilterParmsIndex, DS_FilterFileCmd->FileTableIndex);
         }
     }
-} /* End of DS_CmdSetFilterFile() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetFilterType() - set pkt filter filename type            */
+/* Set pkt filter filename type                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -414,11 +414,11 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
                               DS_FilterTypeCmd->FilterParmsIndex, DS_FilterTypeCmd->FilterType);
         }
     }
-} /* End of DS_CmdSetFilterType() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetFilterParms() - set packet filter parameters           */
+/* Set packet filter parameters                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -532,11 +532,11 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
                               pFilterParms->Algorithm_O);
         }
     }
-} /* End of DS_CmdSetFilterParms() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestType() - set destination filename type             */
+/* Set destination filename type                                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -609,11 +609,11 @@ void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
                           "DEST TYPE command: file table index = %d, filename type = %d",
                           DS_DestTypeCmd->FileTableIndex, DS_DestTypeCmd->FileNameType);
     }
-} /* End of DS_CmdSetDestType() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestState() - set dest file ena/dis state              */
+/* Set dest file ena/dis state                                     */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -685,11 +685,11 @@ void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
                           "DEST STATE command: file table index = %d, file state = %d", DS_DestStateCmd->FileTableIndex,
                           DS_DestStateCmd->EnableState);
     }
-} /* End of DS_CmdSetDestState() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestPath() - set path portion of filename              */
+/* Set path portion of filename                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -752,11 +752,11 @@ void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
                           "DEST PATH command: file table index = %d, pathname = '%s'",
                           (int)DS_DestPathCmd->FileTableIndex, DS_DestPathCmd->Pathname);
     }
-} /* End of DS_CmdSetDestPath() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestBase() - set base portion of filename              */
+/* Set base portion of filename                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -819,11 +819,11 @@ void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
                           "DEST BASE command: file table index = %d, base filename = '%s'",
                           (int)DS_DestBaseCmd->FileTableIndex, DS_DestBaseCmd->Basename);
     }
-} /* End of DS_CmdSetDestBase() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestExt() - set extension portion of filename          */
+/* Set extension portion of filename                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -886,11 +886,11 @@ void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
                           "DEST EXT command: file table index = %d, extension = '%s'",
                           (int)DS_DestExtCmd->FileTableIndex, DS_DestExtCmd->Extension);
     }
-} /* End of DS_CmdSetDestExt() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestSize() - set maximum file size limit               */
+/* Set maximum file size limit                                     */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -963,11 +963,11 @@ void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
                           "DEST SIZE command: file table index = %d, size limit = %d",
                           (int)DS_DestSizeCmd->FileTableIndex, (int)DS_DestSizeCmd->MaxFileSize);
     }
-} /* End of DS_CmdSetDestSize() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestAge() - set maximum file age limit                 */
+/* Set maximum file age limit                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -1040,11 +1040,11 @@ void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
                           "DEST AGE command: file table index = %d, age limit = %d", (int)DS_DestAgeCmd->FileTableIndex,
                           (int)DS_DestAgeCmd->MaxFileAge);
     }
-} /* End of DS_CmdSetDestAge() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdSetDestCount() - set seq cnt portion of filename          */
+/* Set seq cnt portion of filename                                 */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -1130,11 +1130,11 @@ void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
                           "DEST COUNT command: file table index = %d, sequence count = %d",
                           (int)DS_DestCountCmd->FileTableIndex, (int)DS_DestCountCmd->SequenceCount);
     }
-} /* End of DS_CmdSetDestCount() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdCloseFile() - close destination file                      */
+/* Close destination file                                          */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -1184,11 +1184,11 @@ void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_CLOSE_CMD_EID, CFE_EVS_EventType_DEBUG, "DEST CLOSE command: file table index = %d",
                           (int)DS_CloseFileCmd->FileTableIndex);
     }
-} /* End of DS_CmdCloseFile() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdCloseAll() - close all open destination files             */
+/* Close all open destination files                                */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -1229,11 +1229,11 @@ void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_DEBUG, "DEST CLOSE ALL command");
     }
-} /* End of DS_CmdCloseAll() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdGetFileInfo() - get file info packet                      */
+/* Get file info packet                                            */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -1329,11 +1329,11 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
         CFE_SB_TimeStampMsg(&DS_FileInfoPkt.TlmHeader.Msg);
         CFE_SB_TransmitMsg(&DS_FileInfoPkt.TlmHeader.Msg, true);
     }
-} /* End of DS_CmdGetFileInfo() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdAddMID() - add message ID to packet filter table          */
+/* Add message ID to packet filter table                           */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -1440,8 +1440,4 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
                           (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
     }
-} /* End of DS_CmdAddMID() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}

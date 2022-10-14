@@ -46,7 +46,7 @@
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppData -- application global data structure                 */
+/* Application global data structure                               */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -54,7 +54,7 @@ DS_AppData_t DS_AppData;
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppMain() -- application entry point and main process loop   */
+/* Application entry point and main process loop                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -166,12 +166,11 @@ void DS_AppMain(void)
     ** Let cFE kill the application (and any child tasks)...
     */
     CFE_ES_ExitApp(RunStatus);
-
-} /* End of DS_AppMain() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppInitialize() -- application initialization                */
+/* Application initialization                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -274,12 +273,11 @@ int32 DS_AppInitialize(void)
     }
 
     return Result;
-
-} /* End of DS_AppInitialize() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppProcessMsg() -- process Software Bus messages             */
+/* Process Software Bus messages                                   */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -334,11 +332,11 @@ void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
             DS_AppStorePacket(MessageID, BufPtr);
             break;
     }
-} /* End of DS_AppProcessMsg() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppProcessCmd() -- process application commands              */
+/* Process application commands                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -486,11 +484,11 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
             DS_AppData.CmdRejectedCounter++;
             break;
     }
-} /* End of DS_AppProcessCmd() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppProcessHK() -- process hk request command                 */
+/* Process hk request command                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -600,17 +598,16 @@ void DS_AppProcessHK(void)
     */
     CFE_SB_TimeStampMsg(&HkPacket.TlmHeader.Msg);
     CFE_SB_TransmitMsg(&HkPacket.TlmHeader.Msg, true);
-} /* End of DS_AppProcessHK() */
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_AppStorePacket() -- packet storage pre-processor             */
+/* Packet storage pre-processor                                    */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-
     if (DS_AppData.AppEnableState == DS_DISABLED)
     {
         /*
@@ -633,8 +630,4 @@ void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         */
         DS_FileStorePacket(MessageID, BufPtr);
     }
-} /* End of DS_AppStorePacket() */
-
-/************************/
-/*  End of File Comment */
-/************************/
+}
