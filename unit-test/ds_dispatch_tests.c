@@ -138,7 +138,7 @@ void DS_AppProcessMsg_Test_HKInvalidRequest(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_HK_REQUEST_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_HKREQ_LEN_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
