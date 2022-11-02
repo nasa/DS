@@ -879,7 +879,7 @@ void DS_FileCloseDest(int32 FileIndex)
             ** Error - send event but leave destination enabled...
             */
             CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "FILE MOVE error: dir name = '%s', filename = '%s'", PathName, FileName);
+                              "FILE MOVE error: dir name = '%s', filename = 'NULL'", PathName);
         }
 
         /* Update the path name for reporting */
