@@ -579,6 +579,37 @@
  */
 #define DS_CLOSE_ALL_CC 17
 
+/**
+ * \brief Remove Message ID from Packet Filter Table
+ *
+ *  \par Description
+ *       This command will change the Message ID selection for a
+ *       used Packet Filter Table entry to unused (0).
+ *
+ *  \par Command Structure
+ *       #DS_RemoveMidCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkPacket_t.CmdAcceptedCounter will increment
+ *       - The #DS_REMOVE_MID_CMD_EID debug event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Message ID is invalid (can be anything but zero)
+ *       - Packet filter table is not currently loaded
+ *       - Message ID does not exist in packet filter table
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkPacket_t.CmdRejectedCounter will increment
+ *       - The #DS_REMOVE_MID_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_REMOVE_MID_CC 18
+
 /**\}*/
 
 #endif

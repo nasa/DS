@@ -269,6 +269,19 @@ typedef struct
     CFE_SB_MsgId_t MessageID; /**< \brief Message ID to add to Packet Filter Table */
 } DS_AddMidCmd_t;
 
+/**
+ *  \brief Remove Message ID from Packet Filter Table
+ *
+ *  For command details see #DS_REMOVE_MID_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief cFE Software Bus command message header */
+
+    CFE_SB_MsgId_t MessageID; /**< \brief Message ID to add to Packet Filter Table */
+
+} DS_RemoveMidCmd_t;
+
 /**\}*/
 
 /**
