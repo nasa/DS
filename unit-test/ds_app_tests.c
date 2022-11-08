@@ -713,6 +713,23 @@ void DS_AppProcessCmd_Test_AddMID(void)
     UtAssert_STUB_COUNT(DS_CmdAddMID, 1);
 }
 
+void DS_AppProcessCmd_Test_RemoveMID(void)
+{
+    size_t            forced_Size    = sizeof(DS_RemoveMidCmd_t);
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = DS_REMOVE_MID_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+
+    /* Execute the function being tested */
+    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(DS_CmdRemoveMID, 1);
+}
+
 void DS_AppProcessCmd_Test_CloseAll(void)
 {
     uint32            i;
@@ -986,6 +1003,7 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_CloseFile);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_GetFileInfo);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_AddMID);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_RemoveMID);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_CloseAll);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_InvalidCommandCode);
 
