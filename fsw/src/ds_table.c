@@ -396,7 +396,6 @@ void DS_TableManageFilter(void)
 int32 DS_TableVerifyDestFile(const void *TableData)
 {
     DS_DestFileTable_t *DestFileTable = (DS_DestFileTable_t *)TableData;
-    const char *        DescResult    = "OK";
     int32               Result        = CFE_SUCCESS;
     int32               i             = 0;
 
@@ -428,8 +427,8 @@ int32 DS_TableVerifyDestFile(const void *TableData)
     ** Note that totals include each table entry plus the descriptor
     */
     CFE_EVS_SendEvent(DS_FIL_TBL_EID, CFE_EVS_EventType_INFORMATION,
-                      "Destination file table verify results: desc text = %s, good entries = %d, bad = %d, unused = %d",
-                      DescResult, (int)CountGood, (int)CountBad, (int)CountUnused);
+                      "Destination file table verify results: good entries = %d, bad = %d, unused = %d", (int)CountGood,
+                      (int)CountBad, (int)CountUnused);
 
     return Result;
 }
@@ -513,7 +512,6 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableI
 int32 DS_TableVerifyFilter(const void *TableData)
 {
     DS_FilterTable_t *FilterTable = (DS_FilterTable_t *)TableData;
-    const char *      DescResult  = "OK";
     int32             Result      = CFE_SUCCESS;
     int32             i           = 0;
 
@@ -551,8 +549,8 @@ int32 DS_TableVerifyFilter(const void *TableData)
     ** Note that totals include each table entry plus the descriptor
     */
     CFE_EVS_SendEvent(DS_FLT_TBL_EID, CFE_EVS_EventType_INFORMATION,
-                      "Filter table verify results: desc text = %s, good entries = %d, bad = %d, unused = %d",
-                      DescResult, (int)CountGood, (int)CountBad, (int)CountUnused);
+                      "Filter table verify results: good entries = %d, bad = %d, unused = %d", (int)CountGood,
+                      (int)CountBad, (int)CountUnused);
 
     return Result;
 }
