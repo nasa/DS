@@ -103,6 +103,10 @@ DS5017,DS5017,"Upon Receipt of a Get File Info command, DS shall generate a tele
      5) Enable state
      6) Open state
      7) Filename ",Provides information on file status
+DS5018,DS5018,"Upon receipt of a Remove Message ID to Packet Filter Table command, DS shall remove the command-specified Message ID from the Packet Filter Table.",Allow on-orbit modification of Packet Filter Table without requiring a table update.
+DS5018.1,DS5018.1,If the command-specified Message ID is invalid DS will reject the command and send an event message.,Allow on-orbit modification of Packet Filter Table without requiring a table update.
+DS5018.2,DS5018.2,If the Packet Filter Table is not loaded DS will reject the command and send an event message.,Response to command without a loaded Packet Filter Table.
+DS5018.3,DS5018.3,If the command-specified Message ID is not specified in the Packet Filter Table DS will reject the command and send an event message.,Response to commanding a specified message ID that does not exist in the Packet Filter Table.
 DS8000,DS8000,"DS shall generate a housekeeping message containing the following:
 a) Valid Command Counter
 b) Command Rejected Counter
