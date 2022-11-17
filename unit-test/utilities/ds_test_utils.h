@@ -70,6 +70,7 @@ typedef union
     DS_CloseAllCmd_t    CloseAllCmd;
     DS_GetFileInfoCmd_t GetFileInfoCmd;
     DS_AddMidCmd_t      AddMidCmd;
+    DS_RemoveMidCmd_t   RemoveMidCmd;
 } UT_CmdBuf_t;
 
 extern UT_CmdBuf_t UT_CmdBuf;

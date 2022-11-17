@@ -3343,6 +3343,247 @@ void DS_CmdAddMID_Test_FilterTableFull(void)
     UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
+void DS_CmdRemoveMID_Test_Nominal(void)
+{
+    DS_HashLink_t     HashLink;
+    size_t            forced_Size      = sizeof(DS_RemoveMidCmd_t);
+    CFE_SB_MsgId_t    MessageID        = DS_UT_MID_1;
+    CFE_SB_MsgId_t    forced_MsgID     = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode   = DS_REMOVE_MID_CC;
+    int32             FilterTableIndex = 0;
+    int32             HashTableIndex   = 1;
+    int32             strCmpResult;
+
+    char ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "REMOVE MID command: MID = 0x%%08lX, filter index = %%d, hash index = %%d");
+
+    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_RemoveMidCmd_t), "DS_RemoveMidCmd_t is 32-bit aligned");
+
+    UT_CmdBuf.RemoveMidCmd.MessageID                          = MessageID;
+    HashLink.Index                                            = FilterTableIndex;
+    HashLink.MessageID                                        = MessageID;
+    DS_AppData.HashTable[HashTableIndex]                      = &HashLink;
+    DS_AppData.FilterTblPtr->Packet[HashLink.Index].MessageID = MessageID;
+
+    UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, FilterTableIndex);
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+
+    /* Verify results */
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].MessageID),
+                      CFE_SB_MsgIdToValue(CFE_SB_INVALID_MSG_ID));
+    UtAssert_INT32_EQ(DS_AppData.HashTable[HashTableIndex]->Index, 0);
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(DS_AppData.HashLinks[HashTableIndex].MessageID),
+                      CFE_SB_MsgIdToValue(CFE_SB_INVALID_MSG_ID));
+
+    /* Check first elements */
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType == DS_BY_COUNT,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType == DS_BY_COUNT");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O == 0");
+
+    /* Check middle elements */
+    UtAssert_True(
+        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FileTableIndex == 0,
+        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].FileTableIndex == 0");
+
+    UtAssert_True(
+        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FilterType == DS_BY_COUNT,
+        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].FilterType == DS_BY_COUNT");
+
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_N == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_N == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_X == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_X == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_O == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_O == 0");
+
+    /* Check last elements */
+    UtAssert_True(
+        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FileTableIndex == 0,
+        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].FileTableIndex == 0");
+
+    UtAssert_True(
+        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FilterType == DS_BY_COUNT,
+        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].FilterType == DS_BY_COUNT");
+
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_N == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_N == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_X == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_X == 0");
+    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_O == 0,
+                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_O == 0");
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_STUB_COUNT(CFE_MSG_GetSize, 1);
+    UtAssert_STUB_COUNT(CFE_SB_IsValidMsgId, 1);
+    UtAssert_STUB_COUNT(DS_TableHashFunction, 1);
+    UtAssert_STUB_COUNT(DS_TableCreateHash, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+}
+
+void DS_CmdRemoveMID_Test_InvalidCommandLength(void)
+{
+    size_t            forced_Size    = sizeof(DS_RemoveMidCmd_t) + 1;
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = DS_REMOVE_MID_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid REMOVE MID command length: expected = %%d, actual = %%d");
+
+    UT_CmdBuf.AddMidCmd.MessageID = DS_UT_MID_1;
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+
+    /* Verify results */
+    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void DS_CmdRemoveMID_Test_InvalidMessageID(void)
+{
+    size_t            forced_Size    = sizeof(DS_RemoveMidCmd_t);
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = DS_REMOVE_MID_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid REMOVE MID command arg: invalid MID = 0x%%08lX");
+
+    UT_CmdBuf.AddMidCmd.MessageID = CFE_SB_INVALID_MSG_ID;
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+
+    /* Verify results */
+    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void DS_CmdRemoveMID_Test_FilterTableNotLoaded(void)
+{
+    size_t            forced_Size    = sizeof(DS_RemoveMidCmd_t);
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = DS_REMOVE_MID_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid REMOVE MID command: filter table is not loaded");
+
+    UT_CmdBuf.AddMidCmd.MessageID = DS_UT_MID_1;
+
+    /* Reset table pointer to NULL (set in test setup) */
+    DS_AppData.FilterTblPtr = NULL;
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+
+    /* Verify results */
+    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void DS_CmdRemoveMID_Test_MessageIDNotAdded(void)
+{
+    size_t            forced_Size    = sizeof(DS_RemoveMidCmd_t);
+    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
+    CFE_MSG_FcnCode_t forced_CmdCode = DS_REMOVE_MID_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+    UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid REMOVE MID command: MID = 0x%%08lX is not in filter table");
+
+    UT_CmdBuf.AddMidCmd.MessageID = DS_UT_MID_1;
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+
+    /* Verify results */
+    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
 void UtTest_Setup(void)
 {
     UtTest_Add(DS_CmdNoop_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdNoop_Test_Nominal");
@@ -3505,4 +3746,14 @@ void UtTest_Setup(void)
     UtTest_Add(DS_CmdAddMID_Test_MIDAlreadyInFilterTable, DS_Test_Setup, DS_Test_TearDown,
                "DS_CmdAddMID_Test_MIDAlreadyInFilterTable");
     UtTest_Add(DS_CmdAddMID_Test_FilterTableFull, DS_Test_Setup, DS_Test_TearDown, "DS_CmdAddMID_Test_FilterTableFull");
+
+    UtTest_Add(DS_CmdRemoveMID_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdRemoveMID_Test_Nominal");
+    UtTest_Add(DS_CmdRemoveMID_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
+               "DS_CmdRemoveMID_Test_InvalidCommandLength");
+    UtTest_Add(DS_CmdRemoveMID_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
+               "DS_CmdRemoveMID_Test_InvalidMessageID");
+    UtTest_Add(DS_CmdRemoveMID_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_CmdRemoveMID_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_CmdRemoveMID_Test_MessageIDNotAdded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_CmdRemoveMID_Test_MessageIDNotAdded");
 }
