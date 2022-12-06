@@ -35,8 +35,7 @@
 #include "cfe.h"
 #include "cfe_tbl_filedef.h"
 #include "ds_platform_cfg.h"
-#include "ds_appdefs.h"
-#include "ds_app.h"
+#include "ds_extern_typedefs.h"
 #include "ds_msg.h"
 
 /*
