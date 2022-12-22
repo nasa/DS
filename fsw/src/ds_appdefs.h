@@ -30,16 +30,10 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#define DS_UNUSED 0 /**< \brief Unused entries in DS tables */
-
-#define DS_DISABLED 0 /**< \brief Enable/disable state selection */
-#define DS_ENABLED  1 /**< \brief Enable/disable state selection */
+#define DS_ENABLED 1 /**< \brief Enable/disable state selection */
 
 #define DS_CLOSED 0 /**< \brief File is closed */
 #define DS_OPEN   1 /**< \brief File is open */
-
-#define DS_BY_COUNT 1 /**< \brief Action is based on packet sequence count */
-#define DS_BY_TIME  2 /**< \brief Action is based on packet timestamp */
 
 #define DS_STRING_REQUIRED true  /**< \brief String text is required */
 #define DS_STRING_OPTIONAL false /**< \brief String text is optional */
@@ -50,7 +44,6 @@
 #define DS_INDEX_NONE -1 /**< \brief Packet filter table look-up = not found */
 
 #define DS_PATH_SEPARATOR '/' /**< \brief File system path separator */
-#define DS_EMPTY_STRING   ""  /**< \brief Empty string buffer entries in DS tables */
 
 #define DS_TABLE_VERIFY_ERR 0xFFFFFFFF /**< \brief Table verification error return value */
 

@@ -32,6 +32,8 @@
 
 #include "ds_table.h"
 
+#include "ds_extern_typedefs.h"
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* DS application data structures                                  */
