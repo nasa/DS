@@ -36,6 +36,7 @@
 
 #define DS_UNUSED   0 /**< \brief Unused entries in DS tables */
 #define DS_DISABLED 0 /**< \brief Enable/disable state selection */
+#define DS_ENABLED  1 /**< \brief Enable/disable state selection */
 
 #define DS_BY_TIME 2 /**< \brief Action is based on packet timestamp */
 

@@ -30,8 +30,6 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#define DS_ENABLED 1 /**< \brief Enable/disable state selection */
-
 #define DS_CLOSED 0 /**< \brief File is closed */
 #define DS_OPEN   1 /**< \brief File is open */
 
