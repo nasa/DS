@@ -700,25 +700,21 @@ void DS_FileCreateName_Test_Error(void)
 
 void DS_FileCreateName_Test_PathBaseSeqTooLarge(void)
 {
-    int32 FileIndex = 0;
+    int32 FileIndex   = 0;
+    int32 PathnameLen = (DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1) / 2;
+    int32 BasenameLen = DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1 - PathnameLen;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
     DS_AppData.FileStatus[FileIndex].FileCount              = 1;
 
     /* Set to fail the condition "if ((strlen(Workname) + strlen(Sequence)) < DS_TOTAL_FNAME_BUFSIZE)" */
-    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "PathnamePathnamePathnamePat",
-            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname));
-    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, "BasenameBasenameBasenameBase",
-            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Basename));
+    memset(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, 'p', PathnameLen);
+    memset(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, 'b', BasenameLen);
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
-    UtAssert_INT32_EQ(strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname) +
-                          strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Basename) + DS_SEQUENCE_DIGITS +
-                          strlen("/"),
-                      DS_TOTAL_FNAME_BUFSIZE);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
@@ -726,16 +722,16 @@ void DS_FileCreateName_Test_PathBaseSeqTooLarge(void)
 
 void DS_FileCreateName_Test_PathBaseSeqExtTooLarge(void)
 {
-    int32 FileIndex = 0;
+    int32 FileIndex   = 0;
+    int32 PathnameLen = (DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1) / 2;
+    int32 BasenameLen = DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1 - PathnameLen;
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
     DS_AppData.FileStatus[FileIndex].FileCount              = 1;
 
     /* Set to fail the condition "if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)" */
-    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, "PathnamePathnamePathname",
-            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname));
-    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, "BasenameBasenameBasenameBase",
-            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Basename));
+    memset(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, 'p', PathnameLen);
+    memset(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, 'b', BasenameLen);
     strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Extension, "ext",
             sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Extension));
 
@@ -743,11 +739,6 @@ void DS_FileCreateName_Test_PathBaseSeqExtTooLarge(void)
     UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
-    UtAssert_INT32_EQ(strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname) +
-                          strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Basename) +
-                          strlen(DS_AppData.DestFileTblPtr->File[FileIndex].Extension) + DS_SEQUENCE_DIGITS +
-                          strlen("/"),
-                      DS_TOTAL_FNAME_BUFSIZE);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_NAME_ERR_EID);
