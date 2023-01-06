@@ -26,7 +26,7 @@
 #ifndef DS_EXTERN_TYPEDEFS_H
 #define DS_EXTERN_TYPEDEFS_H
 
-#include "cfe.h"
+#include <cfe.h>
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */

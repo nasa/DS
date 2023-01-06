@@ -24,8 +24,8 @@
 #ifndef DS_MSG_H
 #define DS_MSG_H
 
-#include "cfe.h"
-#include "ds_platform_cfg.h"
+#include <cfe.h>
+#include <ds_platform_cfg.h>
 
 /**
  * \defgroup cfsdscmdstructs CFS Data Storage Command Structures
