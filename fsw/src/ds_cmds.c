@@ -1269,7 +1269,8 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Initialize file info telemetry packet...
         */
-        CFE_MSG_Init(&DS_FileInfoPkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(DS_DIAG_TLM_MID), sizeof(DS_FileInfoPkt_t));
+        CFE_MSG_Init(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_DIAG_TLM_MID),
+                     sizeof(DS_FileInfoPkt_t));
 
         /*
         ** Process array of destination file info data...
@@ -1326,8 +1327,8 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Timestamp and send file info telemetry packet...
         */
-        CFE_SB_TimeStampMsg(&DS_FileInfoPkt.TlmHeader.Msg);
-        CFE_SB_TransmitMsg(&DS_FileInfoPkt.TlmHeader.Msg, true);
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader));
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), true);
     }
 }
 
