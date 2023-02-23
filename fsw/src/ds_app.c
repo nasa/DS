@@ -512,7 +512,7 @@ void DS_AppProcessHK(void)
     /*
     ** Initialize housekeeping packet...
     */
-    CFE_MSG_Init(&HkPacket.TlmHeader.Msg, CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
+    CFE_MSG_Init(CFE_MSG_PTR(HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
 
     /*
     ** Process data storage file age limits...
@@ -603,8 +603,8 @@ void DS_AppProcessHK(void)
     /*
     ** Timestamp and send housekeeping telemetry packet...
     */
-    CFE_SB_TimeStampMsg(&HkPacket.TlmHeader.Msg);
-    CFE_SB_TransmitMsg(&HkPacket.TlmHeader.Msg, true);
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader), true);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

@@ -958,6 +958,7 @@ void DS_FileTestAge(uint32 ElapsedSeconds)
 void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
 {
     DS_FileCompletePktBuf_t *PktBuf;
+    DS_FileInfo_t *          FileInfo;
 
     /*
     ** Get a Message block of memory and initialize it
@@ -969,38 +970,40 @@ void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
     */
     if (PktBuf != NULL)
     {
-        CFE_MSG_Init(&PktBuf->Pkt.TlmHeader.Msg, CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(*PktBuf));
+        CFE_MSG_Init(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(*PktBuf));
+
+        FileInfo = &PktBuf->Pkt.FileInfo;
 
         /*
         ** Set file age and size...
         */
-        PktBuf->Pkt.FileInfo.FileAge  = FileStatus->FileAge;
-        PktBuf->Pkt.FileInfo.FileSize = FileStatus->FileSize;
+        FileInfo->FileAge  = FileStatus->FileAge;
+        FileInfo->FileSize = FileStatus->FileSize;
         /*
         ** Set file growth rate (computed when process last HK request)...
         */
-        PktBuf->Pkt.FileInfo.FileRate = FileStatus->FileRate;
+        FileInfo->FileRate = FileStatus->FileRate;
         /*
         ** Set current filename sequence count...
         */
-        PktBuf->Pkt.FileInfo.SequenceCount = FileStatus->FileCount;
+        FileInfo->SequenceCount = FileStatus->FileCount;
         /*
         ** Set file enable/disable state...
         */
-        PktBuf->Pkt.FileInfo.EnableState = FileStatus->FileState;
+        FileInfo->EnableState = FileStatus->FileState;
         /*
         ** Set file closed state...
         */
-        PktBuf->Pkt.FileInfo.OpenState = DS_CLOSED;
+        FileInfo->OpenState = DS_CLOSED;
         /*
         ** Set current open filename...
         */
-        strncpy(PktBuf->Pkt.FileInfo.FileName, FileStatus->FileName, sizeof(PktBuf->Pkt.FileInfo.FileName));
+        strncpy(FileInfo->FileName, FileStatus->FileName, sizeof(FileInfo->FileName));
 
         /*
         ** Timestamp and send file info telemetry...
         */
-        CFE_SB_TimeStampMsg(&PktBuf->Pkt.TlmHeader.Msg);
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader));
         CFE_SB_TransmitBuffer(&PktBuf->SBBuf, true);
     }
 }
