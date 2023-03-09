@@ -343,7 +343,7 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
 void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
 {
     DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
-    int32               Result     = CFE_SUCCESS;
+    int32               Result;
 
     /*
     ** Let cFE manage the file I/O...
@@ -382,7 +382,7 @@ void DS_FileWriteHeader(int32 FileIndex)
     DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
     CFE_FS_Header_t     CFE_FS_Header;
     DS_FileHeader_t     DS_FileHeader;
-    int32               Result = CFE_SUCCESS;
+    int32               Result;
 
     /*
     ** Initialize selected parts of the cFE file header...
@@ -475,9 +475,9 @@ void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileCreateDest(uint32 FileIndex)
 {
-    DS_DestFileEntry_t *DestFile        = &DS_AppData.DestFileTblPtr->File[FileIndex];
-    DS_AppFileStatus_t *FileStatus      = &DS_AppData.FileStatus[FileIndex];
-    int32               Result          = CFE_SUCCESS;
+    DS_DestFileEntry_t *DestFile   = &DS_AppData.DestFileTblPtr->File[FileIndex];
+    DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+    int32               Result;
     osal_id_t           LocalFileHandle = OS_OBJECT_ID_UNDEFINED;
 
     /*
@@ -767,7 +767,7 @@ void DS_FileUpdateHeader(int32 FileIndex)
     */
     DS_AppFileStatus_t *FileStatus  = &DS_AppData.FileStatus[FileIndex];
     CFE_TIME_SysTime_t  CurrentTime = CFE_TIME_GetTime();
-    int32               Result      = CFE_SUCCESS;
+    int32               Result;
 
     Result = OS_lseek(FileStatus->FileHandle, sizeof(CFE_FS_Header_t), OS_SEEK_SET);
 

@@ -46,8 +46,8 @@
 
 int32 DS_TableInit(void)
 {
-    int32  Result1               = CFE_SUCCESS;
-    int32  Result2               = CFE_SUCCESS;
+    int32  Result1;
+    int32  Result2;
     bool   NeedToLoadDestTable   = false;
     bool   NeedToLoadFilterTable = false;
     uint16 TableRegisterFlags    = CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP;
@@ -184,7 +184,8 @@ int32 DS_TableInit(void)
 
 void DS_TableManageDestFile(void)
 {
-    int32 i = 0, Result = CFE_SUCCESS;
+    int32 i = 0;
+    int32 Result;
 
     /*
     ** Pointer will be NULL until first successful table load...
@@ -291,7 +292,7 @@ void DS_TableManageDestFile(void)
 
 void DS_TableManageFilter(void)
 {
-    int32 Result = CFE_SUCCESS;
+    int32 Result;
 
     /*
     ** Pointer will be NULL until first successful filter table load...
@@ -872,8 +873,8 @@ int32 DS_TableCreateCDS(void)
 {
     /* Store file sequence counts and task ena/dis state in CDS */
     uint32 DataStoreBuffer[DS_DEST_FILE_CNT + 1] = {0};
-    int32  Result                                = CFE_SUCCESS;
-    int32  i                                     = 0;
+    int32  Result;
+    int32  i = 0;
 
     /*
     ** Request for CDS area from cFE Executive Services...
@@ -943,8 +944,8 @@ void DS_TableUpdateCDS(void)
 {
     /* Store file sequence counts and task ena/dis state in CDS */
     uint32 DataStoreBuffer[DS_DEST_FILE_CNT + 1] = {0};
-    int32  Result                                = CFE_SUCCESS;
-    int32  i                                     = 0;
+    int32  Result;
+    int32  i = 0;
 
     /*
     ** Handle is non-zero when CDS is active...

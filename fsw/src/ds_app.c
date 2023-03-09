@@ -60,8 +60,8 @@ DS_AppData_t DS_AppData;
 
 void DS_AppMain(void)
 {
-    CFE_SB_Buffer_t *BufPtr    = NULL;
-    int32            Result    = CFE_SUCCESS;
+    CFE_SB_Buffer_t *BufPtr = NULL;
+    int32            Result;
     uint32           RunStatus = CFE_ES_RunStatus_APP_RUN;
 
     /*
@@ -176,8 +176,8 @@ void DS_AppMain(void)
 
 int32 DS_AppInitialize(void)
 {
-    int32 Result = CFE_SUCCESS;
-    int32 i      = 0;
+    int32 Result;
+    int32 i = 0;
 
     /*
     ** Initialize global data structure...
