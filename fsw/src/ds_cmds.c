@@ -1431,7 +1431,7 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
             pFilterParms->Algorithm_O = 0;
         }
 
-        CFE_SB_SubscribeEx(DS_AddMidCmd->MessageID, DS_AppData.InputPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
+        CFE_SB_SubscribeEx(DS_AddMidCmd->MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
         /*
         ** Notify cFE that we have modified the table data...
         */
@@ -1536,7 +1536,7 @@ void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
             pFilterParms->Algorithm_O = 0;
         }
 
-        CFE_SB_Unsubscribe(DS_RemoveMidCmd->MessageID, DS_AppData.InputPipe);
+        CFE_SB_Unsubscribe(DS_RemoveMidCmd->MessageID, DS_AppData.CmdPipe);
 
         /*
         ** Notify cFE that we have modified the table data...
