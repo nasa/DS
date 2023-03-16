@@ -98,7 +98,7 @@ void DS_AppMain(void)
         /*
         ** Wait for next Software Bus message...
         */
-        Result = CFE_SB_ReceiveBuffer(&BufPtr, DS_AppData.InputPipe, DS_SB_TIMEOUT);
+        Result = CFE_SB_ReceiveBuffer(&BufPtr, DS_AppData.CmdPipe, DS_SB_TIMEOUT);
 
         /*
         ** Performance Log (start time counter)...
@@ -210,7 +210,7 @@ int32 DS_AppInitialize(void)
     */
     if (Result == CFE_SUCCESS)
     {
-        Result = CFE_SB_CreatePipe(&DS_AppData.InputPipe, DS_APP_PIPE_DEPTH, DS_APP_PIPE_NAME);
+        Result = CFE_SB_CreatePipe(&DS_AppData.CmdPipe, DS_APP_PIPE_DEPTH, DS_APP_PIPE_NAME);
         if (Result != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR, "Unable to create input pipe, err = 0x%08X",
@@ -223,7 +223,7 @@ int32 DS_AppInitialize(void)
     */
     if (Result == CFE_SUCCESS)
     {
-        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), DS_AppData.InputPipe);
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), DS_AppData.CmdPipe);
 
         if (Result != CFE_SUCCESS)
         {
@@ -237,7 +237,7 @@ int32 DS_AppInitialize(void)
     */
     if (Result == CFE_SUCCESS)
     {
-        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_AppData.InputPipe);
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_AppData.CmdPipe);
 
         if (Result != CFE_SUCCESS)
         {

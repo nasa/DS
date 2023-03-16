@@ -826,7 +826,7 @@ void DS_TableSubscribe(void)
         if (CFE_SB_IsValidMsgId(MessageID) && (CFE_SB_MsgIdToValue(MessageID) != DS_CMD_MID) &&
             (CFE_SB_MsgIdToValue(MessageID) != DS_SEND_HK_MID))
         {
-            CFE_SB_SubscribeEx(MessageID, DS_AppData.InputPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
+            CFE_SB_SubscribeEx(MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
         }
     }
 }
@@ -858,7 +858,7 @@ void DS_TableUnsubscribe(void)
         if (CFE_SB_IsValidMsgId(MessageID) && (CFE_SB_MsgIdToValue(MessageID) != DS_CMD_MID) &&
             (CFE_SB_MsgIdToValue(MessageID) != DS_SEND_HK_MID))
         {
-            CFE_SB_Unsubscribe(MessageID, DS_AppData.InputPipe);
+            CFE_SB_Unsubscribe(MessageID, DS_AppData.CmdPipe);
         }
     }
 }
