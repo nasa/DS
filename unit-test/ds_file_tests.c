@@ -591,8 +591,12 @@ void DS_FileCreateDest_Test_ClosedFileHandle(void)
 
 void DS_FileCreateName_Test_Nominal(void)
 {
-    int32 FileIndex    = 0;
-    char  StrCompare[] = "path/base00000001.ext";
+    int32 FileIndex = 0;
+    char  StrFormat[OS_MAX_PATH_LEN];
+    char  StrCompare[OS_MAX_PATH_LEN];
+
+    snprintf(StrFormat, sizeof(StrFormat), "path/base%%0%uu.ext", DS_SEQUENCE_DIGITS);
+    snprintf(StrCompare, sizeof(StrCompare), StrFormat, 1);
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
@@ -611,8 +615,12 @@ void DS_FileCreateName_Test_Nominal(void)
 
 void DS_FileCreateName_Test_NominalWithSeparator(void)
 {
-    int32 FileIndex    = 0;
-    char  StrCompare[] = "path/base00000001.ext";
+    int32 FileIndex = 0;
+    char  StrFormat[OS_MAX_PATH_LEN];
+    char  StrCompare[OS_MAX_PATH_LEN];
+
+    snprintf(StrFormat, sizeof(StrFormat), "path/base%%0%uu.ext", DS_SEQUENCE_DIGITS);
+    snprintf(StrCompare, sizeof(StrCompare), StrFormat, 1);
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
@@ -633,8 +641,12 @@ void DS_FileCreateName_Test_NominalWithSeparator(void)
 
 void DS_FileCreateName_Test_NominalWithPeriod(void)
 {
-    int32 FileIndex    = 0;
-    char  StrCompare[] = "path/base00000001.ext";
+    int32 FileIndex = 0;
+    char  StrFormat[OS_MAX_PATH_LEN];
+    char  StrCompare[OS_MAX_PATH_LEN];
+
+    snprintf(StrFormat, sizeof(StrFormat), "path/base%%0%uu.ext", DS_SEQUENCE_DIGITS);
+    snprintf(StrCompare, sizeof(StrCompare), StrFormat, 1);
 
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
@@ -746,8 +758,12 @@ void DS_FileCreateName_Test_PathBaseSeqExtTooLarge(void)
 
 void DS_FileCreateName_Test_ExtensionZero(void)
 {
-    int32 FileIndex    = 0;
-    char  StrCompare[] = "path/base00000001";
+    int32 FileIndex = 0;
+    char  StrFormat[OS_MAX_PATH_LEN];
+    char  StrCompare[OS_MAX_PATH_LEN];
+
+    snprintf(StrFormat, sizeof(StrFormat), "path/base%%0%uu", DS_SEQUENCE_DIGITS);
+    snprintf(StrCompare, sizeof(StrCompare), StrFormat, 1);
 
     UT_DS_SetDestFileEntry(&DS_AppData.DestFileTblPtr->File[FileIndex]);
 
@@ -769,22 +785,21 @@ void DS_FileCreateName_Test_ExtensionZero(void)
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
 void DS_FileCreateSequence_Test_ByCount(void)
 {
-    int32 FileIndex = 0;
+    const uint32 Count = 1;
+    char         StrFormat[DS_TOTAL_FNAME_BUFSIZE];
+    char         StrCompare[DS_TOTAL_FNAME_BUFSIZE];
+    char         Sequence[DS_TOTAL_FNAME_BUFSIZE];
 
-    char Sequence[DS_TOTAL_FNAME_BUFSIZE];
+    snprintf(StrFormat, sizeof(StrFormat), "%%0%uu", DS_SEQUENCE_DIGITS);
+    snprintf(StrCompare, sizeof(StrCompare), StrFormat, Count);
 
     memset(Sequence, 0, sizeof(Sequence));
 
-    DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
-
-    DS_AppData.FileStatus[FileIndex].FileCount = 1;
-
     /* Execute the function being tested */
-    DS_FileCreateSequence(Sequence, DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType,
-                          DS_AppData.FileStatus[FileIndex].FileCount);
+    DS_FileCreateSequence(Sequence, DS_BY_COUNT, Count);
 
     /* Verify results */
-    UtAssert_UINT32_EQ(strncmp(Sequence, "00000001", DS_TOTAL_FNAME_BUFSIZE), 0);
+    UtAssert_STRINGBUF_EQ(Sequence, sizeof(Sequence), StrCompare, sizeof(StrCompare));
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 #endif
