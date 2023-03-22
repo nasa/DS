@@ -19,261 +19,237 @@
 
 /**
  * @file
- *  Unit testing stubs for the ds_cmds.c file.
+ *
+ * Auto-Generated stub implementations for functions defined in ds_cmds header
  */
 
-#include "cfe.h"
-
-#include "ds_platform_cfg.h"
-#include "ds_verify.h"
-
-#include "ds_appdefs.h"
-#include "ds_msgids.h"
-
-#include "ds_msg.h"
-#include "ds_app.h"
 #include "ds_cmds.h"
-#include "ds_file.h"
-#include "ds_table.h"
-#include "ds_events.h"
-#include "ds_version.h"
+#include "utgenstub.h"
 
-#include <stdio.h>
-
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* NOOP command                                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdNoop), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdNoop);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Reset hk telemetry counters command                             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdReset), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdReset);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set application ena/dis state                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetAppState), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetAppState);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set packet filter file index                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetFilterFile), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetFilterFile);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set pkt filter filename type                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetFilterType), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetFilterType);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set packet filter parameters                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetFilterParms), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetFilterParms);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set destination filename type                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestType), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestType);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set dest file ena/dis state                                     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestState), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestState);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set path portion of filename                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestPath), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestPath);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set base portion of filename                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestBase), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestBase);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set extension portion of filename                               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestExt), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestExt);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set maximum file size limit                                     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestSize), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestSize);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set maximum file age limit                                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestAge), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestAge);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set seq cnt portion of filename                                 */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdSetDestCount), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdSetDestCount);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Close destination file                                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdCloseFile), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdCloseFile);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Close all open destination files                                */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdCloseAll), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdCloseAll);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Get file info packet                                            */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdGetFileInfo), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdGetFileInfo);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Add message ID to packet filter table                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdAddMID()
+ * ----------------------------------------------------
+ */
 void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdAddMID), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdAddMID);
-} /* End of DS_CmdAddMID() */
+    UT_GenStub_AddParam(DS_CmdAddMID, const CFE_SB_Buffer_t *, BufPtr);
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* DS_CmdRemoveMID() - remove message ID from packet filter table  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    UT_GenStub_Execute(DS_CmdAddMID, Basic, NULL);
+}
 
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdCloseAll()
+ * ----------------------------------------------------
+ */
+void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdCloseAll, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdCloseAll, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdCloseFile()
+ * ----------------------------------------------------
+ */
+void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdCloseFile, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdCloseFile, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdGetFileInfo()
+ * ----------------------------------------------------
+ */
+void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdGetFileInfo, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdGetFileInfo, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdNoop()
+ * ----------------------------------------------------
+ */
+void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdNoop, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdNoop, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdRemoveMID()
+ * ----------------------------------------------------
+ */
 void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_CmdRemoveMID), BufPtr);
-    UT_DEFAULT_IMPL(DS_CmdRemoveMID);
+    UT_GenStub_AddParam(DS_CmdRemoveMID, const CFE_SB_Buffer_t *, BufPtr);
 
-} /* End of DS_CmdRemoveMID() */
+    UT_GenStub_Execute(DS_CmdRemoveMID, Basic, NULL);
+}
 
-/************************/
-/*  End of File Comment */
-/************************/
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdReset()
+ * ----------------------------------------------------
+ */
+void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdReset, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdReset, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetAppState()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetAppState, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetAppState, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestAge()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestAge, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestAge, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestBase()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestBase, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestBase, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestCount()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestCount, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestCount, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestExt()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestExt, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestExt, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestPath()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestPath, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestPath, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestSize()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestSize, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestSize, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestState()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestState, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestState, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetDestType()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetDestType, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetDestType, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetFilterFile()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetFilterFile, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetFilterFile, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetFilterParms()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetFilterParms, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetFilterParms, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CmdSetFilterType()
+ * ----------------------------------------------------
+ */
+void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CmdSetFilterType, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CmdSetFilterType, Basic, NULL);
+}

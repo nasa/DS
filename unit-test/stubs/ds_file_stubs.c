@@ -19,160 +19,182 @@
 
 /**
  * @file
- *  Unit testing stubs for the ds_file.c file.
+ *
+ * Auto-Generated stub implementations for functions defined in ds_file header
  */
 
-#include "cfe.h"
-#include "cfe_fs.h"
-
-#include "ds_platform_cfg.h"
-#include "ds_verify.h"
-
-#include "ds_appdefs.h"
-
-#include "ds_msg.h"
-#include "ds_app.h"
 #include "ds_file.h"
-#include "ds_table.h"
-#include "ds_events.h"
+#include "utgenstub.h"
 
-#include <stdio.h>
-
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Store packet in file(s)                                         */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileStorePacket), MessageID);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileStorePacket), BufPtr);
-    UT_DEFAULT_IMPL(DS_FileStorePacket);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Prepare to write packet data to file                            */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileSetupWrite), FileIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileSetupWrite), BufPtr);
-    UT_DEFAULT_IMPL(DS_FileSetupWrite);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Write data to destination file                                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteData), FileIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteData), FileData);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteData), DataLength);
-    UT_DEFAULT_IMPL(DS_FileWriteData);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Write header to destination file                                */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_FileWriteHeader(int32 FileIndex)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteHeader), FileIndex);
-    UT_DEFAULT_IMPL(DS_FileWriteHeader);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* File write error handler                                        */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteError), FileIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteError), DataLength);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileWriteError), WriteResult);
-    UT_DEFAULT_IMPL(DS_FileWriteError);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Create destination file                                         */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void DS_FileCreateDest(uint32 FileIndex)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateDest), FileIndex);
-    UT_DEFAULT_IMPL(DS_FileCreateDest);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Create destination filename                                     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void DS_FileCreateName(uint32 FileIndex)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateName), FileIndex);
-    UT_DEFAULT_IMPL(DS_FileCreateName);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set text from count or time                                     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateSequence), Buffer);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateSequence), Type);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCreateSequence), Count);
-    UT_DEFAULT_IMPL(DS_FileCreateSequence);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Update destination file header                                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_FileUpdateHeader(int32 FileIndex)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileUpdateHeader), FileIndex);
-    UT_DEFAULT_IMPL(DS_FileUpdateHeader);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Close destination file                                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCloseDest()
+ * ----------------------------------------------------
+ */
 void DS_FileCloseDest(int32 FileIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileCloseDest), FileIndex);
-    UT_DEFAULT_IMPL(DS_FileCloseDest);
+    UT_GenStub_AddParam(DS_FileCloseDest, int32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileCloseDest, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* File age processor                                              */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCreateDest()
+ * ----------------------------------------------------
+ */
+void DS_FileCreateDest(uint32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileCreateDest, uint32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileCreateDest, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCreateName()
+ * ----------------------------------------------------
+ */
+void DS_FileCreateName(uint32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileCreateName, uint32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileCreateName, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCreateSequence()
+ * ----------------------------------------------------
+ */
+void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
+{
+    UT_GenStub_AddParam(DS_FileCreateSequence, char *, Buffer);
+    UT_GenStub_AddParam(DS_FileCreateSequence, uint32, Type);
+    UT_GenStub_AddParam(DS_FileCreateSequence, uint32, Count);
+
+    UT_GenStub_Execute(DS_FileCreateSequence, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileSetupWrite()
+ * ----------------------------------------------------
+ */
+void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_FileSetupWrite, int32, FileIndex);
+    UT_GenStub_AddParam(DS_FileSetupWrite, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_FileSetupWrite, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileStorePacket()
+ * ----------------------------------------------------
+ */
+void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_FileStorePacket, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(DS_FileStorePacket, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_FileStorePacket, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileTestAge()
+ * ----------------------------------------------------
+ */
 void DS_FileTestAge(uint32 ElapsedSeconds)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_FileTestAge), ElapsedSeconds);
-    UT_DEFAULT_IMPL(DS_FileTestAge);
+    UT_GenStub_AddParam(DS_FileTestAge, uint32, ElapsedSeconds);
+
+    UT_GenStub_Execute(DS_FileTestAge, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileTransmit()
+ * ----------------------------------------------------
+ */
+void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
+{
+    UT_GenStub_AddParam(DS_FileTransmit, DS_AppFileStatus_t *, FileStatus);
+
+    UT_GenStub_Execute(DS_FileTransmit, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileUpdateHeader()
+ * ----------------------------------------------------
+ */
+void DS_FileUpdateHeader(int32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileUpdateHeader, int32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileUpdateHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileWriteData()
+ * ----------------------------------------------------
+ */
+void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
+{
+    UT_GenStub_AddParam(DS_FileWriteData, int32, FileIndex);
+    UT_GenStub_AddParam(DS_FileWriteData, const void *, FileData);
+    UT_GenStub_AddParam(DS_FileWriteData, uint32, DataLength);
+
+    UT_GenStub_Execute(DS_FileWriteData, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileWriteError()
+ * ----------------------------------------------------
+ */
+void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
+{
+    UT_GenStub_AddParam(DS_FileWriteError, uint32, FileIndex);
+    UT_GenStub_AddParam(DS_FileWriteError, uint32, DataLength);
+    UT_GenStub_AddParam(DS_FileWriteError, int32, WriteResult);
+
+    UT_GenStub_Execute(DS_FileWriteError, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileWriteHeader()
+ * ----------------------------------------------------
+ */
+void DS_FileWriteHeader(int32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileWriteHeader, int32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileWriteHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_IsPacketFiltered()
+ * ----------------------------------------------------
+ */
+bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint16 Algorithm_N, uint16 Algorithm_X,
+                         uint16 Algorithm_O)
+{
+    UT_GenStub_SetupReturnBuffer(DS_IsPacketFiltered, bool);
+
+    UT_GenStub_AddParam(DS_IsPacketFiltered, CFE_MSG_Message_t *, MessagePtr);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, FilterType);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, Algorithm_N);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, Algorithm_X);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, Algorithm_O);
+
+    UT_GenStub_Execute(DS_IsPacketFiltered, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_IsPacketFiltered, bool);
 }

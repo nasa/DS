@@ -19,302 +19,351 @@
 
 /**
  * @file
- *  CFS Data Storage (DS) table management functions
+ *
+ * Auto-Generated stub implementations for functions defined in ds_table header
  */
 
-#include "cfe.h"
-
-#include "ds_msgids.h"
-
-#include "ds_platform_cfg.h"
-#include "ds_verify.h"
-
-#include "ds_appdefs.h"
-
-#include "ds_app.h"
 #include "ds_table.h"
-#include "ds_msg.h"
-#include "ds_events.h"
+#include "utgenstub.h"
 
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-#define DS_CDS_NAME "DS_CDS"
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* DS application table initialization                             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 DS_TableInit(void)
-{
-    return UT_DEFAULT_IMPL(DS_TableInit);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Manage table data updates                                       */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_TableManageDestFile(void)
-{
-    UT_DEFAULT_IMPL(DS_TableManageDestFile);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Manage table data updates                                       */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_TableManageFilter(void)
-{
-    UT_DEFAULT_IMPL(DS_TableManageFilter);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Validate table data                                             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 DS_TableVerifyDestFile(const void *TableData)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyDestFile), TableData);
-    return UT_DEFAULT_IMPL(DS_TableVerifyDestFile);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify dest table entry                                         */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableIndex, int32 ErrorCount)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyDestFileEntry), DestFileEntry);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyDestFileEntry), TableIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyDestFileEntry), ErrorCount);
-    return UT_DEFAULT_IMPL(DS_TableVerifyDestFileEntry);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Validate table data                                             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 DS_TableVerifyFilter(const void *TableData)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyFilter), TableData);
-    return UT_DEFAULT_IMPL(DS_TableVerifyFilter);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify filter table entry                                       */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyFilterEntry), PacketEntry);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyFilterEntry), TableIndex);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyFilterEntry), ErrorCount);
-    return UT_DEFAULT_IMPL(DS_TableVerifyFilterEntry);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Find unused table entries                                       */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableEntryUnused), TableEntry);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableEntryUnused), BufferSize);
-    return UT_DEFAULT_IMPL(DS_TableEntryUnused);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify dest file index                                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyFileIndex(uint16 FileTableIndex)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyFileIndex), FileTableIndex);
-    return UT_DEFAULT_IMPL(DS_TableVerifyFileIndex);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify algorithm parameters                                     */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyParms), Algorithm_N);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyParms), Algorithm_X);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyParms), Algorithm_O);
-    return UT_DEFAULT_IMPL(DS_TableVerifyParms);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify filter or filename type                                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyType(uint16 TimeVsCount)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyType), TimeVsCount);
-    return UT_DEFAULT_IMPL(DS_TableVerifyType);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify file ena/dis state                                       */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyState(uint16 EnableState)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyState), EnableState);
-    return UT_DEFAULT_IMPL(DS_TableVerifyState);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify file size limit                                          */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifySize(uint32 MaxFileSize)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifySize), MaxFileSize);
-    return UT_DEFAULT_IMPL(DS_TableVerifySize);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify file age limit                                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyAge(uint32 MaxFileAge)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyAge), MaxFileAge);
-    return UT_DEFAULT_IMPL(DS_TableVerifyAge);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Verify sequence count                                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-bool DS_TableVerifyCount(uint32 SequenceCount)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableVerifyCount), SequenceCount);
-    return UT_DEFAULT_IMPL(DS_TableVerifyCount);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process new filter table                                        */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_TableSubscribe(void)
-{
-    UT_DEFAULT_IMPL(DS_TableSubscribe);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process old filter table                                        */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_TableUnsubscribe(void)
-{
-    UT_DEFAULT_IMPL(DS_TableUnsubscribe);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Create DS storage area in CDS                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-int32 DS_TableCreateCDS(void)
-{
-    return UT_DEFAULT_IMPL(DS_TableCreateCDS);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Update DS storage area in CDS                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_TableUpdateCDS(void)
-{
-    UT_DEFAULT_IMPL(DS_TableUpdateCDS);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Convert messageID to hash table index                           */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
-{
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableHashFunction), MessageID);
-    return UT_DEFAULT_IMPL(DS_TableHashFunction);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Create and populate hash table                                  */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_TableCreateHash(void)
-{
-    UT_DEFAULT_IMPL(DS_TableCreateHash);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* DS_TableAddMsgID() - get filter table index for MID             */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableAddMsgID()
+ * ----------------------------------------------------
+ */
 int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableAddMsgID), MessageID);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableAddMsgID), FilterIndex);
-    return UT_DEFAULT_IMPL(DS_TableAddMsgID);
+    UT_GenStub_SetupReturnBuffer(DS_TableAddMsgID, int32);
+
+    UT_GenStub_AddParam(DS_TableAddMsgID, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(DS_TableAddMsgID, int32, FilterIndex);
+
+    UT_GenStub_Execute(DS_TableAddMsgID, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableAddMsgID, int32);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* DS_TableFindMsgID() - get filter table index for MID            */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableCreateCDS()
+ * ----------------------------------------------------
+ */
+int32 DS_TableCreateCDS(void)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableCreateCDS, int32);
 
+    UT_GenStub_Execute(DS_TableCreateCDS, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableCreateCDS, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableCreateHash()
+ * ----------------------------------------------------
+ */
+void DS_TableCreateHash(void)
+{
+
+    UT_GenStub_Execute(DS_TableCreateHash, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableEntryUnused()
+ * ----------------------------------------------------
+ */
+bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableEntryUnused, bool);
+
+    UT_GenStub_AddParam(DS_TableEntryUnused, const void *, TableEntry);
+    UT_GenStub_AddParam(DS_TableEntryUnused, int32, BufferSize);
+
+    UT_GenStub_Execute(DS_TableEntryUnused, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableEntryUnused, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableFindMsgID()
+ * ----------------------------------------------------
+ */
 int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_TableFindMsgID), MessageID);
-    return UT_DEFAULT_IMPL(DS_TableFindMsgID);
+    UT_GenStub_SetupReturnBuffer(DS_TableFindMsgID, int32);
+
+    UT_GenStub_AddParam(DS_TableFindMsgID, CFE_SB_MsgId_t, MessageID);
+
+    UT_GenStub_Execute(DS_TableFindMsgID, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableFindMsgID, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableHashFunction()
+ * ----------------------------------------------------
+ */
+uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableHashFunction, uint32);
+
+    UT_GenStub_AddParam(DS_TableHashFunction, CFE_SB_MsgId_t, MessageID);
+
+    UT_GenStub_Execute(DS_TableHashFunction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableHashFunction, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableInit()
+ * ----------------------------------------------------
+ */
+int32 DS_TableInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableInit, int32);
+
+    UT_GenStub_Execute(DS_TableInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableManageDestFile()
+ * ----------------------------------------------------
+ */
+void DS_TableManageDestFile(void)
+{
+
+    UT_GenStub_Execute(DS_TableManageDestFile, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableManageFilter()
+ * ----------------------------------------------------
+ */
+void DS_TableManageFilter(void)
+{
+
+    UT_GenStub_Execute(DS_TableManageFilter, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableSubscribe()
+ * ----------------------------------------------------
+ */
+void DS_TableSubscribe(void)
+{
+
+    UT_GenStub_Execute(DS_TableSubscribe, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableUnsubscribe()
+ * ----------------------------------------------------
+ */
+void DS_TableUnsubscribe(void)
+{
+
+    UT_GenStub_Execute(DS_TableUnsubscribe, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableUpdateCDS()
+ * ----------------------------------------------------
+ */
+void DS_TableUpdateCDS(void)
+{
+
+    UT_GenStub_Execute(DS_TableUpdateCDS, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyAge()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyAge(uint32 MaxFileAge)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyAge, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyAge, uint32, MaxFileAge);
+
+    UT_GenStub_Execute(DS_TableVerifyAge, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyAge, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyCount()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyCount(uint32 SequenceCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyCount, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyCount, uint32, SequenceCount);
+
+    UT_GenStub_Execute(DS_TableVerifyCount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyCount, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyDestFile()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyDestFile(const void *TableData)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyDestFile, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyDestFile, const void *, TableData);
+
+    UT_GenStub_Execute(DS_TableVerifyDestFile, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyDestFile, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyDestFileEntry()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableIndex, int32 ErrorCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyDestFileEntry, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyDestFileEntry, DS_DestFileEntry_t *, DestFileEntry);
+    UT_GenStub_AddParam(DS_TableVerifyDestFileEntry, uint8, TableIndex);
+    UT_GenStub_AddParam(DS_TableVerifyDestFileEntry, int32, ErrorCount);
+
+    UT_GenStub_Execute(DS_TableVerifyDestFileEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyDestFileEntry, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyFileIndex()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyFileIndex(uint16 FileTableIndex)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFileIndex, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyFileIndex, uint16, FileTableIndex);
+
+    UT_GenStub_Execute(DS_TableVerifyFileIndex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFileIndex, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyFilter()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyFilter(const void *TableData)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFilter, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyFilter, const void *, TableData);
+
+    UT_GenStub_Execute(DS_TableVerifyFilter, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFilter, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyFilterEntry()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFilterEntry, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyFilterEntry, DS_PacketEntry_t *, PacketEntry);
+    UT_GenStub_AddParam(DS_TableVerifyFilterEntry, int32, TableIndex);
+    UT_GenStub_AddParam(DS_TableVerifyFilterEntry, int32, ErrorCount);
+
+    UT_GenStub_Execute(DS_TableVerifyFilterEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFilterEntry, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyParms()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyParms, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_N);
+    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_X);
+    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_O);
+
+    UT_GenStub_Execute(DS_TableVerifyParms, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyParms, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifySize()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifySize(uint32 MaxFileSize)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifySize, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifySize, uint32, MaxFileSize);
+
+    UT_GenStub_Execute(DS_TableVerifySize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifySize, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyState()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyState(uint16 EnableState)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyState, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyState, uint16, EnableState);
+
+    UT_GenStub_Execute(DS_TableVerifyState, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyState, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyType()
+ * ----------------------------------------------------
+ */
+bool DS_TableVerifyType(uint16 TimeVsCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyType, bool);
+
+    UT_GenStub_AddParam(DS_TableVerifyType, uint16, TimeVsCount);
+
+    UT_GenStub_Execute(DS_TableVerifyType, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyType, bool);
 }

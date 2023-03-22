@@ -19,109 +19,82 @@
 
 /**
  * @file
- *  Unit testing stubs for the ds_app.c file.
+ *
+ * Auto-Generated stub implementations for functions defined in ds_app header
  */
 
-#include "cfe.h"
-
-#include "ds_perfids.h"
-#include "ds_msgids.h"
-
-#include "ds_platform_cfg.h"
-#include "ds_verify.h"
-
-#include "ds_appdefs.h"
-
-#include "ds_msg.h"
 #include "ds_app.h"
-#include "ds_cmds.h"
-#include "ds_file.h"
-#include "ds_table.h"
-#include "ds_events.h"
-#include "ds_msgdefs.h"
-#include "ds_version.h"
+#include "utgenstub.h"
 
-#include <stdio.h>
-
-/* UT includes */
-#include "uttest.h"
-#include "utassert.h"
-#include "utstubs.h"
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Application global data structure                               */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-DS_AppData_t DS_AppData;
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Application entry point and main process loop                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_AppMain(void)
-{
-    UT_DEFAULT_IMPL(DS_AppMain);
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Application initialization                                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppInitialize()
+ * ----------------------------------------------------
+ */
 int32 DS_AppInitialize(void)
 {
-    return UT_DEFAULT_IMPL(DS_AppInitialize);
+    UT_GenStub_SetupReturnBuffer(DS_AppInitialize, int32);
+
+    UT_GenStub_Execute(DS_AppInitialize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_AppInitialize, int32);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process Software Bus messages                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppMain()
+ * ----------------------------------------------------
+ */
+void DS_AppMain(void)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppProcessMsg), BufPtr);
-    UT_DEFAULT_IMPL(DS_AppProcessMsg);
+
+    UT_GenStub_Execute(DS_AppMain, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process application commands                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppProcessCmd()
+ * ----------------------------------------------------
+ */
 void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppProcessCmd), BufPtr);
-    UT_DEFAULT_IMPL(DS_AppProcessCmd);
+    UT_GenStub_AddParam(DS_AppProcessCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_AppProcessCmd, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process hk request command                                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppProcessHK()
+ * ----------------------------------------------------
+ */
 void DS_AppProcessHK(void)
 {
-    UT_DEFAULT_IMPL(DS_AppProcessHK);
+
+    UT_GenStub_Execute(DS_AppProcessHK, Basic, NULL);
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Packet storage pre-processor                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppProcessMsg()
+ * ----------------------------------------------------
+ */
+void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_AppProcessMsg, const CFE_SB_Buffer_t *, BufPtr);
 
+    UT_GenStub_Execute(DS_AppProcessMsg, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppStorePacket()
+ * ----------------------------------------------------
+ */
 void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppStorePacket), MessageID);
-    UT_Stub_RegisterContextGenericArg(UT_KEY(DS_AppStorePacket), BufPtr);
-    UT_DEFAULT_IMPL(DS_AppStorePacket);
+    UT_GenStub_AddParam(DS_AppStorePacket, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(DS_AppStorePacket, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_AppStorePacket, Basic, NULL);
 }
