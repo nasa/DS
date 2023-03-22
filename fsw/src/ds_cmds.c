@@ -40,6 +40,14 @@
 
 #include <stdio.h>
 
+/**
+ * \brief Internal Macro to access the internal payload structure of a message
+ *
+ * This is done as a macro so it can be applied consistently to all
+ * message processing functions, based on the way DS defines its messages.
+ */
+#define DS_GET_CMD_PAYLOAD(ptr, type) (&((const type *)(ptr))->Payload)
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* NOOP command                                                    */
@@ -144,9 +152,12 @@ void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_AppStateCmd_t *DS_AppStateCmd = (DS_AppStateCmd_t *)BufPtr;
-    size_t            ActualLength   = 0;
-    size_t            ExpectedLength = sizeof(DS_AppStateCmd_t);
+    const DS_AppState_Payload_t *DS_AppStateCmd;
+
+    size_t ActualLength   = 0;
+    size_t ExpectedLength = sizeof(DS_AppStateCmd_t);
+
+    DS_AppStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AppStateCmd_t);
 
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
@@ -198,13 +209,15 @@ void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_FilterFileCmd_t *DS_FilterFileCmd = (DS_FilterFileCmd_t *)BufPtr;
-    size_t              ActualLength     = 0;
-    size_t              ExpectedLength   = sizeof(DS_FilterFileCmd_t);
-    DS_PacketEntry_t *  pPacketEntry     = NULL;
-    DS_FilterParms_t *  pFilterParms     = NULL;
-    int32               FilterTableIndex = 0;
+    const DS_FilterFile_Payload_t *DS_FilterFileCmd;
 
+    size_t            ActualLength     = 0;
+    size_t            ExpectedLength   = sizeof(DS_FilterFileCmd_t);
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+
+    DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterFileCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -311,12 +324,15 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_FilterTypeCmd_t *DS_FilterTypeCmd = (DS_FilterTypeCmd_t *)BufPtr;
-    size_t              ActualLength     = 0;
-    size_t              ExpectedLength   = sizeof(DS_FilterTypeCmd_t);
-    DS_PacketEntry_t *  pPacketEntry     = NULL;
-    DS_FilterParms_t *  pFilterParms     = NULL;
-    int32               FilterTableIndex = 0;
+    const DS_FilterType_Payload_t *DS_FilterTypeCmd;
+
+    size_t            ActualLength     = 0;
+    size_t            ExpectedLength   = sizeof(DS_FilterTypeCmd_t);
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+
+    DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterTypeCmd_t);
 
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
@@ -424,13 +440,15 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_FilterParmsCmd_t *DS_FilterParmsCmd = (DS_FilterParmsCmd_t *)BufPtr;
-    size_t               ActualLength      = 0;
-    size_t               ExpectedLength    = sizeof(DS_FilterParmsCmd_t);
-    DS_PacketEntry_t *   pPacketEntry      = NULL;
-    DS_FilterParms_t *   pFilterParms      = NULL;
-    int32                FilterTableIndex  = 0;
+    const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
 
+    size_t            ActualLength     = 0;
+    size_t            ExpectedLength   = sizeof(DS_FilterParmsCmd_t);
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+
+    DS_FilterParmsCmd = &((const DS_FilterParmsCmd_t *)BufPtr)->Payload;
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -542,11 +560,13 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestTypeCmd_t *  DS_DestTypeCmd = (DS_DestTypeCmd_t *)BufPtr;
+    const DS_DestType_Payload_t *DS_DestTypeCmd;
+
     size_t              ActualLength   = 0;
     size_t              ExpectedLength = sizeof(DS_DestTypeCmd_t);
     DS_DestFileEntry_t *pDest          = NULL;
 
+    DS_DestTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestTypeCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -619,10 +639,12 @@ void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestStateCmd_t *DS_DestStateCmd = (DS_DestStateCmd_t *)BufPtr;
-    size_t             ActualLength    = 0;
-    size_t             ExpectedLength  = sizeof(DS_DestStateCmd_t);
+    const DS_DestState_Payload_t *DS_DestStateCmd;
 
+    size_t ActualLength   = 0;
+    size_t ExpectedLength = sizeof(DS_DestStateCmd_t);
+
+    DS_DestStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestStateCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -695,11 +717,13 @@ void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestPathCmd_t *  DS_DestPathCmd = (DS_DestPathCmd_t *)BufPtr;
+    const DS_DestPath_Payload_t *DS_DestPathCmd;
+
     size_t              ActualLength   = 0;
     size_t              ExpectedLength = sizeof(DS_DestPathCmd_t);
     DS_DestFileEntry_t *pDest          = NULL;
 
+    DS_DestPathCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestPathCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -763,11 +787,12 @@ void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestBaseCmd_t *  DS_DestBaseCmd = (DS_DestBaseCmd_t *)BufPtr;
-    size_t              ActualLength   = 0;
-    size_t              ExpectedLength = sizeof(DS_DestBaseCmd_t);
-    DS_DestFileEntry_t *pDest          = NULL;
+    const DS_DestBase_Payload_t *DS_DestBaseCmd;
+    size_t                       ActualLength   = 0;
+    size_t                       ExpectedLength = sizeof(DS_DestBaseCmd_t);
+    DS_DestFileEntry_t *         pDest          = NULL;
 
+    DS_DestBaseCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestBaseCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -831,11 +856,12 @@ void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestExtCmd_t *   DS_DestExtCmd  = (DS_DestExtCmd_t *)BufPtr;
-    size_t              ActualLength   = 0;
-    size_t              ExpectedLength = sizeof(DS_DestExtCmd_t);
-    DS_DestFileEntry_t *pDest          = NULL;
+    const DS_DestExt_Payload_t *DS_DestExtCmd;
+    size_t                      ActualLength   = 0;
+    size_t                      ExpectedLength = sizeof(DS_DestExtCmd_t);
+    DS_DestFileEntry_t *        pDest          = NULL;
 
+    DS_DestExtCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestExtCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -899,11 +925,13 @@ void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestSizeCmd_t *  DS_DestSizeCmd = (DS_DestSizeCmd_t *)BufPtr;
+    const DS_DestSize_Payload_t *DS_DestSizeCmd;
+
     size_t              ActualLength   = 0;
     size_t              ExpectedLength = sizeof(DS_DestSizeCmd_t);
     DS_DestFileEntry_t *pDest          = NULL;
 
+    DS_DestSizeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestSizeCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -976,11 +1004,13 @@ void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestAgeCmd_t *   DS_DestAgeCmd  = (DS_DestAgeCmd_t *)BufPtr;
+    const DS_DestAge_Payload_t *DS_DestAgeCmd;
+
     size_t              ActualLength   = 0;
     size_t              ExpectedLength = sizeof(DS_DestAgeCmd_t);
     DS_DestFileEntry_t *pDest          = NULL;
 
+    DS_DestAgeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestAgeCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -1053,12 +1083,13 @@ void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_DestCountCmd_t * DS_DestCountCmd = (DS_DestCountCmd_t *)BufPtr;
-    size_t              ActualLength    = 0;
-    size_t              ExpectedLength  = sizeof(DS_DestCountCmd_t);
-    DS_AppFileStatus_t *FileStatus      = NULL;
-    DS_DestFileEntry_t *DestFile        = NULL;
+    const DS_DestCount_Payload_t *DS_DestCountCmd;
+    size_t                        ActualLength   = 0;
+    size_t                        ExpectedLength = sizeof(DS_DestCountCmd_t);
+    DS_AppFileStatus_t *          FileStatus     = NULL;
+    DS_DestFileEntry_t *          DestFile       = NULL;
 
+    DS_DestCountCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestCountCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -1143,10 +1174,11 @@ void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_CloseFileCmd_t *DS_CloseFileCmd = (DS_CloseFileCmd_t *)BufPtr;
-    size_t             ActualLength    = 0;
-    size_t             ExpectedLength  = sizeof(DS_CloseFileCmd_t);
+    const DS_CloseFile_Payload_t *DS_CloseFileCmd;
+    size_t                        ActualLength   = 0;
+    size_t                        ExpectedLength = sizeof(DS_CloseFileCmd_t);
 
+    DS_CloseFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_CloseFileCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -1243,6 +1275,7 @@ void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
 void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
 {
     DS_FileInfoPkt_t DS_FileInfoPkt;
+    DS_FileInfo_t *  FileInfoPtr;
     size_t           ActualLength   = 0;
     size_t           ExpectedLength = sizeof(DS_GetFileInfoCmd_t);
     int32            i              = 0;
@@ -1280,32 +1313,34 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
         */
         for (i = 0; i < DS_DEST_FILE_CNT; i++)
         {
+            FileInfoPtr = &DS_FileInfoPkt.Payload[i];
+
             /*
             ** Set file age and size...
             */
-            DS_FileInfoPkt.FileInfo[i].FileAge  = DS_AppData.FileStatus[i].FileAge;
-            DS_FileInfoPkt.FileInfo[i].FileSize = DS_AppData.FileStatus[i].FileSize;
+            FileInfoPtr->FileAge  = DS_AppData.FileStatus[i].FileAge;
+            FileInfoPtr->FileSize = DS_AppData.FileStatus[i].FileSize;
 
             /*
             ** Set file growth rate (computed when process last HK request)...
             */
-            DS_FileInfoPkt.FileInfo[i].FileRate = DS_AppData.FileStatus[i].FileRate;
+            FileInfoPtr->FileRate = DS_AppData.FileStatus[i].FileRate;
 
             /*
             ** Set current filename sequence count...
             */
-            DS_FileInfoPkt.FileInfo[i].SequenceCount = DS_AppData.FileStatus[i].FileCount;
+            FileInfoPtr->SequenceCount = DS_AppData.FileStatus[i].FileCount;
 
             /*
             ** Set file enable/disable state...
             */
             if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
             {
-                DS_FileInfoPkt.FileInfo[i].EnableState = DS_DISABLED;
+                FileInfoPtr->EnableState = DS_DISABLED;
             }
             else
             {
-                DS_FileInfoPkt.FileInfo[i].EnableState = DS_AppData.FileStatus[i].FileState;
+                FileInfoPtr->EnableState = DS_AppData.FileStatus[i].FileState;
             }
 
             /*
@@ -1313,17 +1348,16 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
             */
             if (!OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
             {
-                DS_FileInfoPkt.FileInfo[i].OpenState = DS_CLOSED;
+                FileInfoPtr->OpenState = DS_CLOSED;
             }
             else
             {
-                DS_FileInfoPkt.FileInfo[i].OpenState = DS_OPEN;
+                FileInfoPtr->OpenState = DS_OPEN;
 
                 /*
                 ** Set current open filename...
                 */
-                strncpy(DS_FileInfoPkt.FileInfo[i].FileName, DS_AppData.FileStatus[i].FileName,
-                        sizeof(DS_FileInfoPkt.FileInfo[i].FileName));
+                strncpy(FileInfoPtr->FileName, DS_AppData.FileStatus[i].FileName, sizeof(FileInfoPtr->FileName));
             }
         }
 
@@ -1343,15 +1377,16 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_AddMidCmd_t *  DS_AddMidCmd     = (DS_AddMidCmd_t *)BufPtr;
-    size_t            ActualLength     = 0;
-    size_t            ExpectedLength   = sizeof(DS_AddMidCmd_t);
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
-    int32             HashTableIndex   = 0;
-    int32             i                = 0;
+    const DS_AddRemoveMid_Payload_t *DS_AddMidCmd;
+    size_t                           ActualLength     = 0;
+    size_t                           ExpectedLength   = sizeof(DS_AddMidCmd_t);
+    DS_PacketEntry_t *               pPacketEntry     = NULL;
+    DS_FilterParms_t *               pFilterParms     = NULL;
+    int32                            FilterTableIndex = 0;
+    int32                            HashTableIndex   = 0;
+    int32                            i                = 0;
 
+    DS_AddMidCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
     if (ExpectedLength != ActualLength)
@@ -1454,15 +1489,17 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_RemoveMidCmd_t *DS_RemoveMidCmd  = (DS_RemoveMidCmd_t *)BufPtr;
-    size_t             ActualLength     = 0;
-    size_t             ExpectedLength   = sizeof(DS_RemoveMidCmd_t);
-    DS_PacketEntry_t * pPacketEntry     = NULL;
-    DS_FilterParms_t * pFilterParms     = NULL;
-    int32              FilterTableIndex = 0;
-    int32              HashTableIndex   = 0;
-    int32              i                = 0;
+    const DS_AddRemoveMid_Payload_t *DS_RemoveMidCmd;
 
+    size_t            ActualLength     = 0;
+    size_t            ExpectedLength   = sizeof(DS_RemoveMidCmd_t);
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+    int32             HashTableIndex   = 0;
+    int32             i                = 0;
+
+    DS_RemoveMidCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
     CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
     FilterTableIndex = DS_TableFindMsgID(DS_RemoveMidCmd->MessageID);
 
