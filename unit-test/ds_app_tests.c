@@ -139,7 +139,6 @@ void DS_AppMain_Test_SBTimeout(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_STUB_COUNT(DS_FileTestAge, 1);
 }
 
 void DS_AppInitialize_Test_Nominal(void)

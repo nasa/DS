@@ -115,13 +115,11 @@ void DS_AppMain(void)
         else if (Result == CFE_SB_TIME_OUT)
         {
             /*
-             * Process data storage file age limits and check for
-             * table updates.  This is usually done during the
+             * Check for table updates.  This is usually done during the
              * housekeeping cycle, but if housekeeping requests are
              * coming at a rate slower than 1Hz, we perform the operations
              * here.
              */
-            DS_FileTestAge(DS_SECS_PER_TIMEOUT);
             DS_TableManageDestFile();
             DS_TableManageFilter();
         }
