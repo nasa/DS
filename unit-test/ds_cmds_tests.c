@@ -48,299 +48,105 @@
 #define CMD_STRUCT_DATA_IS_32_ALIGNED(x) ((sizeof(x) - sizeof(CFE_MSG_CommandHeader_t)) % 4) == 0
 #define TLM_STRUCT_DATA_IS_32_ALIGNED(x) ((sizeof(x) - sizeof(CFE_MSG_TelemetryHeader_t)) % 4) == 0
 
-uint8 call_count_CFE_EVS_SendEvent;
-
 /*
  * Function Definitions
  */
 
-void DS_CmdNoop_Test_Nominal(void)
+void DS_NoopCmd_Test_Nominal(void)
 {
-    size_t            forced_Size    = sizeof(DS_NoopCmd_t);
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_NOOP_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "NOOP command, Version %%d.%%d.%%d.%%d");
-
     /* Execute the function being tested */
-    DS_CmdNoop(&UT_CmdBuf.Buf);
+    DS_NoopCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NOOP_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_NoopCmd_t), "DS_NoopCmd_t is 32-bit aligned");
 }
 
-void DS_CmdNoop_Test_InvalidCommandLength(void)
+void DS_ResetCountersCmd_Test_Nominal(void)
 {
-    size_t            forced_Size    = sizeof(DS_NoopCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_NOOP_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid NOOP command length: expected = %%d, actual = %%d");
-
     /* Execute the function being tested */
-    DS_CmdNoop(&UT_CmdBuf.Buf);
+    DS_ResetCountersCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_ZERO(DS_AppData.CmdAcceptedCounter);
+    UtAssert_ZERO(DS_AppData.CmdRejectedCounter);
+    UtAssert_ZERO(DS_AppData.DisabledPktCounter);
+    UtAssert_ZERO(DS_AppData.IgnoredPktCounter);
+    UtAssert_ZERO(DS_AppData.FilteredPktCounter);
+    UtAssert_ZERO(DS_AppData.PassedPktCounter);
+    UtAssert_ZERO(DS_AppData.FileWriteCounter);
+    UtAssert_ZERO(DS_AppData.FileWriteErrCounter);
+    UtAssert_ZERO(DS_AppData.FileUpdateCounter);
+    UtAssert_ZERO(DS_AppData.FileUpdateErrCounter);
+    UtAssert_ZERO(DS_AppData.DestTblLoadCounter);
+    UtAssert_ZERO(DS_AppData.DestTblErrCounter);
+    UtAssert_ZERO(DS_AppData.FilterTblLoadCounter);
+    UtAssert_ZERO(DS_AppData.FilterTblErrCounter);
 
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NOOP_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-}
-
-void DS_CmdReset_Test_Nominal(void)
-{
-    size_t            forced_Size    = sizeof(DS_ResetCmd_t);
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_RESET_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset counters command");
-
-    /* Execute the function being tested */
-    DS_CmdReset(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 0, "DS_AppData.CmdAcceptedCounter == 0");
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 0, "DS_AppData.CmdRejectedCounter == 0");
-    UtAssert_True(DS_AppData.DisabledPktCounter == 0, "DS_AppData.DisabledPktCounter == 0");
-    UtAssert_True(DS_AppData.IgnoredPktCounter == 0, "DS_AppData.IgnoredPktCounter == 0");
-    UtAssert_True(DS_AppData.FilteredPktCounter == 0, "DS_AppData.FilteredPktCounter == 0");
-    UtAssert_True(DS_AppData.PassedPktCounter == 0, "DS_AppData.PassedPktCounter == 0");
-    UtAssert_True(DS_AppData.FileWriteCounter == 0, "DS_AppData.FileWriteCounter == 0");
-    UtAssert_True(DS_AppData.FileWriteErrCounter == 0, "DS_AppData.FileWriteErrCounter == 0");
-    UtAssert_True(DS_AppData.FileUpdateCounter == 0, "DS_AppData.FileUpdateCounter == 0");
-    UtAssert_True(DS_AppData.FileUpdateErrCounter == 0, "DS_AppData.FileUpdateErrCounter == 0");
-    UtAssert_True(DS_AppData.DestTblLoadCounter == 0, "DS_AppData.DestTblLoadCounter == 0");
-    UtAssert_True(DS_AppData.DestTblErrCounter == 0, "DS_AppData.DestTblErrCounter == 0");
-    UtAssert_True(DS_AppData.FilterTblLoadCounter == 0, "DS_AppData.FilterTblLoadCounter == 0");
-    UtAssert_True(DS_AppData.FilterTblErrCounter == 0, "DS_AppData.FilterTblErrCounter == 0");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_RESET_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_ResetCmd_t), "DS_ResetCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_ResetCountersCmd_t), "DS_ResetCountersCmd_t is 32-bit aligned");
 }
 
-void DS_CmdReset_Test_InvalidCommandLength(void)
+void DS_SetAppStateCmd_Test_Nominal(void)
 {
-    size_t            forced_Size    = sizeof(DS_ResetCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_RESET_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid RESET command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdReset(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_RESET_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-}
-
-void DS_CmdSetAppState_Test_Nominal(void)
-{
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "APP STATE command: state = %%d");
     DS_AppState_Payload_t *CmdPayload = &UT_CmdBuf.AppStateCmd.Payload;
-
-    size_t            forced_Size    = sizeof(DS_AppStateCmd_t);
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_APP_STATE_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
     CmdPayload->EnableState = true;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    DS_CmdSetAppState(&UT_CmdBuf.Buf);
+    DS_SetAppStateCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.CmdRejectedCounter, 0);
     UtAssert_INT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
     UtAssert_True(DS_AppData.AppEnableState == true, "DS_AppData.AppEnableState == true");
 
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_AppStateCmd_t), "DS_AppStateCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetAppState_Test_InvalidCommandLength(void)
+void DS_SetAppStateCmd_Test_InvalidAppState(void)
 {
-    size_t                 forced_Size    = sizeof(DS_AppStateCmd_t) + 1;
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_APP_STATE_CC;
-    DS_AppState_Payload_t *CmdPayload     = &UT_CmdBuf.AppStateCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid APP STATE command length: expected = %%d, actual = %%d");
-
-    CmdPayload->EnableState = true;
-
-    /* Execute the function being tested */
-    DS_CmdSetAppState(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-}
-
-void DS_CmdSetAppState_Test_InvalidAppState(void)
-{
-    size_t                 forced_Size    = sizeof(DS_AppStateCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_APP_STATE_CC;
-    DS_AppState_Payload_t *CmdPayload     = &UT_CmdBuf.AppStateCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Invalid APP STATE command arg: app state = %%d");
+    DS_AppState_Payload_t *CmdPayload = &UT_CmdBuf.AppStateCmd.Payload;
 
     CmdPayload->EnableState = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetAppState(&UT_CmdBuf.Buf);
+    DS_SetAppStateCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 }
 
-void DS_CmdSetFilterFile_Test_Nominal(void)
+void DS_SetFilterFileCmd_Test_Nominal(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                   forced_Size             = sizeof(DS_FilterFileCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID            = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode          = DS_SET_FILTER_FILE_CC;
     int32                    forced_FilterTableIndex = 1;
     DS_FilterFile_Payload_t *CmdPayload              = &UT_CmdBuf.FilterFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "FILTER FILE command: MID = 0x%%08lX, index = %%d, filter = %%d, file = %%d");
 
     CmdPayload->FilterParmsIndex = 2;
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FileTableIndex   = 4;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
     DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->FilterParmsIndex].FileTableIndex = 0;
 
@@ -348,10 +154,10 @@ void DS_CmdSetFilterFile_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), forced_FilterTableIndex);
 
     /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
+    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
     UtAssert_True(
         DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->FilterParmsIndex].FileTableIndex ==
@@ -359,180 +165,71 @@ void DS_CmdSetFilterFile_Test_Nominal(void)
         "DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->"
         "FilterParmsIndex].FileTableIndex == CmdPayload->FileTableIndex");
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterFileCmd_t), "DS_FilterFileCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetFilterFile_Test_InvalidCommandLength(void)
+void DS_SetFilterFileCmd_Test_InvalidMessageID(void)
 {
-    size_t            forced_Size    = sizeof(DS_FilterFileCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_FILTER_FILE_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER FILE command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetFilterFile_Test_InvalidMessageID(void)
-{
-    size_t                   forced_Size    = sizeof(DS_FilterFileCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_FILE_CC;
-    DS_FilterFile_Payload_t *CmdPayload     = &UT_CmdBuf.FilterFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER FILE command arg: invalid messageID = 0x%%08lX");
+    DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
+    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterFile_Test_InvalidFilterParametersIndex(void)
+void DS_SetFilterFileCmd_Test_InvalidFilterParametersIndex(void)
 {
-    size_t                   forced_Size    = sizeof(DS_FilterFileCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_FILE_CC;
-    DS_FilterFile_Payload_t *CmdPayload     = &UT_CmdBuf.FilterFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER FILE command arg: filter parameters index = %%d");
+    DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
+    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterFile_Test_InvalidFileTableIndex(void)
+void DS_SetFilterFileCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t                   forced_Size    = sizeof(DS_FilterFileCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_FILE_CC;
-    DS_FilterFile_Payload_t *CmdPayload     = &UT_CmdBuf.FilterFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER FILE command arg: file table index = %%d");
+    DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = 1;
     CmdPayload->FileTableIndex   = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
+    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterFile_Test_FilterTableNotLoaded(void)
+void DS_SetFilterFileCmd_Test_FilterTableNotLoaded(void)
 {
-    size_t                   forced_Size    = sizeof(DS_FilterFileCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_FILE_CC;
-    DS_FilterFile_Payload_t *CmdPayload     = &UT_CmdBuf.FilterFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER FILE command: packet filter table is not loaded");
+    DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = 1;
@@ -544,279 +241,125 @@ void DS_CmdSetFilterFile_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
+    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterFile_Test_MessageIDNotInFilterTable(void)
+void DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                   forced_Size    = sizeof(DS_FilterFileCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_FILE_CC;
-    DS_FilterFile_Payload_t *CmdPayload     = &UT_CmdBuf.FilterFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER FILE command: Message ID 0x%%08lX is not in filter table");
+    DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
     CmdPayload->FilterParmsIndex = 2;
     CmdPayload->MessageID        = DS_UT_MID_2;
     CmdPayload->FileTableIndex   = 4;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_CmdSetFilterFile(&UT_CmdBuf.Buf);
+    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterType_Test_Nominal(void)
+void DS_SetFilterTypeCmd_Test_Nominal(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                   forced_Size    = sizeof(DS_FilterTypeCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-    DS_FilterType_Payload_t *CmdPayload     = &UT_CmdBuf.FilterTypeCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "FILTER TYPE command: MID = 0x%%08lX, index = %%d, filter = %%d, type = %%d");
+    DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
     CmdPayload->FilterParmsIndex = 2;
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterType       = 1;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
+    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].FilterType == 1,
-                  "DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].FilterType == 1");
+    UtAssert_UINT32_EQ(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].FilterType, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterTypeCmd_t), "DS_FilterTypeCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetFilterType_Test_InvalidCommandLength(void)
+void DS_SetFilterTypeCmd_Test_InvalidMessageID(void)
 {
-    size_t            forced_Size    = sizeof(DS_FilterTypeCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER TYPE command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetFilterType_Test_InvalidMessageID(void)
-{
-    size_t                   forced_Size    = sizeof(DS_FilterTypeCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-    DS_FilterType_Payload_t *CmdPayload     = &UT_CmdBuf.FilterTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER TYPE command arg: invalid messageID = 0x%%08lX");
+    DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
+    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterType_Test_InvalidFilterParametersIndex(void)
+void DS_SetFilterTypeCmd_Test_InvalidFilterParametersIndex(void)
 {
-    size_t                   forced_Size    = sizeof(DS_FilterTypeCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-    DS_FilterType_Payload_t *CmdPayload     = &UT_CmdBuf.FilterTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER TYPE command arg: filter parameters index = %%d");
+    DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
+    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterType_Test_InvalidFilterType(void)
+void DS_SetFilterTypeCmd_Test_InvalidFilterType(void)
 {
-    size_t                   forced_Size    = sizeof(DS_FilterTypeCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-    DS_FilterType_Payload_t *CmdPayload     = &UT_CmdBuf.FilterTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER TYPE command arg: filter type = %%d");
+    DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = 1;
     CmdPayload->FilterType       = false;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
+    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterType_Test_FilterTableNotLoaded(void)
+void DS_SetFilterTypeCmd_Test_FilterTableNotLoaded(void)
 {
-    size_t                   forced_Size    = sizeof(DS_FilterTypeCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-    DS_FilterType_Payload_t *CmdPayload     = &UT_CmdBuf.FilterTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER TYPE command: packet filter table is not loaded");
+    DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = 1;
@@ -828,86 +371,41 @@ void DS_CmdSetFilterType_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
+    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterType_Test_MessageIDNotInFilterTable(void)
+void DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                   forced_Size    = sizeof(DS_FilterTypeCmd_t);
-    CFE_SB_MsgId_t           forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t        forced_CmdCode = DS_SET_FILTER_TYPE_CC;
-    DS_FilterType_Payload_t *CmdPayload     = &UT_CmdBuf.FilterTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER TYPE command: Message ID 0x%%08lX is not in filter table");
+    DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_2;
     CmdPayload->FilterParmsIndex = 1;
     CmdPayload->FilterType       = 1;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
-    DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
-
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_CmdSetFilterType(&UT_CmdBuf.Buf);
+    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterParms_Test_Nominal(void)
+void DS_SetFilterParmsCmd_Test_Nominal(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                    forced_Size    = sizeof(DS_FilterParmsCmd_t);
-    CFE_SB_MsgId_t            forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t         forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-    DS_FilterParms_Payload_t *CmdPayload     = &UT_CmdBuf.FilterParmsCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "FILTER PARMS command: MID = 0x%%08lX, index = %%d, filter = %%d, N = %%d, X = %%d, O = %%d");
+    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
 
     CmdPayload->FilterParmsIndex = 2;
     CmdPayload->MessageID        = DS_UT_MID_1;
@@ -915,165 +413,64 @@ void DS_CmdSetFilterParms_Test_Nominal(void)
     CmdPayload->Algorithm_X      = 0;
     CmdPayload->Algorithm_O      = 0;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
-    DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
-
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
 
     /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
+    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_N == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_O);
 
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_X == 0");
-
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_O == 0");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterParmsCmd_t), "DS_FilterParmsCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetFilterParms_Test_InvalidCommandLength(void)
+void DS_SetFilterParmsCmd_Test_InvalidMessageID(void)
 {
-    size_t            forced_Size    = sizeof(DS_FilterParmsCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER PARMS command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetFilterParms_Test_InvalidMessageID(void)
-{
-    size_t                    forced_Size    = sizeof(DS_FilterParmsCmd_t);
-    CFE_SB_MsgId_t            forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t         forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-    DS_FilterParms_Payload_t *CmdPayload     = &UT_CmdBuf.FilterParmsCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER PARMS command arg: invalid messageID = 0x%%08lX");
+    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
 
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
+    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterParms_Test_InvalidFilterParametersIndex(void)
+void DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex(void)
 {
-    size_t                    forced_Size    = sizeof(DS_FilterParmsCmd_t);
-    CFE_SB_MsgId_t            forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t         forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-    DS_FilterParms_Payload_t *CmdPayload     = &UT_CmdBuf.FilterParmsCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER PARMS command arg: filter parameters index = %%d");
+    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
+    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterParms_Test_InvalidFilterAlgorithm(void)
+void DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                    forced_Size    = sizeof(DS_FilterParmsCmd_t);
-    CFE_SB_MsgId_t            forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t         forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-    DS_FilterParms_Payload_t *CmdPayload     = &UT_CmdBuf.FilterParmsCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER PARMS command arg: N = %%d, X = %%d, O = %%d");
+    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
 
     CmdPayload->FilterParmsIndex = 2;
     CmdPayload->MessageID        = DS_UT_MID_1;
@@ -1081,43 +478,22 @@ void DS_CmdSetFilterParms_Test_InvalidFilterAlgorithm(void)
     CmdPayload->Algorithm_X      = 1;
     CmdPayload->Algorithm_O      = 1;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
+    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
 }
 
-void DS_CmdSetFilterParms_Test_FilterTableNotLoaded(void)
+void DS_SetFilterParmsCmd_Test_FilterTableNotLoaded(void)
 {
-    size_t                    forced_Size    = sizeof(DS_FilterParmsCmd_t);
-    CFE_SB_MsgId_t            forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t         forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-    DS_FilterParms_Payload_t *CmdPayload     = &UT_CmdBuf.FilterParmsCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER PARMS command: packet filter table is not loaded");
+    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
 
     CmdPayload->MessageID        = DS_UT_MID_1;
     CmdPayload->FilterParmsIndex = 1;
@@ -1128,84 +504,42 @@ void DS_CmdSetFilterParms_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
+    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetFilterParms_Test_MessageIDNotInFilterTable(void)
+void DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable(void)
 {
-    DS_HashLink_t HashLink;
-
-    size_t                    forced_Size    = sizeof(DS_FilterParmsCmd_t);
-    CFE_SB_MsgId_t            forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t         forced_CmdCode = DS_SET_FILTER_PARMS_CC;
-    DS_FilterParms_Payload_t *CmdPayload     = &UT_CmdBuf.FilterParmsCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid FILTER PARMS command: Message ID 0x%%08lX is not in filter table");
+    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
 
     CmdPayload->FilterParmsIndex = 2;
     CmdPayload->MessageID        = DS_UT_MID_2;
 
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_CmdSetFilterParms(&UT_CmdBuf.Buf);
+    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestType_Test_Nominal(void)
+void DS_SetDestTypeCmd_Test_Nominal(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestTypeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_TYPE_CC;
-    DS_DestType_Payload_t *CmdPayload     = &UT_CmdBuf.DestTypeCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST TYPE command: file table index = %%d, filename type = %%d");
+    DS_DestType_Payload_t *CmdPayload = &UT_CmdBuf.DestTypeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->FileNameType   = 2;
@@ -1214,113 +548,41 @@ void DS_CmdSetDestType_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestType(&UT_CmdBuf.Buf);
+    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    UtAssert_True(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].FileNameType == 2,
-                  "DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].FileNameType == 2");
+    UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].FileNameType, 2);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestTypeCmd_t), "DS_DestTypeCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestType_Test_InvalidCommandLength(void)
+void DS_SetDestTypeCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t            forced_Size    = sizeof(DS_DestTypeCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_TYPE_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST TYPE command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetDestType(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestType_Test_InvalidFileTableIndex(void)
-{
-    size_t                 forced_Size    = sizeof(DS_DestTypeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_TYPE_CC;
-    DS_DestType_Payload_t *CmdPayload     = &UT_CmdBuf.DestTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST TYPE command arg: file table index = %%d");
+    DS_DestType_Payload_t *CmdPayload = &UT_CmdBuf.DestTypeCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetDestType(&UT_CmdBuf.Buf);
+    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestType_Test_InvalidFilenameType(void)
+void DS_SetDestTypeCmd_Test_InvalidFilenameType(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestTypeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_TYPE_CC;
-    DS_DestType_Payload_t *CmdPayload     = &UT_CmdBuf.DestTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST TYPE command arg: filename type = %%d");
+    DS_DestType_Payload_t *CmdPayload = &UT_CmdBuf.DestTypeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->FileNameType   = 99;
@@ -1328,38 +590,19 @@ void DS_CmdSetDestType_Test_InvalidFilenameType(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestType(&UT_CmdBuf.Buf);
+    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestType_Test_FileTableNotLoaded(void)
+void DS_SetDestTypeCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestTypeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_TYPE_CC;
-    DS_DestType_Payload_t *CmdPayload     = &UT_CmdBuf.DestTypeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST TYPE command: destination file table is not loaded");
+    DS_DestType_Payload_t *CmdPayload = &UT_CmdBuf.DestTypeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->FileNameType   = 2;
@@ -1370,38 +613,19 @@ void DS_CmdSetDestType_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestType(&UT_CmdBuf.Buf);
+    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestState_Test_Nominal(void)
+void DS_SetDestStateCmd_Test_Nominal(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestStateCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_STATE_CC;
-    DS_DestState_Payload_t *CmdPayload     = &UT_CmdBuf.DestStateCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST STATE command: file table index = %%d, file state = %%d");
+    DS_DestState_Payload_t *CmdPayload = &UT_CmdBuf.DestStateCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->EnableState    = 1;
@@ -1410,114 +634,43 @@ void DS_CmdSetDestState_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestState(&UT_CmdBuf.Buf);
+    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
     UtAssert_True(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].EnableState == CmdPayload->EnableState,
                   "DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].EnableState == "
                   "CmdPayload->EnableState");
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestStateCmd_t), "DS_DestStateCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestState_Test_InvalidCommandLength(void)
+void DS_SetDestStateCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t            forced_Size    = sizeof(DS_DestStateCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_STATE_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST STATE command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetDestState(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestState_Test_InvalidFileTableIndex(void)
-{
-    size_t                  forced_Size    = sizeof(DS_DestStateCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_STATE_CC;
-    DS_DestState_Payload_t *CmdPayload     = &UT_CmdBuf.DestStateCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST STATE command arg: file table index = %%d");
+    DS_DestState_Payload_t *CmdPayload = &UT_CmdBuf.DestStateCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetDestState(&UT_CmdBuf.Buf);
+    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestState_Test_InvalidFileState(void)
+void DS_SetDestStateCmd_Test_InvalidFileState(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestStateCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_STATE_CC;
-    DS_DestState_Payload_t *CmdPayload     = &UT_CmdBuf.DestStateCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST STATE command arg: file state = %%d");
+    DS_DestState_Payload_t *CmdPayload = &UT_CmdBuf.DestStateCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->EnableState    = 99;
@@ -1525,38 +678,19 @@ void DS_CmdSetDestState_Test_InvalidFileState(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestState(&UT_CmdBuf.Buf);
+    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestState_Test_FileTableNotLoaded(void)
+void DS_SetDestStateCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestStateCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_STATE_CC;
-    DS_DestState_Payload_t *CmdPayload     = &UT_CmdBuf.DestStateCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST STATE command: destination file table is not loaded");
+    DS_DestState_Payload_t *CmdPayload = &UT_CmdBuf.DestStateCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
 
@@ -1566,38 +700,19 @@ void DS_CmdSetDestState_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestState(&UT_CmdBuf.Buf);
+    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestPath_Test_Nominal(void)
+void DS_SetDestPathCmd_Test_Nominal(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestPathCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_PATH_CC;
-    DS_DestPath_Payload_t *CmdPayload     = &UT_CmdBuf.DestPathCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST PATH command: file table index = %%d, pathname = '%%s'");
+    DS_DestPath_Payload_t *CmdPayload = &UT_CmdBuf.DestPathCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     strncpy(CmdPayload->Pathname, "pathname", sizeof(CmdPayload->Pathname) - 1);
@@ -1605,115 +720,44 @@ void DS_CmdSetDestPath_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestPath(&UT_CmdBuf.Buf);
+    DS_SetDestPathCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Pathname, "pathname",
                           sizeof(DS_AppData.DestFileTblPtr->File[0].Pathname)) == 0,
                   "strncmp (DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Pathname, "
                   "'pathname', sizeof(DestFileTable.File[0].Pathname) - 1) == 0");
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestPathCmd_t), "DS_DestPathCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestPath_Test_InvalidCommandLength(void)
+void DS_SetDestPathCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t            forced_Size    = sizeof(DS_DestPathCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_PATH_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST PATH command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetDestPath(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestPath_Test_InvalidFileTableIndex(void)
-{
-    size_t                 forced_Size    = sizeof(DS_DestPathCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_PATH_CC;
-    DS_DestPath_Payload_t *CmdPayload     = &UT_CmdBuf.DestPathCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST PATH command arg: file table index = %%d");
+    DS_DestPath_Payload_t *CmdPayload = &UT_CmdBuf.DestPathCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetDestPath(&UT_CmdBuf.Buf);
+    DS_SetDestPathCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestPath_Test_FileTableNotLoaded(void)
+void DS_SetDestPathCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestPathCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_PATH_CC;
-    DS_DestPath_Payload_t *CmdPayload     = &UT_CmdBuf.DestPathCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST PATH command: destination file table is not loaded");
+    DS_DestPath_Payload_t *CmdPayload = &UT_CmdBuf.DestPathCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     strncpy(CmdPayload->Pathname, "pathname", sizeof(CmdPayload->Pathname) - 1);
@@ -1723,38 +767,19 @@ void DS_CmdSetDestPath_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestPath(&UT_CmdBuf.Buf);
+    DS_SetDestPathCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestBase_Test_Nominal(void)
+void DS_SetDestBaseCmd_Test_Nominal(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestBaseCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_BASE_CC;
-    DS_DestBase_Payload_t *CmdPayload     = &UT_CmdBuf.DestBaseCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST BASE command: file table index = %%d, base filename = '%%s'");
+    DS_DestBase_Payload_t *CmdPayload = &UT_CmdBuf.DestBaseCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     strncpy(CmdPayload->Basename, "base", sizeof(CmdPayload->Basename) - 1);
@@ -1762,115 +787,44 @@ void DS_CmdSetDestBase_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestBase(&UT_CmdBuf.Buf);
+    DS_SetDestBaseCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Basename, "base",
                           sizeof(DS_AppData.DestFileTblPtr->File[0].Basename)) == 0,
                   "strncmp (DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Basename, 'base', "
                   "sizeof(DestFileTable.File[0].Basename)) == 0");
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestBaseCmd_t), "DS_DestBaseCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestBase_Test_InvalidCommandLength(void)
+void DS_SetDestBaseCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t            forced_Size    = sizeof(DS_DestBaseCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_BASE_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST BASE command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetDestBase(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestBase_Test_InvalidFileTableIndex(void)
-{
-    size_t                 forced_Size    = sizeof(DS_DestBaseCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_BASE_CC;
-    DS_DestBase_Payload_t *CmdPayload     = &UT_CmdBuf.DestBaseCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST BASE command arg: file table index = %%d");
+    DS_DestBase_Payload_t *CmdPayload = &UT_CmdBuf.DestBaseCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetDestBase(&UT_CmdBuf.Buf);
+    DS_SetDestBaseCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestBase_Test_FileTableNotLoaded(void)
+void DS_SetDestBaseCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestBaseCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_BASE_CC;
-    DS_DestBase_Payload_t *CmdPayload     = &UT_CmdBuf.DestBaseCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST BASE command: destination file table is not loaded");
+    DS_DestBase_Payload_t *CmdPayload = &UT_CmdBuf.DestBaseCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     strncpy(CmdPayload->Basename, "base", sizeof(CmdPayload->Basename));
@@ -1880,38 +834,19 @@ void DS_CmdSetDestBase_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestBase(&UT_CmdBuf.Buf);
+    DS_SetDestBaseCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestExt_Test_Nominal(void)
+void DS_SetDestExtCmd_Test_Nominal(void)
 {
-    size_t                forced_Size    = sizeof(DS_DestExtCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_EXT_CC;
-    DS_DestExt_Payload_t *CmdPayload     = &UT_CmdBuf.DestExtCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST EXT command: file table index = %%d, extension = '%%s'");
+    DS_DestExt_Payload_t *CmdPayload = &UT_CmdBuf.DestExtCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     strncpy(CmdPayload->Extension, "txt", DS_EXTENSION_BUFSIZE);
@@ -1919,10 +854,10 @@ void DS_CmdSetDestExt_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestExt(&UT_CmdBuf.Buf);
+    DS_SetDestExtCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Extension, "txt",
                           DS_EXTENSION_BUFSIZE) == 0,
@@ -1930,105 +865,34 @@ void DS_CmdSetDestExt_Test_Nominal(void)
                   "DS_EXTENSION_BUFSIZE) == "
                   "0");
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestExtCmd_t), "DS_DestExtCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestExt_Test_InvalidCommandLength(void)
+void DS_SetDestExtCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t            forced_Size    = sizeof(DS_DestExtCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_SET_DEST_EXT_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST EXT command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdSetDestExt(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestExt_Test_InvalidFileTableIndex(void)
-{
-    size_t                forced_Size    = sizeof(DS_DestExtCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_EXT_CC;
-    DS_DestExt_Payload_t *CmdPayload     = &UT_CmdBuf.DestExtCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST EXT command arg: file table index = %%d");
+    DS_DestExt_Payload_t *CmdPayload = &UT_CmdBuf.DestExtCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CmdSetDestExt(&UT_CmdBuf.Buf);
+    DS_SetDestExtCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestExt_Test_FileTableNotLoaded(void)
+void DS_SetDestExtCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                forced_Size    = sizeof(DS_DestExtCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_EXT_CC;
-    DS_DestExt_Payload_t *CmdPayload     = &UT_CmdBuf.DestExtCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST EXT command: destination file table is not loaded");
+    DS_DestExt_Payload_t *CmdPayload = &UT_CmdBuf.DestExtCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     strncpy(CmdPayload->Extension, "txt", DS_EXTENSION_BUFSIZE);
@@ -2038,38 +902,19 @@ void DS_CmdSetDestExt_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestExt(&UT_CmdBuf.Buf);
+    DS_SetDestExtCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestSize_Test_Nominal(void)
+void DS_SetDestSizeCmd_Test_Nominal(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestSizeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_SIZE_CC;
-    DS_DestSize_Payload_t *CmdPayload     = &UT_CmdBuf.DestSizeCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST SIZE command: file table index = %%d, size limit = %%d");
+    DS_DestSize_Payload_t *CmdPayload = &UT_CmdBuf.DestSizeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->MaxFileSize    = 100000000;
@@ -2078,118 +923,42 @@ void DS_CmdSetDestSize_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestSize(&UT_CmdBuf.Buf);
+    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    UtAssert_True(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileSize == 100000000,
-                  "DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileSize == 100000000");
+    UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileSize, 100000000);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestSizeCmd_t), "DS_DestSizeCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestSize_Test_InvalidCommandLength(void)
+void DS_SetDestSizeCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestSizeCmd_t) + 1;
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_SIZE_CC;
-    DS_DestSize_Payload_t *CmdPayload     = &UT_CmdBuf.DestSizeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST SIZE command length: expected = %%d, actual = %%d");
-
-    CmdPayload->FileTableIndex = 1;
-    CmdPayload->MaxFileSize    = 100000000;
-
-    /* Execute the function being tested */
-    DS_CmdSetDestSize(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestSize_Test_InvalidFileTableIndex(void)
-{
-    size_t                 forced_Size    = sizeof(DS_DestSizeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_SIZE_CC;
-    DS_DestSize_Payload_t *CmdPayload     = &UT_CmdBuf.DestSizeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST SIZE command arg: file table index = %%d");
+    DS_DestSize_Payload_t *CmdPayload = &UT_CmdBuf.DestSizeCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
     CmdPayload->MaxFileSize    = 100000000;
 
     /* Execute the function being tested */
-    DS_CmdSetDestSize(&UT_CmdBuf.Buf);
+    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestSize_Test_InvalidFileSizeLimit(void)
+void DS_SetDestSizeCmd_Test_InvalidFileSizeLimit(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestSizeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_SIZE_CC;
-    DS_DestSize_Payload_t *CmdPayload     = &UT_CmdBuf.DestSizeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST SIZE command arg: size limit = %%d");
+    DS_DestSize_Payload_t *CmdPayload = &UT_CmdBuf.DestSizeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->MaxFileSize    = 1;
@@ -2199,38 +968,19 @@ void DS_CmdSetDestSize_Test_InvalidFileSizeLimit(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestSize(&UT_CmdBuf.Buf);
+    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestSize_Test_FileTableNotLoaded(void)
+void DS_SetDestSizeCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                 forced_Size    = sizeof(DS_DestSizeCmd_t);
-    CFE_SB_MsgId_t         forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t      forced_CmdCode = DS_SET_DEST_SIZE_CC;
-    DS_DestSize_Payload_t *CmdPayload     = &UT_CmdBuf.DestSizeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST SIZE command: destination file table is not loaded");
+    DS_DestSize_Payload_t *CmdPayload = &UT_CmdBuf.DestSizeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->MaxFileSize    = 100000000;
@@ -2241,38 +991,19 @@ void DS_CmdSetDestSize_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestSize(&UT_CmdBuf.Buf);
+    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestAge_Test_Nominal(void)
+void DS_SetDestAgeCmd_Test_Nominal(void)
 {
-    size_t                forced_Size    = sizeof(DS_DestAgeCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_AGE_CC;
-    DS_DestAge_Payload_t *CmdPayload     = &UT_CmdBuf.DestAgeCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST AGE command: file table index = %%d, age limit = %%d");
+    DS_DestAge_Payload_t *CmdPayload = &UT_CmdBuf.DestAgeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->MaxFileAge     = 1000;
@@ -2281,117 +1012,42 @@ void DS_CmdSetDestAge_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyAge), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestAge(&UT_CmdBuf.Buf);
+    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    UtAssert_True(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileAge == 1000,
-                  "DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileAge == 1000");
+    UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileAge, 1000);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestAgeCmd_t), "DS_DestAgeCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestAge_Test_InvalidCommandLength(void)
+void DS_SetDestAgeCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t                forced_Size    = sizeof(DS_DestAgeCmd_t) + 1;
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_AGE_CC;
-    DS_DestAge_Payload_t *CmdPayload     = &UT_CmdBuf.DestAgeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST AGE command length: expected = %%d, actual = %%d");
-
-    CmdPayload->FileTableIndex = 1;
-    CmdPayload->MaxFileAge     = 1000;
-
-    /* Execute the function being tested */
-    DS_CmdSetDestAge(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestAge_Test_InvalidFileTableIndex(void)
-{
-    size_t                forced_Size    = sizeof(DS_DestAgeCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_AGE_CC;
-    DS_DestAge_Payload_t *CmdPayload     = &UT_CmdBuf.DestAgeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST AGE command arg: file table index = %%d");
+    DS_DestAge_Payload_t *CmdPayload = &UT_CmdBuf.DestAgeCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
     CmdPayload->MaxFileAge     = 1000;
 
     /* Execute the function being tested */
-    DS_CmdSetDestAge(&UT_CmdBuf.Buf);
+    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestAge_Test_InvalidFileAgeLimit(void)
+void DS_SetDestAgeCmd_Test_InvalidFileAgeLimit(void)
 {
-    size_t                forced_Size    = sizeof(DS_DestAgeCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_AGE_CC;
-    DS_DestAge_Payload_t *CmdPayload     = &UT_CmdBuf.DestAgeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Invalid DEST AGE command arg: age limit = %%d");
+    DS_DestAge_Payload_t *CmdPayload = &UT_CmdBuf.DestAgeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->MaxFileAge     = 1;
@@ -2401,38 +1057,19 @@ void DS_CmdSetDestAge_Test_InvalidFileAgeLimit(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestAge(&UT_CmdBuf.Buf);
+    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestAge_Test_FileTableNotLoaded(void)
+void DS_SetDestAgeCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                forced_Size    = sizeof(DS_DestAgeCmd_t);
-    CFE_SB_MsgId_t        forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t     forced_CmdCode = DS_SET_DEST_AGE_CC;
-    DS_DestAge_Payload_t *CmdPayload     = &UT_CmdBuf.DestAgeCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST AGE command: destination file table is not loaded");
+    DS_DestAge_Payload_t *CmdPayload = &UT_CmdBuf.DestAgeCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->MaxFileAge     = 1000;
@@ -2443,38 +1080,19 @@ void DS_CmdSetDestAge_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyAge), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestAge(&UT_CmdBuf.Buf);
+    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestCount_Test_Nominal(void)
+void DS_SetDestCountCmd_Test_Nominal(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestCountCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_COUNT_CC;
-    DS_DestCount_Payload_t *CmdPayload     = &UT_CmdBuf.DestCountCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "DEST COUNT command: file table index = %%d, sequence count = %%d");
+    DS_DestCount_Payload_t *CmdPayload = &UT_CmdBuf.DestCountCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->SequenceCount  = 1;
@@ -2483,121 +1101,43 @@ void DS_CmdSetDestCount_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyCount), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestCount(&UT_CmdBuf.Buf);
+    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    UtAssert_True(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].SequenceCount == 1,
-                  "DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].SequenceCount == 1");
+    UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].SequenceCount, 1);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[CmdPayload->FileTableIndex].FileCount, 1);
 
-    UtAssert_True(DS_AppData.FileStatus[CmdPayload->FileTableIndex].FileCount == 1,
-                  "DS_AppData.FileStatus[CmdPayload->FileTableIndex].FileCount == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestCountCmd_t), "DS_DestCountCmd_t is 32-bit aligned");
 }
 
-void DS_CmdSetDestCount_Test_InvalidCommandLength(void)
+void DS_SetDestCountCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestCountCmd_t) + 1;
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_COUNT_CC;
-    DS_DestCount_Payload_t *CmdPayload     = &UT_CmdBuf.DestCountCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST COUNT command length: expected = %%d, actual = %%d");
-
-    CmdPayload->FileTableIndex = 1;
-    CmdPayload->SequenceCount  = 1;
-
-    /* Execute the function being tested */
-    DS_CmdSetDestCount(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdSetDestCount_Test_InvalidFileTableIndex(void)
-{
-    size_t                  forced_Size    = sizeof(DS_DestCountCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_COUNT_CC;
-    DS_DestCount_Payload_t *CmdPayload     = &UT_CmdBuf.DestCountCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST COUNT command arg: file table index = %%d");
+    DS_DestCount_Payload_t *CmdPayload = &UT_CmdBuf.DestCountCmd.Payload;
 
     CmdPayload->FileTableIndex = 99;
     CmdPayload->SequenceCount  = 1;
 
     /* Execute the function being tested */
-    DS_CmdSetDestCount(&UT_CmdBuf.Buf);
+    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestCount_Test_InvalidFileSequenceCount(void)
+void DS_SetDestCountCmd_Test_InvalidFileSequenceCount(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestCountCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_COUNT_CC;
-    DS_DestCount_Payload_t *CmdPayload     = &UT_CmdBuf.DestCountCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST COUNT command arg: sequence count = %%d");
+    DS_DestCount_Payload_t *CmdPayload = &UT_CmdBuf.DestCountCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->SequenceCount  = -1;
@@ -2607,38 +1147,19 @@ void DS_CmdSetDestCount_Test_InvalidFileSequenceCount(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestCount(&UT_CmdBuf.Buf);
+    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdSetDestCount_Test_FileTableNotLoaded(void)
+void DS_SetDestCountCmd_Test_FileTableNotLoaded(void)
 {
-    size_t                  forced_Size    = sizeof(DS_DestCountCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_SET_DEST_COUNT_CC;
-    DS_DestCount_Payload_t *CmdPayload     = &UT_CmdBuf.DestCountCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST COUNT command: destination file table is not loaded");
+    DS_DestCount_Payload_t *CmdPayload = &UT_CmdBuf.DestCountCmd.Payload;
 
     CmdPayload->FileTableIndex = 1;
     CmdPayload->SequenceCount  = 1;
@@ -2649,41 +1170,20 @@ void DS_CmdSetDestCount_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyCount), true);
 
     /* Execute the function being tested */
-    DS_CmdSetDestCount(&UT_CmdBuf.Buf);
+    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdCloseFile_Test_Nominal(void)
+void DS_CloseFileCmd_Test_Nominal(void)
 {
-    uint32 i;
-    uint8  call_count_DS_FileUpdateHeader = 0;
-    uint8  call_count_DS_FileCloseDest    = 0;
-
-    size_t                  forced_Size    = sizeof(DS_CloseFileCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_CLOSE_FILE_CC;
-    DS_CloseFile_Payload_t *CmdPayload     = &UT_CmdBuf.CloseFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "DEST CLOSE command: file table index = %%d");
+    uint32                  i;
+    DS_CloseFile_Payload_t *CmdPayload = &UT_CmdBuf.CloseFileCmd.Payload;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
@@ -2699,50 +1199,26 @@ void DS_CmdCloseFile_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdCloseFile(&UT_CmdBuf.Buf);
+    DS_CloseFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_DS_FileUpdateHeader = UT_GetStubCount(UT_KEY(DS_FileUpdateHeader));
-    UtAssert_INT32_EQ(call_count_DS_FileUpdateHeader, 1);
-
-    call_count_DS_FileCloseDest = UT_GetStubCount(UT_KEY(DS_FileCloseDest));
-    UtAssert_INT32_EQ(call_count_DS_FileCloseDest, 1);
+    UtAssert_STUB_COUNT(DS_FileUpdateHeader, 1);
+    UtAssert_STUB_COUNT(DS_FileCloseDest, 1);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseFileCmd_t), "DS_CloseFileCmd_t is 32-bit aligned");
 }
 
-void DS_CmdCloseFile_Test_NominalAlreadyClosed(void)
+void DS_CloseFileCmd_Test_NominalAlreadyClosed(void)
 {
-    uint32 i;
-    uint8  call_count_DS_FileUpdateHeader = 0;
-    uint8  call_count_DS_FileCloseDest    = 0;
-
-    size_t                  forced_Size    = sizeof(DS_CloseFileCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_CLOSE_FILE_CC;
-    DS_CloseFile_Payload_t *CmdPayload     = &UT_CmdBuf.CloseFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "DEST CLOSE command: file table index = %%d");
+    uint32                  i;
+    DS_CloseFile_Payload_t *CmdPayload = &UT_CmdBuf.CloseFileCmd.Payload;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
@@ -2756,121 +1232,44 @@ void DS_CmdCloseFile_Test_NominalAlreadyClosed(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CmdCloseFile(&UT_CmdBuf.Buf);
+    DS_CloseFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_DS_FileUpdateHeader = UT_GetStubCount(UT_KEY(DS_FileUpdateHeader));
-    UtAssert_INT32_EQ(call_count_DS_FileUpdateHeader, 0);
-
-    call_count_DS_FileCloseDest = UT_GetStubCount(UT_KEY(DS_FileCloseDest));
-    UtAssert_INT32_EQ(call_count_DS_FileCloseDest, 0);
+    UtAssert_STUB_COUNT(DS_FileUpdateHeader, 0);
+    UtAssert_STUB_COUNT(DS_FileCloseDest, 0);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseFileCmd_t), "DS_CloseFileCmd_t is 32-bit aligned");
 }
 
-void DS_CmdCloseFile_Test_InvalidCommandLength(void)
+void DS_CloseFileCmd_Test_InvalidFileTableIndex(void)
 {
-    size_t                  forced_Size    = sizeof(DS_CloseFileCmd_t) + 1;
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_CLOSE_FILE_CC;
-    DS_CloseFile_Payload_t *CmdPayload     = &UT_CmdBuf.CloseFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST CLOSE command length: expected = %%d, actual = %%d");
-
-    CmdPayload->FileTableIndex = 0;
-
-    /* Execute the function being tested */
-    DS_CmdCloseFile(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdCloseFile_Test_InvalidFileTableIndex(void)
-{
-    size_t                  forced_Size    = sizeof(DS_CloseFileCmd_t);
-    CFE_SB_MsgId_t          forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t       forced_CmdCode = DS_CLOSE_FILE_CC;
-    DS_CloseFile_Payload_t *CmdPayload     = &UT_CmdBuf.CloseFileCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
+    DS_CloseFile_Payload_t *CmdPayload = &UT_CmdBuf.CloseFileCmd.Payload;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST CLOSE command arg: file table index = %%d");
 
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CmdCloseFile(&UT_CmdBuf.Buf);
+    DS_CloseFileCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdCloseAll_Test_Nominal(void)
+void DS_CloseAllCmd_Test_Nominal(void)
 {
     uint32 i;
-
-    size_t            forced_Size    = sizeof(DS_CloseAllCmd_t);
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_CLOSE_ALL_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "DEST CLOSE ALL command");
 
     for (i = 1; i < DS_DEST_FILE_CNT; i++)
     {
@@ -2882,32 +1281,22 @@ void DS_CmdCloseAll_Test_Nominal(void)
 #endif
 
     /* Execute the function being tested */
-    DS_CmdCloseAll(&UT_CmdBuf.Buf);
+    DS_CloseAllCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_ALL_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseAllCmd_t), "DS_CloseAllCmd_t is 32-bit aligned");
 }
 
-void DS_CmdCloseAll_Test_CloseAll(void)
+void DS_CloseAllCmd_Test_CloseAll(void)
 {
     uint32 i;
-    size_t forced_Size = sizeof(DS_CloseAllCmd_t);
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
 
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
@@ -2915,7 +1304,7 @@ void DS_CmdCloseAll_Test_CloseAll(void)
     }
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CmdCloseAll(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -2929,54 +1318,9 @@ void DS_CmdCloseAll_Test_CloseAll(void)
     UtAssert_BOOL_TRUE(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseAllCmd_t));
 }
 
-void DS_CmdCloseAll_Test_InvalidCommandLength(void)
-{
-    size_t            forced_Size    = sizeof(DS_CloseAllCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_CLOSE_ALL_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid DEST CLOSE ALL command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdCloseAll(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_ALL_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdGetFileInfo_Test_EnabledOpen(void)
+void DS_GetFileInfoCmd_Test_EnabledOpen(void)
 {
     uint32 i;
-
-    size_t            forced_Size    = sizeof(DS_GetFileInfoCmd_t);
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_GET_FILE_INFO_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "GET FILE INFO command");
 
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
@@ -2990,41 +1334,23 @@ void DS_CmdGetFileInfo_Test_EnabledOpen(void)
     }
 
     /* Execute the function being tested */
-    DS_CmdGetFileInfo(&UT_CmdBuf.Buf);
+    DS_GetFileInfoCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
     /* Changes to DS_FileInfoPkt cannot easily be verified because DS_FileInfoPkt is a local variable */
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_GET_FILE_INFO_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_FileInfoPkt_t), "DS_FileInfoPkt_t is 32-bit aligned");
 }
 
-void DS_CmdGetFileInfo_Test_DisabledClosed(void)
+void DS_GetFileInfoCmd_Test_DisabledClosed(void)
 {
     uint32 i;
-
-    size_t            forced_Size    = sizeof(DS_GetFileInfoCmd_t);
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_GET_FILE_INFO_CC;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "GET FILE INFO command");
 
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
@@ -3041,90 +1367,30 @@ void DS_CmdGetFileInfo_Test_DisabledClosed(void)
     DS_AppData.DestFileTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_CmdGetFileInfo(&UT_CmdBuf.Buf);
+    DS_GetFileInfoCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_GET_FILE_INFO_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     /* Generates 1 event message we don't care about in this test */
 }
 
-void DS_CmdGetFileInfo_Test_InvalidCommandLength(void)
+void DS_AddMIDCmd_Test_Nominal(void)
 {
-    size_t            forced_Size    = sizeof(DS_GetFileInfoCmd_t) + 1;
-    CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t forced_CmdCode = DS_GET_FILE_INFO_CC;
+    int32 FilterTableIndex;
 
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid GET FILE INFO command length: expected = %%d, actual = %%d");
-
-    /* Execute the function being tested */
-    DS_CmdGetFileInfo(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_GET_FILE_INFO_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdAddMID_Test_Nominal(void)
-{
-    int32         FilterTableIndex;
-    DS_HashLink_t HashLink;
-
-    size_t                     forced_Size    = sizeof(DS_AddMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_ADD_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.AddMidCmd.Payload;
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "ADD MID command: MID = 0x%%08lX, filter index = %%d, hash index = %%d");
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.AddMidCmd.Payload;
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_AddMidCmd_t), "DS_AddMidCmd_t is 32-bit aligned");
 
     CmdPayload->MessageID = DS_UT_MID_1;
 
-    DS_AppData.HashTable[0]                                   = &HashLink;
-    HashLink.Index                                            = 0;
-    DS_AppData.FilterTblPtr->Packet[HashLink.Index].MessageID = CFE_SB_INVALID_MSG_ID;
-    HashLink.Next                                             = (struct DS_HashTag *)&DS_AppData.HashTable[1];
-
-    DS_AppData.HashTable[1] = &HashLink;
-    HashLink.Index          = 1;
-    HashLink.Next           = (struct DS_HashTag *)&DS_AppData.HashTable[2];
-
-    DS_AppData.FilterTblPtr->Packet[HashLink.Index].MessageID = DS_UT_MID_2;
+    DS_AppData.FilterTblPtr->Packet[0].MessageID = CFE_SB_INVALID_MSG_ID;
+    DS_AppData.FilterTblPtr->Packet[1].MessageID = DS_UT_MID_2;
 
     FilterTableIndex = 0;
 
@@ -3135,164 +1401,61 @@ void DS_CmdAddMID_Test_Nominal(void)
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, 0);
 
     /* Execute the function being tested */
-    DS_CmdAddMID(&UT_CmdBuf.Buf);
+    DS_AddMIDCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdAcceptedCounter == 1, "DS_AppData.CmdAcceptedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
 
     UtAssert_BOOL_TRUE(CFE_SB_MsgId_Equal(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].MessageID, DS_UT_MID_1));
 
     /* Check first elements */
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType == DS_BY_COUNT,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType == DS_BY_COUNT");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex);
+    UtAssert_UINT8_EQ(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType, DS_BY_COUNT);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O);
 
     /* Check middle elements */
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FileTableIndex == 0,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].FileTableIndex == 0");
-
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FilterType == DS_BY_COUNT,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].FilterType == DS_BY_COUNT");
-
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_N == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_X == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_O == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FileTableIndex);
+    UtAssert_UINT8_EQ(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FilterType,
+                      DS_BY_COUNT);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_O);
 
     /* Check last elements */
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FileTableIndex == 0,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].FileTableIndex == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FileTableIndex);
+    UtAssert_UINT8_EQ(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FilterType,
+                      DS_BY_COUNT);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_O);
 
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FilterType == DS_BY_COUNT,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].FilterType == DS_BY_COUNT");
-
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_N == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_X == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_O == 0");
-
-    /* UtAssert_True (DS_AppData.HashLinks[0].Index == 0, "DS_AppData.HashLinks[0].Index == 0"); */
-    /* UtAssert_True (DS_AppData.HashLinks[0].MessageID == DS_UT_MID_1, "DS_AppData.HashLinks[0].MessageID ==
-     * DS_UT_MID_1"); */
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdAddMID_Test_InvalidCommandLength(void)
+void DS_AddMIDCmd_Test_InvalidMessageID(void)
 {
-    size_t                     forced_Size    = sizeof(DS_AddMidCmd_t) + 1;
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_ADD_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.AddMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid ADD MID command length: expected = %%d, actual = %%d");
-
-    CmdPayload->MessageID = DS_UT_MID_1;
-
-    /* Execute the function being tested */
-    DS_CmdAddMID(&UT_CmdBuf.Buf);
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdAddMID_Test_InvalidMessageID(void)
-{
-    size_t                     forced_Size    = sizeof(DS_AddMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_ADD_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.AddMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid ADD MID command arg: invalid MID = 0x%%08lX");
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.AddMidCmd.Payload;
 
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_CmdAddMID(&UT_CmdBuf.Buf);
+    DS_AddMIDCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    /*   UtAssert_True
-           (Ut_CFE_EVS_EventSent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_ERROR, "Invalid ADD MID command arg: invalid MID = 0x
-       0"), "Invalid ADD MID command arg: invalid MID = 0x   0");
-   */
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdAddMID_Test_FilterTableNotLoaded(void)
+void DS_AddMIDCmd_Test_FilterTableNotLoaded(void)
 {
-    size_t                     forced_Size    = sizeof(DS_AddMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_ADD_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.AddMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid ADD MID command: filter table is not loaded");
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.AddMidCmd.Payload;
 
     CmdPayload->MessageID = DS_UT_MID_1;
 
@@ -3300,81 +1463,39 @@ void DS_CmdAddMID_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_CmdAddMID(&UT_CmdBuf.Buf);
+    DS_AddMIDCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdAddMID_Test_MIDAlreadyInFilterTable(void)
+void DS_AddMIDCmd_Test_MIDAlreadyInFilterTable(void)
 {
-    DS_HashLink_t HashLink;
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.AddMidCmd.Payload;
 
-    size_t                     forced_Size    = sizeof(DS_AddMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_ADD_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.AddMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid ADD MID command: MID = 0x%%08lX is already in filter table at index = %%d");
-
-    CmdPayload->MessageID = DS_UT_MID_1;
-
-    DS_AppData.HashTable[187]                  = &HashLink;
-    HashLink.Index                             = 0;
+    CmdPayload->MessageID                      = DS_UT_MID_1;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, 1);
 
     /* Execute the function being tested */
-    DS_CmdAddMID(&UT_CmdBuf.Buf);
+    DS_AddMIDCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdAddMID_Test_FilterTableFull(void)
+void DS_AddMIDCmd_Test_FilterTableFull(void)
 {
-    size_t                     forced_Size    = sizeof(DS_AddMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_ADD_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.AddMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Invalid ADD MID command: filter table is full");
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.AddMidCmd.Payload;
 
     CmdPayload->MessageID = DS_UT_MID_1;
 
@@ -3382,208 +1503,91 @@ void DS_CmdAddMID_Test_FilterTableFull(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_CmdAddMID(&UT_CmdBuf.Buf);
+    DS_AddMIDCmd(&UT_CmdBuf.Buf);
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdRemoveMID_Test_Nominal(void)
+void DS_RemoveMIDCmd_Test_Nominal(void)
 {
-    DS_HashLink_t              HashLink;
-    size_t                     forced_Size      = sizeof(DS_RemoveMidCmd_t);
     CFE_SB_MsgId_t             MessageID        = DS_UT_MID_1;
-    CFE_SB_MsgId_t             forced_MsgID     = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode   = DS_REMOVE_MID_CC;
     int32                      FilterTableIndex = 0;
     int32                      HashTableIndex   = 1;
-    int32                      strCmpResult;
-    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.RemoveMidCmd.Payload;
-
-    char ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "REMOVE MID command: MID = 0x%%08lX, filter index = %%d, hash index = %%d");
+    DS_AddRemoveMid_Payload_t *CmdPayload       = &UT_CmdBuf.RemoveMidCmd.Payload;
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_RemoveMidCmd_t), "DS_RemoveMidCmd_t is 32-bit aligned");
 
-    CmdPayload->MessageID                                     = MessageID;
-    HashLink.Index                                            = FilterTableIndex;
-    HashLink.MessageID                                        = MessageID;
-    DS_AppData.HashTable[HashTableIndex]                      = &HashLink;
-    DS_AppData.FilterTblPtr->Packet[HashLink.Index].MessageID = MessageID;
+    CmdPayload->MessageID                                       = MessageID;
+    DS_AppData.FilterTblPtr->Packet[FilterTableIndex].MessageID = MessageID;
 
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, FilterTableIndex);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].MessageID),
                       CFE_SB_MsgIdToValue(CFE_SB_INVALID_MSG_ID));
-    UtAssert_INT32_EQ(DS_AppData.HashTable[HashTableIndex]->Index, 0);
     UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(DS_AppData.HashLinks[HashTableIndex].MessageID),
                       CFE_SB_MsgIdToValue(CFE_SB_INVALID_MSG_ID));
 
     /* Check first elements */
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType == DS_BY_COUNT,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType == DS_BY_COUNT");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FileTableIndex);
+    UtAssert_UINT8_EQ(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].FilterType, DS_BY_COUNT);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[0].Algorithm_O);
 
     /* Check middle elements */
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FileTableIndex == 0,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].FileTableIndex == 0");
-
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FilterType == DS_BY_COUNT,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].FilterType == DS_BY_COUNT");
-
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_N == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_X == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET/2].Algorithm_O == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FileTableIndex);
+    UtAssert_UINT8_EQ(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].FilterType,
+                      DS_BY_COUNT);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET / 2].Algorithm_O);
 
     /* Check last elements */
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FileTableIndex == 0,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].FileTableIndex == 0");
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FileTableIndex);
+    UtAssert_UINT8_EQ(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FilterType,
+                      DS_BY_COUNT);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_O);
 
-    UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].FilterType == DS_BY_COUNT,
-        "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].FilterType == DS_BY_COUNT");
-
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_N == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_N == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_X == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_X == 0");
-    UtAssert_True(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET - 1].Algorithm_O == 0,
-                  "DS_AppData.FilterTblPtr->Packet[FilterTableIndex].Filter[DS_FILTERS_PER_PACKET-1].Algorithm_O == 0");
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-
-    UtAssert_STUB_COUNT(CFE_MSG_GetSize, 1);
     UtAssert_STUB_COUNT(CFE_SB_IsValidMsgId, 1);
     UtAssert_STUB_COUNT(DS_TableHashFunction, 1);
     UtAssert_STUB_COUNT(DS_TableCreateHash, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
 }
 
-void DS_CmdRemoveMID_Test_InvalidCommandLength(void)
+void DS_RemoveMIDCmd_Test_InvalidMessageID(void)
 {
-    size_t                     forced_Size    = sizeof(DS_RemoveMidCmd_t) + 1;
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_REMOVE_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.RemoveMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid REMOVE MID command length: expected = %%d, actual = %%d");
-
-    CmdPayload->MessageID = DS_UT_MID_1;
-
-    /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
-
-    /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
-
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
-}
-
-void DS_CmdRemoveMID_Test_InvalidMessageID(void)
-{
-    size_t                     forced_Size    = sizeof(DS_RemoveMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_REMOVE_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.RemoveMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid REMOVE MID command arg: invalid MID = 0x%%08lX");
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.RemoveMidCmd.Payload;
 
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdRemoveMID_Test_FilterTableNotLoaded(void)
+void DS_RemoveMIDCmd_Test_FilterTableNotLoaded(void)
 {
-    size_t                     forced_Size    = sizeof(DS_RemoveMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_REMOVE_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.RemoveMidCmd.Payload;
-
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid REMOVE MID command: filter table is not loaded");
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.RemoveMidCmd.Payload;
 
     CmdPayload->MessageID = DS_UT_MID_1;
 
@@ -3591,230 +1595,167 @@ void DS_CmdRemoveMID_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
-void DS_CmdRemoveMID_Test_MessageIDNotAdded(void)
+void DS_RemoveMIDCmd_Test_MessageIDNotAdded(void)
 {
-    size_t                     forced_Size    = sizeof(DS_RemoveMidCmd_t);
-    CFE_SB_MsgId_t             forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
-    CFE_MSG_FcnCode_t          forced_CmdCode = DS_REMOVE_MID_CC;
-    DS_AddRemoveMid_Payload_t *CmdPayload     = &UT_CmdBuf.RemoveMidCmd.Payload;
+    DS_AddRemoveMid_Payload_t *CmdPayload = &UT_CmdBuf.RemoveMidCmd.Payload;
 
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
-    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
-
-    int32 strCmpResult;
-    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
-    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
-             "Invalid REMOVE MID command: MID = 0x%%08lX is not in filter table");
 
     CmdPayload->MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CmdRemoveMID(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_True(DS_AppData.CmdRejectedCounter == 1, "DS_AppData.CmdRejectedCounter == 1");
+    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
 
-    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
-    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
-
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
-
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-
-    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
-
-    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
 }
 
 void UtTest_Setup(void)
 {
-    UtTest_Add(DS_CmdNoop_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdNoop_Test_Nominal");
-    UtTest_Add(DS_CmdNoop_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdNoop_Test_InvalidCommandLength");
+    UtTest_Add(DS_NoopCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_NoopCmd_Test_Nominal");
 
-    UtTest_Add(DS_CmdReset_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdReset_Test_Nominal");
-    UtTest_Add(DS_CmdReset_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdReset_Test_InvalidCommandLength");
+    UtTest_Add(DS_ResetCountersCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_ResetCountersCmd_Test_Nominal");
 
-    UtTest_Add(DS_CmdSetAppState_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetAppState_Test_Nominal");
-    UtTest_Add(DS_CmdSetAppState_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetAppState_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetAppState_Test_InvalidAppState, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetAppState_Test_InvalidAppState");
+    UtTest_Add(DS_SetAppStateCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetAppStateCmd_Test_Nominal");
+    UtTest_Add(DS_SetAppStateCmd_Test_InvalidAppState, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetAppStateCmd_Test_InvalidAppState");
 
-    UtTest_Add(DS_CmdSetFilterFile_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetFilterFile_Test_Nominal");
-    UtTest_Add(DS_CmdSetFilterFile_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterFile_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetFilterFile_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterFile_Test_InvalidMessageID");
-    UtTest_Add(DS_CmdSetFilterFile_Test_InvalidFilterParametersIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterFile_Test_InvalidFilterParametersIndex");
-    UtTest_Add(DS_CmdSetFilterFile_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterFile_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetFilterFile_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterFile_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_CmdSetFilterFile_Test_MessageIDNotInFilterTable, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterFile_Test_MessageIDNotInFilterTable");
+    UtTest_Add(DS_SetFilterFileCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetFilterFileCmd_Test_Nominal");
+    UtTest_Add(DS_SetFilterFileCmd_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterFileCmd_Test_InvalidMessageID");
+    UtTest_Add(DS_SetFilterFileCmd_Test_InvalidFilterParametersIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterFileCmd_Test_InvalidFilterParametersIndex");
+    UtTest_Add(DS_SetFilterFileCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterFileCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetFilterFileCmd_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterFileCmd_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable");
 
-    UtTest_Add(DS_CmdSetFilterType_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetFilterType_Test_Nominal");
-    UtTest_Add(DS_CmdSetFilterType_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterType_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetFilterType_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterType_Test_InvalidMessageID");
-    UtTest_Add(DS_CmdSetFilterType_Test_InvalidFilterParametersIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterType_Test_InvalidFilterParametersIndex");
-    UtTest_Add(DS_CmdSetFilterType_Test_InvalidFilterType, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterType_Test_InvalidFilterType");
-    UtTest_Add(DS_CmdSetFilterType_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterType_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_CmdSetFilterType_Test_MessageIDNotInFilterTable, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterType_Test_MessageIDNotInFilterTable");
+    UtTest_Add(DS_SetFilterTypeCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetFilterTypeCmd_Test_Nominal");
+    UtTest_Add(DS_SetFilterTypeCmd_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterTypeCmd_Test_InvalidMessageID");
+    UtTest_Add(DS_SetFilterTypeCmd_Test_InvalidFilterParametersIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterTypeCmd_Test_InvalidFilterParametersIndex");
+    UtTest_Add(DS_SetFilterTypeCmd_Test_InvalidFilterType, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterTypeCmd_Test_InvalidFilterType");
+    UtTest_Add(DS_SetFilterTypeCmd_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterTypeCmd_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable");
 
-    UtTest_Add(DS_CmdSetFilterParms_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetFilterParms_Test_Nominal");
-    UtTest_Add(DS_CmdSetFilterParms_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterParms_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetFilterParms_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterParms_Test_InvalidMessageID");
-    UtTest_Add(DS_CmdSetFilterParms_Test_InvalidFilterParametersIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterParms_Test_InvalidFilterParametersIndex");
-    UtTest_Add(DS_CmdSetFilterParms_Test_InvalidFilterAlgorithm, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterParms_Test_InvalidFilterAlgorithm");
-    UtTest_Add(DS_CmdSetFilterParms_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterParms_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_CmdSetFilterParms_Test_MessageIDNotInFilterTable, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetFilterParms_Test_MessageIDNotInFilterTable");
+    UtTest_Add(DS_SetFilterParmsCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetFilterParmsCmd_Test_Nominal");
+    UtTest_Add(DS_SetFilterParmsCmd_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterParmsCmd_Test_InvalidMessageID");
+    UtTest_Add(DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex");
+    UtTest_Add(DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm");
+    UtTest_Add(DS_SetFilterParmsCmd_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterParmsCmd_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable");
 
-    UtTest_Add(DS_CmdSetDestType_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestType_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestType_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestType_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestType_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestType_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestType_Test_InvalidFilenameType, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestType_Test_InvalidFilenameType");
-    UtTest_Add(DS_CmdSetDestType_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestType_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestTypeCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestTypeCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestTypeCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestTypeCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestTypeCmd_Test_InvalidFilenameType, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestTypeCmd_Test_InvalidFilenameType");
+    UtTest_Add(DS_SetDestTypeCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestTypeCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestState_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestState_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestState_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestState_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestState_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestState_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestState_Test_InvalidFileState, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestState_Test_InvalidFileState");
-    UtTest_Add(DS_CmdSetDestState_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestState_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestStateCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestStateCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestStateCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestStateCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestStateCmd_Test_InvalidFileState, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestStateCmd_Test_InvalidFileState");
+    UtTest_Add(DS_SetDestStateCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestStateCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestPath_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestPath_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestPath_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestPath_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestPath_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestPath_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestPath_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestPath_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestPathCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestPathCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestPathCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestPathCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestPathCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestPathCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestBase_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestBase_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestBase_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestBase_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestBase_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestBase_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestBase_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestBase_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestBaseCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestBaseCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestBaseCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestBaseCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestBaseCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestBaseCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestExt_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestExt_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestExt_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestExt_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestExt_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestExt_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestExt_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestExt_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestExtCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestExtCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestExtCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestExtCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestExtCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestExtCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestSize_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestSize_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestSize_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestSize_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestSize_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestSize_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestSize_Test_InvalidFileSizeLimit, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestSize_Test_InvalidFileSizeLimit");
-    UtTest_Add(DS_CmdSetDestSize_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestSize_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestSizeCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestSizeCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestSizeCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestSizeCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestSizeCmd_Test_InvalidFileSizeLimit, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestSizeCmd_Test_InvalidFileSizeLimit");
+    UtTest_Add(DS_SetDestSizeCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestSizeCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestAge_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestAge_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestAge_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestAge_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestAge_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestAge_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestAge_Test_InvalidFileAgeLimit, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestAge_Test_InvalidFileAgeLimit");
-    UtTest_Add(DS_CmdSetDestAge_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestAge_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestAgeCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestAgeCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestAgeCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestAgeCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestAgeCmd_Test_InvalidFileAgeLimit, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestAgeCmd_Test_InvalidFileAgeLimit");
+    UtTest_Add(DS_SetDestAgeCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestAgeCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdSetDestCount_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdSetDestCount_Test_Nominal");
-    UtTest_Add(DS_CmdSetDestCount_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestCount_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdSetDestCount_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestCount_Test_InvalidFileTableIndex");
-    UtTest_Add(DS_CmdSetDestCount_Test_InvalidFileSequenceCount, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestCount_Test_InvalidFileSequenceCount");
-    UtTest_Add(DS_CmdSetDestCount_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdSetDestCount_Test_FileTableNotLoaded");
+    UtTest_Add(DS_SetDestCountCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestCountCmd_Test_Nominal");
+    UtTest_Add(DS_SetDestCountCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestCountCmd_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_SetDestCountCmd_Test_InvalidFileSequenceCount, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestCountCmd_Test_InvalidFileSequenceCount");
+    UtTest_Add(DS_SetDestCountCmd_Test_FileTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_SetDestCountCmd_Test_FileTableNotLoaded");
 
-    UtTest_Add(DS_CmdCloseFile_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdCloseFile_Test_Nominal");
-    UtTest_Add(DS_CmdCloseFile_Test_NominalAlreadyClosed, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdCloseFile_Test_NominalAlreadyClosed");
-    UtTest_Add(DS_CmdCloseFile_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdCloseFile_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdCloseFile_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdCloseFile_Test_InvalidFileTableIndex");
+    UtTest_Add(DS_CloseFileCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CloseFileCmd_Test_Nominal");
+    UtTest_Add(DS_CloseFileCmd_Test_NominalAlreadyClosed, DS_Test_Setup, DS_Test_TearDown,
+               "DS_CloseFileCmd_Test_NominalAlreadyClosed");
+    UtTest_Add(DS_CloseFileCmd_Test_InvalidFileTableIndex, DS_Test_Setup, DS_Test_TearDown,
+               "DS_CloseFileCmd_Test_InvalidFileTableIndex");
 
-    UtTest_Add(DS_CmdCloseAll_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdCloseAll_Test_Nominal");
-    UtTest_Add(DS_CmdCloseAll_Test_CloseAll, DS_Test_Setup, DS_Test_TearDown, "DS_CmdCloseAll_Test_CloseAll");
-    UtTest_Add(DS_CmdCloseAll_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdCloseAll_Test_InvalidCommandLength");
+    UtTest_Add(DS_CloseAllCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CloseAllCmd_Test_Nominal");
+    UtTest_Add(DS_CloseAllCmd_Test_CloseAll, DS_Test_Setup, DS_Test_TearDown, "DS_CloseAllCmd_Test_CloseAll");
 
-    UtTest_Add(DS_CmdGetFileInfo_Test_EnabledOpen, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdGetFileInfo_Test_EnabledOpen");
-    UtTest_Add(DS_CmdGetFileInfo_Test_DisabledClosed, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdGetFileInfo_Test_DisabledClosed");
-    UtTest_Add(DS_CmdGetFileInfo_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdGetFileInfo_Test_InvalidCommandLength");
+    UtTest_Add(DS_GetFileInfoCmd_Test_EnabledOpen, DS_Test_Setup, DS_Test_TearDown,
+               "DS_GetFileInfoCmd_Test_EnabledOpen");
+    UtTest_Add(DS_GetFileInfoCmd_Test_DisabledClosed, DS_Test_Setup, DS_Test_TearDown,
+               "DS_GetFileInfoCmd_Test_DisabledClosed");
 
-    UtTest_Add(DS_CmdAddMID_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdAddMID_Test_Nominal");
-    UtTest_Add(DS_CmdAddMID_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdAddMID_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdAddMID_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdAddMID_Test_InvalidMessageID");
-    UtTest_Add(DS_CmdAddMID_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdAddMID_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_CmdAddMID_Test_MIDAlreadyInFilterTable, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdAddMID_Test_MIDAlreadyInFilterTable");
-    UtTest_Add(DS_CmdAddMID_Test_FilterTableFull, DS_Test_Setup, DS_Test_TearDown, "DS_CmdAddMID_Test_FilterTableFull");
+    UtTest_Add(DS_AddMIDCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_AddMIDCmd_Test_Nominal");
+    UtTest_Add(DS_AddMIDCmd_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
+               "DS_AddMIDCmd_Test_InvalidMessageID");
+    UtTest_Add(DS_AddMIDCmd_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_AddMIDCmd_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_AddMIDCmd_Test_MIDAlreadyInFilterTable, DS_Test_Setup, DS_Test_TearDown,
+               "DS_AddMIDCmd_Test_MIDAlreadyInFilterTable");
+    UtTest_Add(DS_AddMIDCmd_Test_FilterTableFull, DS_Test_Setup, DS_Test_TearDown, "DS_AddMIDCmd_Test_FilterTableFull");
 
-    UtTest_Add(DS_CmdRemoveMID_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_CmdRemoveMID_Test_Nominal");
-    UtTest_Add(DS_CmdRemoveMID_Test_InvalidCommandLength, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdRemoveMID_Test_InvalidCommandLength");
-    UtTest_Add(DS_CmdRemoveMID_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdRemoveMID_Test_InvalidMessageID");
-    UtTest_Add(DS_CmdRemoveMID_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdRemoveMID_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_CmdRemoveMID_Test_MessageIDNotAdded, DS_Test_Setup, DS_Test_TearDown,
-               "DS_CmdRemoveMID_Test_MessageIDNotAdded");
+    UtTest_Add(DS_RemoveMIDCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_RemoveMIDCmd_Test_Nominal");
+    UtTest_Add(DS_RemoveMIDCmd_Test_InvalidMessageID, DS_Test_Setup, DS_Test_TearDown,
+               "DS_RemoveMIDCmd_Test_InvalidMessageID");
+    UtTest_Add(DS_RemoveMIDCmd_Test_FilterTableNotLoaded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_RemoveMIDCmd_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_RemoveMIDCmd_Test_MessageIDNotAdded, DS_Test_Setup, DS_Test_TearDown,
+               "DS_RemoveMIDCmd_Test_MessageIDNotAdded");
 }

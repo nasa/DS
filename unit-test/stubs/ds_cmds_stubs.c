@@ -28,228 +28,228 @@
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdAddMID()
+ * Generated stub function for DS_AddMIDCmd()
  * ----------------------------------------------------
  */
-void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
+void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdAddMID, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_AddMIDCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdAddMID, Basic, NULL);
+    UT_GenStub_Execute(DS_AddMIDCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdCloseAll()
+ * Generated stub function for DS_CloseAllCmd()
  * ----------------------------------------------------
  */
-void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
+void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdCloseAll, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_CloseAllCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdCloseAll, Basic, NULL);
+    UT_GenStub_Execute(DS_CloseAllCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdCloseFile()
+ * Generated stub function for DS_CloseFileCmd()
  * ----------------------------------------------------
  */
-void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
+void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdCloseFile, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_CloseFileCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdCloseFile, Basic, NULL);
+    UT_GenStub_Execute(DS_CloseFileCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdGetFileInfo()
+ * Generated stub function for DS_GetFileInfoCmd()
  * ----------------------------------------------------
  */
-void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
+void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdGetFileInfo, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_GetFileInfoCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdGetFileInfo, Basic, NULL);
+    UT_GenStub_Execute(DS_GetFileInfoCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdNoop()
+ * Generated stub function for DS_NoopCmd()
  * ----------------------------------------------------
  */
-void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr)
+void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdNoop, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_NoopCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdNoop, Basic, NULL);
+    UT_GenStub_Execute(DS_NoopCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdRemoveMID()
+ * Generated stub function for DS_RemoveMIDCmd()
  * ----------------------------------------------------
  */
-void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
+void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdRemoveMID, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_RemoveMIDCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdRemoveMID, Basic, NULL);
+    UT_GenStub_Execute(DS_RemoveMIDCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdReset()
+ * Generated stub function for DS_ResetCountersCmd()
  * ----------------------------------------------------
  */
-void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
+void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdReset, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_ResetCountersCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdReset, Basic, NULL);
+    UT_GenStub_Execute(DS_ResetCountersCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetAppState()
+ * Generated stub function for DS_SetAppStateCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetAppState, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetAppStateCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetAppState, Basic, NULL);
+    UT_GenStub_Execute(DS_SetAppStateCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestAge()
+ * Generated stub function for DS_SetDestAgeCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestAge, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestAgeCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestAge, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestAgeCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestBase()
+ * Generated stub function for DS_SetDestBaseCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestBase, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestBaseCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestBase, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestBaseCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestCount()
+ * Generated stub function for DS_SetDestCountCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestCount, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestCountCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestCount, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestCountCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestExt()
+ * Generated stub function for DS_SetDestExtCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestExt, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestExtCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestExt, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestExtCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestPath()
+ * Generated stub function for DS_SetDestPathCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestPath, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestPathCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestPath, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestPathCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestSize()
+ * Generated stub function for DS_SetDestSizeCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestSize, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestSizeCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestSize, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestSizeCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestState()
+ * Generated stub function for DS_SetDestStateCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestState, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestStateCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestState, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestStateCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetDestType()
+ * Generated stub function for DS_SetDestTypeCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetDestType, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetDestTypeCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetDestType, Basic, NULL);
+    UT_GenStub_Execute(DS_SetDestTypeCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetFilterFile()
+ * Generated stub function for DS_SetFilterFileCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetFilterFile, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetFilterFileCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetFilterFile, Basic, NULL);
+    UT_GenStub_Execute(DS_SetFilterFileCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetFilterParms()
+ * Generated stub function for DS_SetFilterParmsCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetFilterParms, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetFilterParmsCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetFilterParms, Basic, NULL);
+    UT_GenStub_Execute(DS_SetFilterParmsCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_CmdSetFilterType()
+ * Generated stub function for DS_SetFilterTypeCmd()
  * ----------------------------------------------------
  */
-void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_CmdSetFilterType, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetFilterTypeCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_CmdSetFilterType, Basic, NULL);
+    UT_GenStub_Execute(DS_SetFilterTypeCmd, Basic, NULL);
 }

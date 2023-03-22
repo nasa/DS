@@ -20,57 +20,32 @@
 /**
  * @file
  *
- * Auto-Generated stub implementations for functions defined in ds_app header
+ * Auto-Generated stub implementations for functions defined in ds_dispatch header
  */
 
-#include "ds_app.h"
+#include "ds_dispatch.h"
 #include "utgenstub.h"
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_AppInitialize()
+ * Generated stub function for DS_AppProcessCmd()
  * ----------------------------------------------------
  */
-int32 DS_AppInitialize(void)
+void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_SetupReturnBuffer(DS_AppInitialize, int32);
+    UT_GenStub_AddParam(DS_AppProcessCmd, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_AppInitialize, Basic, NULL);
-
-    return UT_GenStub_GetReturnValue(DS_AppInitialize, int32);
+    UT_GenStub_Execute(DS_AppProcessCmd, Basic, NULL);
 }
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_AppMain()
+ * Generated stub function for DS_AppProcessMsg()
  * ----------------------------------------------------
  */
-void DS_AppMain(void)
+void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
 {
+    UT_GenStub_AddParam(DS_AppProcessMsg, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_AppMain, Basic, NULL);
-}
-
-/*
- * ----------------------------------------------------
- * Generated stub function for DS_AppSendHkCmd()
- * ----------------------------------------------------
- */
-void DS_AppSendHkCmd(void)
-{
-
-    UT_GenStub_Execute(DS_AppSendHkCmd, Basic, NULL);
-}
-
-/*
- * ----------------------------------------------------
- * Generated stub function for DS_AppStorePacket()
- * ----------------------------------------------------
- */
-void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
-{
-    UT_GenStub_AddParam(DS_AppStorePacket, CFE_SB_MsgId_t, MessageID);
-    UT_GenStub_AddParam(DS_AppStorePacket, const CFE_SB_Buffer_t *, BufPtr);
-
-    UT_GenStub_Execute(DS_AppStorePacket, Basic, NULL);
+    UT_GenStub_Execute(DS_AppProcessMsg, Basic, NULL);
 }

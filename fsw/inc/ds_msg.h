@@ -33,6 +33,14 @@
  */
 
 /**
+ *  \brief Send HK Request
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief cFE Software Bus command message header */
+} DS_SendHkCmd_t;
+
+/**
  *  \brief No-Operation Command
  *
  *  For command details see #DS_NOOP_CC
@@ -45,12 +53,12 @@ typedef struct
 /**
  *  \brief Reset Housekeeping Telemetry Command
  *
- *  For command details see #DS_RESET_CC
+ *  For command details see #DS_RESET_COUNTERS_CC
  */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief cFE Software Bus command message header */
-} DS_ResetCmd_t;
+} DS_ResetCountersCmd_t;
 
 /**
  *  \brief Payload containing Ena/Dis State

@@ -11,6 +11,7 @@ add_cfe_coverage_stubs("ds_internal"
   utilities/ds_test_utils.c
   stubs/ds_app_stubs.c
   stubs/ds_cmds_stubs.c
+  stubs/ds_dispatch_stubs.c
   stubs/ds_file_stubs.c
   stubs/ds_global_stubs.c
   stubs/ds_table_stubs.c

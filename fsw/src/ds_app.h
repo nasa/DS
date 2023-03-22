@@ -148,37 +148,6 @@ void DS_AppMain(void);
 int32 DS_AppInitialize(void);
 
 /**
- *  \brief Software Bus message handler
- *
- *  \par Description
- *       Process packets received via Software Bus message pipe
- *       - may call application housekeeping request command handler
- *       - may call 1Hz wakeup command handler (if enabled)
- *       - may call application ground command handler
- *       All packets are processed for possible data storage
- *
- *  \par Assumptions, External Events, and Notes:
- *       (none)
- *
- *  \param[in] BufPtr Software Bus message pointer
- */
-void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr);
-
-/**
- *  \brief Application ground command handler
- *
- *  \par Description
- *       Call command code specific DS command handler function
- *       Generate command error event for unknown command codes
- *
- *  \par Assumptions, External Events, and Notes:
- *       (none)
- *
- *  \param[in] BufPtr Software Bus message pointer
- */
-void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr);
-
-/**
  *  \brief Application housekeeping request command handler
  *
  *  \par Description
@@ -190,7 +159,7 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_HkPacket_t
  */
-void DS_AppProcessHK(void);
+void DS_AppSendHkCmd(void);
 
 /**
  *  \brief Application packet storage pre-processor

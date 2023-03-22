@@ -5,6 +5,7 @@ set(APP_SRC_FILES
   fsw/src/ds_cmds.c
   fsw/src/ds_app.c
   fsw/src/ds_file.c
+  fsw/src/ds_dispatch.c
 )
 
 # Create the app module
