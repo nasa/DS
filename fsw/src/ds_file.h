@@ -27,6 +27,7 @@
 #include "cfe.h"
 
 #include "ds_platform_cfg.h"
+#include "ds_app.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
