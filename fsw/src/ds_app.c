@@ -505,6 +505,8 @@ void DS_AppProcessHK(void)
     char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
     CFE_TBL_Info_t FilterTblInfo;
 
+    DS_HkTlm_Payload_t *PayloadPtr;
+
     memset(&HkPacket, 0, sizeof(HkPacket));
 
     /*
@@ -523,40 +525,43 @@ void DS_AppProcessHK(void)
     DS_TableManageDestFile();
     DS_TableManageFilter();
 
+    /* Get internal payload substructure */
+    PayloadPtr = &HkPacket.Payload;
+
     /*
     ** Copy application command counters to housekeeping telemetry packet...
     */
-    HkPacket.CmdAcceptedCounter = DS_AppData.CmdAcceptedCounter;
-    HkPacket.CmdRejectedCounter = DS_AppData.CmdRejectedCounter;
+    PayloadPtr->CmdAcceptedCounter = DS_AppData.CmdAcceptedCounter;
+    PayloadPtr->CmdRejectedCounter = DS_AppData.CmdRejectedCounter;
 
     /*
     ** Copy packet storage counters to housekeeping telemetry packet...
     */
-    HkPacket.DisabledPktCounter = DS_AppData.DisabledPktCounter;
-    HkPacket.IgnoredPktCounter  = DS_AppData.IgnoredPktCounter;
-    HkPacket.FilteredPktCounter = DS_AppData.FilteredPktCounter;
-    HkPacket.PassedPktCounter   = DS_AppData.PassedPktCounter;
+    PayloadPtr->DisabledPktCounter = DS_AppData.DisabledPktCounter;
+    PayloadPtr->IgnoredPktCounter  = DS_AppData.IgnoredPktCounter;
+    PayloadPtr->FilteredPktCounter = DS_AppData.FilteredPktCounter;
+    PayloadPtr->PassedPktCounter   = DS_AppData.PassedPktCounter;
 
     /*
     ** Copy file I/O counters to housekeeping telemetry packet...
     */
-    HkPacket.FileWriteCounter     = DS_AppData.FileWriteCounter;
-    HkPacket.FileWriteErrCounter  = DS_AppData.FileWriteErrCounter;
-    HkPacket.FileUpdateCounter    = DS_AppData.FileUpdateCounter;
-    HkPacket.FileUpdateErrCounter = DS_AppData.FileUpdateErrCounter;
+    PayloadPtr->FileWriteCounter     = DS_AppData.FileWriteCounter;
+    PayloadPtr->FileWriteErrCounter  = DS_AppData.FileWriteErrCounter;
+    PayloadPtr->FileUpdateCounter    = DS_AppData.FileUpdateCounter;
+    PayloadPtr->FileUpdateErrCounter = DS_AppData.FileUpdateErrCounter;
 
     /*
     ** Copy configuration table counters to housekeeping telemetry packet...
     */
-    HkPacket.DestTblLoadCounter   = DS_AppData.DestTblLoadCounter;
-    HkPacket.DestTblErrCounter    = DS_AppData.DestTblErrCounter;
-    HkPacket.FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
-    HkPacket.FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
+    PayloadPtr->DestTblLoadCounter   = DS_AppData.DestTblLoadCounter;
+    PayloadPtr->DestTblErrCounter    = DS_AppData.DestTblErrCounter;
+    PayloadPtr->FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
+    PayloadPtr->FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
 
     /*
     ** Copy app enable/disable state to housekeeping telemetry packet...
     */
-    HkPacket.AppEnableState = DS_AppData.AppEnableState;
+    PayloadPtr->AppEnableState = DS_AppData.AppEnableState;
 
     /*
     ** Compute file growth rate from number of bytes since last HK request...
@@ -574,8 +579,8 @@ void DS_AppProcessHK(void)
         Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
         if (Status == CFE_SUCCESS)
         {
-            strncpy(HkPacket.FilterTblFilename, FilterTblInfo.LastFileLoaded, OS_MAX_PATH_LEN - 1);
-            HkPacket.FilterTblFilename[OS_MAX_PATH_LEN - 1] = '\0';
+            strncpy(PayloadPtr->FilterTblFilename, FilterTblInfo.LastFileLoaded, OS_MAX_PATH_LEN - 1);
+            PayloadPtr->FilterTblFilename[OS_MAX_PATH_LEN - 1] = '\0';
         }
 
         else
@@ -585,7 +590,7 @@ void DS_AppProcessHK(void)
             CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
                               "Invalid filter tbl name in DS_AppProcessHK. Name=%s, Err=0x%08X", FilterTblName, Status);
 
-            memset(HkPacket.FilterTblFilename, 0, sizeof(HkPacket.FilterTblFilename));
+            memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
         }
     }
     else
@@ -595,7 +600,7 @@ void DS_AppProcessHK(void)
         CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Filter tbl name copy fail in DS_AppProcessHK. Err=%d", (int)Status);
 
-        memset(HkPacket.FilterTblFilename, 0, sizeof(HkPacket.FilterTblFilename));
+        memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
     }
 
     /*

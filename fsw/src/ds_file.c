@@ -972,7 +972,7 @@ void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
     {
         CFE_MSG_Init(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(*PktBuf));
 
-        FileInfo = &PktBuf->Pkt.FileInfo;
+        FileInfo = &PktBuf->Pkt.Payload;
 
         /*
         ** Set file age and size...
