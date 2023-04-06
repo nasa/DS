@@ -71,7 +71,7 @@ void DS_AppMain(void)
     CFE_ES_PerfLogEntry(DS_APPMAIN_PERF_ID);
 
     /*
-    ** Perform application specific initialization...
+    ** Perform application-specific initialization...
     */
     Result = DS_AppInitialize();
 
@@ -202,11 +202,7 @@ int32 DS_AppInitialize(void)
     {
         CFE_ES_WriteToSysLog("DS App: Error registering for Event Services, RC = 0x%08X\n", (unsigned int)Result);
     }
-
-    /*
-    ** Create application Software Bus message pipe...
-    */
-    if (Result == CFE_SUCCESS)
+    else
     {
         Result = CFE_SB_CreatePipe(&DS_AppData.CmdPipe, DS_APP_PIPE_DEPTH, DS_APP_PIPE_NAME);
         if (Result != CFE_SUCCESS)
@@ -275,7 +271,7 @@ int32 DS_AppInitialize(void)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Process hk request command                                      */
+/* Process HK request command                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -346,7 +342,7 @@ void DS_AppSendHkCmd(void)
     PayloadPtr->AppEnableState = DS_AppData.AppEnableState;
 
     /*
-    ** Compute file growth rate from number of bytes since last HK request...
+    ** Compute file growth rate from the number of bytes since the last HK request...
     */
     for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
@@ -354,7 +350,7 @@ void DS_AppSendHkCmd(void)
         DS_AppData.FileStatus[i].FileGrowth = 0;
     }
 
-    /* Get the filter table info, put the file name in the hk pkt. */
+    /* Get the filter table info, put the file name in the HK pkt. */
     Status = snprintf(FilterTblName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "DS.%s", DS_FILTER_TBL_NAME);
     if (Status >= 0)
     {
@@ -364,7 +360,6 @@ void DS_AppSendHkCmd(void)
             strncpy(PayloadPtr->FilterTblFilename, FilterTblInfo.LastFileLoaded, OS_MAX_PATH_LEN - 1);
             PayloadPtr->FilterTblFilename[OS_MAX_PATH_LEN - 1] = '\0';
         }
-
         else
         {
             /* If the filter table name is invalid, send an event and erase any

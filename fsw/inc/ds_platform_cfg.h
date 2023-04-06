@@ -285,7 +285,7 @@
  *
  *  \par Limits:
  *       None -- however, the user should be cautioned that a very
- *       small value will allow an size limit that closes files too
+ *       small value will allow a size limit that closes files too
  *       frequently, while a very large value will effectively
  *       prevent files from ever being closed due to size.
  */
