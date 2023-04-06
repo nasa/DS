@@ -846,7 +846,7 @@
  * \par Cause:
  *
  * This event is issued when the filter table name is not successfully
- * created (via snprintf) in the DS_AppProcessHK function.
+ * created (via snprintf) in the DS_AppSendHkCmd function.
  */
 #define DS_APPHK_FILTER_TBL_PRINT_ERR_EID 70
 

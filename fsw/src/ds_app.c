@@ -35,6 +35,7 @@
 
 #include "ds_msg.h"
 #include "ds_app.h"
+#include "ds_dispatch.h"
 #include "ds_cmds.h"
 #include "ds_file.h"
 #include "ds_table.h"
@@ -275,229 +276,11 @@ int32 DS_AppInitialize(void)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* Process Software Bus messages                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
-{
-    CFE_SB_MsgId_t MessageID      = CFE_SB_INVALID_MSG_ID;
-    size_t         ActualLength   = 0;
-    size_t         ExpectedLength = 0;
-
-    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
-
-    switch (CFE_SB_MsgIdToValue(MessageID))
-    {
-        /*
-        ** DS application commands...
-        */
-        case DS_CMD_MID:
-            DS_AppProcessCmd(BufPtr);
-            if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
-            {
-                DS_AppStorePacket(MessageID, BufPtr);
-            }
-            break;
-
-        /*
-        ** DS housekeeping request command...
-        */
-        case DS_SEND_HK_MID:
-
-            CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
-            ExpectedLength = sizeof(DS_NoopCmd_t);
-            if (ExpectedLength != ActualLength)
-            {
-                CFE_EVS_SendEvent(DS_HK_REQUEST_ERR_EID, CFE_EVS_EventType_ERROR,
-                                  "Invalid HK request length: expected = %d, actual = %d", (int)ExpectedLength,
-                                  (int)ActualLength);
-            }
-            else
-            {
-                DS_AppProcessHK();
-                if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
-                {
-                    DS_AppStorePacket(MessageID, BufPtr);
-                }
-            }
-            break;
-
-        /*
-        ** Unknown message ID's (must be something to store)...
-        */
-        default:
-            DS_AppStorePacket(MessageID, BufPtr);
-            break;
-    }
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process application commands                                    */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
-{
-    CFE_MSG_FcnCode_t CommandCode = 0;
-
-    CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
-
-    switch (CommandCode)
-    {
-        /*
-        ** Do nothing command (aliveness test)...
-        */
-        case DS_NOOP_CC:
-            DS_CmdNoop(BufPtr);
-            break;
-
-        /*
-        ** Set housekeeping telemetry counters to zero...
-        */
-        case DS_RESET_CC:
-            DS_CmdReset(BufPtr);
-            break;
-
-        /*
-        ** Set DS application enable/disable state...
-        */
-        case DS_SET_APP_STATE_CC:
-            DS_CmdSetAppState(BufPtr);
-            break;
-
-        /*
-        ** Set packet filter file index...
-        */
-        case DS_SET_FILTER_FILE_CC:
-            DS_CmdSetFilterFile(BufPtr);
-            break;
-
-        /*
-        ** Set packet filter type (time vs count)...
-        */
-        case DS_SET_FILTER_TYPE_CC:
-            DS_CmdSetFilterType(BufPtr);
-            break;
-
-        /*
-        ** Set packet filter algorithm parameters...
-        */
-        case DS_SET_FILTER_PARMS_CC:
-            DS_CmdSetFilterParms(BufPtr);
-            break;
-
-        /*
-        ** Set destination file filename type (time vs count)...
-        */
-        case DS_SET_DEST_TYPE_CC:
-            DS_CmdSetDestType(BufPtr);
-            break;
-
-        /*
-        ** Set destination file enable/disable state...
-        */
-        case DS_SET_DEST_STATE_CC:
-            DS_CmdSetDestState(BufPtr);
-            break;
-
-        /*
-        ** Set destination file path portion of filename...
-        */
-        case DS_SET_DEST_PATH_CC:
-            DS_CmdSetDestPath(BufPtr);
-            break;
-
-        /*
-        ** Set destination file base portion of filename...
-        */
-        case DS_SET_DEST_BASE_CC:
-            DS_CmdSetDestBase(BufPtr);
-            break;
-
-        /*
-        ** Set destination file extension portion of filename...
-        */
-        case DS_SET_DEST_EXT_CC:
-            DS_CmdSetDestExt(BufPtr);
-            break;
-
-        /*
-        ** Set destination file maximum size limit...
-        */
-        case DS_SET_DEST_SIZE_CC:
-            DS_CmdSetDestSize(BufPtr);
-            break;
-
-        /*
-        ** Set destination file maximum age limit...
-        */
-        case DS_SET_DEST_AGE_CC:
-            DS_CmdSetDestAge(BufPtr);
-            break;
-
-        /*
-        ** Set destination file sequence count portion of filename...
-        */
-        case DS_SET_DEST_COUNT_CC:
-            DS_CmdSetDestCount(BufPtr);
-            break;
-
-        /*
-        ** Close destination file (next packet will re-open)...
-        */
-        case DS_CLOSE_FILE_CC:
-            DS_CmdCloseFile(BufPtr);
-            break;
-
-        /*
-        ** Get file info telemetry packet...
-        */
-        case DS_GET_FILE_INFO_CC:
-            DS_CmdGetFileInfo(BufPtr);
-            break;
-
-        /*
-        ** Add message ID to filter table...
-        */
-        case DS_ADD_MID_CC:
-            DS_CmdAddMID(BufPtr);
-            break;
-
-        /*
-        ** Remove message ID from filter table...
-        */
-        case DS_REMOVE_MID_CC:
-            DS_CmdRemoveMID(BufPtr);
-            break;
-
-        /*
-        ** Close all destination files (next packet will re-open)...
-        */
-        case DS_CLOSE_ALL_CC:
-            DS_CmdCloseAll(BufPtr);
-            break;
-
-        /*
-        ** DS application command with unknown command code...
-        */
-        default:
-            CFE_EVS_SendEvent(DS_CMD_CODE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid command code: MID = 0x%08X, CC = %d", DS_CMD_MID, CommandCode);
-
-            DS_AppData.CmdRejectedCounter++;
-            break;
-    }
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
 /* Process hk request command                                      */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_AppProcessHK(void)
+void DS_AppSendHkCmd(void)
 {
     DS_HkPacket_t  HkPacket;
     int32          i                                              = 0;
@@ -588,7 +371,7 @@ void DS_AppProcessHK(void)
             /* If the filter table name is invalid, send an event and erase any
              * stale/misleading filename from the HK packet */
             CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid filter tbl name in DS_AppProcessHK. Name=%s, Err=0x%08X", FilterTblName, Status);
+                              "Invalid filter tbl name in DS_AppSendHkCmd. Name=%s, Err=0x%08X", FilterTblName, Status);
 
             memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
         }
@@ -598,7 +381,7 @@ void DS_AppProcessHK(void)
         /* If the filter table name couldn't be copied, send an event and erase
          * any stale/misleading filename from the HK packet */
         CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Filter tbl name copy fail in DS_AppProcessHK. Err=%d", (int)Status);
+                          "Filter tbl name copy fail in DS_AppSendHkCmd. Err=%d", (int)Status);
 
         memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
     }

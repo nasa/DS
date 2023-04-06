@@ -49,7 +49,7 @@
  *
  *  \sa #DS_NOOP_CC, #DS_NoopCmd_t
  */
-void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr);
+void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief RESET command handler
@@ -67,9 +67,9 @@ void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_RESET_CC, #DS_ResetCmd_t
+ *  \sa #DS_RESET_COUNTERS_CC, #DS_ResetCountersCmd_t
  */
-void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr);
+void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set application enable/disable state command handler
@@ -90,7 +90,7 @@ void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_APP_STATE_CC, #DS_AppStateCmd_t
  */
-void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set file index for filter table entry command handler
@@ -114,7 +114,7 @@ void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_FILTER_FILE_CC, #DS_FilterFileCmd_t
  */
-void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set filter type for filter table entry command handler
@@ -138,7 +138,7 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_FILTER_TYPE_CC, #DS_FilterTypeCmd_t
  */
-void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set filter parameters for filter table entry command handler
@@ -162,7 +162,7 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_FILTER_PARMS_CC, #DS_FilterParmsCmd_t
  */
-void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage filename type command handler
@@ -186,7 +186,7 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_TYPE_CC, #DS_DestTypeCmd_t
  */
-void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage enable/disable state command handler
@@ -210,7 +210,7 @@ void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_STATE_CC, #DS_DestStateCmd_t
  */
-void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage file pathname command handler
@@ -234,7 +234,7 @@ void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_PATH_CC, #DS_DestPathCmd_t
  */
-void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage file basename command handler
@@ -258,7 +258,7 @@ void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_BASE_CC, #DS_DestBaseCmd_t
  */
-void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage file extension command handler
@@ -282,7 +282,7 @@ void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_EXT_CC, #DS_DestExtCmd_t
  */
-void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**  \brief Set data storage file size limit command handler
  *
@@ -305,7 +305,7 @@ void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_SIZE_CC, #DS_DestSizeCmd_t
  */
-void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage file age limit command handler
@@ -329,7 +329,7 @@ void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_AGE_CC, #DS_DestAgeCmd_t
  */
-void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Set data storage filename sequence count command handler
@@ -353,7 +353,7 @@ void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_SET_DEST_COUNT_CC, #DS_DestCountCmd_t
  */
-void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr);
+void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Close data storage file command handler
@@ -376,7 +376,7 @@ void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_CLOSE_FILE_CC, #DS_CloseFileCmd_t
  */
-void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr);
+void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Close all data storage files command handler
@@ -398,7 +398,7 @@ void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_CLOSE_ALL_CC, #DS_CloseAllCmd_t
  */
-void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr);
+void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Get file information telemetry packet command handler
@@ -419,7 +419,7 @@ void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_GET_FILE_INFO_CC, #DS_GetFileInfoCmd_t, #DS_FileInfoPkt_t
  */
-void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr);
+void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Add Message ID to Packet Filter Table
@@ -442,7 +442,7 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_ADD_MID_CC, #DS_AddMidCmd_t
  */
-void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr);
+void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr);
 
 /**
  *  \brief Remove Message ID from Packet Filter Table
@@ -464,6 +464,6 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_REMOVE_MID_CC, #DS_RemoveMidCmd_t
  */
-void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr);
+void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr);
 
 #endif

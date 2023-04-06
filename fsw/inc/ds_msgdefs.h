@@ -65,7 +65,7 @@
  *       This command will set the housekeeping counters to zero
  *
  *  \par Command Structure
- *       #DS_ResetCmd_t
+ *       #DS_ResetCountersCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -83,7 +83,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_RESET_CC 1
+#define DS_RESET_COUNTERS_CC 1
 
 /**
  * \brief Set Enable/Disable State For DS Application

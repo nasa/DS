@@ -54,34 +54,15 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr)
+void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    size_t ActualLength   = 0;
-    size_t ExpectedLength = sizeof(DS_NoopCmd_t);
+    /*
+    ** Do nothing except display "aliveness" event...
+    */
+    DS_AppData.CmdAcceptedCounter++;
 
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
-
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_NOOP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid NOOP command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else
-    {
-        /*
-        ** Do nothing except display "aliveness" event...
-        */
-        DS_AppData.CmdAcceptedCounter++;
-
-        CFE_EVS_SendEvent(DS_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
-                          DS_MAJOR_VERSION, DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV);
-    }
+    CFE_EVS_SendEvent(DS_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
+                      DS_MAJOR_VERSION, DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -90,58 +71,39 @@ void DS_CmdNoop(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
+void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    size_t ActualLength   = 0;
-    size_t ExpectedLength = sizeof(DS_ResetCmd_t);
+    /*
+    ** Reset application command counters...
+    */
+    DS_AppData.CmdAcceptedCounter = 0;
+    DS_AppData.CmdRejectedCounter = 0;
 
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
+    /*
+    ** Reset packet storage counters...
+    */
+    DS_AppData.DisabledPktCounter = 0;
+    DS_AppData.IgnoredPktCounter  = 0;
+    DS_AppData.FilteredPktCounter = 0;
+    DS_AppData.PassedPktCounter   = 0;
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
+    /*
+    ** Reset file I/O counters...
+    */
+    DS_AppData.FileWriteCounter     = 0;
+    DS_AppData.FileWriteErrCounter  = 0;
+    DS_AppData.FileUpdateCounter    = 0;
+    DS_AppData.FileUpdateErrCounter = 0;
 
-        CFE_EVS_SendEvent(DS_RESET_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid RESET command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else
-    {
-        /*
-        ** Reset application command counters...
-        */
-        DS_AppData.CmdAcceptedCounter = 0;
-        DS_AppData.CmdRejectedCounter = 0;
+    /*
+    ** Reset configuration table counters...
+    */
+    DS_AppData.DestTblLoadCounter   = 0;
+    DS_AppData.DestTblErrCounter    = 0;
+    DS_AppData.FilterTblLoadCounter = 0;
+    DS_AppData.FilterTblErrCounter  = 0;
 
-        /*
-        ** Reset packet storage counters...
-        */
-        DS_AppData.DisabledPktCounter = 0;
-        DS_AppData.IgnoredPktCounter  = 0;
-        DS_AppData.FilteredPktCounter = 0;
-        DS_AppData.PassedPktCounter   = 0;
-
-        /*
-        ** Reset file I/O counters...
-        */
-        DS_AppData.FileWriteCounter     = 0;
-        DS_AppData.FileWriteErrCounter  = 0;
-        DS_AppData.FileUpdateCounter    = 0;
-        DS_AppData.FileUpdateErrCounter = 0;
-
-        /*
-        ** Reset configuration table counters...
-        */
-        DS_AppData.DestTblLoadCounter   = 0;
-        DS_AppData.DestTblErrCounter    = 0;
-        DS_AppData.FilterTblLoadCounter = 0;
-        DS_AppData.FilterTblErrCounter  = 0;
-
-        CFE_EVS_SendEvent(DS_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
-    }
+    CFE_EVS_SendEvent(DS_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -150,29 +112,13 @@ void DS_CmdReset(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_AppState_Payload_t *DS_AppStateCmd;
 
-    size_t ActualLength   = 0;
-    size_t ExpectedLength = sizeof(DS_AppStateCmd_t);
-
     DS_AppStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AppStateCmd_t);
 
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
-
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_ENADIS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid APP STATE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyState(DS_AppStateCmd->EnableState) == false)
+    if (DS_TableVerifyState(DS_AppStateCmd->EnableState) == false)
     {
         /*
         ** Invalid enable/disable state...
@@ -207,31 +153,17 @@ void DS_CmdSetAppState(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_FilterFile_Payload_t *DS_FilterFileCmd;
 
-    size_t            ActualLength     = 0;
-    size_t            ExpectedLength   = sizeof(DS_FilterFileCmd_t);
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
 
     DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterFileCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER FILE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (!CFE_SB_IsValidMsgId(DS_FilterFileCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(DS_FilterFileCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
@@ -322,32 +254,17 @@ void DS_CmdSetFilterFile(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_FilterType_Payload_t *DS_FilterTypeCmd;
 
-    size_t            ActualLength     = 0;
-    size_t            ExpectedLength   = sizeof(DS_FilterTypeCmd_t);
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
 
     DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterTypeCmd_t);
 
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
-
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER TYPE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (!CFE_SB_IsValidMsgId(DS_FilterTypeCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(DS_FilterTypeCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
@@ -438,31 +355,17 @@ void DS_CmdSetFilterType(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
 
-    size_t            ActualLength     = 0;
-    size_t            ExpectedLength   = sizeof(DS_FilterParmsCmd_t);
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
 
     DS_FilterParmsCmd = &((const DS_FilterParmsCmd_t *)BufPtr)->Payload;
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER PARMS command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (!CFE_SB_IsValidMsgId(DS_FilterParmsCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(DS_FilterParmsCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
@@ -558,29 +461,15 @@ void DS_CmdSetFilterParms(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestType_Payload_t *DS_DestTypeCmd;
 
-    size_t              ActualLength   = 0;
-    size_t              ExpectedLength = sizeof(DS_DestTypeCmd_t);
-    DS_DestFileEntry_t *pDest          = NULL;
+    DS_DestFileEntry_t *pDest = NULL;
 
     DS_DestTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestTypeCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST TYPE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestTypeCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestTypeCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -637,28 +526,13 @@ void DS_CmdSetDestType(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestState_Payload_t *DS_DestStateCmd;
 
-    size_t ActualLength   = 0;
-    size_t ExpectedLength = sizeof(DS_DestStateCmd_t);
-
     DS_DestStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestStateCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST STATE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestStateCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestStateCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -715,29 +589,15 @@ void DS_CmdSetDestState(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestPath_Payload_t *DS_DestPathCmd;
 
-    size_t              ActualLength   = 0;
-    size_t              ExpectedLength = sizeof(DS_DestPathCmd_t);
-    DS_DestFileEntry_t *pDest          = NULL;
+    DS_DestFileEntry_t *pDest = NULL;
 
     DS_DestPathCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestPathCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST PATH command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestPathCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestPathCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -785,28 +645,14 @@ void DS_CmdSetDestPath(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestBase_Payload_t *DS_DestBaseCmd;
-    size_t                       ActualLength   = 0;
-    size_t                       ExpectedLength = sizeof(DS_DestBaseCmd_t);
-    DS_DestFileEntry_t *         pDest          = NULL;
+    DS_DestFileEntry_t *         pDest = NULL;
 
     DS_DestBaseCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestBaseCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST BASE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestBaseCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestBaseCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -854,28 +700,14 @@ void DS_CmdSetDestBase(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestExt_Payload_t *DS_DestExtCmd;
-    size_t                      ActualLength   = 0;
-    size_t                      ExpectedLength = sizeof(DS_DestExtCmd_t);
-    DS_DestFileEntry_t *        pDest          = NULL;
+    DS_DestFileEntry_t *        pDest = NULL;
 
     DS_DestExtCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestExtCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST EXT command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestExtCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestExtCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -923,29 +755,14 @@ void DS_CmdSetDestExt(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestSize_Payload_t *DS_DestSizeCmd;
-
-    size_t              ActualLength   = 0;
-    size_t              ExpectedLength = sizeof(DS_DestSizeCmd_t);
-    DS_DestFileEntry_t *pDest          = NULL;
+    DS_DestFileEntry_t *         pDest = NULL;
 
     DS_DestSizeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestSizeCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST SIZE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestSizeCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestSizeCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -1002,29 +819,14 @@ void DS_CmdSetDestSize(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestAge_Payload_t *DS_DestAgeCmd;
-
-    size_t              ActualLength   = 0;
-    size_t              ExpectedLength = sizeof(DS_DestAgeCmd_t);
-    DS_DestFileEntry_t *pDest          = NULL;
+    DS_DestFileEntry_t *        pDest = NULL;
 
     DS_DestAgeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestAgeCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST AGE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestAgeCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestAgeCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -1081,29 +883,15 @@ void DS_CmdSetDestAge(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_DestCount_Payload_t *DS_DestCountCmd;
-    size_t                        ActualLength   = 0;
-    size_t                        ExpectedLength = sizeof(DS_DestCountCmd_t);
-    DS_AppFileStatus_t *          FileStatus     = NULL;
-    DS_DestFileEntry_t *          DestFile       = NULL;
+    DS_AppFileStatus_t *          FileStatus = NULL;
+    DS_DestFileEntry_t *          DestFile   = NULL;
 
     DS_DestCountCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestCountCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST COUNT command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_DestCountCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_DestCountCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -1172,27 +960,13 @@ void DS_CmdSetDestCount(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
+void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_CloseFile_Payload_t *DS_CloseFileCmd;
-    size_t                        ActualLength   = 0;
-    size_t                        ExpectedLength = sizeof(DS_CloseFileCmd_t);
 
     DS_CloseFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_CloseFileCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_CLOSE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST CLOSE command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (DS_TableVerifyFileIndex(DS_CloseFileCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(DS_CloseFileCmd->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -1227,43 +1001,25 @@ void DS_CmdCloseFile(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
+void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    size_t ActualLength   = 0;
-    size_t ExpectedLength = sizeof(DS_CloseAllCmd_t);
-    int32  i              = 0;
+    int32 i = 0;
 
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
-
-    if (ExpectedLength != ActualLength)
+    /*
+    ** Close all open destination files...
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST CLOSE ALL command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else
-    {
-        /*
-        ** Close all open destination files...
-        */
-        for (i = 0; i < DS_DEST_FILE_CNT; i++)
+        if (OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
         {
-            if (OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
-            {
-                DS_FileUpdateHeader(i);
-                DS_FileCloseDest(i);
-            }
+            DS_FileUpdateHeader(i);
+            DS_FileCloseDest(i);
         }
-
-        DS_AppData.CmdAcceptedCounter++;
-
-        CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_DEBUG, "DEST CLOSE ALL command");
     }
+
+    DS_AppData.CmdAcceptedCounter++;
+
+    CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_DEBUG, "DEST CLOSE ALL command");
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1272,101 +1028,83 @@ void DS_CmdCloseAll(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
+void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     DS_FileInfoPkt_t DS_FileInfoPkt;
     DS_FileInfo_t *  FileInfoPtr;
-    size_t           ActualLength   = 0;
-    size_t           ExpectedLength = sizeof(DS_GetFileInfoCmd_t);
-    int32            i              = 0;
+    int32            i = 0;
 
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
+    /*
+    ** Create and send a file info packet...
+    */
+    DS_AppData.CmdAcceptedCounter++;
 
-    if (ExpectedLength != ActualLength)
+    CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_DEBUG, "GET FILE INFO command");
+
+    /*
+    ** Initialize file info telemetry packet...
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_DIAG_TLM_MID),
+                 sizeof(DS_FileInfoPkt_t));
+
+    /*
+    ** Process array of destination file info data...
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
     {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid GET FILE INFO command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else
-    {
-        /*
-        ** Create and send a file info packet...
-        */
-        DS_AppData.CmdAcceptedCounter++;
-
-        CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_DEBUG, "GET FILE INFO command");
+        FileInfoPtr = &DS_FileInfoPkt.Payload[i];
 
         /*
-        ** Initialize file info telemetry packet...
+        ** Set file age and size...
         */
-        CFE_MSG_Init(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_DIAG_TLM_MID),
-                     sizeof(DS_FileInfoPkt_t));
+        FileInfoPtr->FileAge  = DS_AppData.FileStatus[i].FileAge;
+        FileInfoPtr->FileSize = DS_AppData.FileStatus[i].FileSize;
 
         /*
-        ** Process array of destination file info data...
+        ** Set file growth rate (computed when process last HK request)...
         */
-        for (i = 0; i < DS_DEST_FILE_CNT; i++)
+        FileInfoPtr->FileRate = DS_AppData.FileStatus[i].FileRate;
+
+        /*
+        ** Set current filename sequence count...
+        */
+        FileInfoPtr->SequenceCount = DS_AppData.FileStatus[i].FileCount;
+
+        /*
+        ** Set file enable/disable state...
+        */
+        if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
         {
-            FileInfoPtr = &DS_FileInfoPkt.Payload[i];
-
-            /*
-            ** Set file age and size...
-            */
-            FileInfoPtr->FileAge  = DS_AppData.FileStatus[i].FileAge;
-            FileInfoPtr->FileSize = DS_AppData.FileStatus[i].FileSize;
-
-            /*
-            ** Set file growth rate (computed when process last HK request)...
-            */
-            FileInfoPtr->FileRate = DS_AppData.FileStatus[i].FileRate;
-
-            /*
-            ** Set current filename sequence count...
-            */
-            FileInfoPtr->SequenceCount = DS_AppData.FileStatus[i].FileCount;
-
-            /*
-            ** Set file enable/disable state...
-            */
-            if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
-            {
-                FileInfoPtr->EnableState = DS_DISABLED;
-            }
-            else
-            {
-                FileInfoPtr->EnableState = DS_AppData.FileStatus[i].FileState;
-            }
-
-            /*
-            ** Set file open/closed state...
-            */
-            if (!OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
-            {
-                FileInfoPtr->OpenState = DS_CLOSED;
-            }
-            else
-            {
-                FileInfoPtr->OpenState = DS_OPEN;
-
-                /*
-                ** Set current open filename...
-                */
-                strncpy(FileInfoPtr->FileName, DS_AppData.FileStatus[i].FileName, sizeof(FileInfoPtr->FileName));
-            }
+            FileInfoPtr->EnableState = DS_DISABLED;
+        }
+        else
+        {
+            FileInfoPtr->EnableState = DS_AppData.FileStatus[i].FileState;
         }
 
         /*
-        ** Timestamp and send file info telemetry packet...
+        ** Set file open/closed state...
         */
-        CFE_SB_TimeStampMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader));
-        CFE_SB_TransmitMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), true);
+        if (!OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
+        {
+            FileInfoPtr->OpenState = DS_CLOSED;
+        }
+        else
+        {
+            FileInfoPtr->OpenState = DS_OPEN;
+
+            /*
+            ** Set current open filename...
+            */
+            strncpy(FileInfoPtr->FileName, DS_AppData.FileStatus[i].FileName, sizeof(FileInfoPtr->FileName));
+        }
     }
+
+    /*
+    ** Timestamp and send file info telemetry packet...
+    */
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), true);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1375,11 +1113,9 @@ void DS_CmdGetFileInfo(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
+void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *DS_AddMidCmd;
-    size_t                           ActualLength     = 0;
-    size_t                           ExpectedLength   = sizeof(DS_AddMidCmd_t);
     DS_PacketEntry_t *               pPacketEntry     = NULL;
     DS_FilterParms_t *               pFilterParms     = NULL;
     int32                            FilterTableIndex = 0;
@@ -1387,20 +1123,8 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
     int32                            i                = 0;
 
     DS_AddMidCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid ADD MID command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (!CFE_SB_IsValidMsgId(DS_AddMidCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(DS_AddMidCmd->MessageID))
     {
         /*
         ** Invalid packet message ID - can be anything but unused...
@@ -1483,38 +1207,24 @@ void DS_CmdAddMID(const CFE_SB_Buffer_t *BufPtr)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_CmdRemoveMID() - remove message ID from packet filter table  */
+/* DS_RemoveMIDCmd() - remove message ID from packet filter table  */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CmdRemoveMID(const CFE_SB_Buffer_t *BufPtr)
+void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *DS_RemoveMidCmd;
 
-    size_t            ActualLength     = 0;
-    size_t            ExpectedLength   = sizeof(DS_RemoveMidCmd_t);
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
     int32             HashTableIndex   = 0;
     int32             i                = 0;
 
-    DS_RemoveMidCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
-    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
+    DS_RemoveMidCmd  = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
     FilterTableIndex = DS_TableFindMsgID(DS_RemoveMidCmd->MessageID);
 
-    if (ExpectedLength != ActualLength)
-    {
-        /*
-        ** Invalid command packet length...
-        */
-        DS_AppData.CmdRejectedCounter++;
-
-        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid REMOVE MID command length: expected = %d, actual = %d", (int)ExpectedLength,
-                          (int)ActualLength);
-    }
-    else if (!CFE_SB_IsValidMsgId(DS_RemoveMidCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(DS_RemoveMidCmd->MessageID))
     {
         /*
         ** Invalid packet message ID - can be anything but unused...
