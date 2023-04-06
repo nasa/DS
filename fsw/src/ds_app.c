@@ -200,8 +200,7 @@ int32 DS_AppInitialize(void)
 
     if (Result != CFE_SUCCESS)
     {
-        CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR, "Unable to register for EVS services, err = 0x%08X",
-                          (unsigned int)Result);
+        CFE_ES_WriteToSysLog("DS App: Error registering for Event Services, RC = 0x%08X\n", (unsigned int)Result);
     }
 
     /*

@@ -98,11 +98,11 @@ void DS_AppMain_Test_AppInitializeError(void)
     DS_AppMain();
 
     /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_EXIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_CRITICAL);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_CRITICAL);
     UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
-    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 2);
 }
 
 void DS_AppMain_Test_SBError(void)
@@ -178,11 +178,7 @@ void DS_AppInitialize_Test_EVSRegisterError(void)
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileHandle));
 
-    /* Note: not verifying that rest of DS_AppData is set to 0, because some elements of DS_AppData
-     * are modified by subfunctions, which we're not testing here */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_INIT_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
 }
 
 void DS_AppInitialize_Test_SBCreatePipeError(void)
