@@ -274,7 +274,7 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 015 */
     {
-      /* .MessageID = */ MOONRANGER_POSE_MID,
+      /* .MessageID = */ OBC_SET_WHEEL_SPEED_ALL_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */

@@ -309,7 +309,7 @@ DS_DestFileTable_t DS_DestFileTable =
 #if (DS_MOVE_FILES == TRUE)
       /* .Movename      = */ DS_EMPTY_STRING,
 #endif
-      /* .Pathname      = */ "/cf/set_by_cmd_b4_enable",
+      /* .Pathname      = */ "/cf",
       /* .Basename      = */ "pose_mid",
       /* .Extension     = */ "tlm",
 
