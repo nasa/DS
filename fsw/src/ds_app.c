@@ -173,10 +173,10 @@ void DS_AppMain(void)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-int32 DS_AppInitialize(void)
+CFE_Status_t DS_AppInitialize(void)
 {
-    int32 Result;
-    int32 i = 0;
+    CFE_Status_t Result;
+    int32        i = 0;
 
     /*
     ** Initialize global data structure...
@@ -279,7 +279,7 @@ void DS_AppSendHkCmd(void)
 {
     DS_HkPacket_t  HkPacket;
     int32          i                                              = 0;
-    int32          Status                                         = 0;
+    CFE_Status_t   Status                                         = 0;
     char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
     CFE_TBL_Info_t FilterTblInfo;
 

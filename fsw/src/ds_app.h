@@ -145,7 +145,7 @@ void DS_AppMain(void);
  *  \return Execution status, see \ref CFEReturnCodes
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
-int32 DS_AppInitialize(void);
+CFE_Status_t DS_AppInitialize(void);
 
 /**
  *  \brief Application housekeeping request command handler

@@ -55,7 +55,7 @@
 
   This document provides a complete specification for the commands and telemetry associated
   with the CFS Data Storage (DS) application software.  The document is intended primarily
-  for users of the software (operations personal, test engineers, and maintenance personnel).
+  for users of the software (operations personnel, test engineers, and maintenance personnel).
   The last section of the document, the deployment guide section, is intended for mission
   developers when deploying and configuring the application software for a mission
   flight software build environment.

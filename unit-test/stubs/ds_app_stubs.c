@@ -31,13 +31,13 @@
  * Generated stub function for DS_AppInitialize()
  * ----------------------------------------------------
  */
-int32 DS_AppInitialize(void)
+CFE_Status_t DS_AppInitialize(void)
 {
-    UT_GenStub_SetupReturnBuffer(DS_AppInitialize, int32);
+    UT_GenStub_SetupReturnBuffer(DS_AppInitialize, CFE_Status_t);
 
     UT_GenStub_Execute(DS_AppInitialize, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_AppInitialize, int32);
+    return UT_GenStub_GetReturnValue(DS_AppInitialize, CFE_Status_t);
 }
 
 /*
