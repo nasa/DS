@@ -82,7 +82,8 @@
 
 #define FILE_CFE_APP_HK_PKTS  4
 #define FILE_CFE_APP_TLM_PKTS 5
-#define MOONRANGER_POSE_FILE_INDEX 15
+#define MOONRANGER_DEBUG_FILE_INDEX 14
+#define MOONRANGER_NOMINAL_FILE_INDEX 15
 
 /*
 ** Sample packet filter table data
@@ -278,7 +279,7 @@ DS_FilterTable_t DS_FilterTable =
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { MOONRANGER_POSE_FILE_INDEX,  DS_BY_COUNT, 1, 1, 0 },
+        { MOONRANGER_NOMINAL_FILE_INDEX,  DS_BY_COUNT, 1, 1, 0 },
         { FILE_ALL_APP_TLM_PKTS, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -286,11 +287,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 016 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ OBC_SET_HEATER_STATE_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -298,11 +299,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 017 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ OBC_PERIPHERAL_DATA_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -310,11 +311,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 018 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ IMU_DRIVER_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -322,11 +323,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 019 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ IMU_DRIVER_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -334,11 +335,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 020 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ IMU_DRIVER_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -346,11 +347,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 021 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CAMERA_IF_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0  },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -358,11 +359,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 022 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CAMERA_IF_IMG_SAVED_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -370,11 +371,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 023 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CAMERA_IF_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -382,11 +383,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 024 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CAMERA_IF_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -394,11 +395,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 025 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CAMERA_IF_NEW_STEREO_IMG_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -406,11 +407,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 026 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ SB_TRANSPORT_LIB_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -418,11 +419,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 027 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ POSE_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -430,11 +431,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 028 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ POSE_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -442,11 +443,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 029 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ POSE_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -454,11 +455,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 030 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ STEREO_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -466,11 +467,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 031 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ STEREO_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -478,11 +479,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 032 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ STEREO_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -490,11 +491,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 033 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ STEREO_NEW_PCL_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -502,11 +503,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 034 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ STEREO_NEW_DISP_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -514,11 +515,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 035 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLANNER_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -526,11 +527,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 036 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLANNER_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -538,11 +539,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 037 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLANNER_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -550,11 +551,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 038 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLANNER_GOAL_REACHED_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -562,11 +563,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 039 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MAPPER_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -574,11 +575,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 040 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MAPPER_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -586,11 +587,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 041 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MAPPER_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -598,11 +599,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 042 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_MESH_SAVED_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0  },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -610,11 +611,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 043 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ VEHICLE_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -622,11 +623,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 044 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ VEHICLE_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -634,11 +635,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 045 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ VEHICLE_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -646,11 +647,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 046 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TBL_MANAGER_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -658,11 +659,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 047 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TBL_MANAGER_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -670,11 +671,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 048 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TBL_MANAGER_SEND_UPDATE_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -682,11 +683,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 049 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TBL_MANAGER_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -694,11 +695,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 050 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ FTP_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -706,11 +707,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 051 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ FTP_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -718,11 +719,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 052 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ FTP_CONTROL,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -730,11 +731,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 053 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ FTP_SEND_ALL,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -742,11 +743,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 054 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ FTP_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -754,11 +755,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 055 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ FTP_INIT,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -766,11 +767,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 056 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_GOAL_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -778,11 +779,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 057 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_POSE_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -790,11 +791,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 058 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_IMG_POSE_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -802,11 +803,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 059 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_BODY_VELOCITY_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -814,11 +815,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 060 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_DRIVE_ARC_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -826,11 +827,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 061 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ MOONRANGER_IMU_DATA_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -838,11 +839,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 062 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TLM_OUTPUT_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -850,11 +851,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 063 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TLM_OUTPUT_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -862,11 +863,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 064 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TLM_OUTPUT_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -874,11 +875,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 065 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TLM_OUTPUT_DATA_TYPES_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -886,11 +887,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 066 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CMD_INGEST_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -898,11 +899,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 067 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CMD_INGEST_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -910,11 +911,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 068 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ CMD_INGEST_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -922,11 +923,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 069 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ HS_CMD_MID ,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -934,11 +935,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 070 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ HS_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -946,11 +947,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 071 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ HS_WAKEUP_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -958,11 +959,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 072 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ HS_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -970,11 +971,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 073 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ SCH_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -982,11 +983,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 074 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ SCH_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -994,11 +995,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 075 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ SCH_HK_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1006,11 +1007,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 076 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ SCH_DIAG_TLM_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1018,11 +1019,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 077 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ TX2I_HEALTH_MID ,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1030,23 +1031,22 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 078 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLAN_HANDLER_CMD_MID ,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
       }
     },
     /* Packet Index 079 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLAN_HANDLER_SEND_HK_MID ,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1054,11 +1054,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 080 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLAN_HANDLER_NEW_PLAN_MID ,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1066,11 +1066,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 081 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ PLAN_HANDLER_HK_TLM_MID ,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1078,11 +1078,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 082 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ DS_CMD_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_NOMINAL_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }
@@ -1090,11 +1090,11 @@ DS_FilterTable_t DS_FilterTable =
     },
     /* Packet Index 083 */
     {
-      /* .MessageID = */ DS_UNUSED,
+      /* .MessageID = */ DS_SEND_HK_MID,
       /* .Filter    = */
       {
         /* File table index, filter type, N, X, O */
-        { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
+        { MOONRANGER_DEBUG_FILE_INDEX, DS_BY_COUNT, 1, 1, 0 },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED },
         { DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED, DS_UNUSED }

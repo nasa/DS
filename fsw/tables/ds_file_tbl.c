@@ -294,15 +294,15 @@ DS_DestFileTable_t DS_DestFileTable =
 #if (DS_MOVE_FILES == TRUE)
       /* .Movename      = */ DS_EMPTY_STRING,
 #endif
-      /* .Pathname      = */ DS_EMPTY_STRING,
-      /* .Basename      = */ DS_EMPTY_STRING,
-      /* .Extension     = */ DS_EMPTY_STRING,
+      /* .Pathname      = */ "/cf",
+      /* .Basename      = */ "debug",
+      /* .Extension     = */ "tlm",
 
-      /* .FileNameType  = */ DS_UNUSED,
-      /* .EnableState   = */ DS_UNUSED,
-      /* .MaxFileSize   = */ DS_UNUSED,
-      /* .MaxFileAge    = */ DS_UNUSED,
-      /* .SequenceCount = */ DS_UNUSED,
+      /* .FileNameType  = */ DS_BY_COUNT,
+      /* .EnableState   = */ DS_ENABLED,
+      /* .MaxFileSize   = */ (1024 * 1024 * 2),         /* 2 M-bytes */
+      /* .MaxFileAge    = */ (60 * 60 * 2),             /* 2 hours */
+      /* .SequenceCount = */ 5000,
     },
     /* File Index 15 */
     {
@@ -310,7 +310,7 @@ DS_DestFileTable_t DS_DestFileTable =
       /* .Movename      = */ DS_EMPTY_STRING,
 #endif
       /* .Pathname      = */ "/cf",
-      /* .Basename      = */ "pose_mid",
+      /* .Basename      = */ "nominal",
       /* .Extension     = */ "tlm",
 
       /* .FileNameType  = */ DS_BY_COUNT,
