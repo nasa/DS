@@ -883,7 +883,7 @@ void DS_FileCloseDest(int32 FileIndex)
         }
 
         /* Update the path name for reporting */
-        strncpy(FileStatus->FileName, PathName, sizeof(PathName));
+        strncpy(FileStatus->FileName, PathName, sizeof(FileStatus->FileName));
     }
 #else
     /*
