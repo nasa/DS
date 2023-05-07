@@ -98,7 +98,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_ENADIS_CMD_EID debug event message will be sent
+ *       - The #DS_ENADIS_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -127,7 +127,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_FILE_CMD_EID debug event message will be sent
+ *       - The #DS_FILE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -160,7 +160,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_FTYPE_CMD_EID debug event message will be sent
+ *       - The #DS_FTYPE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -193,7 +193,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_PARMS_CMD_EID debug event message will be sent
+ *       - The #DS_PARMS_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -226,7 +226,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_NTYPE_CMD_EID debug event message will be sent
+ *       - The #DS_NTYPE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -257,7 +257,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_STATE_CMD_EID debug event message will be sent
+ *       - The #DS_STATE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -288,7 +288,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_PATH_CMD_EID debug event message will be sent
+ *       - The #DS_PATH_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -319,7 +319,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_BASE_CMD_EID debug event message will be sent
+ *       - The #DS_BASE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -350,7 +350,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_EXT_CMD_EID debug event message will be sent
+ *       - The #DS_EXT_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -381,7 +381,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_SIZE_CMD_EID debug event message will be sent
+ *       - The #DS_SIZE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -412,7 +412,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_AGE_CMD_EID debug event message will be sent
+ *       - The #DS_AGE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -443,7 +443,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_SEQ_CMD_EID debug event message will be sent
+ *       - The #DS_SEQ_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -473,7 +473,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_CLOSE_CMD_EID debug event message will be sent
+ *       - The #DS_CLOSE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -530,7 +530,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_ADD_MID_CMD_EID debug event message will be sent
+ *       - The #DS_ADD_MID_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -563,7 +563,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_CLOSE_ALL_CMD_EID debug event message will be sent
+ *       - The #DS_CLOSE_ALL_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -592,7 +592,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_REMOVE_MID_CMD_EID debug event message will be sent
+ *       - The #DS_REMOVE_MID_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:

@@ -142,7 +142,7 @@ void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_ENADIS_CMD_EID, CFE_EVS_EventType_DEBUG, "APP STATE command: state = %d",
+        CFE_EVS_SendEvent(DS_ENADIS_CMD_EID, CFE_EVS_EventType_INFORMATION, "APP STATE command: state = %d",
                           DS_AppStateCmd->EnableState);
     }
 }
@@ -240,7 +240,7 @@ void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
             DS_AppData.CmdAcceptedCounter++;
 
-            CFE_EVS_SendEvent(DS_FILE_CMD_EID, CFE_EVS_EventType_DEBUG,
+            CFE_EVS_SendEvent(DS_FILE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                               "FILTER FILE command: MID = 0x%08lX, index = %d, filter = %d, file = %d",
                               (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID), (int)FilterTableIndex,
                               DS_FilterFileCmd->FilterParmsIndex, DS_FilterFileCmd->FileTableIndex);
@@ -341,7 +341,7 @@ void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 
             DS_AppData.CmdAcceptedCounter++;
 
-            CFE_EVS_SendEvent(DS_FTYPE_CMD_EID, CFE_EVS_EventType_DEBUG,
+            CFE_EVS_SendEvent(DS_FTYPE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                               "FILTER TYPE command: MID = 0x%08lX, index = %d, filter = %d, type = %d",
                               (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID), (int)FilterTableIndex,
                               DS_FilterTypeCmd->FilterParmsIndex, DS_FilterTypeCmd->FilterType);
@@ -446,7 +446,7 @@ void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
 
             DS_AppData.CmdAcceptedCounter++;
 
-            CFE_EVS_SendEvent(DS_PARMS_CMD_EID, CFE_EVS_EventType_DEBUG,
+            CFE_EVS_SendEvent(DS_PARMS_CMD_EID, CFE_EVS_EventType_INFORMATION,
                               "FILTER PARMS command: MID = 0x%08lX, index = %d, filter = %d, N = %d, X = %d, O = %d",
                               (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID), (int)FilterTableIndex,
                               DS_FilterParmsCmd->FilterParmsIndex, pFilterParms->Algorithm_N, pFilterParms->Algorithm_X,
@@ -514,7 +514,7 @@ void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_NTYPE_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_NTYPE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST TYPE command: file table index = %d, filename type = %d",
                           DS_DestTypeCmd->FileTableIndex, DS_DestTypeCmd->FileNameType);
     }
@@ -577,7 +577,7 @@ void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_STATE_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_STATE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST STATE command: file table index = %d, file state = %d", DS_DestStateCmd->FileTableIndex,
                           DS_DestStateCmd->EnableState);
     }
@@ -633,7 +633,7 @@ void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_PATH_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_PATH_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST PATH command: file table index = %d, pathname = '%s'",
                           (int)DS_DestPathCmd->FileTableIndex, DS_DestPathCmd->Pathname);
     }
@@ -688,7 +688,7 @@ void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_BASE_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_BASE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST BASE command: file table index = %d, base filename = '%s'",
                           (int)DS_DestBaseCmd->FileTableIndex, DS_DestBaseCmd->Basename);
     }
@@ -743,7 +743,7 @@ void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_EXT_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_EXT_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST EXT command: file table index = %d, extension = '%s'",
                           (int)DS_DestExtCmd->FileTableIndex, DS_DestExtCmd->Extension);
     }
@@ -807,7 +807,7 @@ void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_SIZE_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_SIZE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST SIZE command: file table index = %d, size limit = %d",
                           (int)DS_DestSizeCmd->FileTableIndex, (int)DS_DestSizeCmd->MaxFileSize);
     }
@@ -871,7 +871,7 @@ void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_AGE_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_AGE_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST AGE command: file table index = %d, age limit = %d", (int)DS_DestAgeCmd->FileTableIndex,
                           (int)DS_DestAgeCmd->MaxFileAge);
     }
@@ -948,7 +948,7 @@ void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_SEQ_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_SEQ_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "DEST COUNT command: file table index = %d, sequence count = %d",
                           (int)DS_DestCountCmd->FileTableIndex, (int)DS_DestCountCmd->SequenceCount);
     }
@@ -990,7 +990,7 @@ void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_CLOSE_CMD_EID, CFE_EVS_EventType_DEBUG, "DEST CLOSE command: file table index = %d",
+        CFE_EVS_SendEvent(DS_CLOSE_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE command: file table index = %d",
                           (int)DS_CloseFileCmd->FileTableIndex);
     }
 }
@@ -1019,7 +1019,7 @@ void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
 
     DS_AppData.CmdAcceptedCounter++;
 
-    CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_DEBUG, "DEST CLOSE ALL command");
+    CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE ALL command");
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1039,7 +1039,7 @@ void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
     */
     DS_AppData.CmdAcceptedCounter++;
 
-    CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_DEBUG, "GET FILE INFO command");
+    CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_INFORMATION, "GET FILE INFO command");
 
     /*
     ** Initialize file info telemetry packet...
@@ -1198,7 +1198,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_ADD_MID_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_ADD_MID_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "ADD MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
                           (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
@@ -1292,7 +1292,7 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         DS_AppData.CmdAcceptedCounter++;
 
-        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_EID, CFE_EVS_EventType_DEBUG,
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "REMOVE MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
                           (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
