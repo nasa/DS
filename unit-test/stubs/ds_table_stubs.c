@@ -48,13 +48,13 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
  * Generated stub function for DS_TableCreateCDS()
  * ----------------------------------------------------
  */
-int32 DS_TableCreateCDS(void)
+CFE_Status_t DS_TableCreateCDS(void)
 {
-    UT_GenStub_SetupReturnBuffer(DS_TableCreateCDS, int32);
+    UT_GenStub_SetupReturnBuffer(DS_TableCreateCDS, CFE_Status_t);
 
     UT_GenStub_Execute(DS_TableCreateCDS, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_TableCreateCDS, int32);
+    return UT_GenStub_GetReturnValue(DS_TableCreateCDS, CFE_Status_t);
 }
 
 /*
@@ -122,13 +122,13 @@ uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
  * Generated stub function for DS_TableInit()
  * ----------------------------------------------------
  */
-int32 DS_TableInit(void)
+CFE_Status_t DS_TableInit(void)
 {
-    UT_GenStub_SetupReturnBuffer(DS_TableInit, int32);
+    UT_GenStub_SetupReturnBuffer(DS_TableInit, CFE_Status_t);
 
     UT_GenStub_Execute(DS_TableInit, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_TableInit, int32);
+    return UT_GenStub_GetReturnValue(DS_TableInit, CFE_Status_t);
 }
 
 /*
@@ -223,15 +223,15 @@ bool DS_TableVerifyCount(uint32 SequenceCount)
  * Generated stub function for DS_TableVerifyDestFile()
  * ----------------------------------------------------
  */
-int32 DS_TableVerifyDestFile(const void *TableData)
+CFE_Status_t DS_TableVerifyDestFile(const void *TableData)
 {
-    UT_GenStub_SetupReturnBuffer(DS_TableVerifyDestFile, int32);
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyDestFile, CFE_Status_t);
 
     UT_GenStub_AddParam(DS_TableVerifyDestFile, const void *, TableData);
 
     UT_GenStub_Execute(DS_TableVerifyDestFile, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_TableVerifyDestFile, int32);
+    return UT_GenStub_GetReturnValue(DS_TableVerifyDestFile, CFE_Status_t);
 }
 
 /*
@@ -273,15 +273,15 @@ bool DS_TableVerifyFileIndex(uint16 FileTableIndex)
  * Generated stub function for DS_TableVerifyFilter()
  * ----------------------------------------------------
  */
-int32 DS_TableVerifyFilter(const void *TableData)
+CFE_Status_t DS_TableVerifyFilter(const void *TableData)
 {
-    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFilter, int32);
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFilter, CFE_Status_t);
 
     UT_GenStub_AddParam(DS_TableVerifyFilter, const void *, TableData);
 
     UT_GenStub_Execute(DS_TableVerifyFilter, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_TableVerifyFilter, int32);
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFilter, CFE_Status_t);
 }
 
 /*

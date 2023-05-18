@@ -72,7 +72,7 @@ typedef struct DS_HashTag
  *
  *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
  */
-int32 DS_TableInit(void);
+CFE_Status_t DS_TableInit(void);
 
 /**
  *  \brief Manage destination file table loads, dumps, etc.
@@ -139,7 +139,7 @@ void DS_TableManageFilter(void);
  *
  *  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFileEntry
  */
-int32 DS_TableVerifyDestFile(const void *TableData);
+CFE_Status_t DS_TableVerifyDestFile(const void *TableData);
 
 /**
  *  \brief Verify destination file table entry
@@ -185,7 +185,7 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableI
  *
  *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilterEntry
  */
-int32 DS_TableVerifyFilter(const void *TableData);
+CFE_Status_t DS_TableVerifyFilter(const void *TableData);
 
 /**
  *  \brief Verify packet filter table entry
@@ -452,7 +452,7 @@ void DS_TableUnsubscribe(void);
  *
  *  \sa #DS_DestFileEntry_t
  */
-int32 DS_TableCreateCDS(void);
+CFE_Status_t DS_TableCreateCDS(void);
 
 /**
  *  \brief Update CDS with current filename sequence count values
