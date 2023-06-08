@@ -115,7 +115,7 @@ void DS_SetAppStateCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_AppStateCmd_t), "DS_AppStateCmd_t is 32-bit aligned");
@@ -167,7 +167,7 @@ void DS_SetFilterFileCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterFileCmd_t), "DS_FilterFileCmd_t is 32-bit aligned");
@@ -297,7 +297,7 @@ void DS_SetFilterTypeCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterTypeCmd_t), "DS_FilterTypeCmd_t is 32-bit aligned");
@@ -427,7 +427,7 @@ void DS_SetFilterParmsCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterParmsCmd_t), "DS_FilterParmsCmd_t is 32-bit aligned");
@@ -557,7 +557,7 @@ void DS_SetDestTypeCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestTypeCmd_t), "DS_DestTypeCmd_t is 32-bit aligned");
@@ -645,7 +645,7 @@ void DS_SetDestStateCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestStateCmd_t), "DS_DestStateCmd_t is 32-bit aligned");
@@ -732,7 +732,7 @@ void DS_SetDestPathCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestPathCmd_t), "DS_DestPathCmd_t is 32-bit aligned");
@@ -799,7 +799,7 @@ void DS_SetDestBaseCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestBaseCmd_t), "DS_DestBaseCmd_t is 32-bit aligned");
@@ -867,7 +867,7 @@ void DS_SetDestExtCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestExtCmd_t), "DS_DestExtCmd_t is 32-bit aligned");
@@ -932,7 +932,7 @@ void DS_SetDestSizeCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestSizeCmd_t), "DS_DestSizeCmd_t is 32-bit aligned");
@@ -1021,7 +1021,7 @@ void DS_SetDestAgeCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestAgeCmd_t), "DS_DestAgeCmd_t is 32-bit aligned");
@@ -1111,7 +1111,7 @@ void DS_SetDestCountCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestCountCmd_t), "DS_DestCountCmd_t is 32-bit aligned");
@@ -1206,7 +1206,7 @@ void DS_CloseFileCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     UtAssert_STUB_COUNT(DS_FileUpdateHeader, 1);
     UtAssert_STUB_COUNT(DS_FileCloseDest, 1);
@@ -1239,7 +1239,7 @@ void DS_CloseFileCmd_Test_NominalAlreadyClosed(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     UtAssert_STUB_COUNT(DS_FileUpdateHeader, 0);
     UtAssert_STUB_COUNT(DS_FileCloseDest, 0);
@@ -1288,7 +1288,7 @@ void DS_CloseAllCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_ALL_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseAllCmd_t), "DS_CloseAllCmd_t is 32-bit aligned");
@@ -1312,7 +1312,7 @@ void DS_CloseAllCmd_Test_CloseAll(void)
     UtAssert_STUB_COUNT(DS_FileUpdateHeader, DS_DEST_FILE_CNT);
     UtAssert_STUB_COUNT(DS_FileCloseDest, DS_DEST_FILE_CNT);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_ALL_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_BOOL_TRUE(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_CloseAllCmd_t));
@@ -1342,7 +1342,7 @@ void DS_GetFileInfoCmd_Test_EnabledOpen(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_GET_FILE_INFO_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_FileInfoPkt_t), "DS_FileInfoPkt_t is 32-bit aligned");
@@ -1372,7 +1372,7 @@ void DS_GetFileInfoCmd_Test_DisabledClosed(void)
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_GET_FILE_INFO_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     /* Generates 1 event message we don't care about in this test */
@@ -1433,7 +1433,7 @@ void DS_AddMIDCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 }
 
 void DS_AddMIDCmd_Test_InvalidMessageID(void)
@@ -1565,7 +1565,7 @@ void DS_RemoveMIDCmd_Test_Nominal(void)
     UtAssert_STUB_COUNT(DS_TableCreateHash, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 }
 
 void DS_RemoveMIDCmd_Test_InvalidMessageID(void)
