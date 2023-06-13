@@ -229,7 +229,7 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
  *
  *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
  */
-bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize);
+bool DS_TableEntryUnused(const void *TableEntry, size_t BufferSize);
 
 /**
  *  \brief Verify destination file index
@@ -354,7 +354,7 @@ bool DS_TableVerifyState(uint16 EnableState);
  *
  *  \sa #DS_TableVerifyAge, #DS_TableVerifyCount, #DS_DestFileEntry_t
  */
-bool DS_TableVerifySize(uint32 MaxFileSize);
+bool DS_TableVerifySize(size_t MaxFileSize);
 
 /**
  *  \brief Verify destination file max age limit

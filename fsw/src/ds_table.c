@@ -640,11 +640,11 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
+bool DS_TableEntryUnused(const void *TableEntry, size_t BufferSize)
 {
     const char *Buffer = (char *)TableEntry;
     bool        Result = true;
-    int32       i      = 0;
+    uint32      i;
 
     for (i = 0; i < BufferSize; i++)
     {
@@ -752,7 +752,7 @@ bool DS_TableVerifyState(uint16 EnableState)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool DS_TableVerifySize(uint32 MaxFileSize)
+bool DS_TableVerifySize(size_t MaxFileSize)
 {
     bool Result = true;
 
