@@ -347,7 +347,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
     uint16 PacketValue;
     uint16 Seconds;
     uint16 Subsecs;
-    printf("ENTER THE FILTER DOME\n");
     /* 
     ** Verify input values (all errors = packet is filtered)...
     */ 
@@ -356,7 +355,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
         /* 
         ** Group size of zero will result in divide by zero...
         */ 
-        printf("Died 1 \n");
         PacketIsFiltered = TRUE;
     }
     else if (Algorithm_N == 0)
@@ -365,7 +363,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
         ** Pass count of zero will result in zero packets...
         */ 
         PacketIsFiltered = TRUE;
-                printf("Died5 \n");
 
     }
     else if (Algorithm_N > Algorithm_X)
@@ -374,7 +371,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
         ** Pass count cannot exceed group size...
         */ 
         PacketIsFiltered = TRUE;
-                printf("Died 4 \n");
 
     }
     else if (Algorithm_O >= Algorithm_X)
@@ -383,7 +379,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
         ** Group offset must be less than group size...
         */ 
         PacketIsFiltered = TRUE;
-                printf("Died3 \n");
 
     }
     else if ((FilterType != CFS_PKT_TIME_BASED_FILTER_TYPE) &&
@@ -393,7 +388,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
         ** Invalid - unknown filter type...
         */ 
         PacketIsFiltered = TRUE;
-                printf("Died2 \n");
 
     }
     else
@@ -404,7 +398,6 @@ boolean CFS_IsPacketFiltered(CFE_SB_MsgPtr_t MessagePtr,
             ** Create packet filter value from packet sequence count...
             */ 
             PacketValue = CCSDS_RD_SEQ(MessagePtr->Hdr);
-            printf("Read packet Sequence %u \n", PacketValue);
         }
         else
         {
