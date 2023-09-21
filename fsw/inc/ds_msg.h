@@ -407,8 +407,6 @@ typedef struct
  */
 typedef struct
 {
-    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief cFE Software Bus command message header */
-
     CFE_SB_MsgId_t MessageID; /**< \brief Message ID to add to Packet Filter Table */
 } DS_AddRemoveMid_Payload_t;
 
