@@ -960,12 +960,15 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_MoveError(void)
 void DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge(void)
 {
     int32 FileIndex = 0;
-
+    const char DirName[] = "directory1/";
+    
     /* Set up the handle */
     OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
-
-    strncpy(DS_AppData.FileStatus[FileIndex].FileName, "directory1/filenamefilenamefilenamefilenamefilenamefilename",
-            sizeof(DS_AppData.FileStatus[FileIndex].FileName));
+    
+    size_t DirNameLen = sizeof(DirName);
+    strncpy(DS_AppData.FileStatus[FileIndex].FileName, DirName, DirNameLen);
+    memset(&DS_AppData.FileStatus[FileIndex].FileName[DirNameLen-1], 'f', DS_TOTAL_FNAME_BUFSIZE - DirNameLen);
+    DS_AppData.FileStatus[FileIndex].FileName[DS_TOTAL_FNAME_BUFSIZE-1] = '\0';
     strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Movename, "directory2/movename/",
             sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
 
