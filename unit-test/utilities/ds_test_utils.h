@@ -81,8 +81,8 @@ extern UT_CmdBuf_t UT_CmdBuf;
 #define UT_DS_TEST_ADD(test) UtTest_Add(test, DS_Test_Setup, DS_Test_TearDown, #test)
 
 /* Unit test MID */
-#define DS_UT_MID_1 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 1)
-#define DS_UT_MID_2 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 2)
+#define DS_UT_MID_1 CFE_SB_ValueToMsgId(1)
+#define DS_UT_MID_2 CFE_SB_ValueToMsgId(2)
 
 /* Unit test osal ID, generic w/ no type */
 #define DS_UT_OBJID_1 OS_ObjectIdFromInteger(1)
