@@ -365,7 +365,8 @@ void DS_AppSendHkCmd(void)
             /* If the filter table name is invalid, send an event and erase any
              * stale/misleading filename from the HK packet */
             CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid filter tbl name in DS_AppSendHkCmd. Name=%s, Err=0x%08X", FilterTblName, Status);
+                              "Invalid filter tbl name in DS_AppSendHkCmd. Name=%s, Err=0x%08X", FilterTblName,
+                              (unsigned int)Status);
 
             memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
         }

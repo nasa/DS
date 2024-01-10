@@ -861,7 +861,7 @@ void DS_FileCloseDest(int32 FileIndex)
                     */
                     CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
                                       "FILE MOVE error: src = '%s', tgt = '%s', result = %d", FileStatus->FileName,
-                                      PathName, OS_result);
+                                      PathName, (int)OS_result);
                 }
             }
             else
