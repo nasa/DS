@@ -1394,10 +1394,11 @@ void DS_TableCreateCDS_Test_PreExistingCDSArea(void)
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileCount, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileCount, 0);
 
-#if (DS_CDS_ENABLE_STATE == 1)
-    /* only test if configured */
-    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, 0);
-#endif
+    if (DS_CDS_ENABLE_STATE == 1)
+    {
+        /* only test if configured */
+        UtAssert_UINT32_EQ(DS_AppData.AppEnableState, 0);
+    }
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }

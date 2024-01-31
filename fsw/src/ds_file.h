@@ -35,7 +35,6 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
 /**
  * \brief DS File Header (follows cFE file header at start of file)
  */
@@ -49,7 +48,6 @@ typedef struct
 
     char FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief On-board filename */
 } DS_FileHeader_t;
-#endif
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
