@@ -191,9 +191,7 @@
 #endif
 
 #ifndef DS_MOVE_FILES
-#error DS_MOVE_FILES must be defined!
-#elif ((DS_MOVE_FILES != true) && (DS_MOVE_FILES != false))
-#error DS_MOVE_FILES must be true or false!
+#error "DS_MOVE_FILES must be defined!"
 #endif
 
 #ifndef DS_PER_PACKET_PIPE_LIMIT

@@ -52,9 +52,10 @@ CFE_Status_t DS_TableInit(void)
     bool         NeedToLoadFilterTable = false;
     uint16       TableRegisterFlags    = CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP;
 
-#if (DS_MAKE_TABLES_CRITICAL == 1)
-    TableRegisterFlags |= CFE_TBL_OPT_CRITICAL;
-#endif
+    if (DS_MAKE_TABLES_CRITICAL == 1)
+    {
+        TableRegisterFlags |= CFE_TBL_OPT_CRITICAL;
+    }
 
     /*
     ** If registration fails for either table then the DS app will
@@ -909,10 +910,11 @@ CFE_Status_t DS_TableCreateCDS(void)
                 DS_AppData.FileStatus[i].FileCount = DataStoreBuffer[i];
             }
 
-#if (DS_CDS_ENABLE_STATE == 1)
-            /* Only restore enable/disable state if configured */
-            DS_AppData.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
-#endif
+            if (DS_CDS_ENABLE_STATE == 1)
+            {
+                /* Only restore enable/disable state if configured */
+                DS_AppData.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
+            }
         }
     }
 
