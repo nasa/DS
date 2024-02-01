@@ -962,11 +962,11 @@ void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    const DS_CloseFile_Payload_t *DS_CloseFileCmd;
+    const DS_CloseFile_Payload_t *PayloadPtr;
 
-    DS_CloseFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_CloseFileCmd_t);
+    PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_CloseFileCmd_t);
 
-    if (DS_TableVerifyFileIndex(DS_CloseFileCmd->FileTableIndex) == false)
+    if (DS_TableVerifyFileIndex(PayloadPtr->FileTableIndex) == false)
     {
         /*
         ** Invalid destination file table index...
@@ -975,23 +975,23 @@ void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_CLOSE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid DEST CLOSE command arg: file table index = %d",
-                          (int)DS_CloseFileCmd->FileTableIndex);
+                          (int)PayloadPtr->FileTableIndex);
     }
     else
     {
         /*
         ** Close destination file (if the file was open)...
         */
-        if (OS_ObjectIdDefined(DS_AppData.FileStatus[DS_CloseFileCmd->FileTableIndex].FileHandle))
+        if (OS_ObjectIdDefined(DS_AppData.FileStatus[PayloadPtr->FileTableIndex].FileHandle))
         {
-            DS_FileUpdateHeader(DS_CloseFileCmd->FileTableIndex);
-            DS_FileCloseDest(DS_CloseFileCmd->FileTableIndex);
+            DS_FileUpdateHeader(PayloadPtr->FileTableIndex);
+            DS_FileCloseDest(PayloadPtr->FileTableIndex);
         }
 
         DS_AppData.CmdAcceptedCounter++;
 
         CFE_EVS_SendEvent(DS_CLOSE_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE command: file table index = %d",
-                          (int)DS_CloseFileCmd->FileTableIndex);
+                          (int)PayloadPtr->FileTableIndex);
     }
 }
 
@@ -1115,16 +1115,16 @@ void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    const DS_AddRemoveMid_Payload_t *DS_AddMidCmd;
+    const DS_AddRemoveMid_Payload_t *PayloadPtr;
     DS_PacketEntry_t *               pPacketEntry     = NULL;
     DS_FilterParms_t *               pFilterParms     = NULL;
     int32                            FilterTableIndex = 0;
     int32                            HashTableIndex   = 0;
     int32                            i                = 0;
 
-    DS_AddMidCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
+    PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
 
-    if (!CFE_SB_IsValidMsgId(DS_AddMidCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(PayloadPtr->MessageID))
     {
         /*
         ** Invalid packet message ID - can be anything but unused...
@@ -1133,7 +1133,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid ADD MID command arg: invalid MID = 0x%08lX",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID));
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID));
     }
     else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
     {
@@ -1145,7 +1145,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid ADD MID command: filter table is not loaded");
     }
-    else if ((FilterTableIndex = DS_TableFindMsgID(DS_AddMidCmd->MessageID)) != DS_INDEX_NONE)
+    else if ((FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID)) != DS_INDEX_NONE)
     {
         /*
         ** New message ID is already in packet filter table...
@@ -1154,7 +1154,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid ADD MID command: MID = 0x%08lX is already in filter table at index = %d",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID), (int)FilterTableIndex);
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex);
     }
     else if ((FilterTableIndex = DS_TableFindMsgID(CFE_SB_INVALID_MSG_ID)) == DS_INDEX_NONE)
     {
@@ -1173,10 +1173,10 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
         */
         pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
 
-        pPacketEntry->MessageID = DS_AddMidCmd->MessageID;
+        pPacketEntry->MessageID = PayloadPtr->MessageID;
 
         /* Add the message ID to the hash table as well */
-        HashTableIndex = DS_TableAddMsgID(DS_AddMidCmd->MessageID, FilterTableIndex);
+        HashTableIndex = DS_TableAddMsgID(PayloadPtr->MessageID, FilterTableIndex);
 
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
@@ -1190,7 +1190,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
             pFilterParms->Algorithm_O = 0;
         }
 
-        CFE_SB_SubscribeEx(DS_AddMidCmd->MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
+        CFE_SB_SubscribeEx(PayloadPtr->MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
         /*
         ** Notify cFE that we have modified the table data...
         */
@@ -1200,7 +1200,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "ADD MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_AddMidCmd->MessageID), (int)FilterTableIndex,
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
     }
 }
@@ -1213,7 +1213,7 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 {
-    const DS_AddRemoveMid_Payload_t *DS_RemoveMidCmd;
+    const DS_AddRemoveMid_Payload_t *PayloadPtr;
 
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
@@ -1221,10 +1221,10 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
     int32             HashTableIndex   = 0;
     int32             i                = 0;
 
-    DS_RemoveMidCmd  = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
-    FilterTableIndex = DS_TableFindMsgID(DS_RemoveMidCmd->MessageID);
+    PayloadPtr  = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
+    FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID);
 
-    if (!CFE_SB_IsValidMsgId(DS_RemoveMidCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(PayloadPtr->MessageID))
     {
         /*
         ** Invalid packet message ID - can be anything but unused...
@@ -1233,7 +1233,7 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid REMOVE MID command arg: invalid MID = 0x%08lX",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID));
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID));
     }
     else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
     {
@@ -1254,12 +1254,12 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
                           "Invalid REMOVE MID command: MID = 0x%08lX is not in filter table",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID));
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID));
     }
     else
     {
         /* Convert MID into hash table index */
-        HashTableIndex = DS_TableHashFunction(DS_RemoveMidCmd->MessageID);
+        HashTableIndex = DS_TableHashFunction(PayloadPtr->MessageID);
 
         /*
         ** Reset used packet filter entry for used message ID...
@@ -1283,7 +1283,7 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
             pFilterParms->Algorithm_O = 0;
         }
 
-        CFE_SB_Unsubscribe(DS_RemoveMidCmd->MessageID, DS_AppData.CmdPipe);
+        CFE_SB_Unsubscribe(PayloadPtr->MessageID, DS_AppData.CmdPipe);
 
         /*
         ** Notify cFE that we have modified the table data...
@@ -1294,7 +1294,7 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_EID, CFE_EVS_EventType_INFORMATION,
                           "REMOVE MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_RemoveMidCmd->MessageID), (int)FilterTableIndex,
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
     }
 }
