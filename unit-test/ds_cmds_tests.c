@@ -55,7 +55,7 @@
 void DS_NoopCmd_Test_Nominal(void)
 {
     /* Execute the function being tested */
-    DS_NoopCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_NoopCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -71,7 +71,7 @@ void DS_NoopCmd_Test_Nominal(void)
 void DS_ResetCountersCmd_Test_Nominal(void)
 {
     /* Execute the function being tested */
-    DS_ResetCountersCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_ResetCountersCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_ZERO(DS_AppData.CmdAcceptedCounter);
@@ -106,7 +106,7 @@ void DS_SetAppStateCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    DS_SetAppStateCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.CmdRejectedCounter, 0);
@@ -128,7 +128,7 @@ void DS_SetAppStateCmd_Test_InvalidAppState(void)
     CmdPayload->EnableState = 99;
 
     /* Execute the function being tested */
-    DS_SetAppStateCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -154,7 +154,7 @@ void DS_SetFilterFileCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), forced_FilterTableIndex);
 
     /* Execute the function being tested */
-    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -180,7 +180,7 @@ void DS_SetFilterFileCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -198,7 +198,7 @@ void DS_SetFilterFileCmd_Test_InvalidFilterParametersIndex(void)
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -217,7 +217,7 @@ void DS_SetFilterFileCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex   = 99;
 
     /* Execute the function being tested */
-    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -241,7 +241,7 @@ void DS_SetFilterFileCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -265,7 +265,7 @@ void DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_SetFilterFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -288,7 +288,7 @@ void DS_SetFilterTypeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -310,7 +310,7 @@ void DS_SetFilterTypeCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -328,7 +328,7 @@ void DS_SetFilterTypeCmd_Test_InvalidFilterParametersIndex(void)
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -347,7 +347,7 @@ void DS_SetFilterTypeCmd_Test_InvalidFilterType(void)
     CmdPayload->FilterType       = false;
 
     /* Execute the function being tested */
-    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -371,7 +371,7 @@ void DS_SetFilterTypeCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -393,7 +393,7 @@ void DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_SetFilterTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -416,7 +416,7 @@ void DS_SetFilterParmsCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
 
     /* Execute the function being tested */
-    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -440,7 +440,7 @@ void DS_SetFilterParmsCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -458,7 +458,7 @@ void DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex(void)
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -481,7 +481,7 @@ void DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm(void)
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
-    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -504,7 +504,7 @@ void DS_SetFilterParmsCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -527,7 +527,7 @@ void DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_SetFilterParmsCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -548,7 +548,7 @@ void DS_SetDestTypeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -570,7 +570,7 @@ void DS_SetDestTypeCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -590,7 +590,7 @@ void DS_SetDestTypeCmd_Test_InvalidFilenameType(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -613,7 +613,7 @@ void DS_SetDestTypeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    DS_SetDestTypeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -634,7 +634,7 @@ void DS_SetDestStateCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -658,7 +658,7 @@ void DS_SetDestStateCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -678,7 +678,7 @@ void DS_SetDestStateCmd_Test_InvalidFileState(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -700,7 +700,7 @@ void DS_SetDestStateCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    DS_SetDestStateCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -720,7 +720,7 @@ void DS_SetDestPathCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestPathCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -745,7 +745,7 @@ void DS_SetDestPathCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_SetDestPathCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -767,7 +767,7 @@ void DS_SetDestPathCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestPathCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -787,7 +787,7 @@ void DS_SetDestBaseCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestBaseCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -812,7 +812,7 @@ void DS_SetDestBaseCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_SetDestBaseCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -834,7 +834,7 @@ void DS_SetDestBaseCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestBaseCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -854,7 +854,7 @@ void DS_SetDestExtCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestExtCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -880,7 +880,7 @@ void DS_SetDestExtCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_SetDestExtCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -902,7 +902,7 @@ void DS_SetDestExtCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestExtCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -923,7 +923,7 @@ void DS_SetDestSizeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -946,7 +946,7 @@ void DS_SetDestSizeCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->MaxFileSize    = 100000000;
 
     /* Execute the function being tested */
-    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -968,7 +968,7 @@ void DS_SetDestSizeCmd_Test_InvalidFileSizeLimit(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -991,7 +991,7 @@ void DS_SetDestSizeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-    DS_SetDestSizeCmd(&UT_CmdBuf.Buf);
+   UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1012,7 +1012,7 @@ void DS_SetDestAgeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyAge), true);
 
     /* Execute the function being tested */
-    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1035,7 +1035,7 @@ void DS_SetDestAgeCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->MaxFileAge     = 1000;
 
     /* Execute the function being tested */
-    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1057,7 +1057,7 @@ void DS_SetDestAgeCmd_Test_InvalidFileAgeLimit(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1080,7 +1080,7 @@ void DS_SetDestAgeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyAge), true);
 
     /* Execute the function being tested */
-    DS_SetDestAgeCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1101,7 +1101,7 @@ void DS_SetDestCountCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyCount), true);
 
     /* Execute the function being tested */
-    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1125,7 +1125,7 @@ void DS_SetDestCountCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->SequenceCount  = 1;
 
     /* Execute the function being tested */
-    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1147,7 +1147,7 @@ void DS_SetDestCountCmd_Test_InvalidFileSequenceCount(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1170,7 +1170,7 @@ void DS_SetDestCountCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyCount), true);
 
     /* Execute the function being tested */
-    DS_SetDestCountCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1199,7 +1199,7 @@ void DS_CloseFileCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CloseFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1232,7 +1232,7 @@ void DS_CloseFileCmd_Test_NominalAlreadyClosed(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    DS_CloseFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1257,7 +1257,7 @@ void DS_CloseFileCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    DS_CloseFileCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1281,7 +1281,7 @@ void DS_CloseAllCmd_Test_Nominal(void)
 #endif
 
     /* Execute the function being tested */
-    DS_CloseAllCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1334,7 +1334,7 @@ void DS_GetFileInfoCmd_Test_EnabledOpen(void)
     }
 
     /* Execute the function being tested */
-    DS_GetFileInfoCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1367,7 +1367,7 @@ void DS_GetFileInfoCmd_Test_DisabledClosed(void)
     DS_AppData.DestFileTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_GetFileInfoCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1401,7 +1401,7 @@ void DS_AddMIDCmd_Test_Nominal(void)
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, 0);
 
     /* Execute the function being tested */
-    DS_AddMIDCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1443,7 +1443,7 @@ void DS_AddMIDCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    DS_AddMIDCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1463,7 +1463,7 @@ void DS_AddMIDCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_AddMIDCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1483,7 +1483,7 @@ void DS_AddMIDCmd_Test_MIDAlreadyInFilterTable(void)
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, 1);
 
     /* Execute the function being tested */
-    DS_AddMIDCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1503,7 +1503,7 @@ void DS_AddMIDCmd_Test_FilterTableFull(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_AddMIDCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);

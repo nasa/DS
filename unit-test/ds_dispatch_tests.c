@@ -68,7 +68,7 @@ void DS_AppProcessMsg_Test_CmdStore(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), 1);
 
     /* Execute the function being tested */
-    DS_AppProcessMsg(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessMsg(&UT_CmdBuf.Buf));
 
     /* an attempt was made to store this packet */
     UtAssert_STUB_COUNT(DS_AppStorePacket, 1);
@@ -84,7 +84,7 @@ void DS_AppProcessMsg_Test_CmdNoStore(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_AppProcessMsg(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessMsg(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -103,7 +103,7 @@ void DS_AppProcessMsg_Test_HKStore(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), 1);
 
     /* Execute the function being tested */
-    DS_AppProcessMsg(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessMsg(&UT_CmdBuf.Buf));
 
     UtAssert_STUB_COUNT(DS_AppSendHkCmd, 1);
 
@@ -121,7 +121,7 @@ void DS_AppProcessMsg_Test_HKNoStore(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_AppProcessMsg(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessMsg(&UT_CmdBuf.Buf));
 
     UtAssert_STUB_COUNT(DS_AppSendHkCmd, 1);
 
@@ -134,7 +134,7 @@ void DS_AppProcessMsg_Test_HKInvalidRequest(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), 0, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessMsg(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessMsg(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -147,7 +147,7 @@ void DS_AppProcessMsg_Test_UnknownMID(void)
     DS_Dispatch_Test_SetupMsg(DS_UT_MID_1, 0, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessMsg(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessMsg(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -161,7 +161,7 @@ void DS_AppProcessCmd_Test_Noop(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_NOOP_CC, sizeof(DS_NoopCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_NoopCmd, 1);
@@ -170,7 +170,7 @@ void DS_AppProcessCmd_Test_Noop(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_NOOP_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_NoopCmd, 1);
@@ -181,7 +181,7 @@ void DS_AppProcessCmd_Test_Reset(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_RESET_COUNTERS_CC, sizeof(DS_ResetCountersCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_ResetCountersCmd, 1);
@@ -190,7 +190,7 @@ void DS_AppProcessCmd_Test_Reset(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_RESET_COUNTERS_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_ResetCountersCmd, 1);
@@ -201,7 +201,7 @@ void DS_AppProcessCmd_Test_SetAppState(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_APP_STATE_CC, sizeof(DS_AppStateCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetAppStateCmd, 1);
@@ -210,7 +210,7 @@ void DS_AppProcessCmd_Test_SetAppState(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_APP_STATE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetAppStateCmd, 1);
@@ -221,7 +221,7 @@ void DS_AppProcessCmd_Test_SetFilterFile(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_FILE_CC, sizeof(DS_FilterFileCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetFilterFileCmd, 1);
@@ -230,7 +230,7 @@ void DS_AppProcessCmd_Test_SetFilterFile(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_FILE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetFilterFileCmd, 1);
@@ -241,7 +241,7 @@ void DS_AppProcessCmd_Test_SetFilterType(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_TYPE_CC, sizeof(DS_FilterTypeCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetFilterTypeCmd, 1);
@@ -250,7 +250,7 @@ void DS_AppProcessCmd_Test_SetFilterType(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_TYPE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetFilterTypeCmd, 1);
@@ -261,7 +261,7 @@ void DS_AppProcessCmd_Test_SetFilterParms(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_PARMS_CC, sizeof(DS_FilterParmsCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetFilterParmsCmd, 1);
@@ -270,7 +270,7 @@ void DS_AppProcessCmd_Test_SetFilterParms(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_PARMS_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetFilterParmsCmd, 1);
@@ -281,7 +281,7 @@ void DS_AppProcessCmd_Test_SetDestType(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_TYPE_CC, sizeof(DS_DestTypeCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestTypeCmd, 1);
@@ -290,7 +290,7 @@ void DS_AppProcessCmd_Test_SetDestType(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_TYPE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestTypeCmd, 1);
@@ -301,7 +301,7 @@ void DS_AppProcessCmd_Test_SetDestState(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_STATE_CC, sizeof(DS_DestStateCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestStateCmd, 1);
@@ -310,7 +310,7 @@ void DS_AppProcessCmd_Test_SetDestState(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_STATE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestStateCmd, 1);
@@ -321,7 +321,7 @@ void DS_AppProcessCmd_Test_SetDestPath(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_PATH_CC, sizeof(DS_DestPathCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestPathCmd, 1);
@@ -330,7 +330,7 @@ void DS_AppProcessCmd_Test_SetDestPath(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_PATH_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestPathCmd, 1);
@@ -341,7 +341,7 @@ void DS_AppProcessCmd_Test_SetDestBase(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_BASE_CC, sizeof(DS_DestBaseCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestBaseCmd, 1);
@@ -350,7 +350,7 @@ void DS_AppProcessCmd_Test_SetDestBase(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_BASE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestBaseCmd, 1);
@@ -361,7 +361,7 @@ void DS_AppProcessCmd_Test_SetDestExt(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_EXT_CC, sizeof(DS_DestExtCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestExtCmd, 1);
@@ -370,7 +370,7 @@ void DS_AppProcessCmd_Test_SetDestExt(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_EXT_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestExtCmd, 1);
@@ -381,7 +381,7 @@ void DS_AppProcessCmd_Test_SetDestSize(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_SIZE_CC, sizeof(DS_DestSizeCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestSizeCmd, 1);
@@ -390,7 +390,7 @@ void DS_AppProcessCmd_Test_SetDestSize(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_SIZE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestSizeCmd, 1);
@@ -401,7 +401,7 @@ void DS_AppProcessCmd_Test_SetDestAge(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_AGE_CC, sizeof(DS_DestAgeCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestAgeCmd, 1);
@@ -410,7 +410,7 @@ void DS_AppProcessCmd_Test_SetDestAge(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_AGE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestAgeCmd, 1);
@@ -421,7 +421,7 @@ void DS_AppProcessCmd_Test_SetDestCount(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_COUNT_CC, sizeof(DS_DestCountCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_SetDestCountCmd, 1);
@@ -430,7 +430,7 @@ void DS_AppProcessCmd_Test_SetDestCount(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_DEST_COUNT_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_SetDestCountCmd, 1);
@@ -441,7 +441,7 @@ void DS_AppProcessCmd_Test_CloseFile(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_CLOSE_FILE_CC, sizeof(DS_CloseFileCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CloseFileCmd, 1);
@@ -450,7 +450,7 @@ void DS_AppProcessCmd_Test_CloseFile(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_CLOSE_FILE_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_CloseFileCmd, 1);
@@ -461,7 +461,7 @@ void DS_AppProcessCmd_Test_GetFileInfo(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_GET_FILE_INFO_CC, sizeof(DS_GetFileInfoCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_GetFileInfoCmd, 1);
@@ -470,7 +470,7 @@ void DS_AppProcessCmd_Test_GetFileInfo(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_GET_FILE_INFO_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_GetFileInfoCmd, 1);
@@ -481,7 +481,7 @@ void DS_AppProcessCmd_Test_AddMID(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_ADD_MID_CC, sizeof(DS_AddMidCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_AddMIDCmd, 1);
@@ -490,7 +490,7 @@ void DS_AppProcessCmd_Test_AddMID(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_ADD_MID_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_AddMIDCmd, 1);
@@ -501,7 +501,7 @@ void DS_AppProcessCmd_Test_RemoveMID(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_REMOVE_MID_CC, sizeof(DS_RemoveMidCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_RemoveMIDCmd, 1);
@@ -510,7 +510,7 @@ void DS_AppProcessCmd_Test_RemoveMID(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_REMOVE_MID_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_RemoveMIDCmd, 1);
@@ -521,7 +521,7 @@ void DS_AppProcessCmd_Test_CloseAll(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_CLOSE_ALL_CC, sizeof(DS_CloseAllCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(DS_CloseAllCmd, 1);
@@ -530,7 +530,7 @@ void DS_AppProcessCmd_Test_CloseAll(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_CLOSE_ALL_CC, 1);
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
     UtAssert_STUB_COUNT(DS_CloseAllCmd, 1);
@@ -541,7 +541,7 @@ void DS_AppProcessCmd_Test_InvalidCommandCode(void)
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), 99, sizeof(DS_CloseAllCmd_t));
 
     /* Execute the function being tested */
-    DS_AppProcessCmd(&UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);

@@ -75,7 +75,7 @@ void DS_AppMain_Test_Nominal(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
 
     /* Execute the function being tested */
-    DS_AppMain();
+    UtAssert_VOIDCALL(DS_AppMain());
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -95,7 +95,7 @@ void DS_AppMain_Test_AppInitializeError(void)
     UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
 
     /* Execute the function being tested */
-    DS_AppMain();
+    UtAssert_VOIDCALL(DS_AppMain());
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -115,7 +115,7 @@ void DS_AppMain_Test_SBError(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_ReceiveBuffer), CFE_SB_PIPE_RD_ERR);
 
     /* Execute the function being tested */
-    DS_AppMain();
+    UtAssert_VOIDCALL(DS_AppMain());
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
@@ -135,7 +135,7 @@ void DS_AppMain_Test_SBTimeout(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_SB_ReceiveBuffer), CFE_SB_TIME_OUT);
 
     /* Execute the function being tested */
-    DS_AppMain();
+    UtAssert_VOIDCALL(DS_AppMain());
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
@@ -259,7 +259,7 @@ void DS_AppSendHkCmd_Test(void)
     }
 
     /* Execute the function being tested */
-    DS_AppSendHkCmd();
+    UtAssert_VOIDCALL(DS_AppSendHkCmd());
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
@@ -293,7 +293,7 @@ void DS_AppSendHkCmd_Test_SnprintfFail(void)
     UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 1, -1);
 
     /* Execute the function being tested */
-    DS_AppSendHkCmd();
+    UtAssert_VOIDCALL(DS_AppSendHkCmd());
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
@@ -329,7 +329,7 @@ void DS_AppSendHkCmd_Test_TblFail(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetInfo), -1);
 
     /* Execute the function being tested */
-    DS_AppSendHkCmd();
+    UtAssert_VOIDCALL(DS_AppSendHkCmd());
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
@@ -363,7 +363,7 @@ void DS_AppStorePacket_Test_Nominal(void)
     DS_AppData.AppEnableState = DS_ENABLED;
 
     /* Execute the function being tested */
-    DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results -- IgnoredPktCounter increments in call to DS_FileStorePacket() */
     UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 0);
@@ -387,7 +387,7 @@ void DS_AppStorePacket_Test_DSDisabled(void)
     DS_AppData.AppEnableState = DS_DISABLED;
 
     /* Execute the function being tested */
-    DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.DisabledPktCounter, 1);
@@ -410,7 +410,7 @@ void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr   = 0;
 
     /* Execute the function being tested */
-    DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
@@ -433,7 +433,7 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
     DS_AppData.DestFileTblPtr = 0;
 
     /* Execute the function being tested */
-    DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);

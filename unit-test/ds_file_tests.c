@@ -97,7 +97,7 @@ void DS_FileStorePacket_Test_Nominal(void)
     DS_AppData.FileStatus[0].FileSize                           = 0;
 
     /* Execute the function being tested */
-    DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.PassedPktCounter, 1);
@@ -125,7 +125,7 @@ void DS_FileStorePacket_Test_PacketNotInTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.IgnoredPktCounter, 1);
@@ -158,7 +158,7 @@ void DS_FileStorePacket_Test_PassedFilterFalse(void)
     DS_AppData.FileStatus[0].FileState                       = DS_ENABLED;
 
     /* Execute the function being tested */
-    DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FilteredPktCounter, 1);
@@ -189,7 +189,7 @@ void DS_FileStorePacket_Test_DisabledDest(void)
     DS_AppData.FileStatus[0].FileState                       = DS_DISABLED;
 
     /* Execute the function being tested */
-    DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FilteredPktCounter, 1);
@@ -221,7 +221,7 @@ void DS_FileStorePacket_Test_InvalidIndex(void)
     DS_AppData.FileStatus[0].FileState                          = DS_ENABLED;
 
     /* Execute the function being tested */
-    DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FilteredPktCounter, 1);
@@ -245,7 +245,7 @@ void DS_FileSetupWrite_Test_Nominal(void)
     DS_AppData.FileStatus[FileIndex].FileSize              = 3;
 
     /* Execute the function being tested */
-    DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -304,7 +304,7 @@ void DS_FileSetupWrite_Test_MaxFileSizeExceeded(void)
 #endif
 
     /* Execute the function being tested */
-    DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf);
+    UtAssert_VOIDCALL(DS_FileSetupWrite(FileIndex, &UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -356,7 +356,7 @@ void DS_FileWriteData_Test_Error(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0] = '\0';
 
     /* Execute the function being tested */
-    DS_FileWriteData(FileIndex, &UT_CmdBuf.Buf, DataLength);
+    UtAssert_VOIDCALL(DS_FileWriteData(FileIndex, &UT_CmdBuf.Buf, DataLength));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -372,7 +372,7 @@ void DS_FileWriteHeader_Test_PlatformConfigCFE_Nominal(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = 1;
 
     /* Execute the function being tested */
-    DS_FileWriteHeader(FileIndex);
+    UtAssert_VOIDCALL(DS_FileWriteHeader(FileIndex));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -397,7 +397,7 @@ void DS_FileWriteHeader_Test_PrimaryHeaderError(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), -1);
 
     /* Execute the function being tested */
-    DS_FileWriteHeader(FileIndex);
+    UtAssert_VOIDCALL(DS_FileWriteHeader(FileIndex));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -418,7 +418,7 @@ void DS_FileWriteHeader_Test_SecondaryHeaderError(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0] = '\0';
 
     /* Set to generate secondary header error */
-    UT_SetDefaultReturnValue(UT_KEY(OS_write), -1);
+    UtAssert_VOIDCALL(UT_SetDefaultReturnValue(UT_KEY(OS_write), -1));
 
     /* Execute the function being tested */
     DS_FileWriteHeader(FileIndex);
@@ -445,7 +445,7 @@ void DS_FileWriteError_Test(void)
     strncpy(DS_AppData.FileStatus[FileIndex].FileName, "filename", sizeof(DS_AppData.FileStatus[FileIndex].FileName));
 
     /* Execute the function being tested */
-    DS_FileWriteError(FileIndex, DataLength, WriteResult);
+    UtAssert_VOIDCALL(DS_FileWriteError(FileIndex, DataLength, WriteResult));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileWriteErrCounter, 1);
@@ -472,7 +472,7 @@ void DS_FileCreateDest_Test_Nominal(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
 
     /* Execute the function being tested */
-    DS_FileCreateDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
     /* Verify results */
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
@@ -518,7 +518,7 @@ void DS_FileCreateDest_Test_NominalRollover(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType  = DS_BY_COUNT;
     DS_AppData.DestFileTblPtr->File[FileIndex].SequenceCount = 3;
     /* Execute the function being tested */
-    DS_FileCreateDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
     /* Verify results */
 #if DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE
@@ -551,7 +551,7 @@ void DS_FileCreateDest_Test_Error(void)
     UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), -1);
 
     /* Execute the function being tested */
-    DS_FileCreateDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileWriteErrCounter, 1);
@@ -580,7 +580,7 @@ void DS_FileCreateDest_Test_ClosedFileHandle(void)
     UT_SetDefaultReturnValue(UT_KEY(CFE_FS_WriteHeader), -1);
 
     /* Execute the function being tested */
-    DS_FileCreateDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.FileWriteCounter, 1);
@@ -604,7 +604,7 @@ void DS_FileCreateName_Test_Nominal(void)
     DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     /* Execute the function being tested */
-    DS_FileCreateName(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
     UtAssert_STRINGBUF_EQ(DS_AppData.FileStatus[FileIndex].FileName, sizeof(DS_AppData.FileStatus[FileIndex].FileName),
@@ -630,7 +630,7 @@ void DS_FileCreateName_Test_NominalWithSeparator(void)
     DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     /* Execute the function being tested */
-    DS_FileCreateName(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
     UtAssert_STRINGBUF_EQ(DS_AppData.FileStatus[FileIndex].FileName, sizeof(DS_AppData.FileStatus[FileIndex].FileName),
@@ -656,7 +656,7 @@ void DS_FileCreateName_Test_NominalWithPeriod(void)
     DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     /* Execute the function being tested */
-    DS_FileCreateName(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
     UtAssert_STRINGBUF_EQ(DS_AppData.FileStatus[FileIndex].FileName, sizeof(DS_AppData.FileStatus[FileIndex].FileName),
@@ -676,7 +676,7 @@ void DS_FileCreateName_Test_EmptyPath(void)
     DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     /* Execute the function being tested */
-    DS_FileCreateName(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileState, DS_DISABLED);
@@ -701,7 +701,7 @@ void DS_FileCreateName_Test_Error(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].Basename[DS_TOTAL_FNAME_BUFSIZE - 1] = '\0';
 
     /* Execute the function being tested */
-    DS_FileCreateName(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileState, DS_DISABLED);
@@ -796,7 +796,7 @@ void DS_FileCreateSequence_Test_ByCount(void)
     memset(Sequence, 0, sizeof(Sequence));
 
     /* Execute the function being tested */
-    DS_FileCreateSequence(Sequence, DS_BY_COUNT, Count);
+    UtAssert_VOIDCALL(DS_FileCreateSequence(Sequence, DS_BY_COUNT, Count));
 
     /* Verify results */
     UtAssert_STRINGBUF_EQ(Sequence, sizeof(Sequence), StrCompare, sizeof(StrCompare));
@@ -847,7 +847,7 @@ void DS_FileCreateSequence_Test_BadFilenameType(void)
     DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     /* Execute the function being tested */
-    DS_FileCreateSequence(Sequence, 99, DS_AppData.FileStatus[FileIndex].FileCount);
+    UtAssert_VOIDCALL(DS_FileCreateSequence(Sequence, 99, DS_AppData.FileStatus[FileIndex].FileCount));
 
     /* Verify results */
     UtAssert_UINT32_EQ(strncmp(Sequence, "", DS_TOTAL_FNAME_BUFSIZE), 0);
@@ -861,7 +861,7 @@ void DS_FileUpdateHeader_Test_PlatformConfigCFE_Nominal(void)
     int32 FileIndex = 0;
 
     /* Execute the function being tested */
-    DS_FileUpdateHeader(FileIndex);
+    UtAssert_VOIDCALL(DS_FileUpdateHeader(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileUpdateCounter, 1);
@@ -878,7 +878,7 @@ void DS_FileUpdateHeader_Test_WriteError(void)
     UT_SetDefaultReturnValue(UT_KEY(OS_write), -1);
 
     /* Execute the function being tested */
-    DS_FileUpdateHeader(FileIndex);
+    UtAssert_VOIDCALL(DS_FileUpdateHeader(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileUpdateErrCounter, 1);
@@ -895,7 +895,7 @@ void DS_FileUpdateHeader_Test_PlatformConfigCFE_SeekError(void)
     UT_SetDefaultReturnValue(UT_KEY(OS_lseek), -1);
 
     /* Execute the function being tested */
-    DS_FileUpdateHeader(FileIndex);
+    UtAssert_VOIDCALL(DS_FileUpdateHeader(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileUpdateErrCounter, 1);
@@ -917,7 +917,7 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_Nominal(void)
             sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
 
     /* Execute the function being tested */
-    DS_FileCloseDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCloseDest(FileIndex));
 
     /* Verify results */
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[FileIndex].FileHandle));
@@ -945,7 +945,7 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_MoveError(void)
     UT_SetDefaultReturnValue(UT_KEY(OS_mv), -1);
 
     /* Execute the function being tested */
-    DS_FileCloseDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCloseDest(FileIndex));
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileAge, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileSize, 0);
@@ -973,7 +973,7 @@ void DS_FileCloseDest_Test_PlatformConfigMoveFiles_FilenameTooLarge(void)
             sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
 
     /* Execute the function being tested */
-    DS_FileCloseDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCloseDest(FileIndex));
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileAge, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileSize, 0);
@@ -1018,7 +1018,7 @@ void DS_FileCloseDest_Test_MoveFilesFalse(void)
     OS_OpenCreate(&DS_AppData.FileStatus[FileIndex].FileHandle, NULL, 0, 0);
 
     /* Execute the function being tested */
-    DS_FileCloseDest(FileIndex);
+    UtAssert_VOIDCALL(DS_FileCloseDest(FileIndex));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileHandle, OS_OBJECT_ID_UNDEFINED);
@@ -1047,7 +1047,7 @@ void DS_FileTestAge_Test_Nominal(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileAge = 3;
 
     /* Execute the function being tested */
-    DS_FileTestAge(ElapsedSeconds);
+    UtAssert_VOIDCALL(DS_FileTestAge(ElapsedSeconds));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileAge, 2);
@@ -1060,7 +1060,7 @@ void DS_FileTestAge_Test_NullTable(void)
     DS_AppData.DestFileTblPtr = NULL;
 
     /* Execute the function being tested */
-    DS_FileTestAge(ElapsedSeconds);
+    UtAssert_VOIDCALL(DS_FileTestAge(ElapsedSeconds));
 
     /* Verify results */
     UtAssert_STUB_COUNT(OS_close, 0);
@@ -1078,7 +1078,7 @@ void DS_FileTestAge_Test_ExceedMaxAge(void)
     DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileAge = 1;
 
     /* Execute the function being tested */
-    DS_FileTestAge(ElapsedSeconds);
+    UtAssert_VOIDCALL(DS_FileTestAge(ElapsedSeconds));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[FileIndex].FileAge, 0);
@@ -1087,7 +1087,6 @@ void DS_FileTestAge_Test_ExceedMaxAge(void)
 
 void DS_IsPacketFiltered_Test_AlgX0(void)
 {
-    bool              Result;
     CFE_MSG_Message_t Message;
     uint16            FilterType = 2;
     uint16            Alg_N      = 0;
@@ -1095,15 +1094,11 @@ void DS_IsPacketFiltered_Test_AlgX0(void)
     uint16            Alg_O      = 0;
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_AlgN0(void)
 {
-    bool              Result;
     CFE_MSG_Message_t Message;
     uint16            FilterType = 2;
     uint16            Alg_N      = 0;
@@ -1111,15 +1106,11 @@ void DS_IsPacketFiltered_Test_AlgN0(void)
     uint16            Alg_O      = 0;
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_AlgNGreaterX(void)
 {
-    bool              Result;
     CFE_MSG_Message_t Message;
     uint16            FilterType = 2;
     uint16            Alg_N      = 2;
@@ -1127,15 +1118,11 @@ void DS_IsPacketFiltered_Test_AlgNGreaterX(void)
     uint16            Alg_O      = 0;
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_Alg0GreaterX(void)
 {
-    bool              Result;
     CFE_MSG_Message_t Message;
     uint16            FilterType = 2;
     uint16            Alg_N      = 1;
@@ -1143,15 +1130,11 @@ void DS_IsPacketFiltered_Test_Alg0GreaterX(void)
     uint16            Alg_O      = 2;
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_Alg0EqualX(void)
 {
-    bool              Result;
     CFE_MSG_Message_t Message;
     uint16            FilterType = 2;
     uint16            Alg_N      = 1;
@@ -1159,15 +1142,11 @@ void DS_IsPacketFiltered_Test_Alg0EqualX(void)
     uint16            Alg_O      = 1;
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_InvalidFilterType(void)
 {
-    bool              Result;
     CFE_MSG_Message_t Message;
     uint16            FilterType = 0xff;
     uint16            Alg_N      = 1;
@@ -1175,15 +1154,11 @@ void DS_IsPacketFiltered_Test_InvalidFilterType(void)
     uint16            Alg_O      = 0;
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_SeqFilter(void)
 {
-    bool                    Result;
     CFE_MSG_Message_t       Message;
     CFE_MSG_SequenceCount_t SeqCnt     = 0;
     uint16                  FilterType = 1;
@@ -1196,15 +1171,11 @@ void DS_IsPacketFiltered_Test_SeqFilter(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSequenceCount), &SeqCnt, sizeof(SeqCnt), false);
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_FALSE(Result);
+    UtAssert_BOOL_FALSE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_TimeFilter1(void)
 {
-    bool               Result;
     CFE_MSG_Message_t  Message;
     CFE_TIME_SysTime_t PacketTime;
     uint16             FilterType = 2;
@@ -1221,15 +1192,11 @@ void DS_IsPacketFiltered_Test_TimeFilter1(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &PacketTime, sizeof(PacketTime), false);
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_FALSE(Result);
+    UtAssert_BOOL_FALSE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_TimeFilter2(void)
 {
-    bool               Result;
     CFE_MSG_Message_t  Message;
     CFE_TIME_SysTime_t PacketTime;
     uint16             FilterType = 2;
@@ -1246,15 +1213,11 @@ void DS_IsPacketFiltered_Test_TimeFilter2(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &PacketTime, sizeof(PacketTime), false);
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_IsPacketFiltered_Test_TimeFilter3(void)
 {
-    bool               Result;
     CFE_MSG_Message_t  Message;
     CFE_TIME_SysTime_t PacketTime;
     uint16             FilterType = 2;
@@ -1271,10 +1234,7 @@ void DS_IsPacketFiltered_Test_TimeFilter3(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &PacketTime, sizeof(PacketTime), false);
 
     /* Execute the function being tested */
-    Result = DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O);
-
-    /* Verify results */
-    UtAssert_BOOL_TRUE(Result);
+    UtAssert_BOOL_TRUE(DS_IsPacketFiltered(&Message, FilterType, Alg_N, Alg_X, Alg_O));
 }
 
 void DS_FileTransmit_Test_Nominal(void)
