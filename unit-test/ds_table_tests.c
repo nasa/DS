@@ -1214,7 +1214,7 @@ void DS_TableVerifyState_Test_Fail(void)
 
 void DS_TableVerifySize_Test_Nominal(void)
 {
-    uint32 MaxFileSize = DS_FILE_MIN_SIZE_LIMIT;
+    size_t MaxFileSize = DS_FILE_MIN_SIZE_LIMIT;
 
     /* Execute the function being tested */
     UtAssert_BOOL_TRUE(DS_TableVerifySize(MaxFileSize));
@@ -1225,7 +1225,7 @@ void DS_TableVerifySize_Test_Nominal(void)
 
 void DS_TableVerifySize_Test_Fail(void)
 {
-    uint32 MaxFileSize = DS_FILE_MIN_SIZE_LIMIT - 1;
+    size_t MaxFileSize = DS_FILE_MIN_SIZE_LIMIT - 1;
 
     /* Execute the function being tested */
     UtAssert_BOOL_FALSE(DS_TableVerifySize(MaxFileSize));
