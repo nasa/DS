@@ -991,7 +991,7 @@ void DS_SetDestSizeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-   UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1270,15 +1270,14 @@ void DS_CloseFileCmd_Test_InvalidFileTableIndex(void)
 void DS_CloseAllCmd_Test_Nominal(void)
 {
     uint32 i;
+    DS_AppData.EnableMoveFiles = DS_ENABLED;
 
     for (i = 1; i < DS_DEST_FILE_CNT; i++)
     {
         DS_AppData.FileStatus[i].FileHandle = OS_OBJECT_ID_UNDEFINED;
     }
 
-#if (DS_MOVE_FILES == true)
     strncpy(DS_AppData.DestFileTblPtr->File[0].Movename, "", DS_PATHNAME_BUFSIZE);
-#endif
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.Buf));
