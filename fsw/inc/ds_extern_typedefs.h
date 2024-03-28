@@ -84,9 +84,7 @@ typedef struct
  */
 typedef struct
 {
-#if (DS_MOVE_FILES == true)
     char Movename[DS_PATHNAME_BUFSIZE]; /**< \brief Move files to this dir after close */
-#endif
     char Pathname[DS_PATHNAME_BUFSIZE];   /**< \brief Path portion of filename */
     char Basename[DS_BASENAME_BUFSIZE];   /**< \brief Base portion of filename */
     char Extension[DS_EXTENSION_BUFSIZE]; /**< \brief Extension portion of filename */

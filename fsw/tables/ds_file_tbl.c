@@ -74,9 +74,7 @@ DS_DestFileTable_t DS_DestFileTable = {
     {
         /* File Index 00 -- event packets only */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ "set_by_cmd_b4_enable",
             /* .Basename      = */ "events",
             /* .Extension     = */ ".dat",
@@ -89,9 +87,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 01 -- application housekeeping packets */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ "set_by_cmd_b4_enable",
             /* .Basename      = */ "app",
             /* .Extension     = */ ".hk",
@@ -104,9 +100,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 02 -- application telemetry packets */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ "set_by_cmd_b4_enable",
             /* .Basename      = */ "app",
             /* .Extension     = */ ".tlm",
@@ -119,9 +113,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 03 -- hardware telemetry packets */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ "set_by_cmd_b4_enable",
             /* .Basename      = */ "hw",
             /* .Extension     = */ "tlm",
@@ -134,9 +126,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 04 -- cFE housekeeping packets */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ "set_by_cmd_b4_enable",
             /* .Basename      = */ "cfe",
             /* .Extension     = */ "hk",
@@ -149,9 +139,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 05 -- cFE telemetry packets */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ "set_by_cmd_b4_enable",
             /* .Basename      = */ "cfe",
             /* .Extension     = */ "tlm",
@@ -164,9 +152,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 06 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -179,9 +165,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 07 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -194,9 +178,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 08 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -209,9 +191,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 09 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -224,9 +204,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 10 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -239,9 +217,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 11 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -254,9 +230,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 12 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -269,9 +243,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 13 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -284,9 +256,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 14 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
@@ -299,9 +269,7 @@ DS_DestFileTable_t DS_DestFileTable = {
         },
         /* File Index 15 */
         {
-#if (DS_MOVE_FILES == true)
             /* .Movename      = */ DS_EMPTY_STRING,
-#endif
             /* .Pathname      = */ DS_EMPTY_STRING,
             /* .Basename      = */ DS_EMPTY_STRING,
             /* .Extension     = */ DS_EMPTY_STRING,
