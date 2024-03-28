@@ -61,7 +61,7 @@ void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
     */
     DS_AppData.CmdAcceptedCounter++;
 
-    CFE_EVS_SendEvent(DS_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
+    CFE_EVS_SendEvent(DS_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
                       DS_MAJOR_VERSION, DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV);
 }
 
@@ -103,7 +103,7 @@ void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_AppData.FilterTblLoadCounter = 0;
     DS_AppData.FilterTblErrCounter  = 0;
 
-    CFE_EVS_SendEvent(DS_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
+    CFE_EVS_SendEvent(DS_RESET_INF_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

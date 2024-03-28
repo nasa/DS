@@ -360,7 +360,7 @@ void DS_RemoveMIDVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_SendHkCmd_t), DS_HK_REQUEST_ERR_EID, "SEND HK"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SendHkCmd_t), DS_HKREQ_LEN_ERR_EID, "SEND HK"))
     {
         DS_AppSendHkCmd();
     }
@@ -562,8 +562,8 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
         ** DS application command with unknown command code...
         */
         default:
-            CFE_EVS_SendEvent(DS_CMD_CODE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid command code: MID = 0x%08X, CC = %d", DS_CMD_MID, CommandCode);
+            CFE_EVS_SendEvent(DS_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid command code: MID = 0x%08X, CC = %d",
+                              DS_CMD_MID, CommandCode);
 
             DS_AppData.CmdRejectedCounter++;
             break;

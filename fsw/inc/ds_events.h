@@ -39,7 +39,7 @@
  *  This event message is issued if the Data Storage (DS) application successfully
  *  completes its initialization.
  */
-#define DS_INIT_EID 1
+#define DS_INIT_INF_EID 1
 
 /**
  *  \brief DS Initialization Failed Event ID
@@ -242,7 +242,7 @@
  *  these errors so the cause is more likely to result from sending "raw"
  *  ground commands or on-board stored commands.
  */
-#define DS_CMD_CODE_ERR_EID 21
+#define DS_CC_ERR_EID 21
 
 /**
  *  \brief DS Housekeeping Request Invalid Length Event ID
@@ -254,7 +254,7 @@
  *  This event signals the failed execution of a HK request command.
  *  The cause of the failure is an invalid command packet length.
  */
-#define DS_HK_REQUEST_ERR_EID 22
+#define DS_HKREQ_LEN_ERR_EID 22
 
 /**
  *  \brief DS No-op Command Event ID
@@ -267,7 +267,7 @@
  *  command.  The command is used primarily as an indicator that the DS
  *  application can receive commands and generate telemetry.
  */
-#define DS_NOOP_CMD_EID 31
+#define DS_NOOP_INF_EID 31
 
 /**
  *  \brief DS No-op Command Invalid Length Event ID
@@ -284,7 +284,7 @@
 /**
  *  \brief DS Reset Counters Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause:
  *
@@ -292,7 +292,7 @@
  *  counters command.  The command is used primarily to clear counters
  *  that have already been examined.
  */
-#define DS_RESET_CMD_EID 33
+#define DS_RESET_INF_EID 33
 
 /**
  *  \brief DS Reset Counters Command Invalid Length Event ID
