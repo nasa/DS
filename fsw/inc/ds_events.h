@@ -284,7 +284,7 @@
 /**
  *  \brief DS Reset Counters Command Event ID
  *
- *  \par Type: DEBUG
+ *  \par Type: INFORMATION
  *
  *  \par Cause:
  *
@@ -292,7 +292,7 @@
  *  counters command.  The command is used primarily to clear counters
  *  that have already been examined.
  */
-#define DS_RESET_CMD_EID 33
+#define DS_RESET_INF_EID 33
 
 /**
  *  \brief DS Reset Counters Command Invalid Length Event ID
