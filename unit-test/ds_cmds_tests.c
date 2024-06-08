@@ -91,7 +91,7 @@ void DS_ResetCountersCmd_Test_Nominal(void)
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_RESET_INF_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
     UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_ResetCountersCmd_t), "DS_ResetCountersCmd_t is 32-bit aligned");
