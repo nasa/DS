@@ -358,8 +358,7 @@ void DS_AppSendHkCmd(void)
         Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
         if (Status == CFE_SUCCESS)
         {
-            strncpy(PayloadPtr->FilterTblFilename, FilterTblInfo.LastFileLoaded, OS_MAX_PATH_LEN - 1);
-            PayloadPtr->FilterTblFilename[OS_MAX_PATH_LEN - 1] = '\0';
+            snprintf(PayloadPtr->FilterTblFilename, OS_MAX_PATH_LEN, "%s", FilterTblInfo.LastFileLoaded);
         }
         else
         {
