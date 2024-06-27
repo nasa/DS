@@ -43,7 +43,7 @@
 
 #define DS_PATH_SEPARATOR '/' /**< \brief File system path separator */
 
-#define DS_TABLE_VERIFY_ERR 0xFFFFFFFF /**< \brief Table verification error return value */
+#define DS_TABLE_VERIFY_ERR -1 /**< \brief Table verification error return value */
 
 #define DS_FILE_HEADER_NONE 0 /**< \brief File header type is NONE */
 #define DS_FILE_HEADER_CFE  1 /**< \brief File header type is CFE */

@@ -881,7 +881,7 @@ void DS_FileCloseDest(int32 FileIndex)
             }
 
             /* Update the path name for reporting */
-            strncpy(FileStatus->FileName, PathName, sizeof(FileStatus->FileName));
+            snprintf(FileStatus->FileName, sizeof(FileStatus->FileName), "%s", PathName);
         }
     }
 
@@ -991,7 +991,7 @@ void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
         /*
         ** Set current open filename...
         */
-        strncpy(FileInfo->FileName, FileStatus->FileName, sizeof(FileInfo->FileName));
+        snprintf(FileInfo->FileName, sizeof(FileInfo->FileName), "%s", FileStatus->FileName);
 
         /*
         ** Timestamp and send file info telemetry...

@@ -1096,7 +1096,7 @@ void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
             /*
             ** Set current open filename...
             */
-            strncpy(FileInfoPtr->FileName, DS_AppData.FileStatus[i].FileName, sizeof(FileInfoPtr->FileName));
+            snprintf(FileInfoPtr->FileName, sizeof(FileInfoPtr->FileName), "%s", DS_AppData.FileStatus[i].FileName);
         }
     }
 
