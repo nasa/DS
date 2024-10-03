@@ -103,7 +103,7 @@ void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_AppData.FilterTblLoadCounter = 0;
     DS_AppData.FilterTblErrCounter  = 0;
 
-    CFE_EVS_SendEvent(DS_RESET_INF_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
+    CFE_EVS_SendEvent(DS_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset counters command");
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

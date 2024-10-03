@@ -70,7 +70,7 @@
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will reset to zero
- *       - The #DS_RESET_INF_EID debug event message will be sent
+ *       - The #DS_RESET_INF_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
