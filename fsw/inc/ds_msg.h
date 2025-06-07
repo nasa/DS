@@ -185,9 +185,8 @@ typedef struct
 
 /**
  *  \brief Set Ena/Dis State For Destination File Table Entry
- *  \brief Set Filename Type Payload
  *
- *  Used with #DS_DestTypeCmd_t
+ *  Used with #DS_DestStateCmd_t
  *
  *  For command details see #DS_SET_DEST_STATE_CC
  */
