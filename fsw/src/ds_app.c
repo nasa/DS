@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -39,7 +38,7 @@
 #include "ds_cmds.h"
 #include "ds_file.h"
 #include "ds_table.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 #include "ds_msgdefs.h"
 #include "ds_version.h"
 
@@ -111,7 +110,7 @@ void DS_AppMain(void)
         */
         if (Result == CFE_SUCCESS)
         {
-            DS_AppProcessMsg(BufPtr);
+            DS_AppPipe(BufPtr);
         }
         else if (Result == CFE_SB_TIME_OUT)
         {
@@ -183,7 +182,7 @@ CFE_Status_t DS_AppInitialize(void)
     */
     memset(&DS_AppData, 0, sizeof(DS_AppData));
 
-    DS_AppData.AppEnableState = DS_DEF_ENABLE_STATE;
+    DS_AppData.AppEnableState  = DS_DEF_ENABLE_STATE;
     DS_AppData.EnableMoveFiles = DS_MOVE_FILES;
 
     /*
@@ -268,124 +267,6 @@ CFE_Status_t DS_AppInitialize(void)
     }
 
     return Result;
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Process HK request command                                      */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_AppSendHkCmd(void)
-{
-    DS_HkPacket_t  HkPacket;
-    int32          i                                              = 0;
-    CFE_Status_t   Status                                         = 0;
-    char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
-    CFE_TBL_Info_t FilterTblInfo;
-
-    DS_HkTlm_Payload_t *PayloadPtr;
-
-    memset(&HkPacket, 0, sizeof(HkPacket));
-
-    /*
-    ** Initialize housekeeping packet...
-    */
-    CFE_MSG_Init(CFE_MSG_PTR(HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
-
-    /*
-    ** Process data storage file age limits...
-    */
-    DS_FileTestAge(DS_SECS_PER_HK_CYCLE);
-
-    /*
-    ** Take this opportunity to check for table updates...
-    */
-    DS_TableManageDestFile();
-    DS_TableManageFilter();
-
-    /* Get internal payload substructure */
-    PayloadPtr = &HkPacket.Payload;
-
-    /*
-    ** Copy application command counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->CmdAcceptedCounter = DS_AppData.CmdAcceptedCounter;
-    PayloadPtr->CmdRejectedCounter = DS_AppData.CmdRejectedCounter;
-
-    /*
-    ** Copy packet storage counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->DisabledPktCounter = DS_AppData.DisabledPktCounter;
-    PayloadPtr->IgnoredPktCounter  = DS_AppData.IgnoredPktCounter;
-    PayloadPtr->FilteredPktCounter = DS_AppData.FilteredPktCounter;
-    PayloadPtr->PassedPktCounter   = DS_AppData.PassedPktCounter;
-
-    /*
-    ** Copy file I/O counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->FileWriteCounter     = DS_AppData.FileWriteCounter;
-    PayloadPtr->FileWriteErrCounter  = DS_AppData.FileWriteErrCounter;
-    PayloadPtr->FileUpdateCounter    = DS_AppData.FileUpdateCounter;
-    PayloadPtr->FileUpdateErrCounter = DS_AppData.FileUpdateErrCounter;
-
-    /*
-    ** Copy configuration table counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->DestTblLoadCounter   = DS_AppData.DestTblLoadCounter;
-    PayloadPtr->DestTblErrCounter    = DS_AppData.DestTblErrCounter;
-    PayloadPtr->FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
-    PayloadPtr->FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
-
-    /*
-    ** Copy app enable/disable state to housekeeping telemetry packet...
-    */
-    PayloadPtr->AppEnableState = DS_AppData.AppEnableState;
-
-    /*
-    ** Compute file growth rate from the number of bytes since the last HK request...
-    */
-    for (i = 0; i < DS_DEST_FILE_CNT; i++)
-    {
-        DS_AppData.FileStatus[i].FileRate   = DS_AppData.FileStatus[i].FileGrowth / DS_SECS_PER_HK_CYCLE;
-        DS_AppData.FileStatus[i].FileGrowth = 0;
-    }
-
-    /* Get the filter table info, put the file name in the HK pkt. */
-    Status = snprintf(FilterTblName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "DS.%s", DS_FILTER_TBL_NAME);
-    if (Status >= 0)
-    {
-        Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
-        if (Status == CFE_SUCCESS)
-        {
-            snprintf(PayloadPtr->FilterTblFilename, OS_MAX_PATH_LEN, "%s", FilterTblInfo.LastFileLoaded);
-        }
-        else
-        {
-            /* If the filter table name is invalid, send an event and erase any
-             * stale/misleading filename from the HK packet */
-            CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid filter tbl name in DS_AppSendHkCmd. Name=%s, Err=0x%08X", FilterTblName,
-                              (unsigned int)Status);
-
-            memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
-        }
-    }
-    else
-    {
-        /* If the filter table name couldn't be copied, send an event and erase
-         * any stale/misleading filename from the HK packet */
-        CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Filter tbl name copy fail in DS_AppSendHkCmd. Err=%d", (int)Status);
-
-        memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
-    }
-
-    /*
-    ** Timestamp and send housekeeping telemetry packet...
-    */
-    CFE_SB_TimeStampMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader));
-    CFE_SB_TransmitMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader), true);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

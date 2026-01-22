@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -34,7 +33,7 @@
 #include "ds_app.h"
 #include "ds_table.h"
 #include "ds_msg.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 
 #define DS_CDS_NAME "DS_CDS"
 

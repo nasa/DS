@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -24,7 +23,8 @@
 #ifndef DS_CMDS_H
 #define DS_CMDS_H
 
-#include "cfe.h"
+#include "cfe_error.h"
+#include "ds_msg.h"
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -49,7 +49,7 @@
  *
  *  \sa #DS_NOOP_CC, #DS_NoopCmd_t
  */
-void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_NoopCmd(const DS_NoopCmd_t *BufPtr);
 
 /**
  *  \brief RESET command handler
@@ -69,7 +69,7 @@ void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_RESET_COUNTERS_CC, #DS_ResetCountersCmd_t
  */
-void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr);
 
 /**
  *  \brief Set application enable/disable state command handler
@@ -88,9 +88,9 @@ void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_APP_STATE_CC, #DS_AppStateCmd_t
+ *  \sa #DS_SET_APP_STATE_CC, #DS_SetAppStateCmd_t
  */
-void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetAppStateCmd(const DS_SetAppStateCmd_t *BufPtr);
 
 /**
  *  \brief Set file index for filter table entry command handler
@@ -112,9 +112,9 @@ void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_FILTER_FILE_CC, #DS_FilterFileCmd_t
+ *  \sa #DS_SET_FILTER_FILE_CC, #DS_SetFilterFileCmd_t
  */
-void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr);
 
 /**
  *  \brief Set filter type for filter table entry command handler
@@ -136,9 +136,9 @@ void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_FILTER_TYPE_CC, #DS_FilterTypeCmd_t
+ *  \sa #DS_SET_FILTER_TYPE_CC, #DS_SetFilterTypeCmd_t
  */
-void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr);
 
 /**
  *  \brief Set filter parameters for filter table entry command handler
@@ -160,9 +160,9 @@ void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_FILTER_PARMS_CC, #DS_FilterParmsCmd_t
+ *  \sa #DS_SET_FILTER_PARMS_CC, #DS_SetFilterParmsCmd_t
  */
-void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage filename type command handler
@@ -184,9 +184,9 @@ void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_TYPE_CC, #DS_DestTypeCmd_t
+ *  \sa #DS_SET_DEST_TYPE_CC, #DS_SetDestTypeCmd_t
  */
-void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage enable/disable state command handler
@@ -208,9 +208,9 @@ void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_STATE_CC, #DS_DestStateCmd_t
+ *  \sa #DS_SET_DEST_STATE_CC, #DS_SetDestStateCmd_t
  */
-void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestStateCmd(const DS_SetDestStateCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage file pathname command handler
@@ -232,9 +232,9 @@ void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_PATH_CC, #DS_DestPathCmd_t
+ *  \sa #DS_SET_DEST_PATH_CC, #DS_SetDestPathCmd_t
  */
-void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage file basename command handler
@@ -256,9 +256,9 @@ void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_BASE_CC, #DS_DestBaseCmd_t
+ *  \sa #DS_SET_DEST_BASE_CC, #DS_SetDestBaseCmd_t
  */
-void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage file extension command handler
@@ -280,9 +280,9 @@ void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_EXT_CC, #DS_DestExtCmd_t
+ *  \sa #DS_SET_DEST_EXT_CC, #DS_SetDestExtCmd_t
  */
-void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr);
 
 /**  \brief Set data storage file size limit command handler
  *
@@ -303,9 +303,9 @@ void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_SIZE_CC, #DS_DestSizeCmd_t
+ *  \sa #DS_SET_DEST_SIZE_CC, #DS_SetDestSizeCmd_t
  */
-void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage file age limit command handler
@@ -327,9 +327,9 @@ void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_AGE_CC, #DS_DestAgeCmd_t
+ *  \sa #DS_SET_DEST_AGE_CC, #DS_SetDestAgeCmd_t
  */
-void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage filename sequence count command handler
@@ -351,9 +351,9 @@ void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_DEST_COUNT_CC, #DS_DestCountCmd_t
+ *  \sa #DS_SET_DEST_COUNT_CC, #DS_SetDestCountCmd_t
  */
-void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr);
 
 /**
  *  \brief Close data storage file command handler
@@ -376,7 +376,7 @@ void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_CLOSE_FILE_CC, #DS_CloseFileCmd_t
  */
-void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_CloseFileCmd(const DS_CloseFileCmd_t *BufPtr);
 
 /**
  *  \brief Close all data storage files command handler
@@ -398,7 +398,7 @@ void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_CLOSE_ALL_CC, #DS_CloseAllCmd_t
  */
-void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_CloseAllCmd(const DS_CloseAllCmd_t *BufPtr);
 
 /**
  *  \brief Get file information telemetry packet command handler
@@ -419,7 +419,7 @@ void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_GET_FILE_INFO_CC, #DS_GetFileInfoCmd_t, #DS_FileInfoPkt_t
  */
-void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr);
 
 /**
  *  \brief Add Message ID to Packet Filter Table
@@ -442,7 +442,7 @@ void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_ADD_MID_CC, #DS_AddMidCmd_t
  */
-void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr);
 
 /**
  *  \brief Remove Message ID from Packet Filter Table
@@ -464,6 +464,20 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_REMOVE_MID_CC, #DS_RemoveMidCmd_t
  */
-void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr);
+
+/**
+ *  \brief Application housekeeping request command handler
+ *
+ *  \par Description
+ *       Check with cFE Table Services for table updates
+ *       Generate application housekeeping telemetry packet
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_HkPacket_t
+ */
+CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr);
 
 #endif

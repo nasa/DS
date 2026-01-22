@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -35,7 +34,7 @@
 #include "ds_cmds.h"
 #include "ds_file.h"
 #include "ds_table.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 #include "ds_version.h"
 
 #include <stdio.h>
@@ -46,7 +45,7 @@
  * This is done as a macro so it can be applied consistently to all
  * message processing functions, based on the way DS defines its messages.
  */
-#define DS_GET_CMD_PAYLOAD(ptr, type) (&((const type *)(ptr))->Payload)
+#define DS_GET_CMD_PAYLOAD(ptr, type) (&(ptr)->Payload)
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
@@ -54,7 +53,7 @@
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_NoopCmd(const DS_NoopCmd_t *BufPtr)
 {
     /*
     ** Do nothing except display "aliveness" event...
@@ -63,6 +62,8 @@ void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 
     CFE_EVS_SendEvent(DS_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
                       DS_MAJOR_VERSION, DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV);
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -71,7 +72,7 @@ void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr)
 {
     /*
     ** Reset application command counters...
@@ -104,19 +105,15 @@ void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_AppData.FilterTblErrCounter  = 0;
 
     CFE_EVS_SendEvent(DS_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset counters command");
+
+    return CFE_SUCCESS;
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                                                                 */
-/* Set application ena/dis state                                   */
-/*                                                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetAppStateCmd(const DS_SetAppStateCmd_t *BufPtr)
 {
     const DS_AppState_Payload_t *DS_AppStateCmd;
 
-    DS_AppStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AppStateCmd_t);
+    DS_AppStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetAppStateCmd_t);
 
     if (DS_TableVerifyState(DS_AppStateCmd->EnableState) == false)
     {
@@ -145,6 +142,8 @@ void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_ENADIS_CMD_EID, CFE_EVS_EventType_INFORMATION, "APP STATE command: state = %d",
                           DS_AppStateCmd->EnableState);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -153,7 +152,7 @@ void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
 {
     const DS_FilterFile_Payload_t *DS_FilterFileCmd;
 
@@ -161,7 +160,7 @@ void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
 
-    DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterFileCmd_t);
+    DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterFileCmd_t);
 
     if (!CFE_SB_IsValidMsgId(DS_FilterFileCmd->MessageID))
     {
@@ -246,6 +245,8 @@ void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
                               DS_FilterFileCmd->FilterParmsIndex, DS_FilterFileCmd->FileTableIndex);
         }
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -254,7 +255,7 @@ void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
 {
     const DS_FilterType_Payload_t *DS_FilterTypeCmd;
 
@@ -262,7 +263,7 @@ void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
 
-    DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterTypeCmd_t);
+    DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterTypeCmd_t);
 
     if (!CFE_SB_IsValidMsgId(DS_FilterTypeCmd->MessageID))
     {
@@ -347,6 +348,8 @@ void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
                               DS_FilterTypeCmd->FilterParmsIndex, DS_FilterTypeCmd->FilterType);
         }
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -355,7 +358,7 @@ void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
 {
     const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
 
@@ -363,7 +366,7 @@ void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
 
-    DS_FilterParmsCmd = &((const DS_FilterParmsCmd_t *)BufPtr)->Payload;
+    DS_FilterParmsCmd = &BufPtr->Payload;
 
     if (!CFE_SB_IsValidMsgId(DS_FilterParmsCmd->MessageID))
     {
@@ -453,6 +456,8 @@ void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
                               pFilterParms->Algorithm_O);
         }
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -461,13 +466,13 @@ void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr)
 {
     const DS_DestType_Payload_t *DS_DestTypeCmd;
 
     DS_DestFileEntry_t *pDest = NULL;
 
-    DS_DestTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestTypeCmd_t);
+    DS_DestTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestTypeCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestTypeCmd->FileTableIndex) == false)
     {
@@ -518,6 +523,8 @@ void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST TYPE command: file table index = %d, filename type = %d",
                           DS_DestTypeCmd->FileTableIndex, DS_DestTypeCmd->FileNameType);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -526,11 +533,11 @@ void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestStateCmd(const DS_SetDestStateCmd_t *BufPtr)
 {
     const DS_DestState_Payload_t *DS_DestStateCmd;
 
-    DS_DestStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestStateCmd_t);
+    DS_DestStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestStateCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestStateCmd->FileTableIndex) == false)
     {
@@ -581,6 +588,8 @@ void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST STATE command: file table index = %d, file state = %d", DS_DestStateCmd->FileTableIndex,
                           DS_DestStateCmd->EnableState);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -589,13 +598,13 @@ void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr)
 {
     const DS_DestPath_Payload_t *DS_DestPathCmd;
 
     DS_DestFileEntry_t *pDest = NULL;
 
-    DS_DestPathCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestPathCmd_t);
+    DS_DestPathCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestPathCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestPathCmd->FileTableIndex) == false)
     {
@@ -637,6 +646,8 @@ void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST PATH command: file table index = %d, pathname = '%s'",
                           (int)DS_DestPathCmd->FileTableIndex, DS_DestPathCmd->Pathname);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -645,12 +656,12 @@ void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr)
 {
     const DS_DestBase_Payload_t *DS_DestBaseCmd;
     DS_DestFileEntry_t *         pDest = NULL;
 
-    DS_DestBaseCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestBaseCmd_t);
+    DS_DestBaseCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestBaseCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestBaseCmd->FileTableIndex) == false)
     {
@@ -692,6 +703,8 @@ void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST BASE command: file table index = %d, base filename = '%s'",
                           (int)DS_DestBaseCmd->FileTableIndex, DS_DestBaseCmd->Basename);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -700,12 +713,12 @@ void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr)
 {
     const DS_DestExt_Payload_t *DS_DestExtCmd;
     DS_DestFileEntry_t *        pDest = NULL;
 
-    DS_DestExtCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestExtCmd_t);
+    DS_DestExtCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestExtCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestExtCmd->FileTableIndex) == false)
     {
@@ -747,6 +760,8 @@ void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST EXT command: file table index = %d, extension = '%s'",
                           (int)DS_DestExtCmd->FileTableIndex, DS_DestExtCmd->Extension);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -755,12 +770,12 @@ void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
 {
     const DS_DestSize_Payload_t *DS_DestSizeCmd;
     DS_DestFileEntry_t *         pDest = NULL;
 
-    DS_DestSizeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestSizeCmd_t);
+    DS_DestSizeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestSizeCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestSizeCmd->FileTableIndex) == false)
     {
@@ -811,6 +826,8 @@ void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST SIZE command: file table index = %d, size limit = %d",
                           (int)DS_DestSizeCmd->FileTableIndex, (int)DS_DestSizeCmd->MaxFileSize);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -819,12 +836,12 @@ void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
 {
     const DS_DestAge_Payload_t *DS_DestAgeCmd;
     DS_DestFileEntry_t *        pDest = NULL;
 
-    DS_DestAgeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestAgeCmd_t);
+    DS_DestAgeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestAgeCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestAgeCmd->FileTableIndex) == false)
     {
@@ -875,6 +892,8 @@ void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST AGE command: file table index = %d, age limit = %d", (int)DS_DestAgeCmd->FileTableIndex,
                           (int)DS_DestAgeCmd->MaxFileAge);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -883,13 +902,13 @@ void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr)
 {
     const DS_DestCount_Payload_t *DS_DestCountCmd;
     DS_AppFileStatus_t *          FileStatus = NULL;
     DS_DestFileEntry_t *          DestFile   = NULL;
 
-    DS_DestCountCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestCountCmd_t);
+    DS_DestCountCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestCountCmd_t);
 
     if (DS_TableVerifyFileIndex(DS_DestCountCmd->FileTableIndex) == false)
     {
@@ -952,6 +971,8 @@ void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
                           "DEST COUNT command: file table index = %d, sequence count = %d",
                           (int)DS_DestCountCmd->FileTableIndex, (int)DS_DestCountCmd->SequenceCount);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -960,7 +981,7 @@ void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_CloseFileCmd(const DS_CloseFileCmd_t *BufPtr)
 {
     const DS_CloseFile_Payload_t *PayloadPtr;
 
@@ -974,8 +995,7 @@ void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
         DS_AppData.CmdRejectedCounter++;
 
         CFE_EVS_SendEvent(DS_CLOSE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                          "Invalid DEST CLOSE command arg: file table index = %d",
-                          (int)PayloadPtr->FileTableIndex);
+                          "Invalid DEST CLOSE command arg: file table index = %d", (int)PayloadPtr->FileTableIndex);
     }
     else
     {
@@ -993,6 +1013,8 @@ void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
         CFE_EVS_SendEvent(DS_CLOSE_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE command: file table index = %d",
                           (int)PayloadPtr->FileTableIndex);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1001,7 +1023,7 @@ void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_CloseAllCmd(const DS_CloseAllCmd_t *BufPtr)
 {
     int32 i = 0;
 
@@ -1020,6 +1042,8 @@ void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
     DS_AppData.CmdAcceptedCounter++;
 
     CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE ALL command");
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1028,7 +1052,7 @@ void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr)
 {
     DS_FileInfoPkt_t DS_FileInfoPkt;
     DS_FileInfo_t *  FileInfoPtr;
@@ -1105,6 +1129,8 @@ void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
     */
     CFE_SB_TimeStampMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader));
     CFE_SB_TransmitMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), true);
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -1113,7 +1139,7 @@ void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
     DS_PacketEntry_t *               pPacketEntry     = NULL;
@@ -1203,15 +1229,17 @@ void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
                           (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
     }
+
+    return CFE_SUCCESS;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
-/* DS_RemoveMIDCmd() - remove message ID from packet filter table  */
+/* DS_RemoveMidCmd() - remove message ID from packet filter table  */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
+CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
 
@@ -1221,7 +1249,7 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
     int32             HashTableIndex   = 0;
     int32             i                = 0;
 
-    PayloadPtr  = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
+    PayloadPtr       = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
     FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID);
 
     if (!CFE_SB_IsValidMsgId(PayloadPtr->MessageID))
@@ -1297,6 +1325,128 @@ void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
                           (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex,
                           (int)HashTableIndex);
     }
+
+    return CFE_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process HK request command                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
+{
+    DS_HkPacket_t  HkPacket;
+    int32          i                                              = 0;
+    CFE_Status_t   Status                                         = 0;
+    char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
+    CFE_TBL_Info_t FilterTblInfo;
+
+    DS_HkTlm_Payload_t *PayloadPtr;
+
+    memset(&HkPacket, 0, sizeof(HkPacket));
+
+    /*
+    ** Initialize housekeeping packet...
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
+
+    /*
+    ** Process data storage file age limits...
+    */
+    DS_FileTestAge(DS_SECS_PER_HK_CYCLE);
+
+    /*
+    ** Take this opportunity to check for table updates...
+    */
+    DS_TableManageDestFile();
+    DS_TableManageFilter();
+
+    /* Get internal payload substructure */
+    PayloadPtr = &HkPacket.Payload;
+
+    /*
+    ** Copy application command counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->CmdAcceptedCounter = DS_AppData.CmdAcceptedCounter;
+    PayloadPtr->CmdRejectedCounter = DS_AppData.CmdRejectedCounter;
+
+    /*
+    ** Copy packet storage counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->DisabledPktCounter = DS_AppData.DisabledPktCounter;
+    PayloadPtr->IgnoredPktCounter  = DS_AppData.IgnoredPktCounter;
+    PayloadPtr->FilteredPktCounter = DS_AppData.FilteredPktCounter;
+    PayloadPtr->PassedPktCounter   = DS_AppData.PassedPktCounter;
+
+    /*
+    ** Copy file I/O counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->FileWriteCounter     = DS_AppData.FileWriteCounter;
+    PayloadPtr->FileWriteErrCounter  = DS_AppData.FileWriteErrCounter;
+    PayloadPtr->FileUpdateCounter    = DS_AppData.FileUpdateCounter;
+    PayloadPtr->FileUpdateErrCounter = DS_AppData.FileUpdateErrCounter;
+
+    /*
+    ** Copy configuration table counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->DestTblLoadCounter   = DS_AppData.DestTblLoadCounter;
+    PayloadPtr->DestTblErrCounter    = DS_AppData.DestTblErrCounter;
+    PayloadPtr->FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
+    PayloadPtr->FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
+
+    /*
+    ** Copy app enable/disable state to housekeeping telemetry packet...
+    */
+    PayloadPtr->AppEnableState = DS_AppData.AppEnableState;
+
+    /*
+    ** Compute file growth rate from the number of bytes since the last HK request...
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileRate   = DS_AppData.FileStatus[i].FileGrowth / DS_SECS_PER_HK_CYCLE;
+        DS_AppData.FileStatus[i].FileGrowth = 0;
+    }
+
+    /* Get the filter table info, put the file name in the HK pkt. */
+    Status = snprintf(FilterTblName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "DS.%s", DS_FILTER_TBL_NAME);
+    if (Status >= 0)
+    {
+        Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
+        if (Status == CFE_SUCCESS)
+        {
+            snprintf(PayloadPtr->FilterTblFilename, OS_MAX_PATH_LEN, "%s", FilterTblInfo.LastFileLoaded);
+        }
+        else
+        {
+            /* If the filter table name is invalid, send an event and erase any
+             * stale/misleading filename from the HK packet */
+            CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid filter tbl name in DS_SendHkCmd. Name=%s, Err=0x%08X", FilterTblName,
+                              (unsigned int)Status);
+
+            memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
+        }
+    }
+    else
+    {
+        /* If the filter table name couldn't be copied, send an event and erase
+         * any stale/misleading filename from the HK packet */
+        CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Filter tbl name copy fail in DS_SendHkCmd. Err=%d", (int)Status);
+
+        memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
+    }
+
+    /*
+    ** Timestamp and send housekeeping telemetry packet...
+    */
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader), true);
+
+    return CFE_SUCCESS;
 }
 
 /************************/

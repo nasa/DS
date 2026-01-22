@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -21,8 +20,8 @@
  * @file
  *  The CFS Data Storage (DS) Application event id header file
  */
-#ifndef DS_EVENTS_H
-#define DS_EVENTS_H
+#ifndef DS_EVENTIDS_H
+#define DS_EVENTIDS_H
 
 /**
  * \defgroup cfsdsevents CFS Data Store Event IDs
@@ -846,7 +845,7 @@
  * \par Cause:
  *
  * This event is issued when the filter table name is not successfully
- * created (via snprintf) in the DS_AppSendHkCmd function.
+ * created (via snprintf) in the DS_SendHkCmd function.
  */
 #define DS_APPHK_FILTER_TBL_PRINT_ERR_EID 70
 
@@ -882,6 +881,19 @@
  *  must have an entry with the indicated message ID.
  */
 #define DS_REMOVE_MID_CMD_ERR_EID 72
+
+/**
+ *  \brief DS Dropped incoming message due to unrecognized MID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals that the DS app has received messages which
+ *  are neither DS commands nor configured for storage.  These unrecognized
+ *  messages are dropped and indicate a misconfiguration.
+ */
+#define DS_MID_ERR_EID 73
 
 /**@}*/
 

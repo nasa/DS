@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -33,7 +32,7 @@
 #include "ds_cmds.h"
 #include "ds_file.h"
 #include "ds_table.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 #include "ds_msgdefs.h"
 
 #include <stdio.h>
@@ -69,7 +68,7 @@
 
 #include "ds_appdefs.h"
 #include "ds_msgids.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 
 #include "ds_msg.h"
 #include "ds_app.h"
@@ -108,7 +107,7 @@ void DS_NoopVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_NoopCmd_t), DS_NOOP_CMD_ERR_EID, "NOOP"))
     {
-        DS_NoopCmd(BufPtr);
+        DS_NoopCmd((const DS_NoopCmd_t *)BufPtr);
     }
 }
 
@@ -122,7 +121,7 @@ void DS_ResetVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_ResetCountersCmd_t), DS_RESET_CMD_ERR_EID, "RESET"))
     {
-        DS_ResetCountersCmd(BufPtr);
+        DS_ResetCountersCmd((const DS_ResetCountersCmd_t *)BufPtr);
     }
 }
 
@@ -134,9 +133,9 @@ void DS_ResetVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetAppStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_AppStateCmd_t), DS_ENADIS_CMD_ERR_EID, "APP STATE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetAppStateCmd_t), DS_ENADIS_CMD_ERR_EID, "APP STATE"))
     {
-        DS_SetAppStateCmd(BufPtr);
+        DS_SetAppStateCmd((const DS_SetAppStateCmd_t *)BufPtr);
     }
 }
 
@@ -148,9 +147,9 @@ void DS_SetAppStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetFilterFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_FilterFileCmd_t), DS_FILE_CMD_ERR_EID, "FILTER FILE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetFilterFileCmd_t), DS_FILE_CMD_ERR_EID, "FILTER FILE"))
     {
-        DS_SetFilterFileCmd(BufPtr);
+        DS_SetFilterFileCmd((const DS_SetFilterFileCmd_t *)BufPtr);
     }
 }
 
@@ -162,9 +161,9 @@ void DS_SetFilterFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetFilterTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_FilterTypeCmd_t), DS_FTYPE_CMD_ERR_EID, "FILTER TYPE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetFilterTypeCmd_t), DS_FTYPE_CMD_ERR_EID, "FILTER TYPE"))
     {
-        DS_SetFilterTypeCmd(BufPtr);
+        DS_SetFilterTypeCmd((const DS_SetFilterTypeCmd_t *)BufPtr);
     }
 }
 
@@ -176,9 +175,9 @@ void DS_SetFilterTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetFilterParmsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_FilterParmsCmd_t), DS_PARMS_CMD_ERR_EID, "FILTER PARMS"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetFilterParmsCmd_t), DS_PARMS_CMD_ERR_EID, "FILTER PARMS"))
     {
-        DS_SetFilterParmsCmd(BufPtr);
+        DS_SetFilterParmsCmd((const DS_SetFilterParmsCmd_t *)BufPtr);
     }
 }
 
@@ -190,9 +189,9 @@ void DS_SetFilterParmsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestTypeCmd_t), DS_NTYPE_CMD_ERR_EID, "DEST TYPE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestTypeCmd_t), DS_NTYPE_CMD_ERR_EID, "DEST TYPE"))
     {
-        DS_SetDestTypeCmd(BufPtr);
+        DS_SetDestTypeCmd((const DS_SetDestTypeCmd_t *)BufPtr);
     }
 }
 
@@ -204,9 +203,9 @@ void DS_SetDestTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestStateCmd_t), DS_STATE_CMD_ERR_EID, "DEST STATE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestStateCmd_t), DS_STATE_CMD_ERR_EID, "DEST STATE"))
     {
-        DS_SetDestStateCmd(BufPtr);
+        DS_SetDestStateCmd((const DS_SetDestStateCmd_t *)BufPtr);
     }
 }
 
@@ -218,9 +217,9 @@ void DS_SetDestStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestPathVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestPathCmd_t), DS_PATH_CMD_ERR_EID, "DEST PATH"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestPathCmd_t), DS_PATH_CMD_ERR_EID, "DEST PATH"))
     {
-        DS_SetDestPathCmd(BufPtr);
+        DS_SetDestPathCmd((const DS_SetDestPathCmd_t *)BufPtr);
     }
 }
 
@@ -232,9 +231,9 @@ void DS_SetDestPathVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestBaseVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestBaseCmd_t), DS_BASE_CMD_ERR_EID, "DEST BASE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestBaseCmd_t), DS_BASE_CMD_ERR_EID, "DEST BASE"))
     {
-        DS_SetDestBaseCmd(BufPtr);
+        DS_SetDestBaseCmd((const DS_SetDestBaseCmd_t *)BufPtr);
     }
 }
 
@@ -246,9 +245,9 @@ void DS_SetDestBaseVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestExtVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestExtCmd_t), DS_EXT_CMD_ERR_EID, "DEST EXT"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestExtCmd_t), DS_EXT_CMD_ERR_EID, "DEST EXT"))
     {
-        DS_SetDestExtCmd(BufPtr);
+        DS_SetDestExtCmd((const DS_SetDestExtCmd_t *)BufPtr);
     }
 }
 
@@ -260,9 +259,9 @@ void DS_SetDestExtVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestSizeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestSizeCmd_t), DS_SIZE_CMD_ERR_EID, "DEST SIZE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestSizeCmd_t), DS_SIZE_CMD_ERR_EID, "DEST SIZE"))
     {
-        DS_SetDestSizeCmd(BufPtr);
+        DS_SetDestSizeCmd((const DS_SetDestSizeCmd_t *)BufPtr);
     }
 }
 
@@ -274,9 +273,9 @@ void DS_SetDestSizeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestAgeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestAgeCmd_t), DS_AGE_CMD_ERR_EID, "DEST AGE"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestAgeCmd_t), DS_AGE_CMD_ERR_EID, "DEST AGE"))
     {
-        DS_SetDestAgeCmd(BufPtr);
+        DS_SetDestAgeCmd((const DS_SetDestAgeCmd_t *)BufPtr);
     }
 }
 
@@ -288,9 +287,9 @@ void DS_SetDestAgeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 
 void DS_SetDestCountVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_DestCountCmd_t), DS_SEQ_CMD_ERR_EID, "DEST COUNT"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetDestCountCmd_t), DS_SEQ_CMD_ERR_EID, "DEST COUNT"))
     {
-        DS_SetDestCountCmd(BufPtr);
+        DS_SetDestCountCmd((const DS_SetDestCountCmd_t *)BufPtr);
     }
 }
 
@@ -304,7 +303,7 @@ void DS_CloseFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_CloseFileCmd_t), DS_CLOSE_CMD_ERR_EID, "DEST CLOSE"))
     {
-        DS_CloseFileCmd(BufPtr);
+        DS_CloseFileCmd((const DS_CloseFileCmd_t *)BufPtr);
     }
 }
 
@@ -318,7 +317,7 @@ void DS_CloseAllVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_CloseAllCmd_t), DS_CLOSE_ALL_CMD_ERR_EID, "DEST CLOSE ALL"))
     {
-        DS_CloseAllCmd(BufPtr);
+        DS_CloseAllCmd((const DS_CloseAllCmd_t *)BufPtr);
     }
 }
 
@@ -332,7 +331,7 @@ void DS_GetFileInfoVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_GetFileInfoCmd_t), DS_GET_FILE_INFO_CMD_ERR_EID, "GET FILE INFO"))
     {
-        DS_GetFileInfoCmd(BufPtr);
+        DS_GetFileInfoCmd((const DS_GetFileInfoCmd_t *)BufPtr);
     }
 }
 
@@ -346,7 +345,7 @@ void DS_AddMIDVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_AddMidCmd_t), DS_ADD_MID_CMD_ERR_EID, "ADD MID"))
     {
-        DS_AddMIDCmd(BufPtr);
+        DS_AddMidCmd((const DS_AddMidCmd_t *)BufPtr);
     }
 }
 
@@ -354,7 +353,7 @@ void DS_RemoveMIDVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_RemoveMidCmd_t), DS_REMOVE_MID_CMD_ERR_EID, "REMOVE MID"))
     {
-        DS_RemoveMIDCmd(BufPtr);
+        DS_RemoveMidCmd((const DS_RemoveMidCmd_t *)BufPtr);
     }
 }
 
@@ -362,7 +361,7 @@ void DS_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
     if (DS_VerifyLength(BufPtr, sizeof(DS_SendHkCmd_t), DS_HKREQ_LEN_ERR_EID, "SEND HK"))
     {
-        DS_AppSendHkCmd();
+        DS_SendHkCmd((const DS_SendHkCmd_t *)BufPtr);
     }
 }
 
@@ -372,42 +371,50 @@ void DS_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
+void DS_AppPipe(const CFE_SB_Buffer_t *BufPtr)
 {
+    static CFE_SB_MsgId_t CMD_MID     = CFE_SB_MSGID_RESERVED;
+    static CFE_SB_MsgId_t SEND_HK_MID = CFE_SB_MSGID_RESERVED;
+
     CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+
+    /* cache the local MID Values here, this avoids repeat lookups */
+    if (!CFE_SB_IsValidMsgId(CMD_MID))
+    {
+        CMD_MID     = CFE_SB_ValueToMsgId(DS_CMD_MID);
+        SEND_HK_MID = CFE_SB_ValueToMsgId(DS_SEND_HK_MID);
+    }
 
     CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
 
-    switch (CFE_SB_MsgIdToValue(MessageID))
+    if (CFE_SB_MsgId_Equal(MessageID, SEND_HK_MID))
+    {
+        /*
+        ** DS housekeeping request command...
+        */
+        DS_SendHkVerifyDispatch(BufPtr);
+        if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
+        {
+            DS_AppStorePacket(MessageID, BufPtr);
+        }
+    }
+    else if (CFE_SB_MsgId_Equal(MessageID, CMD_MID))
     {
         /*
         ** DS application commands...
         */
-        case DS_CMD_MID:
-            DS_AppProcessCmd(BufPtr);
-            if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
-            {
-                DS_AppStorePacket(MessageID, BufPtr);
-            }
-            break;
-
-        /*
-        ** DS housekeeping request command...
-        */
-        case DS_SEND_HK_MID:
-            DS_SendHkVerifyDispatch(BufPtr);
-            if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
-            {
-                DS_AppStorePacket(MessageID, BufPtr);
-            }
-            break;
-
+        DS_AppProcessCmd(BufPtr);
+        if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
+        {
+            DS_AppStorePacket(MessageID, BufPtr);
+        }
+    }
+    else
+    {
         /*
         ** Unknown message ID's (must be something to store)...
         */
-        default:
-            DS_AppStorePacket(MessageID, BufPtr);
-            break;
+        DS_AppStorePacket(MessageID, BufPtr);
     }
 }
 

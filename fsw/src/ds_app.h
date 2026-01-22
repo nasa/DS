@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -148,20 +147,6 @@ void DS_AppMain(void);
  *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
  */
 CFE_Status_t DS_AppInitialize(void);
-
-/**
- *  \brief Application housekeeping request command handler
- *
- *  \par Description
- *       Check with cFE Table Services for table updates
- *       Generate application housekeeping telemetry packet
- *
- *  \par Assumptions, External Events, and Notes:
- *       (none)
- *
- *  \sa #DS_HkPacket_t
- */
-void DS_AppSendHkCmd(void);
 
 /**
  *  \brief Application packet storage pre-processor

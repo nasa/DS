@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -21,16 +20,18 @@
  * @file
  *  The CFS Data Storage (DS) Application Message IDs header file
  */
-#ifndef DS_MSGIDS_H
-#define DS_MSGIDS_H
+#ifndef DEFAULT_DS_MSGIDS_H
+#define DEFAULT_DS_MSGIDS_H
+
+#include "ds_msgid_values.h"
 
 /**
  * \defgroup cfsdscmdmid CFS Data Storage Message IDs
  * \{
  */
 
-#define DS_CMD_MID     0x18BB /**< \brief DS Ground Commands Message ID */
-#define DS_SEND_HK_MID 0x18BC /**< \brief DS Send Hk Data Cmd Message ID*/
+#define DS_CMD_MID     CFE_PLATFORM_DS_CMD_MIDVAL(CMD)
+#define DS_SEND_HK_MID CFE_PLATFORM_DS_CMD_MIDVAL(SEND_HK)
 
 /**\}*/
 
@@ -39,9 +40,10 @@
  * \{
  */
 
-#define DS_HK_TLM_MID   0x08B8 /**< \brief DS Hk Telemetry Message ID ****/
-#define DS_DIAG_TLM_MID 0x08B9 /**< \brief DS File Info Telemetry Message ID ****/
-#define DS_COMP_TLM_MID 0x08BA /**< \brief DS Completed File Info Telemetry Message ID ****/
+#define DS_HK_TLM_MID   CFE_PLATFORM_DS_TLM_MIDVAL(HK_TLM)   /**< \brief DS Hk Telemetry Message ID ****/
+#define DS_DIAG_TLM_MID CFE_PLATFORM_DS_TLM_MIDVAL(DIAG_TLM) /**< \brief DS File Info Telemetry Message ID ****/
+#define DS_COMP_TLM_MID \
+    CFE_PLATFORM_DS_TLM_MIDVAL(COMP_TLM) /**< \brief DS Completed File Info Telemetry Message ID ****/
 
 /**\}*/
 

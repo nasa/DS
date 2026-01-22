@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -32,10 +31,10 @@
  *   in the table might be used.
  */
 
-#include "cfe.h"
+#include "cfe_sb_api_typedefs.h"
 #include "cfe_tbl_filedef.h"
 #include "ds_platform_cfg.h"
-#include "ds_extern_typedefs.h"
+#include "ds_tbl.h"
 #include "ds_msg.h"
 
 /*

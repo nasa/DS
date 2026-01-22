@@ -1,0 +1,1067 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    GSC-18128-1, "Core Flight Executive Version 6.7"
+    LEW-19710-1, "CCSDS electronic data sheet implementation"
+
+    Copyright (c) 2006-2019 United States Government as represented by
+    the Administrator of the National Aeronautics and Space Administration.
+    All Rights Reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    This document adheres to the Electronic Data Sheet (EDS) XML schema
+    as prescribed in CCSDS book 876.0.
+
+    Purpose:
+      This describes all interface objects for the Executive Services (CFE_ES)
+      core application
+
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+  <Package name="DS" shortDescription="Data Storage">
+
+    <DataTypeSet>
+       <ContainerDataType name="HkTlm_Payload" shortDescription="HK housekeeping">
+        <EntryList>
+          <Entry type="BASE_TYPES/uint8" name="CmdAcceptedCounter" shortDescription="Count of valid commands received" />
+          <Entry type="BASE_TYPES/uint8" name="CmdRejectedCounter" shortDescription="Count of invalid commands received" />
+          <Entry type="BASE_TYPES/uint8" name="DestTblLoadCounter" shortDescription="Count of destination file table loads" />
+          <Entry type="BASE_TYPES/uint8" name="DestTblErrCounter" shortDescription="Count of failed attempts to get table data pointer" />
+          <Entry type="BASE_TYPES/uint8" name="FilterTblLoadCounter" shortDescription="Count of packet filter table loads" />
+          <Entry type="BASE_TYPES/uint8" name="FilterTblErrCounter" shortDescription="Count of failed attempts to get table data pointer" />
+          <Entry type="BASE_TYPES/uint8" name="AppEnableState" shortDescription="Application enable/disable state" />
+          <PaddingEntry sizeInBits="8" />
+          <Entry type="BASE_TYPES/uint16" name="FileWriteCounter" shortDescription="Count of good destination file writes" />
+          <Entry type="BASE_TYPES/uint16" name="FileWriteErrCounter" shortDescription="Count of bad destination file writes" />
+          <Entry type="BASE_TYPES/uint16" name="FileUpdateCounter" shortDescription="Count of good updates to secondary header" />
+          <Entry type="BASE_TYPES/uint16" name="FileUpdateErrCounter" shortDescription="Count of bad updates to secondary header" />
+          <Entry type="BASE_TYPES/uint32" name="DisabledPktCounter" shortDescription="Count of packets discarded (DS was disabled)" />
+          <Entry type="BASE_TYPES/uint32" name="IgnoredPktCounter" shortDescription="Count of packets discarded" />
+          <Entry type="BASE_TYPES/uint32" name="FilteredPktCounter" shortDescription="Count of packets discarded (failed filter test)" />
+          <Entry type="BASE_TYPES/uint32" name="PassedPktCounter" shortDescription="Count of packets that passed filter test" />
+          <Entry type="BASE_TYPES/PathName" name="FilterTblFilename" shortDescription="Name of filter table file" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="HkPacket" baseType="CFE_HDR/TelemetryHeader">
+        <EntryList>
+          <Entry type="HkTlm_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CMD" baseType="CFE_HDR/CommandHeader">
+      </ContainerDataType>
+
+      <StringDataType name="ExtensionString" length="${DS/EXTENSION_BUFSIZE}" />
+      <StringDataType name="BasenameString" length="${DS/BASENAME_BUFSIZE}" />
+      <StringDataType name="PathnameString" length="${DS/PATHNAME_BUFSIZE}" />
+      <StringDataType name="FullNameString" length="${DS/TOTAL_FNAME_BUFSIZE}" />
+      <StringDataType name="DescriptorString" length="${DS/DESCRIPTOR_BUFSIZE}" />
+
+      <EnumeratedDataType name="EnableState" shortDescription="Filter type (packet count or time)">
+        <EnumerationList>
+          <Enumeration label="UNUSED" value="0" shortDescription="Unused entries in DS tables" />
+          <Enumeration label="DISABLED" value="0" shortDescription="Disabled State" />
+          <Enumeration label="ENABLED" value="2" shortDescription="Enabled State" />
+        </EnumerationList>
+        <IntegerDataEncoding sizeInBits="16" encoding="unsigned" />
+      </EnumeratedDataType>
+
+      <ContainerDataType name="DestFileEntry" shortDescription="Get Destination table entry" >
+        <EntryList>
+          <Entry name="Movename" type="PathnameString" shortDescription="Move files to this dir after close" />
+          <Entry name="Pathname" type="PathnameString" shortDescription="Path portion of filename" />
+          <Entry name="Basename" type="BasenameString" shortDescription="Description such as 'HK Telemetry File'" />
+          <Entry name="Extension" type="ExtensionString" shortDescription="Extension portion of filename" />
+          <Entry name="FileNameType" type="BASE_TYPES/uint16" shortDescription="Type of file name" />
+          <Entry name="EnableState" type="EnableState" shortDescription="File enable/disable state "/>
+          <Entry name="MaxFileSize" type="BASE_TYPES/uint32" shortDescription="Max file size (bytes)" />
+          <Entry name="MaxFileAge" type="BASE_TYPES/uint32" shortDescription="Max file age (seconds)" />
+          <Entry name="SequenceCount" type="BASE_TYPES/uint32" shortDescription="Sequence count portion of filename" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="DestinationFile" dataTypeRef="DestFileEntry">
+        <DimensionList>
+          <Dimension size="${DS/DEST_FILE_CNT}" />
+        </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="DestFileTable" shortDescription="Get Free Space table entry" >
+        <EntryList>
+          <Entry name="Descriptor" type="DescriptorString" shortDescription="Description such as 'HK Telemetry File'" />
+          <Entry name="File" type="DestinationFile" shortDescription="Number of data bytes to copy from input to output pkt" />
+        </EntryList>
+      </ContainerDataType>
+
+      <EnumeratedDataType name="FilterType" shortDescription="Filter type (packet count or time)">
+        <EnumerationList>
+          <Enumeration label="INVALID" value="0" />
+          <Enumeration label="BY_COUNT" value="1" shortDescription="Action is based on packet sequence count" />
+          <Enumeration label="BY_TIME" value="2" shortDescription="Action is based on packet timestamp" />
+        </EnumerationList>
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+      </EnumeratedDataType>
+
+      <ContainerDataType name="FilterParms" shortDescription="DS Packet Filter Parameters" >
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint8" shortDescription="Index into Destination File Table" />
+          <Entry name="FilterType" type="FilterType" shortDescription="Filter type (packet count or time)" />
+          <Entry name="Algorithm_N" type="BASE_TYPES/uint16" shortDescription="Algorithm value N (pass this many)" />
+          <Entry name="Algorithm_X" type="BASE_TYPES/uint16" shortDescription="Algorithm value X (out of this many)" />
+          <Entry name="Algorithm_O" type="BASE_TYPES/uint16" shortDescription="Algorithm value O (at this offset)" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="FiltersPerPacket" dataTypeRef="FilterParms">
+        <DimensionList>
+          <Dimension size="${DS/FILTERS_PER_PACKET}" />
+        </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="PacketEntry" shortDescription="Get Destination table entry" >
+        <EntryList>
+          <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Packet MessageID (may be cmd or tlm)" />
+          <Entry name="Filter" type="FiltersPerPacket" shortDescription="One entry for each packet destination" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="FilterPacket" dataTypeRef="PacketEntry">
+        <DimensionList>
+          <Dimension size="${DS/PACKETS_IN_FILTER_TABLE}" />
+        </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="FilterTable" shortDescription="DS Filter Table" >
+        <EntryList>
+          <Entry name="Descriptor" type="DescriptorString" shortDescription="Description such as 'HK Telemetry File'" />
+          <Entry name="Packet" type="FilterPacket" shortDescription="Number of data bytes to copy from input to output pkt" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="AppState_Payload" shortDescription="Set Ena/Dis State For DS Application">
+        <EntryList>
+          <Entry name="EnableState" type="EnableState" shortDescription="Application enable/disable state" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Padding on 32-bit boundaries" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="FilterFile_Payload" shortDescription="Set File Selection For Packet Filter Table Entry">
+        <EntryList>
+          <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
+          <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="FilterType_Payload" shortDescription="Set Filter Type For Packet Filter Table Entry">
+        <EntryList>
+          <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
+          <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
+          <Entry name="FilterType" type="BASE_TYPES/uint16" shortDescription="Filter type (packet count or time)" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="FilterParms_Payload" shortDescription="Set Filter Parameters For Packet Filter Table Entry">
+        <EntryList>
+          <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
+          <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
+          <Entry name="Algorithm_N" type="BASE_TYPES/uint16" shortDescription="Algorithm value N (pass this many)" />
+          <Entry name="Algorithm_X" type="BASE_TYPES/uint16" shortDescription="Algorithm value X (out of this many)" />
+          <Entry name="Algorithm_O" type="BASE_TYPES/uint16" shortDescription="Algorithm value O (at this offset)" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestType_Payload" shortDescription="Set Filename Type For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="FileNameType" type="BASE_TYPES/uint16" shortDescription="Filename type - count vs time" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestState_Payload" shortDescription="Set Ena/Dis State For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="EnableState" type="EnableState" shortDescription="File enable/disable state" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestPath_Payload" shortDescription="Set Path Portion Of Filename For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <Entry name="Pathname" type="PathnameString" shortDescription="Path portion of filename" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestBase_Payload" shortDescription="Set Base Portion Of Filename For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <Entry name="Basename" type="BasenameString" shortDescription="Base portion of filename" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestExt_Payload" shortDescription="Set Extension Portion Of Filename For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <Entry name="Extension" type="ExtensionString" shortDescription="Path portion of filename" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestSize_Payload" shortDescription="Set Max File Size For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <Entry name="MaxFileSize" type="BASE_TYPES/uint32" shortDescription="Max file size (bytes) before re-open" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestAge_Payload" shortDescription="Set Max File Age For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <Entry name="MaxFileAge" type="BASE_TYPES/uint32" shortDescription="Max file age (seconds)" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="DestCount_Payload" shortDescription="Set Sequence Portion Of Filename For Destination File Table Entry">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <Entry name="SequenceCount" type="BASE_TYPES/uint32" shortDescription="Sequence count portion of filename" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CloseFile_Payload" shortDescription="Close Destination File">
+        <EntryList>
+          <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
+          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CloseAllGetFileInfo_Payload" shortDescription="Close all dest files and get file info commands">
+      </ContainerDataType>
+
+      <ContainerDataType name="AddRemoveMid_Payload" shortDescription="Add and remove message ID from Packet Filter Table commands">
+        <EntryList>
+          <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID to add to Packet Filter Table" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="FileInfo" shortDescription="Current state of destination files">
+        <EntryList>
+          <Entry type="BASE_TYPES/uint32" name="FileAge" shortDescription="Current file age in seconds" />
+          <Entry type="BASE_TYPES/uint32" name="FileSize" shortDescription="Current file size in bytes" />
+          <Entry type="BASE_TYPES/uint32" name="FileRate" shortDescription="Current file data rate (avg since HK)" />
+          <Entry type="BASE_TYPES/uint32" name="SequenceCount" shortDescription="Sequence count portion of filename" />
+          <Entry type="EnableState" name="EnableState" shortDescription="Current file enable/disable state" />
+          <Entry type="BASE_TYPES/uint16" name="OpenState" shortDescription="Current file open/close state" />
+          <Entry type="FullNameString"    name="FileName" shortDescription="Current filename (path+base+seq+ext)" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="FileInfoSet" dataTypeRef="FileInfo">
+        <DimensionList>
+          <Dimension size="${DS/DEST_FILE_CNT}" />
+        </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="FileInfoPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Application file info packet">
+        <EntryList>
+          <Entry type="FileInfoSet" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+      <ContainerDataType name="FileCompletePkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Single application file info packet">
+        <EntryList>
+          <Entry type="FileInfo" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SendHkCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Send Housekeeping command" />
+
+      <ContainerDataType name="NoopCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd No-Operation Command
+
+         \par Description
+              This command will increment the command execution counter and send an
+              event containing the version number of the application.  The command
+              is often used as a general test for application "aliveness".
+
+         \par Command Packet Structure
+              #DS_NoopCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_NOOP_CMD_EID informational event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_NOOP_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="0" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="ResetCountersCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Reset Housekeeping Telemetry Counters Command
+
+         \par Description
+              This command will set the housekeeping counters to zero
+
+         \par Command Structure
+              #DS_ResetCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will reset to zero
+              - The #DS_RESET_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_RESET_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="1" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetAppStateCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Enable/Disable State For DS Application
+
+         \par Description
+              This command will modify the Ena/Dis State selection for the
+              DS application.  No packets are stored while DS is disabled.
+
+         \par Command Structure
+              #DS_SetAppStateCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_ENADIS_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid enable/disable state selection
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_ENADIS_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="2" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="AppState_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetFilterFileCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Destination File For Packet Filter Table Entry
+
+         \par Description
+              This command will modify the Destination File selection for the
+              indicated entry in the Packet Filter Table.
+
+         \par Command Structure
+              #DS_SetFilterFileCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_FILE_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid filter table index
+              - Invalid filter parameters index
+              - Invalid destination file selection
+              - Packet filter table is not currently loaded
+              - Cannot modify unused packet filter table entry
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_FILE_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+               None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="3" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="FilterFile_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetFilterTypeCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Filter Type For Packet Filter Table Entry
+
+         \par Description
+              This command will modify the Filter Type selection for the
+              indicated entry in the Packet Filter Table.
+
+          \par Command Structure
+               #DS_SetFilterTypeCmd_t
+
+          \par Command Verification
+               Evidence of success may be found in the following telemetry:
+               - #DS_HkPacket_t.CmdAcceptedCounter will increment
+               - The #DS_FTYPE_CMD_EID debug event message will be sent
+
+          \par Error Conditions
+               This command can fail for the following reasons:
+               - Invalid command packet length
+               - Invalid filter table index
+               - Invalid filter parameters index
+               - Invalid filter type selection
+               - Packet filter table is not currently loaded
+               - Cannot modify unused packet filter table entry
+
+               Evidence of failure may be found in the following telemetry:
+               - #DS_HkPacket_t.CmdRejectedCounter will increment
+               - The #DS_FTYPE_CMD_ERR_EID error event message will be sent
+
+          \par Criticality
+               None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="4" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="FilterType_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetFilterParmsCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Algorithm Parameters For Packet Filter Table Entry
+
+         \par Description
+              This command will modify the Algorithm Parameters for the
+              indicated entry in the Packet Filter Table.
+
+         \par Command Structure
+              #DS_SetFilterParmsCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_PARMS_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid filter table index
+              - Invalid filter parameters index
+              - Algorithm_N value cannot be greater than Algorithm_X
+              - Packet filter table is not currently loaded
+              - Cannot modify unused packet filter table entry
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_PARMS_CMD_ERR_EID error event message will be sent
+
+          \par Criticality
+               None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="5" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="FilterParms_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestTypeCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Filename Type For Destination File Table Entry
+
+         \par Description
+              This command will modify the Filename Type selection for the
+              indicated entry in the Destination File Table.
+
+         \par Command Structure
+             #DS_SetDestTypeCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_NTYPE_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid filename type selection
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_NTYPE_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="6" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestType_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestStateCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Ena/Dis State For Destination File Table Entry
+
+         \par Description
+              This command will modify the Ena/Dis State selection for the
+              indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestStateCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_STATE_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid destination state selection
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_STATE_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="7" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestState_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestPathCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Pathname For Destination File Table Entry
+
+         \par Description
+              This command will modify the Pathname portion of the filename
+              for the indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestPathCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_PATH_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid pathname string (empty, no terminator, bad characters)
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_PATH_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="8" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestPath_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestBaseCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Basename For Destination File Table Entry
+
+         \par Description
+              This command will modify the Basename portion of the filename
+              for the indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestBaseCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_BASE_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid basename string (no terminator, bad characters)
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_BASE_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="9" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestBase_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestExtCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Extension For Destination File Table Entry
+
+         \par Description
+              This command will modify the Extension portion of the filename
+              for the indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestExtCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_EXT_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid extension string (empty, no terminator, bad characters)
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_EXT_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="10" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestExt_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestSizeCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Max File Size For Destination File Table Entry
+
+         \par Description
+              This command will modify the max file size selection for the
+              indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestSizeCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_SIZE_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid max file size selection
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_SIZE_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="11" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestSize_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestAgeCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Max File Age For Destination File Table Entry
+
+         \par Description
+              This command will modify the max file age selection for the
+              indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestAgeCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_AGE_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid max file age selection
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_AGE_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="12" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestAge_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SetDestCountCmd" baseType="CMD">
+        <LongDescription>
+         \fmcmd Set Sequence Count For Destination File Table Entry
+
+         \par Description
+              This command will modify the sequence count value for the
+              indicated entry in the Destination File Table.
+
+         \par Command Structure
+              #DS_SetDestCountCmd_t
+
+         \par Command Verification
+              Evidence of success may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdAcceptedCounter will increment
+              - The #DS_SEQ_CMD_EID debug event message will be sent
+
+         \par Error Conditions
+              This command can fail for the following reasons:
+              - Invalid command packet length
+              - Invalid destination file table index
+              - Invalid sequence count value
+              - Destination file table is not currently loaded
+
+              Evidence of failure may be found in the following telemetry:
+              - #DS_HkPacket_t.CmdRejectedCounter will increment
+              - The #DS_SEQ_CMD_ERR_EID error event message will be sent
+
+         \par Criticality
+              None
+        </LongDescription>
+        <ConstraintSet>
+          <ValueConstraint entry="Sec.FunctionCode" value="13" />
+        </ConstraintSet>
+        <EntryList>
+          <Entry type="DestCount_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+    <ContainerDataType name="CloseFileCmd" baseType="CMD">
+      <LongDescription>
+       \fmcmd Close Destination File
+
+       \par Description
+            This command will close the indicated Destination File.
+
+       \par Command Structure
+            #DS_CloseFileCmd_t
+
+       \par Command Verification
+            Evidence of success may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdAcceptedCounter will increment
+            - The #DS_CLOSE_CMD_EID debug event message will be sent
+
+       \par Error Conditions
+            This command can fail for the following reasons:
+            - Invalid command packet length
+            - Invalid destination file table index
+            - Destination file table is not currently loaded
+
+            Evidence of failure may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdRejectedCounter will increment
+            - The #DS_CLOSE_CMD_ERR_EID error event message will be sent
+
+       \par Criticality
+            None
+      </LongDescription>
+      <ConstraintSet>
+        <ValueConstraint entry="Sec.FunctionCode" value="14" />
+      </ConstraintSet>
+      <EntryList>
+        <Entry type="CloseFile_Payload" name="Payload" />
+      </EntryList>
+    </ContainerDataType>
+
+    <ContainerDataType name="GetFileInfoCmd" baseType="CMD">
+      <LongDescription>
+       \fmcmd Get File Info Packet
+
+       \par Description
+            This command will send the DS File Info Packet.
+
+       \par Command Structure
+            #DS_GetFileInfoCmd_t
+
+       \par Command Verification
+            Evidence of success may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdAcceptedCounter will increment
+            - The #DS_FileInfoPkt_t packet will be sent
+
+       \par Error Conditions
+            This command can fail for the following reasons:
+            - Invalid command packet length
+
+            Evidence of failure may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdRejectedCounter will increment
+            - The #DS_GET_FILE_INFO_CMD_ERR_EID error event message will be sent
+
+       \par Criticality
+            None
+      </LongDescription>
+      <ConstraintSet>
+        <ValueConstraint entry="Sec.FunctionCode" value="15" />
+      </ConstraintSet>
+      <EntryList>
+        <Entry type="CloseAllGetFileInfo_Payload" name="Payload" />
+      </EntryList>
+    </ContainerDataType>
+
+    <ContainerDataType name="AddMidCmd" baseType="CMD">
+      <LongDescription>
+       \fmcmd Add Message ID To Packet Filter Table
+
+       \par Description
+            This command will change the Message ID selection for an
+            unused Packet Filter Table entry to the indicated value.
+
+       \par Command Structure
+            #DS_AddMidCmd_t
+
+       \par Command Verification
+            Evidence of success may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdAcceptedCounter will increment
+            - The #DS_ADD_MID_CMD_EID debug event message will be sent
+
+       \par Error Conditions
+            This command can fail for the following reasons:
+            - Invalid command packet length
+            - Message ID is invalid (can be anything but zero)
+            - Packet filter table is not currently loaded
+            - Message ID already exists in packet filter table
+            - All packet filter table entries are already in use
+
+            Evidence of failure may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdRejectedCounter will increment
+            - The #DS_ADD_MID_CMD_ERR_EID error event message will be sent
+
+       \par Criticality
+            None
+      </LongDescription>
+      <ConstraintSet>
+        <ValueConstraint entry="Sec.FunctionCode" value="16" />
+      </ConstraintSet>
+      <EntryList>
+        <Entry type="AddRemoveMid_Payload" name="Payload" />
+      </EntryList>
+    </ContainerDataType>
+
+    <ContainerDataType name="CloseAllCmd" baseType="CMD">
+      <LongDescription>
+       \fmcmd Close All Destination Files
+
+       \par Description
+            This command will close all open Destination Files.
+            - NOTE: Using this command may incur a performance hit based upon
+                    the number and size of the files being closed.
+
+       \par Command Structure
+            #DS_CloseAllCmd_t
+
+       \par Command Verification
+            Evidence of success may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdAcceptedCounter will increment
+            - The #DS_CLOSE_ALL_CMD_EID debug event message will be sent
+
+       \par Error Conditions
+            This command can fail for the following reasons:
+            - Invalid command packet length
+            - Destination file table is not currently loaded
+
+            Evidence of failure may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdRejectedCounter will increment
+            - The #DS_CLOSE_ALL_CMD_ERR_EID error event message will be sent
+
+       \par Criticality
+            None
+      </LongDescription>
+      <ConstraintSet>
+        <ValueConstraint entry="Sec.FunctionCode" value="17" />
+      </ConstraintSet>
+      <EntryList>
+        <Entry type="CloseAllGetFileInfo_Payload" name="Payload" />
+      </EntryList>
+    </ContainerDataType>
+
+    <ContainerDataType name="RemoveMidCmd" baseType="CMD">
+      <LongDescription>
+       \fmcmd Remove Message ID from Packet Filter Table
+
+       \par Description
+            This command will change the Message ID selection for a
+            used Packet Filter Table entry to unused (0).
+
+       \par Command Structure
+            #DS_RemoveMidCmd_t
+
+       \par Command Verification
+            Evidence of success may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdAcceptedCounter will increment
+            - The #DS_REMOVE_MID_CMD_EID debug event message will be sent
+
+       \par Error Conditions
+            This command can fail for the following reasons:
+            - Invalid command packet length
+            - Message ID is invalid (can be anything but zero)
+            - Packet filter table is not currently loaded
+            - Message ID does not exist in packet filter table
+
+            Evidence of failure may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdRejectedCounter will increment
+            - The #DS_REMOVE_MID_CMD_ERR_EID error event message will be sent
+
+       \par Criticality
+            None
+      </LongDescription>
+      <ConstraintSet>
+        <ValueConstraint entry="Sec.FunctionCode" value="18" />
+      </ConstraintSet>
+      <EntryList>
+        <Entry type="AddRemoveMid_Payload" name="Payload" />
+      </EntryList>
+    </ContainerDataType>
+    </DataTypeSet>
+
+    <ComponentSet>
+      <Component name="Application">
+        <RequiredInterfaceSet>
+
+          <Interface name="FILE_TBL" shortDescription="File Table" type="CFE_TBL/Table">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TableDataType" type="DestFileTable" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="FILTER_TBL" shortDescription="Filter Table" type="CFE_TBL/Table">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TableDataType" type="FilterTable" />
+            </GenericTypeMapSet>
+          </Interface>
+
+          <Interface name="CMD" shortDescription="DS Ground Commands Message ID" type="CFE_SB/Telecommand">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="CMD" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="SEND_HK" shortDescription="DS Send Hk Data Cmd Message ID" type="CFE_SB/Telecommand">
+            <!-- This uses a bare spacepacket with no payload -->
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelecommandDataType" type="SendHkCmd" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="HK_TLM" shortDescription="DS Hk Telemetry Message ID" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="HkPacket" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="DIAG_TLM" shortDescription="DS File Info Telemetry Message ID" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="FileInfoPkt" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="COMP_TLM" shortDescription="DS Completed File Info Telemetry Message ID" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="FileCompletePkt" />
+            </GenericTypeMapSet>
+          </Interface>
+        </RequiredInterfaceSet>
+        <Implementation>
+          <VariableSet>
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="CmdTopicId" initialValue="${CFE_MISSION/DS_CMD_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/DS_SEND_HK_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/DS_HK_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="DiagTlmTopicId" initialValue="${CFE_MISSION/DS_DIAG_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="CompTlmTopicId" initialValue="${CFE_MISSION/DS_COMP_TLM_TOPICID}" />
+          </VariableSet>
+          <!-- Assign fixed numbers to the "TopicId" parameter of each interface -->
+          <ParameterMapSet>
+            <ParameterMap interface="CMD" parameter="TopicId" variableRef="CmdTopicId" />
+            <ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" />
+            <ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" />
+            <ParameterMap interface="DIAG_TLM" parameter="TopicId" variableRef="DiagTlmTopicId" />
+            <ParameterMap interface="COMP_TLM" parameter="TopicId" variableRef="CompTlmTopicId" />
+          </ParameterMapSet>
+        </Implementation>
+      </Component>
+    </ComponentSet>
+
+  </Package>
+</PackageFile>
