@@ -5,8 +5,13 @@ set(APP_SRC_FILES
   fsw/src/ds_cmds.c
   fsw/src/ds_app.c
   fsw/src/ds_file.c
-  fsw/src/ds_dispatch.c
 )
+
+if (CFE_EDS_ENABLED)
+  list(APPEND APP_SRC_FILES fsw/src/ds_eds_dispatch.c)
+else()
+  list(APPEND APP_SRC_FILES fsw/src/ds_dispatch.c)
+endif()
 
 # Create the app module
 add_cfe_app(ds ${APP_SRC_FILES})

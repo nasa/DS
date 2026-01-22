@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -21,8 +20,10 @@
  * @file
  *  The CFS Data Storage (DS) Application platform configuration header file
  */
-#ifndef DS_PLATFORM_CFG_H
-#define DS_PLATFORM_CFG_H
+#ifndef DS_INTERNAL_CFG_H
+#define DS_INTERNAL_CFG_H
+
+#include "ds_internal_cfg_values.h"
 
 /**
  * \defgroup cfsdsplatformcfg CFS Data Storage Platform Configuration
@@ -43,7 +44,8 @@
  *       The string length (including string terminator) cannot exceed
  *       #CFE_MISSION_TBL_MAX_NAME_LENGTH.  (limit is not verified)
  */
-#define DS_DESTINATION_TBL_NAME "FILE_TBL"
+#define DS_DESTINATION_TBL_NAME                  DS_INTERNAL_CFGVAL(DESTINATION_TBL_NAME)
+#define DEFAULT_DS_INTERNAL_DESTINATION_TBL_NAME "FILE_TBL"
 
 /**
  *  \brief Destination File Table -- default table filename
@@ -56,75 +58,8 @@
  *       The string length (including string terminator) cannot exceed
  *       #OS_MAX_PATH_LEN.  (limit is not verified)
  */
-#define DS_DEF_DEST_FILENAME "/cf/ds_file_tbl.tbl"
-
-/**
- *  \brief Destination File Table -- number of files
- *
- *  \par Description:
- *       This parameter defines the size of the DS Destination File
- *       Table by setting the number of file entries in the table.  The
- *       number should be large enough to provide an entry for all the
- *       destination files defined for the project.  Maintenance will
- *       be simplified if file index 'n' always describes the same
- *       file - even if that file is not in use at the present time.
- *
- *  \par Limits:
- *       The number must be greater than zero but there is no upper
- *       enforced limit for this parameter.
- */
-#define DS_DEST_FILE_CNT 16
-
-/**
- *  \brief Destination File Table -- pathname buffer size
- *
- *  \par Description:
- *       This parameter further defines the size of the Destination
- *       File Table by setting the size of the pathname buffer for
- *       each file entry.  Note that the buffer must contain both
- *       the string and the string terminator - so the max string
- *       length is one less than the buffer size.
- *
- *  \par Limits:
- *       The buffer size must be greater than zero and a multiple
- *       of four bytes for alignment.  The value cannot exceed the
- *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
- */
-#define DS_PATHNAME_BUFSIZE OS_MAX_PATH_LEN
-
-/**
- *  \brief Destination File Table -- basename buffer size
- *
- *  \par Description:
- *       This parameter further defines the size of the Destination
- *       File Table by setting the size of the basename buffer for
- *       each file entry.  Note that the buffer must contain both
- *       the string and the string terminator - so the max string
- *       length is one less than the buffer size.
- *
- *  \par Limits:
- *       The buffer size must be greater than zero and a multiple
- *       of four bytes for alignment.  The value cannot exceed the
- *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
- */
-#define DS_BASENAME_BUFSIZE OS_MAX_PATH_LEN
-
-/**
- *  \brief Destination File Table -- extension buffer size
- *
- *  \par Description:
- *       This parameter further defines the size of the Destination
- *       File Table by setting the size of the extension buffer for
- *       each file entry.  Note that the buffer must contain both
- *       the string and the string terminator - so the max string
- *       length is one less than the buffer size.
- *
- *  \par Limits:
- *       The buffer size must be greater than zero and a multiple
- *       of four bytes for alignment.  The value cannot exceed the
- *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
- */
-#define DS_EXTENSION_BUFSIZE 8
+#define DS_DEF_DEST_FILENAME                  DS_INTERNAL_CFGVAL(DEF_DEST_FILENAME)
+#define DEFAULT_DS_INTERNAL_DEF_DEST_FILENAME "/cf/ds_file_tbl.tbl"
 
 /**
  *  \brief Packet Filter Table -- logical table name
@@ -140,7 +75,8 @@
  *       The string length (including string terminator) cannot exceed
  *       #CFE_MISSION_TBL_MAX_NAME_LENGTH.  (limit is not verified)
  */
-#define DS_FILTER_TBL_NAME "FILTER_TBL"
+#define DS_FILTER_TBL_NAME                  DS_INTERNAL_CFGVAL(FILTER_TBL_NAME)
+#define DEFAULT_DS_INTERNAL_FILTER_TBL_NAME "FILTER_TBL"
 
 /**
  *  \brief Packet Filter Table -- default table filename
@@ -153,55 +89,8 @@
  *       The string length (including string terminator) cannot exceed
  *       #OS_MAX_PATH_LEN.  (limit is not verified)
  */
-#define DS_DEF_FILTER_FILENAME "/cf/ds_filter_tbl.tbl"
-
-/**
- *  \brief Packet Filter Table -- number of packets
- *
- *  \par Description:
- *       This parameter defines the size of the DS Packet Filter Table
- *       by setting the number of packet entries in the table.  The
- *       number should be large enough to provide an entry for each
- *       command and telemetry packet subject to data storage.
- *
- *  \par Limits:
- *       The number must be greater than zero but there is no upper
- *       enforced limit for this parameter.  However, setting the
- *       size equal to the number of packets that might be subject
- *       to data storage, rather than the total number of packets
- *       defined for this project, will reduce the table file size,
- *       possibly significantly.
- */
-#define DS_PACKETS_IN_FILTER_TABLE 256
-
-/**
- *  \brief Packet Filter Table -- filters per packet
- *
- *  \par Description:
- *       This parameter further defines the size of the DS Packet
- *       Filter Table by setting the number of filters per packet
- *       entry.  This is the maximum number of destination files
- *       to which a single packet can be written (at one time).
- *
- *  \par Limits:
- *       The number of filters per packet must be greater than zero
- *       and not greater than #DS_DEST_FILE_CNT.
- */
-#define DS_FILTERS_PER_PACKET 4
-
-/**
- *  \brief Common Table File -- descriptor text buffer size
- *
- *  \par Description:
- *       This parameter defines the size of the Descriptor Text
- *       fields in both the Destination File Table and the Packet
- *       Filter Table.  The buffer includes the string terminator.
- *
- *  \par Limits:
- *       The buffer size must be greater than zero and a multiple
- *       of four bytes for alignment.  There is no upper limit.
- */
-#define DS_DESCRIPTOR_BUFSIZE 32
+#define DS_DEF_FILTER_FILENAME                  DS_INTERNAL_CFGVAL(DEF_FILTER_FILENAME)
+#define DEFAULT_DS_INTERNAL_DEF_FILTER_FILENAME "/cf/ds_filter_tbl.tbl"
 
 /**
  *  \brief Filename Sequence Count -- number of digits
@@ -218,7 +107,8 @@
  *       the filename type to "count".  This value should match
  *       the definition for #DS_MAX_SEQUENCE_COUNT, below.
  */
-#define DS_SEQUENCE_DIGITS 8
+#define DS_SEQUENCE_DIGITS                  DS_INTERNAL_CFGVAL(SEQUENCE_DIGITS)
+#define DEFAULT_DS_INTERNAL_SEQUENCE_DIGITS 8
 
 /**
  *  \brief Filename Sequence Count -- max counter value
@@ -232,21 +122,8 @@
  *       more digits than the number of sequence count digits
  *       defined for #DS_SEQUENCE_DIGITS, above.
  */
-#define DS_MAX_SEQUENCE_COUNT 99999999
-
-/**
- *  \brief Data Storage File -- total filename size
- *
- *  \par Description:
- *       This parameter defines the maximum size of a filename after
- *       combining the pathname, basename, sequence and extension.
- *
- *  \par Limits:
- *       The buffer size must be greater than zero and a multiple
- *       of four bytes for alignment.  The buffer size (including
- *       string terminator) cannot exceed #OS_MAX_PATH_LEN.
- */
-#define DS_TOTAL_FNAME_BUFSIZE OS_MAX_PATH_LEN
+#define DS_MAX_SEQUENCE_COUNT                  DS_INTERNAL_CFGVAL(MAX_SEQUENCE_COUNT)
+#define DEFAULT_DS_INTERNAL_MAX_SEQUENCE_COUNT 99999999
 
 /**
  *  \brief Data Storage File -- cFE file header sub-type
@@ -260,7 +137,8 @@
  *       thus the value can be anything from zero to 4,294,967,295.
  *       (limit is not verified)
  */
-#define DS_FILE_HDR_SUBTYPE 0x2710
+#define DS_FILE_HDR_SUBTYPE                  DS_INTERNAL_CFGVAL(FILE_HDR_SUBTYPE)
+#define DEFAULT_DS_INTERNAL_FILE_HDR_SUBTYPE 0x2710
 
 /**
  *  \brief Data Storage File -- cFE file header description
@@ -273,7 +151,8 @@
  *       The string length (including string terminator) cannot exceed
  *       #CFE_FS_HDR_DESC_MAX_LEN.  (limit is not verified)
  */
-#define DS_FILE_HDR_DESCRIPTION "DS data storage file"
+#define DS_FILE_HDR_DESCRIPTION                  DS_INTERNAL_CFGVAL(FILE_HDR_DESCRIPTION)
+#define DEFAULT_DS_INTERNAL_FILE_HDR_DESCRIPTION "DS data storage file"
 
 /**
  *  \brief Data Storage File -- minimum size limit
@@ -289,7 +168,8 @@
  *       frequently, while a very large value will effectively
  *       prevent files from ever being closed due to size.
  */
-#define DS_FILE_MIN_SIZE_LIMIT 1024
+#define DS_FILE_MIN_SIZE_LIMIT                  DS_INTERNAL_CFGVAL(FILE_MIN_SIZE_LIMIT)
+#define DEFAULT_DS_INTERNAL_FILE_MIN_SIZE_LIMIT 1024
 
 /**
  *  \brief Data Storage File -- minimum age limit
@@ -305,7 +185,8 @@
  *       frequently, while a very large value will effectively
  *       prevent files from ever being closed due to age.
  */
-#define DS_FILE_MIN_AGE_LIMIT 60
+#define DS_FILE_MIN_AGE_LIMIT                  DS_INTERNAL_CFGVAL(FILE_MIN_AGE_LIMIT)
+#define DEFAULT_DS_INTERNAL_FILE_MIN_AGE_LIMIT 60
 
 /**
  *  \brief Application Pipe Name
@@ -321,7 +202,8 @@
  *       The string length (including string terminator) cannot
  *       exceed #OS_MAX_API_NAME.  (limit is not verified)
  */
-#define DS_APP_PIPE_NAME "DS_CMD_PIPE"
+#define DS_APP_PIPE_NAME                  DS_INTERNAL_CFGVAL(APP_PIPE_NAME)
+#define DEFAULT_DS_INTERNAL_APP_PIPE_NAME "DS_CMD_PIPE"
 
 /**
  *  \brief Application Pipe Depth
@@ -337,7 +219,8 @@
  *	 The value must be greater than zero and cannot exceed the
  *       definition of #OS_QUEUE_MAX_DEPTH
  */
-#define DS_APP_PIPE_DEPTH 45
+#define DS_APP_PIPE_DEPTH                  DS_INTERNAL_CFGVAL(APP_PIPE_DEPTH)
+#define DEFAULT_DS_INTERNAL_APP_PIPE_DEPTH 45
 
 /**
  *  \brief Make DS Tables Critical
@@ -349,7 +232,8 @@
  *  \par Limits
  *       This parameter must be set to zero or one.
  */
-#define DS_MAKE_TABLES_CRITICAL 0
+#define DS_MAKE_TABLES_CRITICAL                  DS_INTERNAL_CFGVAL(MAKE_TABLES_CRITICAL)
+#define DEFAULT_DS_INTERNAL_MAKE_TABLES_CRITICAL 0
 
 /**
  *  \brief Housekeeping Request Frequency
@@ -365,7 +249,8 @@
  *  \par Limits
  *       This parameter must be greater than zero.
  */
-#define DS_SECS_PER_HK_CYCLE 4
+#define DS_SECS_PER_HK_CYCLE                  DS_INTERNAL_CFGVAL(SECS_PER_HK_CYCLE)
+#define DEFAULT_DS_INTERNAL_SECS_PER_HK_CYCLE 4
 
 /**
  *  \brief Default DS Packet Processor State
@@ -379,7 +264,8 @@
  *  \par Limits
  *       This parameter must be set to zero or one.
  */
-#define DS_DEF_ENABLE_STATE 1
+#define DS_DEF_ENABLE_STATE                  DS_INTERNAL_CFGVAL(DEF_ENABLE_STATE)
+#define DEFAULT_DS_INTERNAL_DEF_ENABLE_STATE 1
 
 /**
  *  \brief Save DS Packet Processor State in Critical Data Store
@@ -396,7 +282,8 @@
  *  \par Limits
  *       This parameter must be set to zero or one.
  */
-#define DS_CDS_ENABLE_STATE 1
+#define DS_CDS_ENABLE_STATE                  DS_INTERNAL_CFGVAL(CDS_ENABLE_STATE)
+#define DEFAULT_DS_INTERNAL_CDS_ENABLE_STATE 1
 
 /** \brief Mission specific version number for DS application
  *
@@ -411,7 +298,8 @@
  *       Must be defined as a numeric value that is greater than
  *       or equal to zero.
  */
-#define DS_MISSION_REV 0
+#define DS_MISSION_REV                  DS_INTERNAL_CFGVAL(MISSION_REV)
+#define DEFAULT_DS_INTERNAL_MISSION_REV 0
 
 /**
  *  \brief File Header Type Selection
@@ -425,7 +313,8 @@
  *       0 = none -- set this value to have no file header
  *       1 = CFE -- set this value to use CFE file headers
  */
-#define DS_FILE_HEADER_TYPE 1
+#define DS_FILE_HEADER_TYPE                  DS_INTERNAL_CFGVAL(FILE_HEADER_TYPE)
+#define DEFAULT_DS_INTERNAL_FILE_HEADER_TYPE 1
 
 /**
  *  \brief Move Files to Downlink Directory After Close Selection
@@ -444,7 +333,8 @@
  *       true  = add move pathname field to Destination File Table
  *       false = do not add move pathname to Destination File Table
  */
-#define DS_MOVE_FILES true
+#define DS_MOVE_FILES                  DS_INTERNAL_CFGVAL(MOVE_FILES)
+#define DEFAULT_DS_INTERNAL_MOVE_FILES true
 
 /**
  *  \brief Application Per Packet Pipe Limit
@@ -460,7 +350,8 @@
  *       The value must be greater than zero and cannot exceed the
  *       definition of #DS_APP_PIPE_DEPTH.
  */
-#define DS_PER_PACKET_PIPE_LIMIT 45
+#define DS_PER_PACKET_PIPE_LIMIT                  DS_INTERNAL_CFGVAL(PER_PACKET_PIPE_LIMIT)
+#define DEFAULT_DS_INTERNAL_PER_PACKET_PIPE_LIMIT 45
 
 /**\}*/
 

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -32,10 +31,12 @@
 #include "ds_msg.h"
 #include "ds_msgdefs.h"
 #include "ds_msgids.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 #include "ds_version.h"
 #include "ds_file.h"
 #include "ds_test_utils.h"
+
+#include "stub_stdio.h"
 
 /* UT includes */
 #include "uttest.h"
@@ -55,7 +56,7 @@
 void DS_NoopCmd_Test_Nominal(void)
 {
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_NoopCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_NoopCmd(&UT_CmdBuf.NoopCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -71,7 +72,7 @@ void DS_NoopCmd_Test_Nominal(void)
 void DS_ResetCountersCmd_Test_Nominal(void)
 {
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_ResetCountersCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_ResetCountersCmd(&UT_CmdBuf.ResetCountersCmd));
 
     /* Verify results */
     UtAssert_ZERO(DS_AppData.CmdAcceptedCounter);
@@ -106,7 +107,7 @@ void DS_SetAppStateCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.AppStateCmd));
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.CmdRejectedCounter, 0);
@@ -118,7 +119,7 @@ void DS_SetAppStateCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_AppStateCmd_t), "DS_AppStateCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetAppStateCmd_t), "DS_AppStateCmd_t is 32-bit aligned");
 }
 
 void DS_SetAppStateCmd_Test_InvalidAppState(void)
@@ -128,7 +129,7 @@ void DS_SetAppStateCmd_Test_InvalidAppState(void)
     CmdPayload->EnableState = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.AppStateCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -154,7 +155,7 @@ void DS_SetFilterFileCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), forced_FilterTableIndex);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -170,7 +171,7 @@ void DS_SetFilterFileCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterFileCmd_t), "DS_FilterFileCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetFilterFileCmd_t), "DS_FilterFileCmd_t is 32-bit aligned");
 }
 
 void DS_SetFilterFileCmd_Test_InvalidMessageID(void)
@@ -180,7 +181,7 @@ void DS_SetFilterFileCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -198,7 +199,7 @@ void DS_SetFilterFileCmd_Test_InvalidFilterParametersIndex(void)
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -217,7 +218,7 @@ void DS_SetFilterFileCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex   = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -241,7 +242,7 @@ void DS_SetFilterFileCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -265,7 +266,7 @@ void DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -288,7 +289,7 @@ void DS_SetFilterTypeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -300,7 +301,7 @@ void DS_SetFilterTypeCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterTypeCmd_t), "DS_FilterTypeCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetFilterTypeCmd_t), "DS_FilterTypeCmd_t is 32-bit aligned");
 }
 
 void DS_SetFilterTypeCmd_Test_InvalidMessageID(void)
@@ -310,7 +311,7 @@ void DS_SetFilterTypeCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -328,7 +329,7 @@ void DS_SetFilterTypeCmd_Test_InvalidFilterParametersIndex(void)
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -347,7 +348,7 @@ void DS_SetFilterTypeCmd_Test_InvalidFilterType(void)
     CmdPayload->FilterType       = false;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -371,7 +372,7 @@ void DS_SetFilterTypeCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -393,7 +394,7 @@ void DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -416,7 +417,7 @@ void DS_SetFilterParmsCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -430,7 +431,7 @@ void DS_SetFilterParmsCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_FilterParmsCmd_t), "DS_FilterParmsCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetFilterParmsCmd_t), "DS_FilterParmsCmd_t is 32-bit aligned");
 }
 
 void DS_SetFilterParmsCmd_Test_InvalidMessageID(void)
@@ -440,7 +441,7 @@ void DS_SetFilterParmsCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -458,7 +459,7 @@ void DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex(void)
     CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -481,7 +482,7 @@ void DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm(void)
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -504,7 +505,7 @@ void DS_SetFilterParmsCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -527,7 +528,7 @@ void DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -548,7 +549,7 @@ void DS_SetDestTypeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -560,7 +561,7 @@ void DS_SetDestTypeCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestTypeCmd_t), "DS_DestTypeCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestTypeCmd_t), "DS_DestTypeCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestTypeCmd_Test_InvalidFileTableIndex(void)
@@ -570,7 +571,7 @@ void DS_SetDestTypeCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -590,7 +591,7 @@ void DS_SetDestTypeCmd_Test_InvalidFilenameType(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -613,7 +614,7 @@ void DS_SetDestTypeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -634,7 +635,7 @@ void DS_SetDestStateCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -648,7 +649,7 @@ void DS_SetDestStateCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestStateCmd_t), "DS_DestStateCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestStateCmd_t), "DS_DestStateCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestStateCmd_Test_InvalidFileTableIndex(void)
@@ -658,7 +659,7 @@ void DS_SetDestStateCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -678,7 +679,7 @@ void DS_SetDestStateCmd_Test_InvalidFileState(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -700,7 +701,7 @@ void DS_SetDestStateCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyState), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -720,7 +721,7 @@ void DS_SetDestPathCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.DestPathCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -735,7 +736,7 @@ void DS_SetDestPathCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestPathCmd_t), "DS_DestPathCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestPathCmd_t), "DS_DestPathCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestPathCmd_Test_InvalidFileTableIndex(void)
@@ -745,7 +746,7 @@ void DS_SetDestPathCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.DestPathCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -767,7 +768,7 @@ void DS_SetDestPathCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.DestPathCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -787,7 +788,7 @@ void DS_SetDestBaseCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.DestBaseCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -802,7 +803,7 @@ void DS_SetDestBaseCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestBaseCmd_t), "DS_DestBaseCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestBaseCmd_t), "DS_DestBaseCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestBaseCmd_Test_InvalidFileTableIndex(void)
@@ -812,7 +813,7 @@ void DS_SetDestBaseCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.DestBaseCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -834,7 +835,7 @@ void DS_SetDestBaseCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.DestBaseCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -854,7 +855,7 @@ void DS_SetDestExtCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.DestExtCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -870,7 +871,7 @@ void DS_SetDestExtCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestExtCmd_t), "DS_DestExtCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestExtCmd_t), "DS_DestExtCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestExtCmd_Test_InvalidFileTableIndex(void)
@@ -880,7 +881,7 @@ void DS_SetDestExtCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.DestExtCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -902,7 +903,7 @@ void DS_SetDestExtCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.DestExtCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -923,7 +924,7 @@ void DS_SetDestSizeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -935,7 +936,7 @@ void DS_SetDestSizeCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestSizeCmd_t), "DS_DestSizeCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestSizeCmd_t), "DS_DestSizeCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestSizeCmd_Test_InvalidFileTableIndex(void)
@@ -946,7 +947,7 @@ void DS_SetDestSizeCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->MaxFileSize    = 100000000;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -968,7 +969,7 @@ void DS_SetDestSizeCmd_Test_InvalidFileSizeLimit(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -991,7 +992,7 @@ void DS_SetDestSizeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifySize), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1012,7 +1013,7 @@ void DS_SetDestAgeCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyAge), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1024,7 +1025,7 @@ void DS_SetDestAgeCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestAgeCmd_t), "DS_DestAgeCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestAgeCmd_t), "DS_DestAgeCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestAgeCmd_Test_InvalidFileTableIndex(void)
@@ -1035,7 +1036,7 @@ void DS_SetDestAgeCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->MaxFileAge     = 1000;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1057,7 +1058,7 @@ void DS_SetDestAgeCmd_Test_InvalidFileAgeLimit(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1080,7 +1081,7 @@ void DS_SetDestAgeCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyAge), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1101,7 +1102,7 @@ void DS_SetDestCountCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyCount), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1114,7 +1115,7 @@ void DS_SetDestCountCmd_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_DestCountCmd_t), "DS_DestCountCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetDestCountCmd_t), "DS_DestCountCmd_t is 32-bit aligned");
 }
 
 void DS_SetDestCountCmd_Test_InvalidFileTableIndex(void)
@@ -1125,7 +1126,7 @@ void DS_SetDestCountCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->SequenceCount  = 1;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1147,7 +1148,7 @@ void DS_SetDestCountCmd_Test_InvalidFileSequenceCount(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1170,7 +1171,7 @@ void DS_SetDestCountCmd_Test_FileTableNotLoaded(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyCount), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1199,7 +1200,7 @@ void DS_CloseFileCmd_Test_Nominal(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.CloseFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1232,7 +1233,7 @@ void DS_CloseFileCmd_Test_NominalAlreadyClosed(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.CloseFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1257,7 +1258,7 @@ void DS_CloseFileCmd_Test_InvalidFileTableIndex(void)
     CmdPayload->FileTableIndex = 99;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.CloseFileCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1280,7 +1281,7 @@ void DS_CloseAllCmd_Test_Nominal(void)
     strncpy(DS_AppData.DestFileTblPtr->File[0].Movename, "", DS_PATHNAME_BUFSIZE);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.CloseAllCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1303,7 +1304,7 @@ void DS_CloseAllCmd_Test_CloseAll(void)
     }
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.CloseAllCmd));
 
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1333,7 +1334,7 @@ void DS_GetFileInfoCmd_Test_EnabledOpen(void)
     }
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.GetFileInfoCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1366,7 +1367,7 @@ void DS_GetFileInfoCmd_Test_DisabledClosed(void)
     DS_AppData.DestFileTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.GetFileInfoCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1400,7 +1401,7 @@ void DS_AddMIDCmd_Test_Nominal(void)
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, 0);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
@@ -1442,7 +1443,7 @@ void DS_AddMIDCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1462,7 +1463,7 @@ void DS_AddMIDCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1482,7 +1483,7 @@ void DS_AddMIDCmd_Test_MIDAlreadyInFilterTable(void)
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, 1);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1502,7 +1503,7 @@ void DS_AddMIDCmd_Test_FilterTableFull(void)
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AddMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1528,7 +1529,7 @@ void DS_RemoveMIDCmd_Test_Nominal(void)
     UT_SetDeferredRetcode(UT_KEY(DS_TableFindMsgID), 1, FilterTableIndex);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
     UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].MessageID),
@@ -1574,7 +1575,7 @@ void DS_RemoveMIDCmd_Test_InvalidMessageID(void)
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1594,7 +1595,7 @@ void DS_RemoveMIDCmd_Test_FilterTableNotLoaded(void)
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1613,7 +1614,7 @@ void DS_RemoveMIDCmd_Test_MessageIDNotAdded(void)
     CmdPayload->MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_RemoveMIDCmd(&UT_CmdBuf.Buf));
+    UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
     UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
@@ -1621,6 +1622,108 @@ void DS_RemoveMIDCmd_Test_MessageIDNotAdded(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+}
+
+void DS_AppSendHkCmd_Test(void)
+{
+    uint32 i;
+
+    /* Most values in the HK packet can't be checked because they're stored in a local variable. */
+
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileGrowth = 99;
+    }
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_SendHkCmd(&UT_CmdBuf.SendHkCmd));
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
+
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
+
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
+
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
+
+    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
+    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void DS_AppSendHkCmd_Test_SnprintfFail(void)
+{
+    uint32 i;
+
+    /* Most values in the HK packet can't be checked because they're stored in a local variable. */
+
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileGrowth = 99;
+    }
+
+    UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 1, -1);
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_SendHkCmd(&UT_CmdBuf.SendHkCmd));
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
+
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
+
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
+
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
+
+    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
+    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_APPHK_FILTER_TBL_PRINT_ERR_EID);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void DS_AppSendHkCmd_Test_TblFail(void)
+{
+    uint32 i;
+
+    /* Most values in the HK packet can't be checked because they're stored in a local variable. */
+
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileGrowth = 99;
+    }
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetInfo), -1);
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_SendHkCmd(&UT_CmdBuf.SendHkCmd));
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
+
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
+
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
+    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
+
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
+
+    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
+    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }
 
 void UtTest_Setup(void)
@@ -1757,4 +1860,8 @@ void UtTest_Setup(void)
                "DS_RemoveMIDCmd_Test_FilterTableNotLoaded");
     UtTest_Add(DS_RemoveMIDCmd_Test_MessageIDNotAdded, DS_Test_Setup, DS_Test_TearDown,
                "DS_RemoveMIDCmd_Test_MessageIDNotAdded");
+
+    UtTest_Add(DS_AppSendHkCmd_Test, DS_Test_Setup, DS_Test_TearDown, "DS_AppSendHkCmd_Test");
+    UtTest_Add(DS_AppSendHkCmd_Test_SnprintfFail, DS_Test_Setup, DS_Test_TearDown, "DS_AppSendHkCmd_Test_SnprintfFail");
+    UtTest_Add(DS_AppSendHkCmd_Test_TblFail, DS_Test_Setup, DS_Test_TearDown, "DS_AppSendHkCmd_Test_TblFail");
 }

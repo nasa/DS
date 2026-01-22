@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -298,7 +297,7 @@ void DS_FileTestAge(uint32 ElapsedSeconds);
  *
  *  \param[in] FileStatus Current state of destination file
  *
- *  \sa #DS_FileCompletePktBuf_t
+ *  \sa #DS_FileCompletePkt_t
  */
 void DS_FileTransmit(DS_AppFileStatus_t *FileStatus);
 

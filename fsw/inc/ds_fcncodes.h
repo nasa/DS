@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -19,13 +18,16 @@
 
 /**
  * @file
- *   The CFS Data Storage (DS) command codes header file
+ *  The CFS Data Storage (DS) Application command and telemetry
+ *   messages.
  */
-#ifndef DS_MSGDEFS_H
-#define DS_MSGDEFS_H
+#ifndef DS_FCNCODES_H
+#define DS_FCNCODES_H
+
+#include "ds_fcncode_values.h"
 
 /**
- * \defgroup cfsdscmdcodes CFS Data Storage Command Codes
+ * \defgroup cfsdscmdcodes CFS Checksum Command Codes
  * \{
  */
 
@@ -56,7 +58,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_NOOP_CC 0
+#define DS_NOOP_CC DS_CCVAL(NOOP)
 
 /**
  * \brief Reset Housekeeping Telemetry Counters Command
@@ -83,7 +85,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_RESET_COUNTERS_CC 1
+#define DS_RESET_COUNTERS_CC DS_CCVAL(RESET_COUNTERS)
 
 /**
  * \brief Set Enable/Disable State For DS Application
@@ -93,7 +95,7 @@
  *       DS application.  No packets are stored while DS is disabled.
  *
  *  \par Command Structure
- *       #DS_AppStateCmd_t
+ *       #DS_SetAppStateCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -112,7 +114,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_APP_STATE_CC 2
+#define DS_SET_APP_STATE_CC DS_CCVAL(SET_APP_STATE)
 
 /**
  * \brief Set Destination File For Packet Filter Table Entry
@@ -122,7 +124,7 @@
  *       indicated entry in the Packet Filter Table.
  *
  *  \par Command Structure
- *       #DS_FilterFileCmd_t
+ *       #DS_SetFilterFileCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -145,7 +147,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_FILTER_FILE_CC 3
+#define DS_SET_FILTER_FILE_CC DS_CCVAL(SET_FILTER_FILE)
 
 /**
  * \brief Set Filter Type For Packet Filter Table Entry
@@ -155,7 +157,7 @@
  *       indicated entry in the Packet Filter Table.
  *
  *  \par Command Structure
- *       #DS_FilterTypeCmd_t
+ *       #DS_SetFilterTypeCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -178,7 +180,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_FILTER_TYPE_CC 4
+#define DS_SET_FILTER_TYPE_CC DS_CCVAL(SET_FILTER_TYPE)
 
 /**
  * \brief Set Algorithm Parameters For Packet Filter Table Entry
@@ -188,7 +190,7 @@
  *       indicated entry in the Packet Filter Table.
  *
  *  \par Command Structure
- *       #DS_FilterParmsCmd_t
+ *       #DS_SetFilterParmsCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -211,7 +213,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_FILTER_PARMS_CC 5
+#define DS_SET_FILTER_PARMS_CC DS_CCVAL(SET_FILTER_PARMS)
 
 /**
  * \brief Set Filename Type For Destination File Table Entry
@@ -221,7 +223,7 @@
  *       indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestTypeCmd_t
+ *       #DS_SetDestTypeCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -242,7 +244,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_TYPE_CC 6
+#define DS_SET_DEST_TYPE_CC DS_CCVAL(SET_DEST_TYPE)
 
 /**
  * \brief Set Ena/Dis State For Destination File Table Entry
@@ -252,7 +254,7 @@
  *       indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestStateCmd_t
+ *       #DS_SetDestStateCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -273,7 +275,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_STATE_CC 7
+#define DS_SET_DEST_STATE_CC DS_CCVAL(SET_DEST_STATE)
 
 /**
  * \brief Set Pathname For Destination File Table Entry
@@ -283,7 +285,7 @@
  *       for the indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestPathCmd_t
+ *       #DS_SetDestPathCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -304,7 +306,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_PATH_CC 8
+#define DS_SET_DEST_PATH_CC DS_CCVAL(SET_DEST_PATH)
 
 /**
  * \brief Set Basename For Destination File Table Entry
@@ -314,7 +316,7 @@
  *       for the indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestBaseCmd_t
+ *       #DS_SetDestBaseCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -335,7 +337,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_BASE_CC 9
+#define DS_SET_DEST_BASE_CC DS_CCVAL(SET_DEST_BASE)
 
 /**
  * \brief Set Extension For Destination File Table Entry
@@ -345,7 +347,7 @@
  *       for the indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestExtCmd_t
+ *       #DS_SetDestExtCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -366,7 +368,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_EXT_CC 10
+#define DS_SET_DEST_EXT_CC DS_CCVAL(SET_DEST_EXT)
 
 /**
  * \brief Set Max File Size For Destination File Table Entry
@@ -376,7 +378,7 @@
  *       indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestSizeCmd_t
+ *       #DS_SetDestSizeCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -397,7 +399,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_SIZE_CC 11
+#define DS_SET_DEST_SIZE_CC DS_CCVAL(SET_DEST_SIZE)
 
 /**
  * \brief Set Max File Age For Destination File Table Entry
@@ -407,7 +409,7 @@
  *       indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestAgeCmd_t
+ *       #DS_SetDestAgeCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -428,7 +430,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_AGE_CC 12
+#define DS_SET_DEST_AGE_CC DS_CCVAL(SET_DEST_AGE)
 
 /**
  * \brief Set Sequence Count For Destination File Table Entry
@@ -438,7 +440,7 @@
  *       indicated entry in the Destination File Table.
  *
  *  \par Command Structure
- *       #DS_DestCountCmd_t
+ *       #DS_SetDestCountCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
@@ -459,7 +461,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_SET_DEST_COUNT_CC 13
+#define DS_SET_DEST_COUNT_CC DS_CCVAL(SET_DEST_COUNT)
 
 /**
  * \brief Close Destination File
@@ -488,7 +490,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_CLOSE_FILE_CC 14
+#define DS_CLOSE_FILE_CC DS_CCVAL(CLOSE_FILE)
 
 /**
  * \brief Get File Info Packet
@@ -515,7 +517,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_GET_FILE_INFO_CC 15
+#define DS_GET_FILE_INFO_CC DS_CCVAL(GET_FILE_INFO)
 
 /**
  * \brief Add Message ID To Packet Filter Table
@@ -547,7 +549,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_ADD_MID_CC 16
+#define DS_ADD_MID_CC DS_CCVAL(ADD_MID)
 
 /**
  * \brief Close All Destination Files
@@ -577,7 +579,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_CLOSE_ALL_CC 17
+#define DS_CLOSE_ALL_CC DS_CCVAL(CLOSE_ALL)
 
 /**
  * \brief Remove Message ID from Packet Filter Table
@@ -608,7 +610,7 @@
  *  \par Criticality
  *       None
  */
-#define DS_REMOVE_MID_CC 18
+#define DS_REMOVE_MID_CC DS_CCVAL(REMOVE_MID)
 
 /**\}*/
 

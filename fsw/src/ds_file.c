@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -35,7 +34,7 @@
 #include "ds_app.h"
 #include "ds_file.h"
 #include "ds_table.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 
 #include <stdio.h>
 
@@ -560,7 +559,7 @@ void DS_FileCreateName(uint32 FileIndex)
     char Sequence[DS_TOTAL_FNAME_BUFSIZE];
 
     /* Copy in path */
-    CFE_SB_MessageStringGet(Workname, DestFile->Pathname, NULL, sizeof(Workname), sizeof(DestFile->Pathname));
+    CFE_SB_MessageStringGet(Workname, DestFile->Pathname, NULL, sizeof(Workname) / 2, sizeof(DestFile->Pathname));
     TotalLength = strlen(Workname);
 
     if (TotalLength > 0)
@@ -950,22 +949,22 @@ void DS_FileTestAge(uint32 ElapsedSeconds)
 
 void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
 {
-    DS_FileCompletePktBuf_t *PktBuf;
-    DS_FileInfo_t *          FileInfo;
+    CFE_SB_Buffer_t *PktBuf;
+    DS_FileInfo_t *  FileInfo;
 
     /*
     ** Get a Message block of memory and initialize it
     */
-    PktBuf = (DS_FileCompletePktBuf_t *)CFE_SB_AllocateMessageBuffer(sizeof(*PktBuf));
+    PktBuf = CFE_SB_AllocateMessageBuffer(sizeof(DS_FileCompletePkt_t));
 
     /*
     ** Process destination file info data...
     */
     if (PktBuf != NULL)
     {
-        CFE_MSG_Init(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(*PktBuf));
+        CFE_MSG_Init(&PktBuf->Msg, CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(DS_FileCompletePkt_t));
 
-        FileInfo = &PktBuf->Pkt.Payload;
+        FileInfo = &((DS_FileCompletePkt_t *)PktBuf)->Payload;
 
         /*
         ** Set file age and size...
@@ -994,9 +993,10 @@ void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
         snprintf(FileInfo->FileName, sizeof(FileInfo->FileName), "%s", FileStatus->FileName);
 
         /*
-        ** Timestamp and send file info telemetry...
+        ** send file info telemetry...
+        ** NOTE: Timestamping is automatically handled by SB/Msg modules
+        ** when "IsOrigination" is set to true.
         */
-        CFE_SB_TimeStampMsg(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader));
-        CFE_SB_TransmitBuffer(&PktBuf->SBBuf, true);
+        CFE_SB_TransmitBuffer(PktBuf, true);
     }
 }

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -40,12 +39,12 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_AppProcessMsg()
+ * Generated stub function for DS_AppPipe()
  * ----------------------------------------------------
  */
-void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
+void DS_AppPipe(const CFE_SB_Buffer_t *BufPtr)
 {
-    UT_GenStub_AddParam(DS_AppProcessMsg, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(DS_AppPipe, const CFE_SB_Buffer_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_AppProcessMsg, Basic, NULL);
+    UT_GenStub_Execute(DS_AppPipe, Basic, NULL);
 }

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -31,7 +30,7 @@
 #include "ds_msg.h"
 #include "ds_msgdefs.h"
 #include "ds_msgids.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 #include "ds_version.h"
 #include "ds_test_utils.h"
 #include "ds_cmds.h"
@@ -247,108 +246,6 @@ void DS_AppInitialize_Test_SBSubscribeDSError(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_AppSendHkCmd_Test(void)
-{
-    uint32 i;
-
-    /* Most values in the HK packet can't be checked because they're stored in a local variable. */
-
-    for (i = 0; i < DS_DEST_FILE_CNT; i++)
-    {
-        DS_AppData.FileStatus[i].FileGrowth = 99;
-    }
-
-    /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AppSendHkCmd());
-
-    /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
-
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
-
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
-
-    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
-
-    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
-
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-}
-
-void DS_AppSendHkCmd_Test_SnprintfFail(void)
-{
-    uint32 i;
-
-    /* Most values in the HK packet can't be checked because they're stored in a local variable. */
-
-    for (i = 0; i < DS_DEST_FILE_CNT; i++)
-    {
-        DS_AppData.FileStatus[i].FileGrowth = 99;
-    }
-
-    UT_SetDeferredRetcode(UT_KEY(stub_snprintf), 1, -1);
-
-    /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AppSendHkCmd());
-
-    /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
-
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
-
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
-
-    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
-
-    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
-
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_APPHK_FILTER_TBL_PRINT_ERR_EID);
-
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-}
-
-void DS_AppSendHkCmd_Test_TblFail(void)
-{
-    uint32 i;
-
-    /* Most values in the HK packet can't be checked because they're stored in a local variable. */
-
-    for (i = 0; i < DS_DEST_FILE_CNT; i++)
-    {
-        DS_AppData.FileStatus[i].FileGrowth = 99;
-    }
-
-    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetInfo), -1);
-
-    /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_AppSendHkCmd());
-
-    /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileGrowth, 0);
-
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileGrowth, 0);
-
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileRate, 99 / DS_SECS_PER_HK_CYCLE);
-    UtAssert_UINT32_EQ(DS_AppData.FileStatus[DS_DEST_FILE_CNT - 1].FileGrowth, 0);
-
-    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
-
-    /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_BOOL_TRUE(TLM_STRUCT_DATA_IS_32_ALIGNED(DS_HkPacket_t));
-
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-}
-
 void DS_AppStorePacket_Test_Nominal(void)
 {
     CFE_SB_MsgId_t    MessageID      = DS_UT_MID_1;
@@ -453,10 +350,6 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_AppInitialize_Test_SBCreatePipeError);
     UT_DS_TEST_ADD(DS_AppInitialize_Test_SBSubscribeHKError);
     UT_DS_TEST_ADD(DS_AppInitialize_Test_SBSubscribeDSError);
-
-    UT_DS_TEST_ADD(DS_AppSendHkCmd_Test);
-    UT_DS_TEST_ADD(DS_AppSendHkCmd_Test_SnprintfFail);
-    UT_DS_TEST_ADD(DS_AppSendHkCmd_Test_TblFail);
 
     UT_DS_TEST_ADD(DS_AppStorePacket_Test_Nominal);
     UT_DS_TEST_ADD(DS_AppStorePacket_Test_DSDisabled);

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -32,7 +31,7 @@
 #include "ds_msg.h"
 #include "ds_msgdefs.h"
 #include "ds_msgids.h"
-#include "ds_events.h"
+#include "ds_eventids.h"
 #include "ds_version.h"
 #include "ds_test_utils.h"
 #include "ds_table.h"
@@ -732,18 +731,20 @@ void DS_FileCreateName_Test_PathBaseSeqTooLarge(void)
 
 void DS_FileCreateName_Test_PathBaseSeqExtTooLarge(void)
 {
-    int32 FileIndex   = 0;
-    int32 PathnameLen = (DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1) / 2;
-    int32 BasenameLen = DS_TOTAL_FNAME_BUFSIZE - DS_SEQUENCE_DIGITS - 1 - PathnameLen;
+    int32               FileIndex = 0;
+    DS_DestFileEntry_t *DestPtr;
 
-    DS_AppData.DestFileTblPtr->File[FileIndex].FileNameType = DS_BY_COUNT;
-    DS_AppData.FileStatus[FileIndex].FileCount              = 1;
+    DestPtr               = &DS_AppData.DestFileTblPtr->File[FileIndex];
+
+    memset(DestPtr, 0, sizeof (*DestPtr));
+    DestPtr->FileNameType = DS_BY_COUNT;
 
     /* Set to fail the condition "if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)" */
-    memset(DS_AppData.DestFileTblPtr->File[FileIndex].Pathname, 'p', PathnameLen);
-    memset(DS_AppData.DestFileTblPtr->File[FileIndex].Basename, 'b', BasenameLen);
-    strncpy(DS_AppData.DestFileTblPtr->File[FileIndex].Extension, "ext",
-            sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Extension));
+    memset(DestPtr->Pathname, 'p', sizeof(DestPtr->Pathname) - 1);
+    memset(DestPtr->Basename, 'b', sizeof(DestPtr->Basename) - 1);
+    strncpy(DestPtr->Extension, "ext", sizeof(DestPtr->Extension));
+
+    DS_AppData.FileStatus[FileIndex].FileCount = 1;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_FileCreateName(FileIndex));
@@ -1238,8 +1239,8 @@ void DS_IsPacketFiltered_Test_TimeFilter3(void)
 
 void DS_FileTransmit_Test_Nominal(void)
 {
-    DS_FileCompletePktBuf_t  PktBuf;
-    DS_FileCompletePktBuf_t *PktBufPtr = &PktBuf;
+    DS_FileCompletePkt_t  PktBuf;
+    DS_FileCompletePkt_t *PktBufPtr = &PktBuf;
 
     /* setup for a call to CFE_SB_AllocateMessageBuffer() */
     memset(PktBufPtr, 0, sizeof(*PktBufPtr));
@@ -1251,7 +1252,6 @@ void DS_FileTransmit_Test_Nominal(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_SB_AllocateMessageBuffer, 1);
     UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
-    UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 1);
     UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 1);
 }
 
@@ -1263,7 +1263,6 @@ void DS_FileTransmit_Test_NoBuf(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_SB_AllocateMessageBuffer, 1);
     UtAssert_STUB_COUNT(CFE_MSG_Init, 0);
-    UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 0);
     UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 0);
 }
 

@@ -1,8 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
- * (DS) application version 2.6.1”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2021 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -49,17 +48,6 @@ void DS_AppMain(void)
 {
 
     UT_GenStub_Execute(DS_AppMain, Basic, NULL);
-}
-
-/*
- * ----------------------------------------------------
- * Generated stub function for DS_AppSendHkCmd()
- * ----------------------------------------------------
- */
-void DS_AppSendHkCmd(void)
-{
-
-    UT_GenStub_Execute(DS_AppSendHkCmd, Basic, NULL);
 }
 
 /*
