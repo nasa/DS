@@ -142,11 +142,11 @@ void DS_FileUpdateHeader(int32 FileIndex)
  * Generated stub function for DS_FileWriteData()
  * ----------------------------------------------------
  */
-void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
+void DS_FileWriteData(int32 FileIndex, const void *FileData, size_t DataLength)
 {
     UT_GenStub_AddParam(DS_FileWriteData, int32, FileIndex);
     UT_GenStub_AddParam(DS_FileWriteData, const void *, FileData);
-    UT_GenStub_AddParam(DS_FileWriteData, uint32, DataLength);
+    UT_GenStub_AddParam(DS_FileWriteData, size_t, DataLength);
 
     UT_GenStub_Execute(DS_FileWriteData, Basic, NULL);
 }
@@ -156,10 +156,10 @@ void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
  * Generated stub function for DS_FileWriteError()
  * ----------------------------------------------------
  */
-void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
+void DS_FileWriteError(uint32 FileIndex, size_t DataLength, int32 WriteResult)
 {
     UT_GenStub_AddParam(DS_FileWriteError, uint32, FileIndex);
-    UT_GenStub_AddParam(DS_FileWriteError, uint32, DataLength);
+    UT_GenStub_AddParam(DS_FileWriteError, size_t, DataLength);
     UT_GenStub_AddParam(DS_FileWriteError, int32, WriteResult);
 
     UT_GenStub_Execute(DS_FileWriteError, Basic, NULL);

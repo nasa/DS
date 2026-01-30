@@ -72,12 +72,12 @@ void DS_TableCreateHash(void)
  * Generated stub function for DS_TableEntryUnused()
  * ----------------------------------------------------
  */
-bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
+bool DS_TableEntryUnused(const void *TableEntry, size_t BufferSize)
 {
     UT_GenStub_SetupReturnBuffer(DS_TableEntryUnused, bool);
 
     UT_GenStub_AddParam(DS_TableEntryUnused, const void *, TableEntry);
-    UT_GenStub_AddParam(DS_TableEntryUnused, int32, BufferSize);
+    UT_GenStub_AddParam(DS_TableEntryUnused, size_t, BufferSize);
 
     UT_GenStub_Execute(DS_TableEntryUnused, Basic, NULL);
 
@@ -324,11 +324,11 @@ bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorith
  * Generated stub function for DS_TableVerifySize()
  * ----------------------------------------------------
  */
-bool DS_TableVerifySize(uint32 MaxFileSize)
+bool DS_TableVerifySize(size_t MaxFileSize)
 {
     UT_GenStub_SetupReturnBuffer(DS_TableVerifySize, bool);
 
-    UT_GenStub_AddParam(DS_TableVerifySize, uint32, MaxFileSize);
+    UT_GenStub_AddParam(DS_TableVerifySize, size_t, MaxFileSize);
 
     UT_GenStub_Execute(DS_TableVerifySize, Basic, NULL);
 

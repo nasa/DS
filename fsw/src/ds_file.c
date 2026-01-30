@@ -339,7 +339,7 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
+void DS_FileWriteData(int32 FileIndex, const void *FileData, size_t DataLength)
 {
     DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
     int32               Result;
@@ -449,7 +449,7 @@ void DS_FileWriteHeader(int32 FileIndex)
 /* File write error handler                                        */
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
+void DS_FileWriteError(uint32 FileIndex, size_t DataLength, int32 WriteResult)
 {
     DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
 
@@ -551,9 +551,9 @@ void DS_FileCreateDest(uint32 FileIndex)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileCreateName(uint32 FileIndex)
 {
-    DS_DestFileEntry_t *DestFile    = &DS_AppData.DestFileTblPtr->File[FileIndex];
-    DS_AppFileStatus_t *FileStatus  = &DS_AppData.FileStatus[FileIndex];
-    int32               TotalLength = 0;
+    DS_DestFileEntry_t *DestFile   = &DS_AppData.DestFileTblPtr->File[FileIndex];
+    DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+    size_t              TotalLength;
 
     char Workname[2 * DS_TOTAL_FNAME_BUFSIZE];
     char Sequence[DS_TOTAL_FNAME_BUFSIZE];
@@ -801,7 +801,7 @@ void DS_FileCloseDest(int32 FileIndex)
 {
     DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
     int32               OS_result;
-    int32               PathLength;
+    size_t              PathLength;
     char *              FileName;
     char                PathName[DS_TOTAL_FNAME_BUFSIZE];
 

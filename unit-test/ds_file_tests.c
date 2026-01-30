@@ -331,7 +331,7 @@ void DS_FileWriteData_Test_Nominal(void)
 void DS_FileWriteData_Test_Error(void)
 {
     int32  FileIndex  = 0;
-    uint32 DataLength = 10;
+    size_t DataLength = 10;
 
     size_t            forced_Size    = sizeof(DS_NoopCmd_t);
     CFE_SB_MsgId_t    forced_MsgID   = CFE_SB_ValueToMsgId(DS_CMD_MID);
@@ -422,7 +422,7 @@ void DS_FileWriteHeader_Test_SecondaryHeaderError(void)
 void DS_FileWriteError_Test(void)
 {
     int32  FileIndex   = 0;
-    uint32 DataLength  = 10;
+    size_t DataLength  = 10;
     int32  WriteResult = -1;
 
     /* Set up the handle */

@@ -121,7 +121,7 @@ void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr);
  *
  *  \sa #DS_AppFileStatus_t, #DS_DestFileEntry_t
  */
-void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength);
+void DS_FileWriteData(int32 FileIndex, const void *FileData, size_t DataLength);
 
 /**
  *  \brief Write data storage file header
@@ -162,7 +162,7 @@ void DS_FileWriteHeader(int32 FileIndex);
  *  \param[in] DataLength  Length of data being written to file
  *  \param[in] WriteResult Result of file write
  */
-void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult);
+void DS_FileWriteError(uint32 FileIndex, size_t DataLength, int32 WriteResult);
 
 /**
  *  \brief Create a new data storage destination file
