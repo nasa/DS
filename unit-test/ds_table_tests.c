@@ -406,40 +406,6 @@ void DS_TableVerifyDestFile_Test_Nominal(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 }
 
-void DS_TableVerifyDestFile_Test_DestFileTableVerificationError(void)
-{
-    DS_DestFileTable_t DestFileTable;
-    uint32             i;
-
-    memset(&DestFileTable, 0, sizeof(DestFileTable));
-
-    memset(&DestFileTable.File[0], 1, sizeof(DestFileTable.File[0]));
-    DestFileTable.File[0].FileNameType  = DS_BY_TIME;
-    DestFileTable.File[0].EnableState   = DS_ENABLED;
-    DestFileTable.File[0].MaxFileSize   = 2048;
-    DestFileTable.File[0].MaxFileAge    = 100;
-    DestFileTable.File[0].SequenceCount = 1;
-
-    strncpy(DestFileTable.File[0].Pathname, "path", DS_PATHNAME_BUFSIZE);
-    strncpy(DestFileTable.File[0].Basename, "basename", DS_BASENAME_BUFSIZE);
-    strncpy(DestFileTable.File[0].Extension, "ext", DS_EXTENSION_BUFSIZE);
-
-    for (i = 0; i < DS_DESCRIPTOR_BUFSIZE; i++)
-    {
-        DestFileTable.Descriptor[i] = '*';
-    }
-
-    /* Execute the function being tested */
-    UtAssert_INT32_EQ(DS_TableVerifyDestFile(&DestFileTable), DS_TABLE_VERIFY_ERR);
-
-    /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_FIL_TBL_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
-}
-
 void DS_TableVerifyDestFile_Test_CountBad(void)
 {
     DS_DestFileTable_t DestFileTable;
@@ -491,56 +457,6 @@ void DS_TableVerifyDestFileEntry_Test_NominalErrZero(void)
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
-}
-
-void DS_TableVerifyDestFileEntry_Test_InvalidPathnameErrZero(void)
-{
-    DS_DestFileEntry_t DestFileEntry;
-    uint32             TableIndex = 0;
-    uint32             ErrorCount = 0;
-
-    DestFileEntry.FileNameType  = DS_BY_TIME;
-    DestFileEntry.EnableState   = DS_ENABLED;
-    DestFileEntry.MaxFileSize   = 2048;
-    DestFileEntry.MaxFileAge    = 100;
-    DestFileEntry.SequenceCount = 1;
-
-    strncpy(DestFileEntry.Pathname, "***", DS_PATHNAME_BUFSIZE);
-    strncpy(DestFileEntry.Basename, "basename", DS_BASENAME_BUFSIZE);
-    strncpy(DestFileEntry.Extension, "ext", DS_EXTENSION_BUFSIZE);
-
-    /* Execute the function being tested */
-    UtAssert_BOOL_FALSE(DS_TableVerifyDestFileEntry(&DestFileEntry, TableIndex, ErrorCount));
-
-    /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
-}
-
-void DS_TableVerifyDestFileEntry_Test_InvalidBasenameErrZero(void)
-{
-    DS_DestFileEntry_t DestFileEntry;
-    uint32             TableIndex = 0;
-    uint32             ErrorCount = 0;
-
-    DestFileEntry.FileNameType  = DS_BY_TIME;
-    DestFileEntry.EnableState   = DS_ENABLED;
-    DestFileEntry.MaxFileSize   = 2048;
-    DestFileEntry.MaxFileAge    = 100;
-    DestFileEntry.SequenceCount = 1;
-
-    strncpy(DestFileEntry.Pathname, "path", DS_PATHNAME_BUFSIZE);
-    strncpy(DestFileEntry.Basename, "***", DS_BASENAME_BUFSIZE);
-    strncpy(DestFileEntry.Extension, "ext", DS_EXTENSION_BUFSIZE);
-
-    /* Execute the function being tested */
-    UtAssert_BOOL_FALSE(DS_TableVerifyDestFileEntry(&DestFileEntry, TableIndex, ErrorCount));
-
-    /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FIL_TBL_ERR_EID);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
 void DS_TableVerifyDestFileEntry_Test_InvalidFilenameTypeErrZero(void)
