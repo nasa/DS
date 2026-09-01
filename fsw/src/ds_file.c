@@ -582,7 +582,10 @@ void DS_FileCreateName(uint32 FileIndex)
         if (Workname[TotalLength - 1] != DS_PATH_SEPARATOR)
         {
             /* There's always space since Workname is twice the size of Pathname */
-            Workname[TotalLength++] = DS_PATH_SEPARATOR;
+            Workname[TotalLength] = DS_PATH_SEPARATOR;
+
+            /* Increment TotalLength */
+            TotalLength++;
         }
 
         /* Add base name */
