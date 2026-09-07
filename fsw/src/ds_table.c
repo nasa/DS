@@ -608,6 +608,8 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
     DS_FilterTable_t *FilterTable = (DS_FilterTable_t *)TableData;
     CFE_Status_t      Result      = CFE_SUCCESS;
     int32             i           = 0;
+    int32             j           = 0;
+    int32             DuplicateIndex;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
@@ -616,7 +618,7 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
     /*
     ** Perform the following validation:
     **
-    **   MessageID = unlimited, zero means unused
+    **   MessageID = active message IDs must be unique, zero means unused
     */
 
     /*
@@ -628,14 +630,44 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
         {
             CountUnused++;
         }
-        else if (DS_TableVerifyFilterEntry(&FilterTable->Packet[i], (uint8)i, CountBad) == true)
-        {
-            CountGood++;
-        }
         else
         {
-            CountBad++;
-            Result = DS_TABLE_VERIFY_ERR;
+            DuplicateIndex = DS_INDEX_NONE;
+
+            for (j = 0; j < i; j++)
+            {
+                if (CFE_SB_IsValidMsgId(FilterTable->Packet[j].MessageID) &&
+                    CFE_SB_MsgId_Equal(FilterTable->Packet[i].MessageID, FilterTable->Packet[j].MessageID))
+                {
+                    DuplicateIndex = j;
+                    break;
+                }
+            }
+
+            if (DuplicateIndex != DS_INDEX_NONE)
+            {
+                if (CountBad == 0)
+                {
+                    CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID,
+                                      CFE_EVS_EventType_ERROR,
+                                      "Filter table verify err: MID = 0x%08lX at index = %d duplicates index = %d",
+                                      (unsigned long)CFE_SB_MsgIdToValue(FilterTable->Packet[i].MessageID),
+                                      (int)i,
+                                      (int)DuplicateIndex);
+                }
+
+                CountBad++;
+                Result = DS_TABLE_VERIFY_ERR;
+            }
+            else if (DS_TableVerifyFilterEntry(&FilterTable->Packet[i], (uint8)i, CountBad) == true)
+            {
+                CountGood++;
+            }
+            else
+            {
+                CountBad++;
+                Result = DS_TABLE_VERIFY_ERR;
+            }
         }
     }
 

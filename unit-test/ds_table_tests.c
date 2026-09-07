@@ -714,9 +714,11 @@ void DS_TableVerifyFilter_Test_Nominal(void)
     FilterTable.Packet[0].Filter[0].FilterType     = 1;
     DS_AppData.FileStatus[0].FileState             = DS_ENABLED;
 
+    FilterTable.Packet[1].MessageID = DS_UT_MID_2;
+
     strncpy(FilterTable.Descriptor, "descriptor", DS_DESCRIPTOR_BUFSIZE);
 
-    for (i = 1; i < 256; i++)
+    for (i = 2; i < DS_PACKETS_IN_FILTER_TABLE; i++)
     {
         FilterTable.Packet[i].MessageID = CFE_SB_INVALID_MSG_ID;
     }
@@ -755,6 +757,32 @@ void DS_TableVerifyFilter_Test_FilterTableVerificationError(void)
     }
 
     FilterTable.Packet[0].Filter[0].FilterType = 3;
+
+    /* Execute the function being tested */
+    UtAssert_INT32_EQ(DS_TableVerifyFilter(&FilterTable), DS_TABLE_VERIFY_ERR);
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FLT_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, DS_FLT_TBL_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+}
+
+void DS_TableVerifyFilter_Test_DuplicateMessageID(void)
+{
+    DS_FilterTable_t FilterTable;
+    uint32           i;
+
+    memset(&FilterTable, 0, sizeof(FilterTable));
+
+    for (i = 0; i < DS_PACKETS_IN_FILTER_TABLE; i++)
+    {
+        FilterTable.Packet[i].MessageID = CFE_SB_INVALID_MSG_ID;
+    }
+
+    FilterTable.Packet[0].MessageID = DS_UT_MID_1;
+    FilterTable.Packet[2].MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
     UtAssert_INT32_EQ(DS_TableVerifyFilter(&FilterTable), DS_TABLE_VERIFY_ERR);
@@ -1520,6 +1548,7 @@ void UtTest_Setup(void)
 
     UT_DS_TEST_ADD(DS_TableVerifyFilter_Test_Nominal);
     UT_DS_TEST_ADD(DS_TableVerifyFilter_Test_FilterTableVerificationError);
+    UT_DS_TEST_ADD(DS_TableVerifyFilter_Test_DuplicateMessageID);
     UT_DS_TEST_ADD(DS_TableVerifyFilter_Test_CountBad);
 
     UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_Nominal);
