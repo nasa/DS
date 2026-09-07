@@ -123,6 +123,10 @@ void DS_AppMain(void)
             DS_TableManageDestFile();
             DS_TableManageFilter();
         }
+        else if (Result == CFE_SB_NO_MESSAGE)
+        {
+            /* no action, but also no error */
+        }
         else
         {
             /*
