@@ -165,8 +165,8 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
 {
     const DS_FilterFile_Payload_t *DS_FilterFileCmd;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
+    DS_PacketEntry_t *pPacketEntry = NULL;
+    DS_FilterParms_t *pFilterParms = NULL;
     int32             FilterTableIndex;
 
     DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterFileCmd_t);
@@ -277,8 +277,8 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
 {
     const DS_FilterType_Payload_t *DS_FilterTypeCmd;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
+    DS_PacketEntry_t *pPacketEntry = NULL;
+    DS_FilterParms_t *pFilterParms = NULL;
     int32             FilterTableIndex;
 
     DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterTypeCmd_t);
@@ -389,8 +389,8 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
 {
     const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
+    DS_PacketEntry_t *pPacketEntry = NULL;
+    DS_FilterParms_t *pFilterParms = NULL;
     int32             FilterTableIndex;
 
     DS_FilterParmsCmd = &BufPtr->Payload;
@@ -1245,8 +1245,8 @@ CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr)
 CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
-    DS_PacketEntry_t                *pPacketEntry     = NULL;
-    DS_FilterParms_t                *pFilterParms     = NULL;
+    DS_PacketEntry_t                *pPacketEntry = NULL;
+    DS_FilterParms_t                *pFilterParms = NULL;
     int32                            FilterTableIndex;
     int32                            HashTableIndex;
     int32                            i;

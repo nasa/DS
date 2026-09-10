@@ -188,11 +188,11 @@ bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr,
 
 void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_PacketEntry_t *PacketEntry  = NULL;
-    DS_FilterParms_t *FilterParms  = NULL;
+    DS_PacketEntry_t *PacketEntry = NULL;
+    DS_FilterParms_t *FilterParms = NULL;
     bool              PassedFilter;
     bool              FilterResult;
-    int32             FilterIndex  = 0;
+    int32             FilterIndex = 0;
     int32             FileIndex;
     int32             i;
 
