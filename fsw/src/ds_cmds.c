@@ -165,9 +165,9 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
 {
     const DS_FilterFile_Payload_t *DS_FilterFileCmd;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
+    DS_PacketEntry_t *pPacketEntry;
+    DS_FilterParms_t *pFilterParms;
+    int32             FilterTableIndex;
 
     DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterFileCmd_t);
 
@@ -277,9 +277,9 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
 {
     const DS_FilterType_Payload_t *DS_FilterTypeCmd;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
+    DS_PacketEntry_t *pPacketEntry;
+    DS_FilterParms_t *pFilterParms;
+    int32             FilterTableIndex;
 
     DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterTypeCmd_t);
 
@@ -389,9 +389,9 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
 {
     const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
+    DS_PacketEntry_t *pPacketEntry;
+    DS_FilterParms_t *pFilterParms;
+    int32             FilterTableIndex;
 
     DS_FilterParmsCmd = &BufPtr->Payload;
 
@@ -510,7 +510,7 @@ CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr)
 {
     const DS_DestType_Payload_t *DS_DestTypeCmd;
 
-    DS_DestFileEntry_t *pDest = NULL;
+    DS_DestFileEntry_t *pDest;
 
     DS_DestTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestTypeCmd_t);
 
@@ -656,7 +656,7 @@ CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr)
 {
     const DS_DestPath_Payload_t *DS_DestPathCmd;
 
-    DS_DestFileEntry_t *pDest = NULL;
+    DS_DestFileEntry_t *pDest;
 
     DS_DestPathCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestPathCmd_t);
 
@@ -721,7 +721,7 @@ CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr)
 CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr)
 {
     const DS_DestBase_Payload_t *DS_DestBaseCmd;
-    DS_DestFileEntry_t          *pDest = NULL;
+    DS_DestFileEntry_t          *pDest;
 
     DS_DestBaseCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestBaseCmd_t);
 
@@ -786,7 +786,7 @@ CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr)
 CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr)
 {
     const DS_DestExt_Payload_t *DS_DestExtCmd;
-    DS_DestFileEntry_t         *pDest = NULL;
+    DS_DestFileEntry_t         *pDest;
 
     DS_DestExtCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestExtCmd_t);
 
@@ -851,7 +851,7 @@ CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr)
 CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
 {
     const DS_DestSize_Payload_t *DS_DestSizeCmd;
-    DS_DestFileEntry_t          *pDest = NULL;
+    DS_DestFileEntry_t          *pDest;
 
     DS_DestSizeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestSizeCmd_t);
 
@@ -924,7 +924,7 @@ CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
 CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
 {
     const DS_DestAge_Payload_t *DS_DestAgeCmd;
-    DS_DestFileEntry_t         *pDest = NULL;
+    DS_DestFileEntry_t         *pDest;
 
     DS_DestAgeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestAgeCmd_t);
 
@@ -997,8 +997,8 @@ CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
 CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr)
 {
     const DS_DestCount_Payload_t *DS_DestCountCmd;
-    DS_AppFileStatus_t           *FileStatus = NULL;
-    DS_DestFileEntry_t           *DestFile   = NULL;
+    DS_AppFileStatus_t           *FileStatus;
+    DS_DestFileEntry_t           *DestFile;
 
     DS_DestCountCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetDestCountCmd_t);
 
@@ -1127,7 +1127,7 @@ CFE_Status_t DS_CloseFileCmd(const DS_CloseFileCmd_t *BufPtr)
 
 CFE_Status_t DS_CloseAllCmd(const DS_CloseAllCmd_t *BufPtr)
 {
-    int32 i = 0;
+    int32 i;
 
     /*
     ** Close all open destination files...
@@ -1158,7 +1158,7 @@ CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr)
 {
     DS_FileInfoPkt_t DS_FileInfoPkt;
     DS_FileInfo_t   *FileInfoPtr;
-    int32            i = 0;
+    int32            i;
 
     /*
     ** Create and send a file info packet...
@@ -1245,11 +1245,11 @@ CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr)
 CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
-    DS_PacketEntry_t                *pPacketEntry     = NULL;
-    DS_FilterParms_t                *pFilterParms     = NULL;
-    int32                            FilterTableIndex = 0;
-    int32                            HashTableIndex   = 0;
-    int32                            i                = 0;
+    DS_PacketEntry_t                *pPacketEntry;
+    DS_FilterParms_t                *pFilterParms;
+    int32                            FilterTableIndex;
+    int32                            HashTableIndex;
+    int32                            i;
 
     PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
 
@@ -1353,11 +1353,11 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
 
-    DS_PacketEntry_t *pPacketEntry     = NULL;
-    DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
-    int32             HashTableIndex   = 0;
-    int32             i                = 0;
+    DS_PacketEntry_t *pPacketEntry;
+    DS_FilterParms_t *pFilterParms;
+    int32             FilterTableIndex;
+    int32             HashTableIndex;
+    int32             i;
 
     PayloadPtr       = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
     FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID);
@@ -1453,8 +1453,8 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
 CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
 {
     DS_HkPacket_t  HkPacket;
-    int32          i                                              = 0;
-    CFE_Status_t   Status                                         = 0;
+    int32          i;
+    CFE_Status_t   Status;
     char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = { 0 };
     CFE_TBL_Info_t FilterTblInfo;
 
