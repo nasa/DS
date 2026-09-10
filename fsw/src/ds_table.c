@@ -205,7 +205,7 @@ CFE_Status_t DS_TableInit(void)
 
 void DS_TableManageDestFile(void)
 {
-    int32        i = 0;
+    int32        i;
     CFE_Status_t Result;
 
     /*
@@ -300,7 +300,7 @@ void DS_TableManageDestFile(void)
 
 void TableDestFileUpdate(void)
 {
-    int32        i = 0;
+    int32        i;
     CFE_Status_t Result;
 
     Result = CFE_TBL_GetAddress((void *)&DS_AppData.DestFileTblPtr, DS_AppData.DestFileTblHandle);
@@ -983,7 +983,7 @@ CFE_Status_t DS_TableCreateCDS(void)
     /* Store file sequence counts and task ena/dis state in CDS */
     uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1] = { 0 };
     CFE_Status_t Result;
-    int32        i = 0;
+    int32        i;
 
     /*
     ** Request for CDS area from cFE Executive Services...
@@ -1057,7 +1057,7 @@ void DS_TableUpdateCDS(void)
     /* Store file sequence counts and task ena/dis state in CDS */
     uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1] = { 0 };
     CFE_Status_t Result;
-    int32        i = 0;
+    int32        i;
 
     /*
     ** Handle is non-zero when CDS is active...

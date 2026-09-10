@@ -167,7 +167,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
 
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
+    int32             FilterTableIndex;
 
     DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterFileCmd_t);
 
@@ -279,7 +279,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
 
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
+    int32             FilterTableIndex;
 
     DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterTypeCmd_t);
 
@@ -391,7 +391,7 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
 
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
-    int32             FilterTableIndex = 0;
+    int32             FilterTableIndex;
 
     DS_FilterParmsCmd = &BufPtr->Payload;
 
@@ -1247,9 +1247,9 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
     DS_PacketEntry_t                *pPacketEntry     = NULL;
     DS_FilterParms_t                *pFilterParms     = NULL;
-    int32                            FilterTableIndex = 0;
-    int32                            HashTableIndex   = 0;
-    int32                            i                = 0;
+    int32                            FilterTableIndex;
+    int32                            HashTableIndex;
+    int32                            i;
 
     PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
 
@@ -1356,8 +1356,8 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
     DS_PacketEntry_t *pPacketEntry     = NULL;
     DS_FilterParms_t *pFilterParms     = NULL;
     int32             FilterTableIndex = 0;
-    int32             HashTableIndex   = 0;
-    int32             i                = 0;
+    int32             HashTableIndex;
+    int32             i;
 
     PayloadPtr       = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
     FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID);

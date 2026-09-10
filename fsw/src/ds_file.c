@@ -190,11 +190,11 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
     DS_PacketEntry_t *PacketEntry  = NULL;
     DS_FilterParms_t *FilterParms  = NULL;
-    bool              PassedFilter = false;
-    bool              FilterResult = false;
+    bool              PassedFilter;
+    bool              FilterResult;
     int32             FilterIndex  = 0;
-    int32             FileIndex    = 0;
-    int32             i            = 0;
+    int32             FileIndex;
+    int32             i;
 
     /*
     ** Convert packet MessageID to packet filter table index...
@@ -661,10 +661,10 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
 {
     CFE_TIME_SysTime_t TimeToPrint;
 
-    uint32 SequenceCount = 0;
-    uint32 NumericDigit  = 0;
+    uint32 SequenceCount;
+    uint32 NumericDigit;
 
-    int32 BufferIndex = 0;
+    int32 BufferIndex;
 
     /*
     ** Build the sequence portion of the filename (time or count)...
@@ -952,7 +952,7 @@ void DS_FileCloseDest(int32 FileIndex)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 void DS_FileTestAge(uint32 ElapsedSeconds)
 {
-    uint32 FileIndex = 0;
+    uint32 FileIndex;
 
     /*
     ** Called from HK request command handler (elapsed = platform config)
