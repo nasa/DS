@@ -1526,13 +1526,16 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     }
 
     /* Get the filter table info, put the file name in the HK pkt. */
-    Status = snprintf(FilterTblName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "DS.%s", DS_FILTER_TBL_NAME);
+    Status = snprintf(FilterTblName, sizeof(FilterTblName), "DS.%s", DS_FILTER_TBL_NAME);
     if (Status >= 0)
     {
         Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
         if (Status == CFE_SUCCESS)
         {
-            snprintf(PayloadPtr->FilterTblFilename, OS_MAX_PATH_LEN, "%s", FilterTblInfo.LastFileLoaded);
+            snprintf(PayloadPtr->FilterTblFilename,
+                     sizeof(PayloadPtr->FilterTblFilename),
+                     "%s",
+                     FilterTblInfo.LastFileLoaded);
         }
         else
         {
