@@ -205,7 +205,7 @@ CFE_Status_t DS_TableInit(void)
 
 void DS_TableManageDestFile(void)
 {
-    int32        i = 0;
+    int32        i;
     CFE_Status_t Result;
 
     /*
@@ -300,7 +300,7 @@ void DS_TableManageDestFile(void)
 
 void TableDestFileUpdate(void)
 {
-    int32        i = 0;
+    int32        i;
     CFE_Status_t Result;
 
     Result = CFE_TBL_GetAddress((void *)&DS_AppData.DestFileTblPtr, DS_AppData.DestFileTblHandle);
@@ -468,7 +468,7 @@ CFE_Status_t DS_TableVerifyDestFile(const void *TableData)
 {
     DS_DestFileTable_t *DestFileTable = (DS_DestFileTable_t *)TableData;
     CFE_Status_t        Result        = CFE_SUCCESS;
-    int32               i             = 0;
+    int32               i;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
@@ -607,7 +607,7 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
 {
     DS_FilterTable_t *FilterTable = (DS_FilterTable_t *)TableData;
     CFE_Status_t      Result      = CFE_SUCCESS;
-    int32             i           = 0;
+    int32             i;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
@@ -663,7 +663,7 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
     const char       *CommonErrorText = "Filter table verify err:";
     DS_FilterParms_t *FilterParms;
     bool              Result = true;
-    int32             i      = 0;
+    int32             i;
 
     /*
     ** Each packet filter table entry has multiple filters per packet
@@ -752,7 +752,7 @@ bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
 {
     const char *Buffer = (char *)TableEntry;
     bool        Result = true;
-    int32       i      = 0;
+    int32       i;
 
     for (i = 0; i < BufferSize; i++)
     {
@@ -916,11 +916,9 @@ bool DS_TableVerifyCount(uint32 SequenceCount)
 
 void DS_TableSubscribe(void)
 {
-    DS_PacketEntry_t *FilterPackets = NULL;
+    DS_PacketEntry_t *FilterPackets = DS_AppData.FilterTblPtr->Packet;
     CFE_SB_MsgId_t    MessageID;
     int32             i;
-
-    FilterPackets = DS_AppData.FilterTblPtr->Packet;
 
     /*
     ** Check each entry in "new" packet filter table...
@@ -948,11 +946,9 @@ void DS_TableSubscribe(void)
 
 void DS_TableUnsubscribe(void)
 {
-    DS_PacketEntry_t *FilterPackets = NULL;
     CFE_SB_MsgId_t    MessageID;
     int32             i;
-
-    FilterPackets = DS_AppData.FilterTblPtr->Packet;
+    DS_PacketEntry_t *FilterPackets = DS_AppData.FilterTblPtr->Packet;
 
     /*
     ** Check each entry in "old" packet filter table...
@@ -983,7 +979,7 @@ CFE_Status_t DS_TableCreateCDS(void)
     /* Store file sequence counts and task ena/dis state in CDS */
     uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1] = { 0 };
     CFE_Status_t Result;
-    int32        i = 0;
+    int32        i;
 
     /*
     ** Request for CDS area from cFE Executive Services...
@@ -1055,9 +1051,9 @@ CFE_Status_t DS_TableCreateCDS(void)
 void DS_TableUpdateCDS(void)
 {
     /* Store file sequence counts and task ena/dis state in CDS */
-    uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1] = { 0 };
+    uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1];
     CFE_Status_t Result;
-    int32        i = 0;
+    int32        i;
 
     /*
     ** Handle is non-zero when CDS is active...
@@ -1147,7 +1143,7 @@ uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
 
 void DS_TableCreateHash(void)
 {
-    int32 FilterIndex = 0;
+    int32 FilterIndex;
 
     /*
     ** Initialize global hash table structures...
@@ -1169,12 +1165,11 @@ void DS_TableCreateHash(void)
 
 int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
 {
-    int32          HashIndex = 0;
-    DS_HashLink_t *NewLink   = NULL;
-    DS_HashLink_t *LinkList  = NULL;
+    int32 HashIndex;
 
     /* Get unused linked list entry (one link entry per filter table entry) */
-    NewLink = &DS_AppData.HashLinks[FilterIndex];
+    DS_HashLink_t *NewLink = &DS_AppData.HashLinks[FilterIndex];
+    DS_HashLink_t *LinkList;
 
     /* Set filter table data values for new linked list entry */
     NewLink->Index     = FilterIndex;
@@ -1214,10 +1209,10 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
 
 int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
 {
-    DS_PacketEntry_t *FilterPackets    = NULL;
-    DS_HashLink_t    *HashLink         = NULL;
-    int32             HashTableIndex   = 0;
-    int32             FilterTableIndex = 0;
+    DS_PacketEntry_t *FilterPackets;
+    DS_HashLink_t    *HashLink;
+    int32             HashTableIndex;
+    int32             FilterTableIndex;
 
     /* De-reference filter table packet array */
     FilterPackets = DS_AppData.FilterTblPtr->Packet;
