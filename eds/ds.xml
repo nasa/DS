@@ -37,9 +37,9 @@
           <Entry type="BASE_TYPES/uint8" name="CmdAcceptedCounter" shortDescription="Count of valid commands received" />
           <Entry type="BASE_TYPES/uint8" name="CmdRejectedCounter" shortDescription="Count of invalid commands received" />
           <Entry type="BASE_TYPES/uint8" name="DestTblLoadCounter" shortDescription="Count of destination file table loads" />
-          <Entry type="BASE_TYPES/uint8" name="DestTblErrCounter" shortDescription="Count of failed attempts to get table data pointer" />
+          <Entry type="BASE_TYPES/uint8" name="DestTblErrCounter" shortDescription="Count of failed attempts to get destination table data pointer" />
           <Entry type="BASE_TYPES/uint8" name="FilterTblLoadCounter" shortDescription="Count of packet filter table loads" />
-          <Entry type="BASE_TYPES/uint8" name="FilterTblErrCounter" shortDescription="Count of failed attempts to get table data pointer" />
+          <Entry type="BASE_TYPES/uint8" name="FilterTblErrCounter" shortDescription="Count of failed attempts to get filter table data pointer" />
           <Entry type="BASE_TYPES/uint8" name="AppEnableState" shortDescription="Application enable/disable state" />
           <PaddingEntry sizeInBits="8" />
           <Entry type="BASE_TYPES/uint16" name="FileWriteCounter" shortDescription="Count of good destination file writes" />
@@ -47,7 +47,7 @@
           <Entry type="BASE_TYPES/uint16" name="FileUpdateCounter" shortDescription="Count of good updates to secondary header" />
           <Entry type="BASE_TYPES/uint16" name="FileUpdateErrCounter" shortDescription="Count of bad updates to secondary header" />
           <Entry type="BASE_TYPES/uint32" name="DisabledPktCounter" shortDescription="Count of packets discarded (DS was disabled)" />
-          <Entry type="BASE_TYPES/uint32" name="IgnoredPktCounter" shortDescription="Count of packets discarded" />
+          <Entry type="BASE_TYPES/uint32" name="IgnoredPktCounter" shortDescription="Count of packets discarded (filter or destination file table unavailable, or pkt has no filter table entry)" />
           <Entry type="BASE_TYPES/uint32" name="FilteredPktCounter" shortDescription="Count of packets discarded (failed filter test)" />
           <Entry type="BASE_TYPES/uint32" name="PassedPktCounter" shortDescription="Count of packets that passed filter test" />
           <Entry type="BASE_TYPES/PathName" name="FilterTblFilename" shortDescription="Name of filter table file" />

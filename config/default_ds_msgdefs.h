@@ -213,9 +213,9 @@ typedef struct
     uint8  CmdAcceptedCounter;   /**< \brief Count of valid commands received */
     uint8  CmdRejectedCounter;   /**< \brief Count of invalid commands received */
     uint8  DestTblLoadCounter;   /**< \brief Count of destination file table loads */
-    uint8  DestTblErrCounter;    /**< \brief Count of failed attempts to get table data pointer */
+    uint8  DestTblErrCounter;    /**< \brief Count of failed attempts to get destination table data pointer */
     uint8  FilterTblLoadCounter; /**< \brief Count of packet filter table loads */
-    uint8  FilterTblErrCounter;  /**< \brief Count of failed attempts to get table data pointer */
+    uint8  FilterTblErrCounter;  /**< \brief Count of failed attempts to get filter table data pointer */
     uint8  AppEnableState;       /**< \brief Application enable/disable state */
     uint8  Padding;              /**< \brief Structure alignment padding */
     uint16 FileWriteCounter;     /**< \brief Count of good destination file writes */
