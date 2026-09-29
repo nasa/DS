@@ -1245,13 +1245,21 @@ CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr)
 CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
-    DS_PacketEntry_t                *pPacketEntry     = NULL;
-    DS_FilterParms_t                *pFilterParms     = NULL;
-    int32                            FilterTableIndex = 0;
-    int32                            HashTableIndex   = 0;
-    int32                            i                = 0;
+    DS_PacketEntry_t                *pPacketEntry   = NULL;
+    DS_FilterParms_t                *pFilterParms   = NULL;
+    int32                            ExistingIndex  = DS_INDEX_NONE;
+    int32                            UnusedIndex    = DS_INDEX_NONE;
+    int32                            HashTableIndex = 0;
+    int32                            i              = 0;
 
     PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
+
+    /* Look up filter table indices only when a table is loaded since DS_TableFindMsgID dereferences it */
+    if (DS_AppData.FilterTblPtr != (DS_FilterTable_t *)NULL)
+    {
+        ExistingIndex = DS_TableFindMsgID(PayloadPtr->MessageID);
+        UnusedIndex   = DS_TableFindMsgID(CFE_SB_INVALID_MSG_ID);
+    }
 
     if (!CFE_SB_IsValidMsgId(PayloadPtr->MessageID))
     {
@@ -1276,7 +1284,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
                           CFE_EVS_EventType_ERROR,
                           "Invalid ADD MID command: filter table is not loaded");
     }
-    else if ((FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID)) != DS_INDEX_NONE)
+    else if (ExistingIndex != DS_INDEX_NONE)
     {
         /*
         ** New message ID is already in packet filter table...
@@ -1287,9 +1295,9 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
                           CFE_EVS_EventType_ERROR,
                           "Invalid ADD MID command: MID = 0x%08lX is already in filter table at index = %d",
                           (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID),
-                          (int)FilterTableIndex);
+                          (int)ExistingIndex);
     }
-    else if ((FilterTableIndex = DS_TableFindMsgID(CFE_SB_INVALID_MSG_ID)) == DS_INDEX_NONE)
+    else if (UnusedIndex == DS_INDEX_NONE)
     {
         /*
         ** Packet filter table has no unused entries...
@@ -1305,12 +1313,12 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
         /*
         ** Initialize unused packet filter entry for new message ID...
         */
-        pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+        pPacketEntry = &DS_AppData.FilterTblPtr->Packet[UnusedIndex];
 
         pPacketEntry->MessageID = PayloadPtr->MessageID;
 
         /* Add the message ID to the hash table as well */
-        HashTableIndex = DS_TableAddMsgID(PayloadPtr->MessageID, FilterTableIndex);
+        HashTableIndex = DS_TableAddMsgID(PayloadPtr->MessageID, UnusedIndex);
 
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
@@ -1336,7 +1344,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
                           CFE_EVS_EventType_INFORMATION,
                           "ADD MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
                           (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID),
-                          (int)FilterTableIndex,
+                          (int)UnusedIndex,
                           (int)HashTableIndex);
     }
 
