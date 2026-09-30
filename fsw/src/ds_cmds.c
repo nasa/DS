@@ -1309,8 +1309,9 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 
         pPacketEntry->MessageID = PayloadPtr->MessageID;
 
-        /* Add the message ID to the hash table as well */
-        HashTableIndex = DS_TableAddMsgID(PayloadPtr->MessageID, FilterTableIndex);
+        /* Rebuild hash links after replacing an unused entry */
+        DS_TableCreateHash();
+        HashTableIndex = DS_TableHashFunction(PayloadPtr->MessageID);
 
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
