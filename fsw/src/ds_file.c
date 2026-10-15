@@ -582,7 +582,10 @@ void DS_FileCreateName(uint32 FileIndex)
         if (Workname[TotalLength - 1] != DS_PATH_SEPARATOR)
         {
             /* There's always space since Workname is twice the size of Pathname */
-            Workname[TotalLength++] = DS_PATH_SEPARATOR;
+            Workname[TotalLength] = DS_PATH_SEPARATOR;
+
+            /* Increment TotalLength */
+            TotalLength++;
         }
 
         /* Add base name */
@@ -619,9 +622,8 @@ void DS_FileCreateName(uint32 FileIndex)
         }
 
         /* Confirm working name fits */
-        if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)
+        if (strlen(Workname) < sizeof(FileStatus->FileName))
         {
-            /* Success - copy workname to filename buffer */
             strcpy(FileStatus->FileName, Workname);
         }
         else
@@ -698,6 +700,8 @@ void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
     }
     else if (Type == DS_BY_TIME)
     {
+        memset(Buffer, 0, CFE_TIME_PRINTED_STRING_SIZE);
+
         /*
         ** Filename is based on seconds from current time...
         */

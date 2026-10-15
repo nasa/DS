@@ -299,7 +299,7 @@
  *       or equal to zero.
  */
 #define DS_MISSION_REV                  DS_INTERNAL_CFGVAL(MISSION_REV)
-#define DEFAULT_DS_INTERNAL_MISSION_REV 0
+#define DEFAULT_DS_INTERNAL_MISSION_REV 0xFF
 
 /**
  *  \brief File Header Type Selection

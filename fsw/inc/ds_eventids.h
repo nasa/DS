@@ -895,6 +895,18 @@
  */
 #define DS_MID_ERR_EID 73
 
+/**
+ *  \brief CFE_TBL_GetAddress returns an error
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals that the DS app had a call to CFE_TBL_GetAddress()
+ *  which returned an error and continuing may cause unexpected behavior.
+ */
+#define DS_TBL_GET_ADDR_ERR_EID 74
+
 /**@}*/
 
 #endif

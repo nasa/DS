@@ -24,13 +24,16 @@ Developer's guide information can be generated using Doxygen:
 
 cFS Framework (cFE, OSAL, PSP)
 
-An integrated bundle including the cFE, OSAL, and PSP can
-be obtained at https://github.com/nasa/cfs
+A demonstration bundle of the Core Flight System including the cFE, OSAL, and PSP can be obtained at https://github.com/nasa/cfs
 
-## About cFS
+For information about a mission ready cFS bundle, see: https://github.com/nasa/cFS#cfs-gov-mission-ready-version
 
-The cFS is a platform and project independent reusable software framework and
-set of reusable applications developed by NASA Goddard Space Flight Center.
-This framework is used as the basis for the flight software for satellite data
-systems and instruments, but can be used on other embedded systems.  More
-information on the cFS can be found at http://cfs.gsfc.nasa.gov
+## Known issues
+
+See all [open issues](https://github.com/nasa/DS/issues) and closed to milestones later than this version.
+
+## Getting Help
+
+For best results, submit issues:questions or issues:help wanted requests at <https://github.com/nasa/cFS>.
+
+Official cFS page: <http://cfs.gsfc.nasa.gov>

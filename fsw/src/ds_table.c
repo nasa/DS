@@ -37,6 +37,12 @@
 
 #define DS_CDS_NAME "DS_CDS"
 
+/*
+ * Local Function Prototypes
+ */
+void TableDestFileUpdate(void);
+void TableFilterUpdate(void);
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                                                                 */
 /* DS application table initialization                             */
@@ -281,21 +287,46 @@ void DS_TableManageDestFile(void)
             */
             CFE_TBL_ReleaseAddress(DS_AppData.DestFileTblHandle);
             CFE_TBL_Update(DS_AppData.DestFileTblHandle);
-            CFE_TBL_GetAddress((void *)&DS_AppData.DestFileTblPtr, DS_AppData.DestFileTblHandle);
-            /*
-            ** Keep local copies of table values that software will modify...
-            */
-            for (i = 0; i < DS_DEST_FILE_CNT; i++)
-            {
-                DS_AppData.FileStatus[i].FileState = DS_AppData.DestFileTblPtr->File[i].EnableState;
-                DS_AppData.FileStatus[i].FileCount = DS_AppData.DestFileTblPtr->File[i].SequenceCount;
-            }
-
-            /*
-            ** Store local values in the Critical Data Store (CDS)...
-            */
-            DS_TableUpdateCDS();
+            TableDestFileUpdate();
         }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Dest File Table Update Local Function                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void TableDestFileUpdate(void)
+{
+    int32        i = 0;
+    CFE_Status_t Result;
+
+    Result = CFE_TBL_GetAddress((void *)&DS_AppData.DestFileTblPtr, DS_AppData.DestFileTblHandle);
+
+    if (Result >= CFE_SUCCESS)
+    {
+        /*
+        ** Keep local copies of table values that software will modify...
+        */
+        for (i = 0; i < DS_DEST_FILE_CNT; i++)
+        {
+            DS_AppData.FileStatus[i].FileState = DS_AppData.DestFileTblPtr->File[i].EnableState;
+            DS_AppData.FileStatus[i].FileCount = DS_AppData.DestFileTblPtr->File[i].SequenceCount;
+        }
+
+        /*
+        ** Store local values in the Critical Data Store (CDS)...
+        */
+        DS_TableUpdateCDS();
+    }
+    else
+    {
+        CFE_EVS_SendEvent(DS_TBL_GET_ADDR_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "Dest File Table Error for CFE_TBL_GetAddress = 0x%08X",
+                          (unsigned int)Result);
     }
 }
 
@@ -389,17 +420,41 @@ void DS_TableManageFilter(void)
             */
             CFE_TBL_ReleaseAddress(DS_AppData.FilterTblHandle);
             CFE_TBL_Update(DS_AppData.FilterTblHandle);
-            CFE_TBL_GetAddress((void *)&DS_AppData.FilterTblPtr, DS_AppData.FilterTblHandle);
-            /*
-            ** Subscribe to the packets in the new filter table...
-            */
-            DS_TableSubscribe();
-
-            /*
-            ** Create hash table for messageID's in new filter table...
-            */
-            DS_TableCreateHash();
+            TableFilterUpdate();
         }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Filter Table Update Local Function                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void TableFilterUpdate(void)
+{
+    CFE_Status_t Result;
+
+    Result = CFE_TBL_GetAddress((void *)&DS_AppData.FilterTblPtr, DS_AppData.FilterTblHandle);
+
+    if (Result >= CFE_SUCCESS)
+    {
+        /*
+        ** Subscribe to the packets in the new filter table...
+        */
+        DS_TableSubscribe();
+
+        /*
+        ** Create hash table for messageID's in new filter table...
+        */
+        DS_TableCreateHash();
+    }
+    else
+    {
+        CFE_EVS_SendEvent(DS_TBL_GET_ADDR_ERR_EID,
+                          CFE_EVS_EventType_ERROR,
+                          "Filter Table Error for CFE_TBL_GetAddress = 0x%08X",
+                          (unsigned int)Result);
     }
 }
 
@@ -553,6 +608,7 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
     DS_FilterTable_t *FilterTable = (DS_FilterTable_t *)TableData;
     CFE_Status_t      Result      = CFE_SUCCESS;
     int32             i           = 0;
+    int32             j           = 0;
 
     int32 CountGood   = 0;
     int32 CountBad    = 0;
@@ -561,7 +617,7 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
     /*
     ** Perform the following validation:
     **
-    **   MessageID = unlimited, zero means unused
+    **   MessageID = active message IDs must be unique, zero means unused
     */
 
     /*
@@ -573,14 +629,37 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
         {
             CountUnused++;
         }
-        else if (DS_TableVerifyFilterEntry(&FilterTable->Packet[i], (uint8)i, CountBad) == true)
-        {
-            CountGood++;
-        }
         else
         {
-            CountBad++;
-            Result = DS_TABLE_VERIFY_ERR;
+            for (j = 0; j < i; j++)
+            {
+                if (CFE_SB_MsgId_Equal(FilterTable->Packet[i].MessageID, FilterTable->Packet[j].MessageID))
+                {
+                    break;
+                }
+            }
+
+            if (j < i)
+            {
+                CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID,
+                                  CFE_EVS_EventType_ERROR,
+                                  "Filter table verify err: MID = 0x%08lX, index = %d, duplicate of index = %d",
+                                  (unsigned long)CFE_SB_MsgIdToValue(FilterTable->Packet[i].MessageID),
+                                  (int)i,
+                                  (int)j);
+
+                CountBad++;
+                Result = DS_TABLE_VERIFY_ERR;
+            }
+            else if (DS_TableVerifyFilterEntry(&FilterTable->Packet[i], (uint8)i, CountBad) == true)
+            {
+                CountGood++;
+            }
+            else
+            {
+                CountBad++;
+                Result = DS_TABLE_VERIFY_ERR;
+            }
         }
     }
 
