@@ -177,7 +177,7 @@ void DS_AppMain(void)
 CFE_Status_t DS_AppInitialize(void)
 {
     CFE_Status_t Result;
-    int32        i = 0;
+    int32        i;
 
     /*
     ** Initialize global data structure...
