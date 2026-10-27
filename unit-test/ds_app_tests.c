@@ -140,6 +140,22 @@ void DS_AppMain_Test_SBTimeout(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
 }
 
+void DS_AppMain_Test_SBNoMessage(void)
+{
+    /* Set to exit loop after first run */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 2, false);
+
+    /* Set to satisfy subsequent condition "Result == CFE_SB_NO_MESSAGE" immediately after call to CFE_SB_RcvMsg */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_ReceiveBuffer), CFE_SB_NO_MESSAGE);
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(DS_AppMain());
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+}
+
 void DS_AppInitialize_Test_Nominal(void)
 {
     memset(&DS_AppData, 1, sizeof(DS_AppData));
@@ -344,6 +360,7 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_AppMain_Test_AppInitializeError);
     UT_DS_TEST_ADD(DS_AppMain_Test_SBError);
     UT_DS_TEST_ADD(DS_AppMain_Test_SBTimeout);
+    UT_DS_TEST_ADD(DS_AppMain_Test_SBNoMessage);
 
     UT_DS_TEST_ADD(DS_AppInitialize_Test_Nominal);
     UT_DS_TEST_ADD(DS_AppInitialize_Test_EVSRegisterError);
