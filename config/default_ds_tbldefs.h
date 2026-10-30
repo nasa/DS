@@ -62,14 +62,14 @@ typedef struct
     uint16 Algorithm_N; /**< \brief Algorithm value N (pass this many) */
     uint16 Algorithm_X; /**< \brief Algorithm value X (out of this many) */
     uint16 Algorithm_O; /**< \brief Algorithm value O (at this offset) */
-} DS_FilterParms_t;
+} DS_FilterParams_t;
 
 /** \brief DS Filter Table Packet Entry */
 typedef struct
 {
     CFE_SB_MsgId_t MessageID; /**< \brief Packet MessageID (may be cmd or tlm) */
 
-    DS_FilterParms_t Filter[DS_FILTERS_PER_PACKET]; /**< \brief One entry for each packet destination */
+    DS_FilterParams_t Filter[DS_FILTERS_PER_PACKET]; /**< \brief One entry for each packet destination */
 } DS_PacketEntry_t;
 
 /**

@@ -32,7 +32,7 @@ enum DS_FunctionCode
     DS_FunctionCode_SET_APP_STATE    = 2,
     DS_FunctionCode_SET_FILTER_FILE  = 3,
     DS_FunctionCode_SET_FILTER_TYPE  = 4,
-    DS_FunctionCode_SET_FILTER_PARMS = 5,
+    DS_FunctionCode_SET_FILTER_PARAMS = 5,
     DS_FunctionCode_SET_DEST_TYPE    = 6,
     DS_FunctionCode_SET_DEST_STATE   = 7,
     DS_FunctionCode_SET_DEST_PATH    = 8,

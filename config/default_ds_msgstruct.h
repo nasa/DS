@@ -100,14 +100,14 @@ typedef struct
 /**
  *  \brief Set Filter Parameters For Packet Filter Table Entry
  *
- *  For command details see #DS_SET_FILTER_PARMS_CC
+ *  For command details see #DS_SET_FILTER_PARAMS_CC
  */
 typedef struct
 {
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief cFE Software Bus command message header */
 
-    DS_FilterParms_Payload_t Payload;
-} DS_SetFilterParmsCmd_t;
+    DS_FilterParams_Payload_t Payload;
+} DS_SetFilterParamsCmd_t;
 
 /**
  *  \brief Set Filename Type For Destination File Table Entry
