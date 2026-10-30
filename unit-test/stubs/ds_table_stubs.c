@@ -297,20 +297,20 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_TableVerifyParms()
+ * Generated stub function for DS_TableVerifyParams()
  * ----------------------------------------------------
  */
-bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
+bool DS_TableVerifyParams(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
 {
-    UT_GenStub_SetupReturnBuffer(DS_TableVerifyParms, bool);
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyParams, bool);
 
-    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_N);
-    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_X);
-    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_O);
+    UT_GenStub_AddParam(DS_TableVerifyParams, uint16, Algorithm_N);
+    UT_GenStub_AddParam(DS_TableVerifyParams, uint16, Algorithm_X);
+    UT_GenStub_AddParam(DS_TableVerifyParams, uint16, Algorithm_O);
 
-    UT_GenStub_Execute(DS_TableVerifyParms, Basic, NULL);
+    UT_GenStub_Execute(DS_TableVerifyParams, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_TableVerifyParms, bool);
+    return UT_GenStub_GetReturnValue(DS_TableVerifyParams, bool);
 }
 
 /*

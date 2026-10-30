@@ -315,18 +315,18 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
 
 /*
  * ----------------------------------------------------
- * Generated stub function for DS_SetFilterParmsCmd()
+ * Generated stub function for DS_SetFilterParamsCmd()
  * ----------------------------------------------------
  */
-CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
+CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
 {
-    UT_GenStub_SetupReturnBuffer(DS_SetFilterParmsCmd, CFE_Status_t);
+    UT_GenStub_SetupReturnBuffer(DS_SetFilterParamsCmd, CFE_Status_t);
 
-    UT_GenStub_AddParam(DS_SetFilterParmsCmd, const DS_SetFilterParmsCmd_t *, BufPtr);
+    UT_GenStub_AddParam(DS_SetFilterParamsCmd, const DS_SetFilterParamsCmd_t *, BufPtr);
 
-    UT_GenStub_Execute(DS_SetFilterParmsCmd, Basic, NULL);
+    UT_GenStub_Execute(DS_SetFilterParamsCmd, Basic, NULL);
 
-    return UT_GenStub_GetReturnValue(DS_SetFilterParmsCmd, CFE_Status_t);
+    return UT_GenStub_GetReturnValue(DS_SetFilterParamsCmd, CFE_Status_t);
 }
 
 /*
