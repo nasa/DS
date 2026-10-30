@@ -190,12 +190,12 @@
  *       indicated entry in the Packet Filter Table.
  *
  *  \par Command Structure
- *       #DS_SetFilterParmsCmd_t
+ *       #DS_SetFilterParamsCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_PARMS_CMD_EID informational event message will be sent
+ *       - The #DS_PARAMS_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -208,12 +208,12 @@
  *
  *       Evidence of failure may be found in the following telemetry:
  *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
- *       - The #DS_PARMS_CMD_ERR_EID error event message will be sent
+ *       - The #DS_PARAMS_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
  *       None
  */
-#define DS_SET_FILTER_PARMS_CC DS_CCVAL(SET_FILTER_PARMS)
+#define DS_SET_FILTER_PARAMS_CC DS_CCVAL(SET_FILTER_PARAMS)
 
 /**
  * \brief Set Filename Type For Destination File Table Entry
