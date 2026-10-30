@@ -188,13 +188,13 @@ bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr,
 
 void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_PacketEntry_t *PacketEntry;
-    DS_FilterParms_t *FilterParms;
-    bool              PassedFilter;
-    bool              FilterResult;
-    int32             FilterIndex;
-    int32             FileIndex;
-    int32             i;
+    DS_PacketEntry_t  *PacketEntry;
+    DS_FilterParams_t *FilterParams;
+    bool               PassedFilter;
+    bool               FilterResult;
+    int32              FilterIndex;
+    int32              FileIndex;
+    int32              i;
 
     /*
     ** Convert packet MessageID to packet filter table index...
@@ -218,14 +218,14 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         */
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
-            FilterParms = &PacketEntry->Filter[i];
+            FilterParams = &PacketEntry->Filter[i];
 
             /*
             ** Ignore unused and invalid filters...
             */
-            if ((FilterParms->Algorithm_N != DS_UNUSED) && (FilterParms->FileTableIndex < DS_DEST_FILE_CNT))
+            if ((FilterParams->Algorithm_N != DS_UNUSED) && (FilterParams->FileTableIndex < DS_DEST_FILE_CNT))
             {
-                FileIndex = FilterParms->FileTableIndex;
+                FileIndex = FilterParams->FileTableIndex;
                 /*
                 ** Ignore disabled destination files...
                 */
@@ -235,10 +235,10 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
                     ** Apply filter algorithm to the packet...
                     */
                     FilterResult = DS_IsPacketFiltered((CFE_MSG_Message_t *)BufPtr,
-                                                       FilterParms->FilterType,
-                                                       FilterParms->Algorithm_N,
-                                                       FilterParms->Algorithm_X,
-                                                       FilterParms->Algorithm_O);
+                                                       FilterParams->FilterType,
+                                                       FilterParams->Algorithm_N,
+                                                       FilterParams->Algorithm_X,
+                                                       FilterParams->Algorithm_O);
                     if (FilterResult == false)
                     {
                         /*
