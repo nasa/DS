@@ -165,9 +165,9 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
 {
     const DS_FilterFile_Payload_t *DS_FilterFileCmd;
 
-    DS_PacketEntry_t *pPacketEntry;
-    DS_FilterParms_t *pFilterParms;
-    int32             FilterTableIndex;
+    DS_PacketEntry_t  *pPacketEntry;
+    DS_FilterParams_t *pFilterParams;
+    int32              FilterTableIndex;
 
     DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterFileCmd_t);
 
@@ -183,7 +183,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
                           "Invalid FILTER FILE command arg: invalid messageID = 0x%08lX",
                           (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID));
     }
-    else if (DS_FilterFileCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
+    else if (DS_FilterFileCmd->FilterParamsIndex >= DS_FILTERS_PER_PACKET)
     {
         /*
         ** Invalid packet filter parameters index...
@@ -193,7 +193,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
         CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
                           "Invalid FILTER FILE command arg: filter parameters index = %d",
-                          DS_FilterFileCmd->FilterParmsIndex);
+                          DS_FilterFileCmd->FilterParamsIndex);
     }
     else if (DS_TableVerifyFileIndex(DS_FilterFileCmd->FileTableIndex) == false)
     {
@@ -242,10 +242,10 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
             /*
             ** Set new packet filter value (file table index)...
             */
-            pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
-            pFilterParms = &pPacketEntry->Filter[DS_FilterFileCmd->FilterParmsIndex];
+            pPacketEntry  = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+            pFilterParams = &pPacketEntry->Filter[DS_FilterFileCmd->FilterParamsIndex];
 
-            pFilterParms->FileTableIndex = DS_FilterFileCmd->FileTableIndex;
+            pFilterParams->FileTableIndex = DS_FilterFileCmd->FileTableIndex;
 
             /*
             ** Notify cFE that we have modified the table data...
@@ -259,7 +259,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
                               "FILTER FILE command: MID = 0x%08lX, index = %d, filter = %d, file = %d",
                               (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID),
                               (int)FilterTableIndex,
-                              DS_FilterFileCmd->FilterParmsIndex,
+                              DS_FilterFileCmd->FilterParamsIndex,
                               DS_FilterFileCmd->FileTableIndex);
         }
     }
@@ -277,9 +277,9 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
 {
     const DS_FilterType_Payload_t *DS_FilterTypeCmd;
 
-    DS_PacketEntry_t *pPacketEntry;
-    DS_FilterParms_t *pFilterParms;
-    int32             FilterTableIndex;
+    DS_PacketEntry_t  *pPacketEntry;
+    DS_FilterParams_t *pFilterParams;
+    int32              FilterTableIndex;
 
     DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_SetFilterTypeCmd_t);
 
@@ -295,7 +295,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
                           "Invalid FILTER TYPE command arg: invalid messageID = 0x%08lX",
                           (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID));
     }
-    else if (DS_FilterTypeCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
+    else if (DS_FilterTypeCmd->FilterParamsIndex >= DS_FILTERS_PER_PACKET)
     {
         /*
         ** Invalid packet filter parameters index...
@@ -305,7 +305,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
         CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
                           "Invalid FILTER TYPE command arg: filter parameters index = %d",
-                          DS_FilterTypeCmd->FilterParmsIndex);
+                          DS_FilterTypeCmd->FilterParamsIndex);
     }
     else if (DS_TableVerifyType(DS_FilterTypeCmd->FilterType) == false)
     {
@@ -354,10 +354,10 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
             /*
             ** Set new packet filter value (filter type)...
             */
-            pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
-            pFilterParms = &pPacketEntry->Filter[DS_FilterTypeCmd->FilterParmsIndex];
+            pPacketEntry  = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+            pFilterParams = &pPacketEntry->Filter[DS_FilterTypeCmd->FilterParamsIndex];
 
-            pFilterParms->FilterType = DS_FilterTypeCmd->FilterType;
+            pFilterParams->FilterType = DS_FilterTypeCmd->FilterType;
 
             /*
             ** Notify cFE that we have modified the table data...
@@ -371,7 +371,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
                               "FILTER TYPE command: MID = 0x%08lX, index = %d, filter = %d, type = %d",
                               (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID),
                               (int)FilterTableIndex,
-                              DS_FilterTypeCmd->FilterParmsIndex,
+                              DS_FilterTypeCmd->FilterParamsIndex,
                               DS_FilterTypeCmd->FilterType);
         }
     }
@@ -385,43 +385,43 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
+CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
 {
-    const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
+    const DS_FilterParams_Payload_t *DS_FilterParamsCmd;
 
-    DS_PacketEntry_t *pPacketEntry;
-    DS_FilterParms_t *pFilterParms;
-    int32             FilterTableIndex;
+    DS_PacketEntry_t  *pPacketEntry;
+    DS_FilterParams_t *pFilterParams;
+    int32              FilterTableIndex;
 
-    DS_FilterParmsCmd = &BufPtr->Payload;
+    DS_FilterParamsCmd = &BufPtr->Payload;
 
-    if (!CFE_SB_IsValidMsgId(DS_FilterParmsCmd->MessageID))
+    if (!CFE_SB_IsValidMsgId(DS_FilterParamsCmd->MessageID))
     {
         /*
         ** Invalid packet messageID...
         */
         DS_AppData.CmdRejectedCounter++;
 
-        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID,
+        CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER PARMS command arg: invalid messageID = 0x%08lX",
-                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID));
+                          "Invalid FILTER PARAMS command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParamsCmd->MessageID));
     }
-    else if (DS_FilterParmsCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
+    else if (DS_FilterParamsCmd->FilterParamsIndex >= DS_FILTERS_PER_PACKET)
     {
         /*
         ** Invalid packet filter parameters index...
         */
         DS_AppData.CmdRejectedCounter++;
 
-        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID,
+        CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER PARMS command arg: filter parameters index = %d",
-                          DS_FilterParmsCmd->FilterParmsIndex);
+                          "Invalid FILTER PARAMS command arg: filter parameters index = %d",
+                          DS_FilterParamsCmd->FilterParamsIndex);
     }
-    else if (DS_TableVerifyParms(DS_FilterParmsCmd->Algorithm_N,
-                                 DS_FilterParmsCmd->Algorithm_X,
-                                 DS_FilterParmsCmd->Algorithm_O)
+    else if (DS_TableVerifyParams(DS_FilterParamsCmd->Algorithm_N,
+                                  DS_FilterParamsCmd->Algorithm_X,
+                                  DS_FilterParamsCmd->Algorithm_O)
              == false)
     {
         /*
@@ -429,12 +429,12 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
         */
         DS_AppData.CmdRejectedCounter++;
 
-        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID,
+        CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER PARMS command arg: N = %d, X = %d, O = %d",
-                          DS_FilterParmsCmd->Algorithm_N,
-                          DS_FilterParmsCmd->Algorithm_X,
-                          DS_FilterParmsCmd->Algorithm_O);
+                          "Invalid FILTER PARAMS command arg: N = %d, X = %d, O = %d",
+                          DS_FilterParamsCmd->Algorithm_N,
+                          DS_FilterParamsCmd->Algorithm_X,
+                          DS_FilterParamsCmd->Algorithm_O);
     }
     else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
     {
@@ -443,16 +443,16 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
         */
         DS_AppData.CmdRejectedCounter++;
 
-        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID,
+        CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
-                          "Invalid FILTER PARMS command: packet filter table is not loaded");
+                          "Invalid FILTER PARAMS command: packet filter table is not loaded");
     }
     else
     {
         /*
         ** Get the index of the filter table entry for this message ID...
         */
-        FilterTableIndex = DS_TableFindMsgID(DS_FilterParmsCmd->MessageID);
+        FilterTableIndex = DS_TableFindMsgID(DS_FilterParamsCmd->MessageID);
 
         if (FilterTableIndex == DS_INDEX_NONE)
         {
@@ -461,22 +461,22 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
             */
             DS_AppData.CmdRejectedCounter++;
 
-            CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID,
+            CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                               CFE_EVS_EventType_ERROR,
-                              "Invalid FILTER PARMS command: Message ID 0x%08lX is not in filter table",
-                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID));
+                              "Invalid FILTER PARAMS command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParamsCmd->MessageID));
         }
         else
         {
             /*
             ** Set new packet filter values (algorithm)...
             */
-            pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
-            pFilterParms = &pPacketEntry->Filter[DS_FilterParmsCmd->FilterParmsIndex];
+            pPacketEntry  = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+            pFilterParams = &pPacketEntry->Filter[DS_FilterParamsCmd->FilterParamsIndex];
 
-            pFilterParms->Algorithm_N = DS_FilterParmsCmd->Algorithm_N;
-            pFilterParms->Algorithm_X = DS_FilterParmsCmd->Algorithm_X;
-            pFilterParms->Algorithm_O = DS_FilterParmsCmd->Algorithm_O;
+            pFilterParams->Algorithm_N = DS_FilterParamsCmd->Algorithm_N;
+            pFilterParams->Algorithm_X = DS_FilterParamsCmd->Algorithm_X;
+            pFilterParams->Algorithm_O = DS_FilterParamsCmd->Algorithm_O;
 
             /*
             ** Notify cFE that we have modified the table data...
@@ -485,15 +485,15 @@ CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr)
 
             DS_AppData.CmdAcceptedCounter++;
 
-            CFE_EVS_SendEvent(DS_PARMS_CMD_EID,
+            CFE_EVS_SendEvent(DS_PARAMS_CMD_EID,
                               CFE_EVS_EventType_INFORMATION,
-                              "FILTER PARMS command: MID = 0x%08lX, index = %d, filter = %d, N = %d, X = %d, O = %d",
-                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID),
+                              "FILTER PARAMS command: MID = 0x%08lX, index = %d, filter = %d, N = %d, X = %d, O = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParamsCmd->MessageID),
                               (int)FilterTableIndex,
-                              DS_FilterParmsCmd->FilterParmsIndex,
-                              pFilterParms->Algorithm_N,
-                              pFilterParms->Algorithm_X,
-                              pFilterParms->Algorithm_O);
+                              DS_FilterParamsCmd->FilterParamsIndex,
+                              pFilterParams->Algorithm_N,
+                              pFilterParams->Algorithm_X,
+                              pFilterParams->Algorithm_O);
         }
     }
 
@@ -1246,7 +1246,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
     DS_PacketEntry_t                *pPacketEntry;
-    DS_FilterParms_t                *pFilterParms;
+    DS_FilterParams_t               *pFilterParams;
     int32                            ExistingIndex = DS_INDEX_NONE;
     int32                            UnusedIndex   = DS_INDEX_NONE;
     int32                            HashTableIndex;
@@ -1323,14 +1323,14 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
 
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
-            pFilterParms = &pPacketEntry->Filter[i];
+            pFilterParams = &pPacketEntry->Filter[i];
 
-            pFilterParms->FileTableIndex = 0;
-            pFilterParms->FilterType     = DS_BY_COUNT;
+            pFilterParams->FileTableIndex = 0;
+            pFilterParams->FilterType     = DS_BY_COUNT;
 
-            pFilterParms->Algorithm_N = 0;
-            pFilterParms->Algorithm_X = 0;
-            pFilterParms->Algorithm_O = 0;
+            pFilterParams->Algorithm_N = 0;
+            pFilterParams->Algorithm_X = 0;
+            pFilterParams->Algorithm_O = 0;
         }
 
         CFE_SB_SubscribeEx(PayloadPtr->MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
@@ -1362,11 +1362,11 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
 {
     const DS_AddRemoveMid_Payload_t *PayloadPtr;
 
-    DS_PacketEntry_t *pPacketEntry;
-    DS_FilterParms_t *pFilterParms;
-    int32             FilterTableIndex;
-    int32             HashTableIndex;
-    int32             i;
+    DS_PacketEntry_t  *pPacketEntry;
+    DS_FilterParams_t *pFilterParams;
+    int32              FilterTableIndex;
+    int32              HashTableIndex;
+    int32              i;
 
     PayloadPtr       = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
     FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID);
@@ -1423,14 +1423,14 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
 
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
-            pFilterParms = &pPacketEntry->Filter[i];
+            pFilterParams = &pPacketEntry->Filter[i];
 
-            pFilterParms->FileTableIndex = 0;
-            pFilterParms->FilterType     = DS_BY_COUNT;
+            pFilterParams->FileTableIndex = 0;
+            pFilterParams->FilterType     = DS_BY_COUNT;
 
-            pFilterParms->Algorithm_N = 0;
-            pFilterParms->Algorithm_X = 0;
-            pFilterParms->Algorithm_O = 0;
+            pFilterParams->Algorithm_N = 0;
+            pFilterParams->Algorithm_X = 0;
+            pFilterParams->Algorithm_O = 0;
         }
 
         CFE_SB_Unsubscribe(PayloadPtr->MessageID, DS_AppData.CmdPipe);
