@@ -114,7 +114,7 @@
         <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
       </EnumeratedDataType>
 
-      <ContainerDataType name="FilterParms" shortDescription="DS Packet Filter Parameters" >
+      <ContainerDataType name="FilterParams" shortDescription="DS Packet Filter Parameters" >
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint8" shortDescription="Index into Destination File Table" />
           <Entry name="FilterType" type="FilterType" shortDescription="Filter type (packet count or time)" />
@@ -124,7 +124,7 @@
         </EntryList>
       </ContainerDataType>
 
-      <ArrayDataType name="FiltersPerPacket" dataTypeRef="FilterParms">
+      <ArrayDataType name="FiltersPerPacket" dataTypeRef="FilterParams">
         <DimensionList>
           <Dimension size="${DS/FILTERS_PER_PACKET}" />
         </DimensionList>
@@ -159,7 +159,7 @@
       <ContainerDataType name="FilterFile_Payload" shortDescription="Set File Selection For Packet Filter Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
-          <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
+          <Entry name="FilterParamsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Params Array" />
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
         </EntryList>
       </ContainerDataType>
@@ -167,15 +167,15 @@
       <ContainerDataType name="FilterType_Payload" shortDescription="Set Filter Type For Packet Filter Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
-          <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
+          <Entry name="FilterParamsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Params Array" />
           <Entry name="FilterType" type="BASE_TYPES/uint16" shortDescription="Filter type (packet count or time)" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterParms_Payload" shortDescription="Set Filter Parameters For Packet Filter Table Entry">
+      <ContainerDataType name="FilterParams_Payload" shortDescription="Set Filter Parameters For Packet Filter Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
-          <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
+          <Entry name="FilterParamsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Params Array" />
           <Entry name="Algorithm_N" type="BASE_TYPES/uint16" shortDescription="Algorithm value N (pass this many)" />
           <Entry name="Algorithm_X" type="BASE_TYPES/uint16" shortDescription="Algorithm value X (out of this many)" />
           <Entry name="Algorithm_O" type="BASE_TYPES/uint16" shortDescription="Algorithm value O (at this offset)" />
@@ -464,7 +464,7 @@
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="SetFilterParmsCmd" baseType="CMD">
+      <ContainerDataType name="SetFilterParamsCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Algorithm Parameters For Packet Filter Table Entry
 
@@ -473,12 +473,12 @@
               indicated entry in the Packet Filter Table.
 
          \par Command Structure
-              #DS_SetFilterParmsCmd_t
+              #DS_SetFilterParamsCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
               - #DS_HkPacket_t.CmdAcceptedCounter will increment
-              - The #DS_PARMS_CMD_EID debug event message will be sent
+              - The #DS_PARAMS_CMD_EID debug event message will be sent
 
          \par Error Conditions
               This command can fail for the following reasons:
@@ -491,7 +491,7 @@
 
               Evidence of failure may be found in the following telemetry:
               - #DS_HkPacket_t.CmdRejectedCounter will increment
-              - The #DS_PARMS_CMD_ERR_EID error event message will be sent
+              - The #DS_PARAMS_CMD_ERR_EID error event message will be sent
 
           \par Criticality
                None
@@ -500,7 +500,7 @@
           <ValueConstraint entry="Sec.FunctionCode" value="5" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="FilterParms_Payload" name="Payload" />
+          <Entry type="FilterParams_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 

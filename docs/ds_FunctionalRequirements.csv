@@ -155,7 +155,7 @@ DS: Packet Filter Table Validation,DS9005,"Upon any initialization and/or Packet
 a) message ID
 b) destination file table index
 c) filter type (time/sequence)
-d) filter parms (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
+d) filter params (N,X,O)",Validate the items that can be validated when a table is updated (some items cannot be validated until runtime).
 DS: Packet Filter Table Message Subscription,DS9006,"Upon any initialization and/or Packet Filter Table Update, DS shall subscribe to the messages defined in the Data Storage Packet Filter Table.",Must subscribe to all of the messages defined in the Data Storage Packet Filter Table after any reset.
 DS: Destination File Table Validation,DS9007,"Upon any initialization and/or Destination File Table Update, DS will validate the Destination File Table:
 a) filename type
