@@ -117,7 +117,7 @@ void DS_AppPipe(const CFE_SB_Buffer_t *BufPtr)
 
     if (status != CFE_SUCCESS && !stored)
     {
-        DS_AppData.CommandErrCounter++;
+        DS_AppData.HkTlm.Payload.CommandErrCounter++;
 
         if (status == CFE_STATUS_VALIDATION_FAILURE || status == CFE_STATUS_UNKNOWN_MSG_ID)
         {

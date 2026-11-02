@@ -48,7 +48,7 @@ bool DS_VerifyLength(const CFE_SB_Buffer_t *BufPtr, size_t ExpectedLength, uint1
         /*
         ** Invalid command packet length...
         */
-        DS_AppData.CommandErrCounter++;
+        DS_AppData.HkTlm.Payload.CommandErrCounter++;
 
         CFE_EVS_SendEvent(FailEventID,
                           CFE_EVS_EventType_ERROR,
@@ -539,7 +539,7 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
                               DS_CMD_MID,
                               CommandCode);
 
-            DS_AppData.CommandErrCounter++;
+            DS_AppData.HkTlm.Payload.CommandErrCounter++;
             break;
     }
 }
