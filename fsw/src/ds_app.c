@@ -184,6 +184,13 @@ CFE_Status_t DS_AppInitialize(void)
     */
     memset(&DS_AppData, 0, sizeof(DS_AppData));
 
+    /*
+    ** Initialize housekeeping packet...
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(DS_AppData.HkTlm.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(DS_HK_TLM_MID),
+                 sizeof(DS_HkPacket_t));
+
     DS_AppData.AppEnableState  = DS_DEF_ENABLE_STATE;
     DS_AppData.EnableMoveFiles = DS_MOVE_FILES;
 
