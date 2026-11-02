@@ -263,8 +263,8 @@ void DS_AppStorePacket_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results -- IgnoredPktCounter increments in call to DS_FileStorePacket() */
-    UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 0);
-    UtAssert_UINT32_EQ(DS_AppData.DisabledPktCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.IgnoredPktCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DisabledPktCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
     UtAssert_STUB_COUNT(DS_FileStorePacket, 1);
@@ -287,7 +287,7 @@ void DS_AppStorePacket_Test_DSDisabled(void)
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DisabledPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DisabledPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
@@ -310,7 +310,7 @@ void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.IgnoredPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
@@ -333,7 +333,7 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.IgnoredPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.IgnoredPktCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }

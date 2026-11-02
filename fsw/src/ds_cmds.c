@@ -88,10 +88,10 @@ CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr)
     /*
     ** Reset packet storage counters...
     */
-    DS_AppData.DisabledPktCounter = 0;
-    DS_AppData.IgnoredPktCounter  = 0;
-    DS_AppData.FilteredPktCounter = 0;
-    DS_AppData.PassedPktCounter   = 0;
+    DS_AppData.HkTlm.Payload.DisabledPktCounter = 0;
+    DS_AppData.HkTlm.Payload.IgnoredPktCounter  = 0;
+    DS_AppData.HkTlm.Payload.FilteredPktCounter = 0;
+    DS_AppData.HkTlm.Payload.PassedPktCounter   = 0;
 
     /*
     ** Reset file I/O counters...
@@ -1499,10 +1499,10 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     /*
     ** Copy packet storage counters to housekeeping telemetry packet...
     */
-    PayloadPtr->DisabledPktCounter = DS_AppData.DisabledPktCounter;
-    PayloadPtr->IgnoredPktCounter  = DS_AppData.IgnoredPktCounter;
-    PayloadPtr->FilteredPktCounter = DS_AppData.FilteredPktCounter;
-    PayloadPtr->PassedPktCounter   = DS_AppData.PassedPktCounter;
+    PayloadPtr->DisabledPktCounter = DS_AppData.HkTlm.Payload.DisabledPktCounter;
+    PayloadPtr->IgnoredPktCounter  = DS_AppData.HkTlm.Payload.IgnoredPktCounter;
+    PayloadPtr->FilteredPktCounter = DS_AppData.HkTlm.Payload.FilteredPktCounter;
+    PayloadPtr->PassedPktCounter   = DS_AppData.HkTlm.Payload.PassedPktCounter;
 
     /*
     ** Copy file I/O counters to housekeeping telemetry packet...

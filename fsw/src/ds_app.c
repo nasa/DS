@@ -302,7 +302,7 @@ void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Application must be enabled in order to store data...
         */
-        DS_AppData.DisabledPktCounter++;
+        DS_AppData.HkTlm.Payload.DisabledPktCounter++;
     }
     else if ((DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
              || (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL))
@@ -310,7 +310,7 @@ void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Must have both tables loaded in order to store data...
         */
-        DS_AppData.IgnoredPktCounter++;
+        DS_AppData.HkTlm.Payload.IgnoredPktCounter++;
     }
     else
     {

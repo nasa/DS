@@ -99,7 +99,7 @@ void DS_FileStorePacket_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.PassedPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.PassedPktCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
@@ -127,7 +127,7 @@ void DS_FileStorePacket_Test_PacketNotInTable(void)
     UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_INT32_EQ(DS_AppData.IgnoredPktCounter, 1);
+    UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.IgnoredPktCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
@@ -160,7 +160,7 @@ void DS_FileStorePacket_Test_PassedFilterFalse(void)
     UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilteredPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilteredPktCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
@@ -191,7 +191,7 @@ void DS_FileStorePacket_Test_DisabledDest(void)
     UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilteredPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilteredPktCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
@@ -223,7 +223,7 @@ void DS_FileStorePacket_Test_InvalidIndex(void)
     UtAssert_VOIDCALL(DS_FileStorePacket(MessageID, &UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilteredPktCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilteredPktCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 

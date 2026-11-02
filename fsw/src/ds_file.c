@@ -206,7 +206,7 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
     */
     if (FilterIndex == DS_INDEX_NONE)
     {
-        DS_AppData.IgnoredPktCounter++;
+        DS_AppData.HkTlm.Payload.IgnoredPktCounter++;
     }
     else
     {
@@ -256,11 +256,11 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         */
         if (PassedFilter)
         {
-            DS_AppData.PassedPktCounter++;
+            DS_AppData.HkTlm.Payload.PassedPktCounter++;
         }
         else
         {
-            DS_AppData.FilteredPktCounter++;
+            DS_AppData.HkTlm.Payload.FilteredPktCounter++;
         }
     }
 }
