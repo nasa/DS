@@ -1461,20 +1461,10 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
 
 CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
 {
-    DS_HkPacket_t  HkPacket;
     int32          i;
     CFE_Status_t   Status;
     char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = { 0 };
     CFE_TBL_Info_t FilterTblInfo;
-
-    DS_HkTlm_Payload_t *PayloadPtr;
-
-    memset(&HkPacket, 0, sizeof(HkPacket));
-
-    /*
-    ** Initialize housekeeping packet...
-    */
-    CFE_MSG_Init(CFE_MSG_PTR(HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
 
     /*
     ** Process data storage file age limits...
@@ -1486,44 +1476,6 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     */
     DS_TableManageDestFile();
     DS_TableManageFilter();
-
-    /* Get internal payload substructure */
-    PayloadPtr = &HkPacket.Payload;
-
-    /*
-    ** Copy application command counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->CommandCounter    = DS_AppData.HkTlm.Payload.CommandCounter;
-    PayloadPtr->CommandErrCounter = DS_AppData.HkTlm.Payload.CommandErrCounter;
-
-    /*
-    ** Copy packet storage counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->DisabledPktCounter = DS_AppData.HkTlm.Payload.DisabledPktCounter;
-    PayloadPtr->IgnoredPktCounter  = DS_AppData.HkTlm.Payload.IgnoredPktCounter;
-    PayloadPtr->FilteredPktCounter = DS_AppData.HkTlm.Payload.FilteredPktCounter;
-    PayloadPtr->PassedPktCounter   = DS_AppData.HkTlm.Payload.PassedPktCounter;
-
-    /*
-    ** Copy file I/O counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->FileWriteCounter     = DS_AppData.HkTlm.Payload.FileWriteCounter;
-    PayloadPtr->FileWriteErrCounter  = DS_AppData.HkTlm.Payload.FileWriteErrCounter;
-    PayloadPtr->FileUpdateCounter    = DS_AppData.HkTlm.Payload.FileUpdateCounter;
-    PayloadPtr->FileUpdateErrCounter = DS_AppData.HkTlm.Payload.FileUpdateErrCounter;
-
-    /*
-    ** Copy configuration table counters to housekeeping telemetry packet...
-    */
-    PayloadPtr->DestTblLoadCounter   = DS_AppData.HkTlm.Payload.DestTblLoadCounter;
-    PayloadPtr->DestTblErrCounter    = DS_AppData.HkTlm.Payload.DestTblErrCounter;
-    PayloadPtr->FilterTblLoadCounter = DS_AppData.HkTlm.Payload.FilterTblLoadCounter;
-    PayloadPtr->FilterTblErrCounter  = DS_AppData.HkTlm.Payload.FilterTblErrCounter;
-
-    /*
-    ** Copy app enable/disable state to housekeeping telemetry packet...
-    */
-    PayloadPtr->AppEnableState = DS_AppData.HkTlm.Payload.AppEnableState;
 
     /*
     ** Compute file growth rate from the number of bytes since the last HK request...
@@ -1541,8 +1493,8 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
         Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
         if (Status == CFE_SUCCESS)
         {
-            snprintf(PayloadPtr->FilterTblFilename,
-                     sizeof(PayloadPtr->FilterTblFilename),
+            snprintf(DS_AppData.HkTlm.Payload.FilterTblFilename,
+                     sizeof(char) * CFE_MISSION_MAX_PATH_LEN,
                      "%s",
                      FilterTblInfo.LastFileLoaded);
         }
@@ -1556,7 +1508,7 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
                               FilterTblName,
                               (unsigned int)Status);
 
-            memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
+            memset(DS_AppData.HkTlm.Payload.FilterTblFilename, 0, sizeof(char) * CFE_MISSION_MAX_PATH_LEN);
         }
     }
     else
@@ -1568,14 +1520,14 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
                           "Filter tbl name copy fail in DS_SendHkCmd. Err=%d",
                           (int)Status);
 
-        memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
+        memset(DS_AppData.HkTlm.Payload.FilterTblFilename, 0, sizeof(char) * CFE_MISSION_MAX_PATH_LEN);
     }
 
     /*
     ** Timestamp and send housekeeping telemetry packet...
     */
-    CFE_SB_TimeStampMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader));
-    CFE_SB_TransmitMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader), true);
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(DS_AppData.HkTlm.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(DS_AppData.HkTlm.TelemetryHeader), true);
 
     return CFE_SUCCESS;
 }
