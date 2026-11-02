@@ -1360,7 +1360,7 @@ void DS_TableCreateCDS_Test_PreExistingCDSArea(void)
     if (DS_CDS_ENABLE_STATE == 1)
     {
         /* only test if configured */
-        UtAssert_UINT32_EQ(DS_AppData.AppEnableState, 0);
+        UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, 0);
     }
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);

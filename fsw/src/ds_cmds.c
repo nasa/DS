@@ -137,7 +137,7 @@ CFE_Status_t DS_SetAppStateCmd(const DS_SetAppStateCmd_t *BufPtr)
         /*
         ** Set new DS application enable/disable state...
         */
-        DS_AppData.AppEnableState = DS_AppStateCmd->EnableState;
+        DS_AppData.HkTlm.Payload.AppEnableState = DS_AppStateCmd->EnableState;
 
         /*
         ** Update the Critical Data Store (CDS)...
@@ -1523,7 +1523,7 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     /*
     ** Copy app enable/disable state to housekeeping telemetry packet...
     */
-    PayloadPtr->AppEnableState = DS_AppData.AppEnableState;
+    PayloadPtr->AppEnableState = DS_AppData.HkTlm.Payload.AppEnableState;
 
     /*
     ** Compute file growth rate from the number of bytes since the last HK request...

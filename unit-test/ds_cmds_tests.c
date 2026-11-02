@@ -112,7 +112,7 @@ void DS_SetAppStateCmd_Test_Nominal(void)
     /* Verify results */
     UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 0);
     UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
-    UtAssert_True(DS_AppData.AppEnableState == true, "DS_AppData.AppEnableState == true");
+    UtAssert_True(DS_AppData.HkTlm.Payload.AppEnableState == true, "DS_AppData.HkTlm.Payload.AppEnableState == true");
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_EID);

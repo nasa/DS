@@ -191,8 +191,8 @@ CFE_Status_t DS_AppInitialize(void)
                  CFE_SB_ValueToMsgId(DS_HK_TLM_MID),
                  sizeof(DS_HkPacket_t));
 
-    DS_AppData.AppEnableState  = DS_DEF_ENABLE_STATE;
-    DS_AppData.EnableMoveFiles = DS_MOVE_FILES;
+    DS_AppData.HkTlm.Payload.AppEnableState = DS_DEF_ENABLE_STATE;
+    DS_AppData.EnableMoveFiles              = DS_MOVE_FILES;
 
     /*
     ** Mark files as closed
@@ -297,7 +297,7 @@ CFE_Status_t DS_AppInitialize(void)
 
 void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_AppData.AppEnableState == DS_DISABLED)
+    if (DS_AppData.HkTlm.Payload.AppEnableState == DS_DISABLED)
     {
         /*
         ** Application must be enabled in order to store data...

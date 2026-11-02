@@ -78,9 +78,6 @@ typedef struct
     DS_FilterTable_t   *FilterTblPtr;   /**< \brief Packet filter table data pointer */
     DS_DestFileTable_t *DestFileTblPtr; /**< \brief Destination file table data pointer */
 
-    uint8 AppEnableState;       /**< \brief Application enable/disable state */
-    uint8 Spare8;               /**< \brief Structure alignment padding */
-
     uint16 FileWriteCounter;     /**< \brief Count of good destination file writes */
     uint16 FileWriteErrCounter;  /**< \brief Count of bad destination file writes */
     uint16 FileUpdateCounter;    /**< \brief Count of good updates to secondary header */

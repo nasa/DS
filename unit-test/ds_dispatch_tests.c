@@ -61,7 +61,7 @@ void DS_AppPipe_Test_CmdStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_NOOP_CC, sizeof(DS_NoopCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), 1);
@@ -77,7 +77,7 @@ void DS_AppPipe_Test_CmdNoStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_NOOP_CC, sizeof(DS_NoopCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
@@ -96,7 +96,7 @@ void DS_AppPipe_Test_HKStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), 0, sizeof(DS_SendHkCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), 1);
@@ -114,7 +114,7 @@ void DS_AppPipe_Test_HKNoStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), 0, sizeof(DS_SendHkCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);

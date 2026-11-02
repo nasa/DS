@@ -148,7 +148,7 @@ void DS_AppInitialize_Test_Nominal(void)
     UtAssert_INT32_EQ(DS_AppInitialize(), CFE_SUCCESS);
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -171,7 +171,7 @@ void DS_AppInitialize_Test_EVSRegisterError(void)
     UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -189,7 +189,7 @@ void DS_AppInitialize_Test_SBCreatePipeError(void)
     UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -211,7 +211,7 @@ void DS_AppInitialize_Test_SBSubscribeHKError(void)
     UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -233,7 +233,7 @@ void DS_AppInitialize_Test_SBSubscribeDSError(void)
     UtAssert_INT32_EQ(DS_AppInitialize(), -1);
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.AppEnableState, DS_DEF_ENABLE_STATE);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, DS_DEF_ENABLE_STATE);
 
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[0].FileHandle));
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(DS_AppData.FileStatus[DS_DEST_FILE_CNT / 2].FileHandle));
@@ -257,7 +257,7 @@ void DS_AppStorePacket_Test_Nominal(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    DS_AppData.AppEnableState = DS_ENABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState = DS_ENABLED;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
@@ -281,7 +281,7 @@ void DS_AppStorePacket_Test_DSDisabled(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    DS_AppData.AppEnableState = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState = DS_DISABLED;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
@@ -303,8 +303,8 @@ void DS_AppStorePacket_Test_FilterTableNotLoaded(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    DS_AppData.AppEnableState = DS_ENABLED;
-    DS_AppData.FilterTblPtr   = 0;
+    DS_AppData.HkTlm.Payload.AppEnableState = DS_ENABLED;
+    DS_AppData.FilterTblPtr                 = 0;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));
@@ -326,8 +326,8 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-    DS_AppData.AppEnableState = DS_ENABLED;
-    DS_AppData.DestFileTblPtr = 0;
+    DS_AppData.HkTlm.Payload.AppEnableState = DS_ENABLED;
+    DS_AppData.DestFileTblPtr               = 0;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));

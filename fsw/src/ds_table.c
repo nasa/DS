@@ -1022,7 +1022,7 @@ CFE_Status_t DS_TableCreateCDS(void)
             DataStoreBuffer[i] = DS_AppData.FileStatus[i].FileCount;
         }
 
-        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.AppEnableState;
+        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.HkTlm.Payload.AppEnableState;
 
         Result = CFE_ES_CopyToCDS(DS_AppData.DataStoreHandle, DataStoreBuffer);
     }
@@ -1043,7 +1043,7 @@ CFE_Status_t DS_TableCreateCDS(void)
             if (DS_CDS_ENABLE_STATE == 1)
             {
                 /* Only restore enable/disable state if configured */
-                DS_AppData.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
+                DS_AppData.HkTlm.Payload.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
             }
         }
     }
@@ -1098,7 +1098,7 @@ void DS_TableUpdateCDS(void)
         ** Always save the DS enable/disable state in the CDS...
         **  (DS_CDS_ENABLE_STATE controls restoring the state)
         */
-        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.AppEnableState;
+        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.HkTlm.Payload.AppEnableState;
 
         /*
         ** Update DS portion of Critical Data Store...
