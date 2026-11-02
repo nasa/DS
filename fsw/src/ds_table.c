@@ -225,7 +225,7 @@ void DS_TableManageDestFile(void)
             /*
             ** Got a pointer to initial table data...
             */
-            DS_AppData.DestTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.DestTblLoadCounter++;
 
             /*
             ** Keep local copies of table values that software will modify...
@@ -246,7 +246,7 @@ void DS_TableManageDestFile(void)
             /*
             ** Still waiting for the first table load...
             */
-            DS_AppData.DestTblErrCounter++;
+            DS_AppData.HkTlm.Payload.DestTblErrCounter++;
 
             /*
             ** Make sure we don't try to use the empty table buffer...
@@ -280,7 +280,7 @@ void DS_TableManageDestFile(void)
             /*
             ** Update the current table with new data...
             */
-            DS_AppData.DestTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.DestTblLoadCounter++;
 
             /*
             ** Allow cFE to update the table data...

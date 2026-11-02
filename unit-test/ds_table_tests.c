@@ -162,7 +162,7 @@ void DS_TableManageDestFile_Test_TableInfoUpdated(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblLoadCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileState, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileCount, 0);
@@ -185,7 +185,7 @@ void DS_TableManageDestFile_Test_TableNeverLoaded(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblErrCounter, 1);
     UtAssert_ADDRESS_EQ(DS_AppData.DestFileTblPtr, NULL);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -232,7 +232,7 @@ void DS_TableManageDestFile_Test_TableInfoUpdatePending(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblLoadCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileState, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileCount, 0);
@@ -271,7 +271,7 @@ void DS_TableManageDestFile_Test_TableSuccess(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblLoadCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblLoadCounter, 0);
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileState, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileCount, 0);

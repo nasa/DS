@@ -78,8 +78,6 @@ typedef struct
     DS_FilterTable_t   *FilterTblPtr;   /**< \brief Packet filter table data pointer */
     DS_DestFileTable_t *DestFileTblPtr; /**< \brief Destination file table data pointer */
 
-    uint8 DestTblLoadCounter;   /**< \brief Count of destination file table loads */
-    uint8 DestTblErrCounter;    /**< \brief Count of failed attempts to get destination table data pointer */
     uint8 FilterTblLoadCounter; /**< \brief Count of packet filter table loads */
     uint8 FilterTblErrCounter;  /**< \brief Count of failed attempts to get filter table data pointer */
     uint8 AppEnableState;       /**< \brief Application enable/disable state */

@@ -104,8 +104,8 @@ CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr)
     /*
     ** Reset configuration table counters...
     */
-    DS_AppData.DestTblLoadCounter   = 0;
-    DS_AppData.DestTblErrCounter    = 0;
+    DS_AppData.HkTlm.Payload.DestTblLoadCounter   = 0;
+    DS_AppData.HkTlm.Payload.DestTblErrCounter    = 0;
     DS_AppData.FilterTblLoadCounter = 0;
     DS_AppData.FilterTblErrCounter  = 0;
 
@@ -1515,8 +1515,8 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     /*
     ** Copy configuration table counters to housekeeping telemetry packet...
     */
-    PayloadPtr->DestTblLoadCounter   = DS_AppData.DestTblLoadCounter;
-    PayloadPtr->DestTblErrCounter    = DS_AppData.DestTblErrCounter;
+    PayloadPtr->DestTblLoadCounter   = DS_AppData.HkTlm.Payload.DestTblLoadCounter;
+    PayloadPtr->DestTblErrCounter    = DS_AppData.HkTlm.Payload.DestTblErrCounter;
     PayloadPtr->FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
     PayloadPtr->FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
 
