@@ -326,13 +326,8 @@ void DS_AppStorePacket_Test_DestFileTableNotLoaded(void)
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_Size, sizeof(forced_Size), false);
     UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_CmdCode, sizeof(forced_CmdCode), false);
 
-<<<<<<< HEAD
     DS_AppData.AppEnableState = DS_ENABLED;
     DS_AppData.DestFileTblPtr = 0;
-=======
-    DS_AppData.HkTlm.Payload.AppEnableState = DS_ENABLED;
-    DS_AppData.DestFileTblPtr               = 0;
->>>>>>> ce77c7a (Issue #179, f with dest file)
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppStorePacket(MessageID, &UT_CmdBuf.Buf));

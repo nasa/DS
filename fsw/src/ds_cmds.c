@@ -106,8 +106,8 @@ CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr)
     */
     DS_AppData.HkTlm.Payload.DestTblLoadCounter   = 0;
     DS_AppData.HkTlm.Payload.DestTblErrCounter    = 0;
-    DS_AppData.FilterTblLoadCounter = 0;
-    DS_AppData.FilterTblErrCounter  = 0;
+    DS_AppData.HkTlm.Payload.FilterTblLoadCounter = 0;
+    DS_AppData.HkTlm.Payload.FilterTblErrCounter  = 0;
 
     CFE_EVS_SendEvent(DS_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset counters command");
 
@@ -1517,8 +1517,8 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     */
     PayloadPtr->DestTblLoadCounter   = DS_AppData.HkTlm.Payload.DestTblLoadCounter;
     PayloadPtr->DestTblErrCounter    = DS_AppData.HkTlm.Payload.DestTblErrCounter;
-    PayloadPtr->FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
-    PayloadPtr->FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
+    PayloadPtr->FilterTblLoadCounter = DS_AppData.HkTlm.Payload.FilterTblLoadCounter;
+    PayloadPtr->FilterTblErrCounter  = DS_AppData.HkTlm.Payload.FilterTblErrCounter;
 
     /*
     ** Copy app enable/disable state to housekeeping telemetry packet...

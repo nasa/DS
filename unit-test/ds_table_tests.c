@@ -296,7 +296,7 @@ void DS_TableManageFilter_Test_TableInfoUpdated(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblLoadCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
@@ -311,7 +311,7 @@ void DS_TableManageFilter_Test_TableNeverLoaded(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblErrCounter, 1);
     UtAssert_ADDRESS_EQ(DS_AppData.FilterTblPtr, NULL);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -350,7 +350,7 @@ void DS_TableManageFilter_Test_TableInfoUpdatePending(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblLoadCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
@@ -376,7 +376,7 @@ void DS_TableManageFilter_Test_TableSuccess(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblLoadCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }

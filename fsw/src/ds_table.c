@@ -357,7 +357,7 @@ void DS_TableManageFilter(void)
             /*
             ** Got a pointer to initial filter table data...
             */
-            DS_AppData.FilterTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.FilterTblLoadCounter++;
 
             /*
             ** Subscribe to the packets in the new filter table...
@@ -374,7 +374,7 @@ void DS_TableManageFilter(void)
             /*
             ** Still waiting for the first filter table load...
             */
-            DS_AppData.FilterTblErrCounter++;
+            DS_AppData.HkTlm.Payload.FilterTblErrCounter++;
 
             /*
             ** Make sure we don't try to use the empty table buffer...
@@ -408,7 +408,7 @@ void DS_TableManageFilter(void)
             /*
             ** Update the current filter table with new data...
             */
-            DS_AppData.FilterTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.FilterTblLoadCounter++;
 
             /*
             ** Un-subscribe to the packets in the old filter table...

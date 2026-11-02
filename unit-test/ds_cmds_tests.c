@@ -87,8 +87,8 @@ void DS_ResetCountersCmd_Test_Nominal(void)
     UtAssert_ZERO(DS_AppData.FileUpdateErrCounter);
     UtAssert_ZERO(DS_AppData.HkTlm.Payload.DestTblLoadCounter);
     UtAssert_ZERO(DS_AppData.HkTlm.Payload.DestTblErrCounter);
-    UtAssert_ZERO(DS_AppData.FilterTblLoadCounter);
-    UtAssert_ZERO(DS_AppData.FilterTblErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FilterTblLoadCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FilterTblErrCounter);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_RESET_INF_EID);
