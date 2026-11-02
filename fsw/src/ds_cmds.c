@@ -96,10 +96,10 @@ CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr)
     /*
     ** Reset file I/O counters...
     */
-    DS_AppData.FileWriteCounter     = 0;
-    DS_AppData.FileWriteErrCounter  = 0;
-    DS_AppData.FileUpdateCounter    = 0;
-    DS_AppData.FileUpdateErrCounter = 0;
+    DS_AppData.HkTlm.Payload.FileWriteCounter     = 0;
+    DS_AppData.HkTlm.Payload.FileWriteErrCounter  = 0;
+    DS_AppData.HkTlm.Payload.FileUpdateCounter    = 0;
+    DS_AppData.HkTlm.Payload.FileUpdateErrCounter = 0;
 
     /*
     ** Reset configuration table counters...
@@ -1507,10 +1507,10 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     /*
     ** Copy file I/O counters to housekeeping telemetry packet...
     */
-    PayloadPtr->FileWriteCounter     = DS_AppData.FileWriteCounter;
-    PayloadPtr->FileWriteErrCounter  = DS_AppData.FileWriteErrCounter;
-    PayloadPtr->FileUpdateCounter    = DS_AppData.FileUpdateCounter;
-    PayloadPtr->FileUpdateErrCounter = DS_AppData.FileUpdateErrCounter;
+    PayloadPtr->FileWriteCounter     = DS_AppData.HkTlm.Payload.FileWriteCounter;
+    PayloadPtr->FileWriteErrCounter  = DS_AppData.HkTlm.Payload.FileWriteErrCounter;
+    PayloadPtr->FileUpdateCounter    = DS_AppData.HkTlm.Payload.FileUpdateCounter;
+    PayloadPtr->FileUpdateErrCounter = DS_AppData.HkTlm.Payload.FileUpdateErrCounter;
 
     /*
     ** Copy configuration table counters to housekeeping telemetry packet...

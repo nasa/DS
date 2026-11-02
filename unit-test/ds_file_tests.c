@@ -338,7 +338,7 @@ void DS_FileWriteData_Test_Nominal(void)
     DS_FileWriteData(FileIndex, &UT_CmdBuf.Buf, sizeof(UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileWriteCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 1);
     UtAssert_UINT32_EQ(StatusPtr->FileSize, sizeof(UT_CmdBuf.Buf));
     UtAssert_UINT32_EQ(StatusPtr->FileGrowth, sizeof(UT_CmdBuf.Buf));
 
@@ -398,7 +398,7 @@ void DS_FileWriteHeader_Test_PlatformConfigCFE_Nominal(void)
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
-    UtAssert_UINT32_EQ(DS_AppData.FileWriteCounter, 2);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 2);
     UtAssert_UINT32_EQ(StatusPtr->FileSize, sizeof(CFE_FS_Header_t) + sizeof(DS_FileHeader_t));
     UtAssert_UINT32_EQ(StatusPtr->FileGrowth, sizeof(CFE_FS_Header_t) + sizeof(DS_FileHeader_t));
 }
@@ -478,7 +478,7 @@ void DS_FileWriteError_Test(void)
     UtAssert_VOIDCALL(DS_FileWriteError(FileIndex, DataLength, WriteResult));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileWriteErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileWriteErrCounter, 1);
     UtAssert_UINT32_EQ(StatusPtr->FileState, DS_DISABLED);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
@@ -511,11 +511,11 @@ void DS_FileCreateDest_Test_Nominal(void)
     /* Verify results */
     if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
     {
-        UtAssert_INT32_EQ(DS_AppData.FileWriteCounter, 3);
+        UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 3);
     }
     else
     {
-        UtAssert_INT32_EQ(DS_AppData.FileWriteCounter, 1);
+        UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 1);
     }
 
     /* the file handle should have been reset and should not be closed */
@@ -565,11 +565,11 @@ void DS_FileCreateDest_Test_NominalRollover(void)
     /* Verify results */
     if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
     {
-        UtAssert_INT32_EQ(DS_AppData.FileWriteCounter, 3);
+        UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 3);
     }
     else
     {
-        UtAssert_INT32_EQ(DS_AppData.FileWriteCounter, 1);
+        UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 1);
     }
 
     /* the file handle should have been reset and should not be closed */
@@ -604,7 +604,7 @@ void DS_FileCreateDest_Test_Error(void)
     UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileWriteErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileWriteErrCounter, 1);
     UtAssert_UINT32_EQ(StatusPtr->FileName[0], 0);
     UtAssert_UINT32_EQ(StatusPtr->FileState, DS_DISABLED);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -641,7 +641,7 @@ void DS_FileCreateDest_Test_ClosedFileHandle(void)
     UtAssert_VOIDCALL(DS_FileCreateDest(FileIndex));
 
     /* Verify results */
-    UtAssert_INT32_EQ(DS_AppData.FileWriteCounter, 1);
+    UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.FileWriteCounter, 1);
     UtAssert_BOOL_FALSE(OS_ObjectIdDefined(StatusPtr->FileHandle));
     UtAssert_INT32_EQ(StatusPtr->FileCount, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -963,7 +963,7 @@ void DS_FileUpdateHeader_Test_PlatformConfigCFE_Nominal(void)
     UtAssert_VOIDCALL(DS_FileUpdateHeader(FileIndex));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileUpdateCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileUpdateCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
@@ -978,7 +978,7 @@ void DS_FileUpdateHeader_Test_WriteError(void)
     UtAssert_VOIDCALL(DS_FileUpdateHeader(FileIndex));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileUpdateErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileUpdateErrCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
@@ -993,7 +993,7 @@ void DS_FileUpdateHeader_Test_PlatformConfigCFE_SeekError(void)
     UtAssert_VOIDCALL(DS_FileUpdateHeader(FileIndex));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FileUpdateErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FileUpdateErrCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 

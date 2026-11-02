@@ -78,11 +78,6 @@ typedef struct
     DS_FilterTable_t   *FilterTblPtr;   /**< \brief Packet filter table data pointer */
     DS_DestFileTable_t *DestFileTblPtr; /**< \brief Destination file table data pointer */
 
-    uint16 FileWriteCounter;     /**< \brief Count of good destination file writes */
-    uint16 FileWriteErrCounter;  /**< \brief Count of bad destination file writes */
-    uint16 FileUpdateCounter;    /**< \brief Count of good updates to secondary header */
-    uint16 FileUpdateErrCounter; /**< \brief Count of bad updates to secondary header */
-
     uint32 DisabledPktCounter; /**< \brief Count of packets discarded (DS app disabled) */
     uint32 IgnoredPktCounter;  /**< \brief Count of packets discarded (filter or destination file table unavailable,
                                 *          or pkt has no filter table entry) */

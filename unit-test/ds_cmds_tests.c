@@ -81,10 +81,10 @@ void DS_ResetCountersCmd_Test_Nominal(void)
     UtAssert_ZERO(DS_AppData.IgnoredPktCounter);
     UtAssert_ZERO(DS_AppData.FilteredPktCounter);
     UtAssert_ZERO(DS_AppData.PassedPktCounter);
-    UtAssert_ZERO(DS_AppData.FileWriteCounter);
-    UtAssert_ZERO(DS_AppData.FileWriteErrCounter);
-    UtAssert_ZERO(DS_AppData.FileUpdateCounter);
-    UtAssert_ZERO(DS_AppData.FileUpdateErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileWriteCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileWriteErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileUpdateCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileUpdateErrCounter);
     UtAssert_ZERO(DS_AppData.HkTlm.Payload.DestTblLoadCounter);
     UtAssert_ZERO(DS_AppData.HkTlm.Payload.DestTblErrCounter);
     UtAssert_ZERO(DS_AppData.HkTlm.Payload.FilterTblLoadCounter);
