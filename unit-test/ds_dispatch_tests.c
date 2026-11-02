@@ -545,7 +545,7 @@ void DS_AppProcessCmd_Test_InvalidCommandCode(void)
     UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }

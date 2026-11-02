@@ -58,7 +58,7 @@ CFE_Status_t DS_NoopCmd(const DS_NoopCmd_t *BufPtr)
     /*
     ** Do nothing except display "aliveness" event...
     */
-    DS_AppData.CmdAcceptedCounter++;
+    DS_AppData.CommandCounter++;
 
     CFE_EVS_SendEvent(DS_NOOP_INF_EID,
                       CFE_EVS_EventType_INFORMATION,
@@ -82,8 +82,8 @@ CFE_Status_t DS_ResetCountersCmd(const DS_ResetCountersCmd_t *BufPtr)
     /*
     ** Reset application command counters...
     */
-    DS_AppData.CmdAcceptedCounter = 0;
-    DS_AppData.CmdRejectedCounter = 0;
+    DS_AppData.CommandCounter    = 0;
+    DS_AppData.CommandErrCounter = 0;
 
     /*
     ** Reset packet storage counters...
@@ -125,7 +125,7 @@ CFE_Status_t DS_SetAppStateCmd(const DS_SetAppStateCmd_t *BufPtr)
         /*
         ** Invalid enable/disable state...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_ENADIS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -144,7 +144,7 @@ CFE_Status_t DS_SetAppStateCmd(const DS_SetAppStateCmd_t *BufPtr)
         */
         DS_TableUpdateCDS();
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_ENADIS_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -176,7 +176,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
         /*
         ** Invalid packet messageID...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -188,7 +188,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
         /*
         ** Invalid packet filter parameters index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -200,7 +200,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -212,7 +212,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
         /*
         ** Must have a valid packet filter table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -230,7 +230,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
             /*
             ** Must not create - may only modify existing packet filter...
             */
-            DS_AppData.CmdRejectedCounter++;
+            DS_AppData.CommandErrCounter++;
 
             CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID,
                               CFE_EVS_EventType_ERROR,
@@ -252,7 +252,7 @@ CFE_Status_t DS_SetFilterFileCmd(const DS_SetFilterFileCmd_t *BufPtr)
             */
             CFE_TBL_Modified(DS_AppData.FilterTblHandle);
 
-            DS_AppData.CmdAcceptedCounter++;
+            DS_AppData.CommandCounter++;
 
             CFE_EVS_SendEvent(DS_FILE_CMD_EID,
                               CFE_EVS_EventType_INFORMATION,
@@ -288,7 +288,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
         /*
         ** Invalid packet messageID...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -300,7 +300,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
         /*
         ** Invalid packet filter parameters index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -312,7 +312,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
         /*
         ** Invalid packet filter filename type...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -324,7 +324,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
         /*
         ** Must have a valid packet filter table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -342,7 +342,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
             /*
             ** Must not create - may only modify existing packet filter...
             */
-            DS_AppData.CmdRejectedCounter++;
+            DS_AppData.CommandErrCounter++;
 
             CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID,
                               CFE_EVS_EventType_ERROR,
@@ -364,7 +364,7 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr)
             */
             CFE_TBL_Modified(DS_AppData.FilterTblHandle);
 
-            DS_AppData.CmdAcceptedCounter++;
+            DS_AppData.CommandCounter++;
 
             CFE_EVS_SendEvent(DS_FTYPE_CMD_EID,
                               CFE_EVS_EventType_INFORMATION,
@@ -400,7 +400,7 @@ CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
         /*
         ** Invalid packet messageID...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -412,7 +412,7 @@ CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
         /*
         ** Invalid packet filter parameters index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -427,7 +427,7 @@ CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
         /*
         ** Invalid packet filter algorithm parameters...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -441,7 +441,7 @@ CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
         /*
         ** Must have a valid packet filter table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -459,7 +459,7 @@ CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
             /*
             ** Must not create - may only modify existing packet filter...
             */
-            DS_AppData.CmdRejectedCounter++;
+            DS_AppData.CommandErrCounter++;
 
             CFE_EVS_SendEvent(DS_PARAMS_CMD_ERR_EID,
                               CFE_EVS_EventType_ERROR,
@@ -483,7 +483,7 @@ CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr)
             */
             CFE_TBL_Modified(DS_AppData.FilterTblHandle);
 
-            DS_AppData.CmdAcceptedCounter++;
+            DS_AppData.CommandCounter++;
 
             CFE_EVS_SendEvent(DS_PARAMS_CMD_EID,
                               CFE_EVS_EventType_INFORMATION,
@@ -519,7 +519,7 @@ CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -531,7 +531,7 @@ CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr)
         /*
         ** Invalid destination filename type...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -543,7 +543,7 @@ CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -562,7 +562,7 @@ CFE_Status_t DS_SetDestTypeCmd(const DS_SetDestTypeCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_NTYPE_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -591,7 +591,7 @@ CFE_Status_t DS_SetDestStateCmd(const DS_SetDestStateCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -603,7 +603,7 @@ CFE_Status_t DS_SetDestStateCmd(const DS_SetDestStateCmd_t *BufPtr)
         /*
         ** Invalid destination file state...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -615,7 +615,7 @@ CFE_Status_t DS_SetDestStateCmd(const DS_SetDestStateCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -634,7 +634,7 @@ CFE_Status_t DS_SetDestStateCmd(const DS_SetDestStateCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_STATE_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -665,7 +665,7 @@ CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -677,7 +677,7 @@ CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -700,7 +700,7 @@ CFE_Status_t DS_SetDestPathCmd(const DS_SetDestPathCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_PATH_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -730,7 +730,7 @@ CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -742,7 +742,7 @@ CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -765,7 +765,7 @@ CFE_Status_t DS_SetDestBaseCmd(const DS_SetDestBaseCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_BASE_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -795,7 +795,7 @@ CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -807,7 +807,7 @@ CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -830,7 +830,7 @@ CFE_Status_t DS_SetDestExtCmd(const DS_SetDestExtCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_EXT_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -860,7 +860,7 @@ CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -872,7 +872,7 @@ CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
         /*
         ** Invalid destination file size limit...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -884,7 +884,7 @@ CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -903,7 +903,7 @@ CFE_Status_t DS_SetDestSizeCmd(const DS_SetDestSizeCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_SIZE_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -933,7 +933,7 @@ CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -945,7 +945,7 @@ CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
         /*
         ** Invalid destination file age limit...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -957,7 +957,7 @@ CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -976,7 +976,7 @@ CFE_Status_t DS_SetDestAgeCmd(const DS_SetDestAgeCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_AGE_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -1007,7 +1007,7 @@ CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1019,7 +1019,7 @@ CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr)
         /*
         ** Invalid destination file sequence count...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1031,7 +1031,7 @@ CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr)
         /*
         ** Must have a valid destination file table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1061,7 +1061,7 @@ CFE_Status_t DS_SetDestCountCmd(const DS_SetDestCountCmd_t *BufPtr)
         */
         DS_TableUpdateCDS();
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_SEQ_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -1090,7 +1090,7 @@ CFE_Status_t DS_CloseFileCmd(const DS_CloseFileCmd_t *BufPtr)
         /*
         ** Invalid destination file table index...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_CLOSE_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1108,7 +1108,7 @@ CFE_Status_t DS_CloseFileCmd(const DS_CloseFileCmd_t *BufPtr)
             DS_FileCloseDest(PayloadPtr->FileTableIndex);
         }
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_CLOSE_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -1141,7 +1141,7 @@ CFE_Status_t DS_CloseAllCmd(const DS_CloseAllCmd_t *BufPtr)
         }
     }
 
-    DS_AppData.CmdAcceptedCounter++;
+    DS_AppData.CommandCounter++;
 
     CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE ALL command");
 
@@ -1163,7 +1163,7 @@ CFE_Status_t DS_GetFileInfoCmd(const DS_GetFileInfoCmd_t *BufPtr)
     /*
     ** Create and send a file info packet...
     */
-    DS_AppData.CmdAcceptedCounter++;
+    DS_AppData.CommandCounter++;
 
     CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_INFORMATION, "GET FILE INFO command");
 
@@ -1266,7 +1266,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
         /*
         ** Invalid packet message ID - can be anything but unused...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1278,7 +1278,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
         /*
         ** Must have a valid packet filter table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1289,7 +1289,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
         /*
         ** New message ID is already in packet filter table...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1302,7 +1302,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
         /*
         ** Packet filter table has no unused entries...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1339,7 +1339,7 @@ CFE_Status_t DS_AddMidCmd(const DS_AddMidCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.FilterTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_ADD_MID_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -1376,7 +1376,7 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
         /*
         ** Invalid packet message ID - can be anything but unused...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1388,7 +1388,7 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
         /*
         ** Must have a valid packet filter table loaded...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1399,7 +1399,7 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
         /*
         ** Message ID is not in packet filter table...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.CommandErrCounter++;
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID,
                           CFE_EVS_EventType_ERROR,
@@ -1440,7 +1440,7 @@ CFE_Status_t DS_RemoveMidCmd(const DS_RemoveMidCmd_t *BufPtr)
         */
         CFE_TBL_Modified(DS_AppData.FilterTblHandle);
 
-        DS_AppData.CmdAcceptedCounter++;
+        DS_AppData.CommandCounter++;
 
         CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_EID,
                           CFE_EVS_EventType_INFORMATION,
@@ -1493,8 +1493,8 @@ CFE_Status_t DS_SendHkCmd(const DS_SendHkCmd_t *BufPtr)
     /*
     ** Copy application command counters to housekeeping telemetry packet...
     */
-    PayloadPtr->CmdAcceptedCounter = DS_AppData.CmdAcceptedCounter;
-    PayloadPtr->CmdRejectedCounter = DS_AppData.CmdRejectedCounter;
+    PayloadPtr->CommandCounter    = DS_AppData.CommandCounter;
+    PayloadPtr->CommandErrCounter = DS_AppData.CommandErrCounter;
 
     /*
     ** Copy packet storage counters to housekeeping telemetry packet...
