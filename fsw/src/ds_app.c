@@ -184,8 +184,15 @@ CFE_Status_t DS_AppInitialize(void)
     */
     memset(&DS_AppData, 0, sizeof(DS_AppData));
 
-    DS_AppData.AppEnableState  = DS_DEF_ENABLE_STATE;
-    DS_AppData.EnableMoveFiles = DS_MOVE_FILES;
+    /*
+    ** Initialize housekeeping packet...
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(DS_AppData.HkTlm.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(DS_HK_TLM_MID),
+                 sizeof(DS_HkPacket_t));
+
+    DS_AppData.HkTlm.Payload.AppEnableState = DS_DEF_ENABLE_STATE;
+    DS_AppData.EnableMoveFiles              = DS_MOVE_FILES;
 
     /*
     ** Mark files as closed
@@ -290,12 +297,12 @@ CFE_Status_t DS_AppInitialize(void)
 
 void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_AppData.AppEnableState == DS_DISABLED)
+    if (DS_AppData.HkTlm.Payload.AppEnableState == DS_DISABLED)
     {
         /*
         ** Application must be enabled in order to store data...
         */
-        DS_AppData.DisabledPktCounter++;
+        DS_AppData.HkTlm.Payload.DisabledPktCounter++;
     }
     else if ((DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
              || (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL))
@@ -303,7 +310,7 @@ void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Must have both tables loaded in order to store data...
         */
-        DS_AppData.IgnoredPktCounter++;
+        DS_AppData.HkTlm.Payload.IgnoredPktCounter++;
     }
     else
     {

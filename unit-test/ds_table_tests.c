@@ -162,7 +162,7 @@ void DS_TableManageDestFile_Test_TableInfoUpdated(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblLoadCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileState, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileCount, 0);
@@ -185,7 +185,7 @@ void DS_TableManageDestFile_Test_TableNeverLoaded(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblErrCounter, 1);
     UtAssert_ADDRESS_EQ(DS_AppData.DestFileTblPtr, NULL);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -232,7 +232,7 @@ void DS_TableManageDestFile_Test_TableInfoUpdatePending(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblLoadCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileState, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileCount, 0);
@@ -271,7 +271,7 @@ void DS_TableManageDestFile_Test_TableSuccess(void)
     DS_TableManageDestFile();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.DestTblLoadCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.DestTblLoadCounter, 0);
 
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileState, 0);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[0].FileCount, 0);
@@ -296,7 +296,7 @@ void DS_TableManageFilter_Test_TableInfoUpdated(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblLoadCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
@@ -311,7 +311,7 @@ void DS_TableManageFilter_Test_TableNeverLoaded(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblErrCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblErrCounter, 1);
     UtAssert_ADDRESS_EQ(DS_AppData.FilterTblPtr, NULL);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -350,7 +350,7 @@ void DS_TableManageFilter_Test_TableInfoUpdatePending(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblLoadCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 
@@ -376,7 +376,7 @@ void DS_TableManageFilter_Test_TableSuccess(void)
     DS_TableManageFilter();
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblLoadCounter, 0);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.FilterTblLoadCounter, 0);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
@@ -926,7 +926,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero(void)
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero(void)
+void DS_TableVerifyFilterEntry_Test_InvalidFilterParamsErrZero(void)
 {
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
@@ -997,7 +997,7 @@ void DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
-void DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero(void)
+void DS_TableVerifyFilterEntry_Test_InvalidFilterParamsErrNonZero(void)
 {
     DS_PacketEntry_t PacketEntry;
     uint32           TableIndex = 0;
@@ -1068,53 +1068,53 @@ void DS_TableVerifyFileIndex_Test_Fail(void)
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
-void DS_TableVerifyParms_Test_NominalOnlyXNonZero(void)
+void DS_TableVerifyParams_Test_NominalOnlyXNonZero(void)
 {
     uint16 Algorithm_N = 0;
     uint16 Algorithm_X = 1;
     uint16 Algorithm_O = 0;
 
     /* Execute the function being tested */
-    UtAssert_BOOL_TRUE(DS_TableVerifyParms(Algorithm_N, Algorithm_X, Algorithm_O));
+    UtAssert_BOOL_TRUE(DS_TableVerifyParams(Algorithm_N, Algorithm_X, Algorithm_O));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
-void DS_TableVerifyParms_Test_NGreaterThanXOnlyNNonZero(void)
+void DS_TableVerifyParams_Test_NGreaterThanXOnlyNNonZero(void)
 {
     uint16 Algorithm_N = 1;
     uint16 Algorithm_X = 0;
     uint16 Algorithm_O = 0;
 
     /* Execute the function being tested */
-    UtAssert_BOOL_FALSE(DS_TableVerifyParms(Algorithm_N, Algorithm_X, Algorithm_O));
+    UtAssert_BOOL_FALSE(DS_TableVerifyParams(Algorithm_N, Algorithm_X, Algorithm_O));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
-void DS_TableVerifyParms_Test_OGreaterThanXOnlyONonZero(void)
+void DS_TableVerifyParams_Test_OGreaterThanXOnlyONonZero(void)
 {
     uint16 Algorithm_N = 0;
     uint16 Algorithm_X = 0;
     uint16 Algorithm_O = 1;
 
     /* Execute the function being tested */
-    UtAssert_BOOL_FALSE(DS_TableVerifyParms(Algorithm_N, Algorithm_X, Algorithm_O));
+    UtAssert_BOOL_FALSE(DS_TableVerifyParams(Algorithm_N, Algorithm_X, Algorithm_O));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
 }
 
-void DS_TableVerifyParms_Test_AllZero(void)
+void DS_TableVerifyParams_Test_AllZero(void)
 {
     uint16 Algorithm_N = 0;
     uint16 Algorithm_X = 0;
     uint16 Algorithm_O = 0;
 
     /* Execute the function being tested */
-    UtAssert_BOOL_TRUE(DS_TableVerifyParms(Algorithm_N, Algorithm_X, Algorithm_O));
+    UtAssert_BOOL_TRUE(DS_TableVerifyParams(Algorithm_N, Algorithm_X, Algorithm_O));
 
     /* Verify results */
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -1360,7 +1360,7 @@ void DS_TableCreateCDS_Test_PreExistingCDSArea(void)
     if (DS_CDS_ENABLE_STATE == 1)
     {
         /* only test if configured */
-        UtAssert_UINT32_EQ(DS_AppData.AppEnableState, 0);
+        UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.AppEnableState, 0);
     }
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
@@ -1558,10 +1558,10 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_Unused);
     UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrZero);
     UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrZero);
-    UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrZero);
+    UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFilterParamsErrZero);
     UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFileTableIndexErrNonZero);
     UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFilterTypeErrNonZero);
-    UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFilterParmsErrNonZero);
+    UT_DS_TEST_ADD(DS_TableVerifyFilterEntry_Test_InvalidFilterParamsErrNonZero);
 
     UT_DS_TEST_ADD(DS_TableEntryUnused_Test_Nominal);
     UT_DS_TEST_ADD(DS_TableEntryUnused_Test_Fail);
@@ -1569,10 +1569,10 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_TableVerifyFileIndex_Test_Nominal);
     UT_DS_TEST_ADD(DS_TableVerifyFileIndex_Test_Fail);
 
-    UT_DS_TEST_ADD(DS_TableVerifyParms_Test_NominalOnlyXNonZero);
-    UT_DS_TEST_ADD(DS_TableVerifyParms_Test_NGreaterThanXOnlyNNonZero);
-    UT_DS_TEST_ADD(DS_TableVerifyParms_Test_OGreaterThanXOnlyONonZero);
-    UT_DS_TEST_ADD(DS_TableVerifyParms_Test_AllZero);
+    UT_DS_TEST_ADD(DS_TableVerifyParams_Test_NominalOnlyXNonZero);
+    UT_DS_TEST_ADD(DS_TableVerifyParams_Test_NGreaterThanXOnlyNNonZero);
+    UT_DS_TEST_ADD(DS_TableVerifyParams_Test_OGreaterThanXOnlyONonZero);
+    UT_DS_TEST_ADD(DS_TableVerifyParams_Test_AllZero);
 
     UT_DS_TEST_ADD(DS_TableVerifyType_Test_Nominal);
     UT_DS_TEST_ADD(DS_TableVerifyType_Test_Fail);

@@ -429,7 +429,7 @@
  *  This event signals the successful execution of a command to set the
  *  filter parameters for a single filter entry in the Packet Filter Table.
  */
-#define DS_PARMS_CMD_EID 41
+#define DS_PARAMS_CMD_EID 41
 
 /**
  *  \brief DS Set Filter Parameters Command Invalid Event ID
@@ -448,7 +448,7 @@
  *  loaded at the time the command was invoked or because the Message
  *  ID was not found in the Packet Filter Table.
  */
-#define DS_PARMS_CMD_ERR_EID 42
+#define DS_PARAMS_CMD_ERR_EID 42
 
 /**
  *  \brief DS Set Filename Type Command Event ID

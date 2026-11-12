@@ -171,7 +171,7 @@
   The Filter Table is defined by #DS_FilterTable_t. This table contains a
   description and #DS_PACKETS_IN_FILTER_TABLE entries. Each entry is defined by
   #DS_PacketEntry_t. Each Packet entry contains the Message ID for DS to store
-  and #DS_FILTERS_PER_PACKET entries defined by #DS_FilterParms_t.
+  and #DS_FILTERS_PER_PACKET entries defined by #DS_FilterParams_t.
 
   The Data Storage (DS) application attempts to load the File and Filter Tables from #DS_DEF_DEST_FILENAME and #DS_DEF_FILTER_FILENAME upon startup.
   If the load fails for either of these tables, DS will still start in the mode of operation as defined by the #DS_DEF_ENABLE_STATE configuration

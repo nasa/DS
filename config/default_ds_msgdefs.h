@@ -51,10 +51,10 @@ typedef struct
  */
 typedef struct
 {
-    CFE_SB_MsgId_t MessageID;        /**< \brief Message ID of existing entry in Packet Filter Table
-                                          \details DS defines Message ID zero to be unused */
-    uint16         FilterParmsIndex; /**< \brief Index into Filter Parms Array */
-    uint16         FileTableIndex;   /**< \brief Index into Destination File Table */
+    CFE_SB_MsgId_t MessageID;         /**< \brief Message ID of existing entry in Packet Filter Table
+                                           \details DS defines Message ID zero to be unused */
+    uint16         FilterParamsIndex; /**< \brief Index into Filter Params Array */
+    uint16         FileTableIndex;    /**< \brief Index into Destination File Table */
 } DS_FilterFile_Payload_t;
 
 /**
@@ -64,26 +64,26 @@ typedef struct
  */
 typedef struct
 {
-    CFE_SB_MsgId_t MessageID;        /**< \brief Message ID of existing entry in Packet Filter Table
-                                          \details DS defines Message ID zero to be unused */
-    uint16         FilterParmsIndex; /**< \brief Index into Filter Parms Array */
-    uint16         FilterType;       /**< \brief Filter type (packet count or time) */
+    CFE_SB_MsgId_t MessageID;         /**< \brief Message ID of existing entry in Packet Filter Table
+                                           \details DS defines Message ID zero to be unused */
+    uint16         FilterParamsIndex; /**< \brief Index into Filter Params Array */
+    uint16         FilterType;        /**< \brief Filter type (packet count or time) */
 } DS_FilterType_Payload_t;
 
 /**
  *  \brief Set Filter Parameters Payload
  *
- *  Used with #DS_SetFilterParmsCmd_t
+ *  Used with #DS_SetFilterParamsCmd_t
  */
 typedef struct
 {
-    CFE_SB_MsgId_t MessageID;        /**< \brief Message ID of existing entry in Packet Filter Table
-                                          \details DS defines Message ID zero to be unused */
-    uint16         FilterParmsIndex; /**< \brief Index into Filter Parms Array */
-    uint16         Algorithm_N;      /**< \brief Algorithm value N (pass this many) */
-    uint16         Algorithm_X;      /**< \brief Algorithm value X (out of this many) */
-    uint16         Algorithm_O;      /**< \brief Algorithm value O (at this offset) */
-} DS_FilterParms_Payload_t;
+    CFE_SB_MsgId_t MessageID;         /**< \brief Message ID of existing entry in Packet Filter Table
+                                           \details DS defines Message ID zero to be unused */
+    uint16         FilterParamsIndex; /**< \brief Index into Filter Params Array */
+    uint16         Algorithm_N;       /**< \brief Algorithm value N (pass this many) */
+    uint16         Algorithm_X;       /**< \brief Algorithm value X (out of this many) */
+    uint16         Algorithm_O;       /**< \brief Algorithm value O (at this offset) */
+} DS_FilterParams_Payload_t;
 
 /**
  *  \brief Set Filename Type Payload
@@ -210,8 +210,8 @@ typedef struct
 
 typedef struct
 {
-    uint8  CmdAcceptedCounter;   /**< \brief Count of valid commands received */
-    uint8  CmdRejectedCounter;   /**< \brief Count of invalid commands received */
+    uint8  CommandCounter;       /**< \brief Count of valid commands received */
+    uint8  CommandErrCounter;    /**< \brief Count of invalid commands received */
     uint8  DestTblLoadCounter;   /**< \brief Count of destination file table loads */
     uint8  DestTblErrCounter;    /**< \brief Count of failed attempts to get destination table data pointer */
     uint8  FilterTblLoadCounter; /**< \brief Count of packet filter table loads */

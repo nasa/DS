@@ -61,7 +61,7 @@ void DS_AppPipe_Test_CmdStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_NOOP_CC, sizeof(DS_NoopCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), 1);
@@ -77,7 +77,7 @@ void DS_AppPipe_Test_CmdNoStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_NOOP_CC, sizeof(DS_NoopCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
@@ -96,7 +96,7 @@ void DS_AppPipe_Test_HKStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), 0, sizeof(DS_SendHkCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), 1);
@@ -114,7 +114,7 @@ void DS_AppPipe_Test_HKNoStore(void)
 {
     DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), 0, sizeof(DS_SendHkCmd_t));
 
-    DS_AppData.AppEnableState                  = DS_DISABLED;
+    DS_AppData.HkTlm.Payload.AppEnableState    = DS_DISABLED;
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
@@ -255,24 +255,26 @@ void DS_AppProcessCmd_Test_SetFilterType(void)
     UtAssert_STUB_COUNT(DS_SetFilterTypeCmd, 1);
 }
 
-void DS_AppProcessCmd_Test_SetFilterParms(void)
+void DS_AppProcessCmd_Test_SetFilterParams(void)
 {
-    DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_PARMS_CC, sizeof(DS_SetFilterParmsCmd_t));
+    DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID),
+                              DS_SET_FILTER_PARAMS_CC,
+                              sizeof(DS_SetFilterParamsCmd_t));
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_STUB_COUNT(DS_SetFilterParmsCmd, 1);
+    UtAssert_STUB_COUNT(DS_SetFilterParamsCmd, 1);
 
     /* Now with an invalid size */
-    DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_PARMS_CC, 1);
+    DS_Dispatch_Test_SetupMsg(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_SET_FILTER_PARAMS_CC, 1);
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Should NOT have invoked the handler this time */
-    UtAssert_STUB_COUNT(DS_SetFilterParmsCmd, 1);
+    UtAssert_STUB_COUNT(DS_SetFilterParamsCmd, 1);
 }
 
 void DS_AppProcessCmd_Test_SetDestType(void)
@@ -543,7 +545,7 @@ void DS_AppProcessCmd_Test_InvalidCommandCode(void)
     UtAssert_VOIDCALL(DS_AppProcessCmd(&UT_CmdBuf.Buf));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }
@@ -562,7 +564,7 @@ void UtTest_Setup(void)
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetAppState);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterFile);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterType);
-    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterParms);
+    UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetFilterParams);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestType);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestState);
     UT_DS_TEST_ADD(DS_AppProcessCmd_Test_SetDestPath);

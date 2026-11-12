@@ -188,13 +188,13 @@ bool DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr,
 
 void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
 {
-    DS_PacketEntry_t *PacketEntry;
-    DS_FilterParms_t *FilterParms;
-    bool              PassedFilter;
-    bool              FilterResult;
-    int32             FilterIndex;
-    int32             FileIndex;
-    int32             i;
+    DS_PacketEntry_t  *PacketEntry;
+    DS_FilterParams_t *FilterParams;
+    bool               PassedFilter;
+    bool               FilterResult;
+    int32              FilterIndex;
+    int32              FileIndex;
+    int32              i;
 
     /*
     ** Convert packet MessageID to packet filter table index...
@@ -206,7 +206,7 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
     */
     if (FilterIndex == DS_INDEX_NONE)
     {
-        DS_AppData.IgnoredPktCounter++;
+        DS_AppData.HkTlm.Payload.IgnoredPktCounter++;
     }
     else
     {
@@ -218,14 +218,14 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         */
         for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
         {
-            FilterParms = &PacketEntry->Filter[i];
+            FilterParams = &PacketEntry->Filter[i];
 
             /*
             ** Ignore unused and invalid filters...
             */
-            if ((FilterParms->Algorithm_N != DS_UNUSED) && (FilterParms->FileTableIndex < DS_DEST_FILE_CNT))
+            if ((FilterParams->Algorithm_N != DS_UNUSED) && (FilterParams->FileTableIndex < DS_DEST_FILE_CNT))
             {
-                FileIndex = FilterParms->FileTableIndex;
+                FileIndex = FilterParams->FileTableIndex;
                 /*
                 ** Ignore disabled destination files...
                 */
@@ -235,10 +235,10 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
                     ** Apply filter algorithm to the packet...
                     */
                     FilterResult = DS_IsPacketFiltered((CFE_MSG_Message_t *)BufPtr,
-                                                       FilterParms->FilterType,
-                                                       FilterParms->Algorithm_N,
-                                                       FilterParms->Algorithm_X,
-                                                       FilterParms->Algorithm_O);
+                                                       FilterParams->FilterType,
+                                                       FilterParams->Algorithm_N,
+                                                       FilterParams->Algorithm_X,
+                                                       FilterParams->Algorithm_O);
                     if (FilterResult == false)
                     {
                         /*
@@ -256,11 +256,11 @@ void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
         */
         if (PassedFilter)
         {
-            DS_AppData.PassedPktCounter++;
+            DS_AppData.HkTlm.Payload.PassedPktCounter++;
         }
         else
         {
-            DS_AppData.FilteredPktCounter++;
+            DS_AppData.HkTlm.Payload.FilteredPktCounter++;
         }
     }
 }
@@ -358,7 +358,7 @@ void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
         /*
         ** Success - update file size and data rate counters...
         */
-        DS_AppData.FileWriteCounter++;
+        DS_AppData.HkTlm.Payload.FileWriteCounter++;
 
         FileStatus->FileSize   += DataLength;
         FileStatus->FileGrowth += DataLength;
@@ -403,7 +403,7 @@ void DS_FileWriteHeader(int32 FileIndex)
             /*
             ** Success - update file size and data rate counters...
             */
-            DS_AppData.FileWriteCounter++;
+            DS_AppData.HkTlm.Payload.FileWriteCounter++;
 
             FileStatus->FileSize   += sizeof(CFE_FS_Header_t);
             FileStatus->FileGrowth += sizeof(CFE_FS_Header_t);
@@ -426,7 +426,7 @@ void DS_FileWriteHeader(int32 FileIndex)
                 /*
                 ** Success - update file size and data rate counters...
                 */
-                DS_AppData.FileWriteCounter++;
+                DS_AppData.HkTlm.Payload.FileWriteCounter++;
 
                 FileStatus->FileSize   += sizeof(DS_FileHeader_t);
                 FileStatus->FileGrowth += sizeof(DS_FileHeader_t);
@@ -461,7 +461,7 @@ void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
     /*
     ** Send event, close file and disable destination...
     */
-    DS_AppData.FileWriteErrCounter++;
+    DS_AppData.HkTlm.Payload.FileWriteErrCounter++;
 
     CFE_EVS_SendEvent(DS_WRITE_FILE_ERR_EID,
                       CFE_EVS_EventType_ERROR,
@@ -508,7 +508,7 @@ void DS_FileCreateDest(uint32 FileIndex)
             /*
             ** Error - send event, disable destination and reset filename...
             */
-            DS_AppData.FileWriteErrCounter++;
+            DS_AppData.HkTlm.Payload.FileWriteErrCounter++;
 
             CFE_EVS_SendEvent(DS_CREATE_FILE_ERR_EID,
                               CFE_EVS_EventType_ERROR,
@@ -529,7 +529,7 @@ void DS_FileCreateDest(uint32 FileIndex)
             /*
             ** Success - store the file handle...
             */
-            DS_AppData.FileWriteCounter++;
+            DS_AppData.HkTlm.Payload.FileWriteCounter++;
 
             FileStatus->FileHandle = LocalFileHandle;
 
@@ -810,16 +810,16 @@ void DS_FileUpdateHeader(int32 FileIndex)
 
             if (Result == sizeof(CFE_TIME_SysTime_t))
             {
-                DS_AppData.FileUpdateCounter++;
+                DS_AppData.HkTlm.Payload.FileUpdateCounter++;
             }
             else
             {
-                DS_AppData.FileUpdateErrCounter++;
+                DS_AppData.HkTlm.Payload.FileUpdateErrCounter++;
             }
         }
         else
         {
-            DS_AppData.FileUpdateErrCounter++;
+            DS_AppData.HkTlm.Payload.FileUpdateErrCounter++;
         }
     }
 }

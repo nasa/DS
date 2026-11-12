@@ -50,27 +50,27 @@ extern CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
 /* Command buffer typedef for any handler */
 typedef union
 {
-    CFE_SB_Buffer_t        Buf;
-    DS_NoopCmd_t           NoopCmd;
-    DS_ResetCountersCmd_t  ResetCountersCmd;
-    DS_SetAppStateCmd_t    AppStateCmd;
-    DS_SetFilterFileCmd_t  FilterFileCmd;
-    DS_SetFilterTypeCmd_t  FilterTypeCmd;
-    DS_SetFilterParmsCmd_t FilterParmsCmd;
-    DS_SetDestTypeCmd_t    DestTypeCmd;
-    DS_SetDestStateCmd_t   DestStateCmd;
-    DS_SetDestPathCmd_t    DestPathCmd;
-    DS_SetDestBaseCmd_t    DestBaseCmd;
-    DS_SetDestExtCmd_t     DestExtCmd;
-    DS_SetDestSizeCmd_t    DestSizeCmd;
-    DS_SetDestAgeCmd_t     DestAgeCmd;
-    DS_SetDestCountCmd_t   DestCountCmd;
-    DS_CloseFileCmd_t      CloseFileCmd;
-    DS_CloseAllCmd_t       CloseAllCmd;
-    DS_GetFileInfoCmd_t    GetFileInfoCmd;
-    DS_AddMidCmd_t         AddMidCmd;
-    DS_RemoveMidCmd_t      RemoveMidCmd;
-    DS_SendHkCmd_t         SendHkCmd;
+    CFE_SB_Buffer_t         Buf;
+    DS_NoopCmd_t            NoopCmd;
+    DS_ResetCountersCmd_t   ResetCountersCmd;
+    DS_SetAppStateCmd_t     AppStateCmd;
+    DS_SetFilterFileCmd_t   FilterFileCmd;
+    DS_SetFilterTypeCmd_t   FilterTypeCmd;
+    DS_SetFilterParamsCmd_t FilterParamsCmd;
+    DS_SetDestTypeCmd_t     DestTypeCmd;
+    DS_SetDestStateCmd_t    DestStateCmd;
+    DS_SetDestPathCmd_t     DestPathCmd;
+    DS_SetDestBaseCmd_t     DestBaseCmd;
+    DS_SetDestExtCmd_t      DestExtCmd;
+    DS_SetDestSizeCmd_t     DestSizeCmd;
+    DS_SetDestAgeCmd_t      DestAgeCmd;
+    DS_SetDestCountCmd_t    DestCountCmd;
+    DS_CloseFileCmd_t       CloseFileCmd;
+    DS_CloseAllCmd_t        CloseAllCmd;
+    DS_GetFileInfoCmd_t     GetFileInfoCmd;
+    DS_AddMidCmd_t          AddMidCmd;
+    DS_RemoveMidCmd_t       RemoveMidCmd;
+    DS_SendHkCmd_t          SendHkCmd;
 } UT_CmdBuf_t;
 
 extern UT_CmdBuf_t UT_CmdBuf;

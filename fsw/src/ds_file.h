@@ -74,7 +74,7 @@ typedef struct
  *  \param[in] MessageID Message ID
  *  \param[in] BufPtr    Software Bus message pointer
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_DestFileEntry_t
  */
 void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr);
 

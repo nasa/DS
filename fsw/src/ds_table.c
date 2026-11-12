@@ -225,7 +225,7 @@ void DS_TableManageDestFile(void)
             /*
             ** Got a pointer to initial table data...
             */
-            DS_AppData.DestTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.DestTblLoadCounter++;
 
             /*
             ** Keep local copies of table values that software will modify...
@@ -246,7 +246,7 @@ void DS_TableManageDestFile(void)
             /*
             ** Still waiting for the first table load...
             */
-            DS_AppData.DestTblErrCounter++;
+            DS_AppData.HkTlm.Payload.DestTblErrCounter++;
 
             /*
             ** Make sure we don't try to use the empty table buffer...
@@ -280,7 +280,7 @@ void DS_TableManageDestFile(void)
             /*
             ** Update the current table with new data...
             */
-            DS_AppData.DestTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.DestTblLoadCounter++;
 
             /*
             ** Allow cFE to update the table data...
@@ -357,7 +357,7 @@ void DS_TableManageFilter(void)
             /*
             ** Got a pointer to initial filter table data...
             */
-            DS_AppData.FilterTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.FilterTblLoadCounter++;
 
             /*
             ** Subscribe to the packets in the new filter table...
@@ -374,7 +374,7 @@ void DS_TableManageFilter(void)
             /*
             ** Still waiting for the first filter table load...
             */
-            DS_AppData.FilterTblErrCounter++;
+            DS_AppData.HkTlm.Payload.FilterTblErrCounter++;
 
             /*
             ** Make sure we don't try to use the empty table buffer...
@@ -408,7 +408,7 @@ void DS_TableManageFilter(void)
             /*
             ** Update the current filter table with new data...
             */
-            DS_AppData.FilterTblLoadCounter++;
+            DS_AppData.HkTlm.Payload.FilterTblLoadCounter++;
 
             /*
             ** Un-subscribe to the packets in the old filter table...
@@ -684,10 +684,10 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData)
 
 bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount)
 {
-    const char       *CommonErrorText = "Filter table verify err:";
-    DS_FilterParms_t *FilterParms;
-    bool              Result = true;
-    int32             i;
+    const char        *CommonErrorText = "Filter table verify err:";
+    DS_FilterParams_t *FilterParams;
+    bool               Result = true;
+    int32              i;
 
     /*
     ** Each packet filter table entry has multiple filters per packet
@@ -705,14 +705,14 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
     */
     for (i = 0; (i < DS_FILTERS_PER_PACKET) && (Result == true); i++)
     {
-        FilterParms = &PacketEntry->Filter[i];
+        FilterParams = &PacketEntry->Filter[i];
 
-        if (DS_TableEntryUnused(FilterParms, sizeof(DS_FilterParms_t)) == false)
+        if (DS_TableEntryUnused(FilterParams, sizeof(DS_FilterParams_t)) == false)
         {
             /*
             ** If any filter field is non-zero then all filter fields must be valid
             */
-            if (DS_TableVerifyFileIndex((uint32)FilterParms->FileTableIndex) == false)
+            if (DS_TableVerifyFileIndex((uint32)FilterParams->FileTableIndex) == false)
             {
                 if (ErrorCount == 0)
                 {
@@ -723,11 +723,11 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
                                       (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
                                       (int)TableIndex,
                                       (int)i,
-                                      FilterParms->FileTableIndex);
+                                      FilterParams->FileTableIndex);
                 }
                 Result = false;
             }
-            else if (DS_TableVerifyType((uint16)FilterParms->FilterType) == false)
+            else if (DS_TableVerifyType((uint16)FilterParams->FilterType) == false)
             {
                 if (ErrorCount == 0)
                 {
@@ -738,25 +738,27 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
                                       (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
                                       (int)TableIndex,
                                       (int)i,
-                                      FilterParms->FilterType);
+                                      FilterParams->FilterType);
                 }
                 Result = false;
             }
-            else if (DS_TableVerifyParms(FilterParms->Algorithm_N, FilterParms->Algorithm_X, FilterParms->Algorithm_O)
+            else if (DS_TableVerifyParams(FilterParams->Algorithm_N,
+                                          FilterParams->Algorithm_X,
+                                          FilterParams->Algorithm_O)
                      == false)
             {
                 if (ErrorCount == 0)
                 {
                     CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID,
                                       CFE_EVS_EventType_ERROR,
-                                      "%s MID = 0x%08lX, index = %d, filter = %d, filter parms N = %d, X = %d, O = %d",
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, filter params N = %d, X = %d, O = %d",
                                       CommonErrorText,
                                       (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
                                       (int)TableIndex,
                                       (int)i,
-                                      FilterParms->Algorithm_N,
-                                      FilterParms->Algorithm_X,
-                                      FilterParms->Algorithm_O);
+                                      FilterParams->Algorithm_N,
+                                      FilterParams->Algorithm_X,
+                                      FilterParams->Algorithm_O);
                 }
                 Result = false;
             }
@@ -814,7 +816,7 @@ bool DS_TableVerifyFileIndex(uint16 FileTableIndex)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
+bool DS_TableVerifyParams(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
 {
     bool Result = true;
 
@@ -1020,7 +1022,7 @@ CFE_Status_t DS_TableCreateCDS(void)
             DataStoreBuffer[i] = DS_AppData.FileStatus[i].FileCount;
         }
 
-        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.AppEnableState;
+        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.HkTlm.Payload.AppEnableState;
 
         Result = CFE_ES_CopyToCDS(DS_AppData.DataStoreHandle, DataStoreBuffer);
     }
@@ -1041,7 +1043,7 @@ CFE_Status_t DS_TableCreateCDS(void)
             if (DS_CDS_ENABLE_STATE == 1)
             {
                 /* Only restore enable/disable state if configured */
-                DS_AppData.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
+                DS_AppData.HkTlm.Payload.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
             }
         }
     }
@@ -1096,7 +1098,7 @@ void DS_TableUpdateCDS(void)
         ** Always save the DS enable/disable state in the CDS...
         **  (DS_CDS_ENABLE_STATE controls restoring the state)
         */
-        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.AppEnableState;
+        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.HkTlm.Payload.AppEnableState;
 
         /*
         ** Update DS portion of Critical Data Store...

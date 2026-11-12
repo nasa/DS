@@ -160,9 +160,9 @@ CFE_Status_t DS_SetFilterTypeCmd(const DS_SetFilterTypeCmd_t *BufPtr);
  *
  *  \param[in] BufPtr Software Bus message pointer
  *
- *  \sa #DS_SET_FILTER_PARMS_CC, #DS_SetFilterParmsCmd_t
+ *  \sa #DS_SET_FILTER_PARAMS_CC, #DS_SetFilterParamsCmd_t
  */
-CFE_Status_t DS_SetFilterParmsCmd(const DS_SetFilterParmsCmd_t *BufPtr);
+CFE_Status_t DS_SetFilterParamsCmd(const DS_SetFilterParamsCmd_t *BufPtr);
 
 /**
  *  \brief Set data storage filename type command handler

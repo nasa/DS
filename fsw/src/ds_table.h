@@ -70,7 +70,7 @@ typedef struct DS_HashTag
  *  \par Assumptions, External Events, and Notes:
  *       (none)
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_DestFileEntry_t
  */
 CFE_Status_t DS_TableInit(void);
 
@@ -114,7 +114,7 @@ void DS_TableManageDestFile(void);
  *  \par Assumptions, External Events, and Notes:
  *       (none)
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_TableVerifyFilter
  */
 void DS_TableManageFilter(void);
 
@@ -183,7 +183,7 @@ bool DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableI
  *
  *  \param[in] TableData Pointer to Packet Filter Table data
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilterEntry
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_TableVerifyFilterEntry
  */
 CFE_Status_t DS_TableVerifyFilter(const void *TableData);
 
@@ -206,7 +206,7 @@ CFE_Status_t DS_TableVerifyFilter(const void *TableData);
  *  \param[in] TableIndex  Index of selected Packet Filter Table entry
  *  \param[in] ErrorCount  Number of errors already encountered
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_TableVerifyFilter
  */
 bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount);
 
@@ -227,7 +227,7 @@ bool DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, 
  *  \param[in] TableEntry Pointer to the table entry data
  *  \param[in] BufferSize Length of the table entry data
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_DestFileEntry_t
  */
 bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize);
 
@@ -260,7 +260,7 @@ bool DS_TableEntryUnused(const void *TableEntry, int32 BufferSize);
  *
  *  \param[in] FileTableIndex Destination File Table Index value
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_DestFileEntry_t
  */
 bool DS_TableVerifyFileIndex(uint16 FileTableIndex);
 
@@ -274,7 +274,7 @@ bool DS_TableVerifyFileIndex(uint16 FileTableIndex);
  *       Algorithm O must be <  Algorithm X
  *
  *  \par Called From:
- *       - Command handler (set filter parms)
+ *       - Command handler (set filter params)
  *       - Packet Filter Table entry validation function
  *
  *  \par Assumptions, External Events, and Notes:
@@ -286,7 +286,7 @@ bool DS_TableVerifyFileIndex(uint16 FileTableIndex);
  *
  *  \sa #DS_TableVerifyType, #DS_TableVerifyState, #DS_DestFileEntry_t
  */
-bool DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O);
+bool DS_TableVerifyParams(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O);
 
 /**
  *  \brief Verify packet filter type or filename type
@@ -412,7 +412,7 @@ bool DS_TableVerifyCount(uint32 SequenceCount);
  *  \par Assumptions, External Events, and Notes:
  *       Caller has determined that the new filter table exists.
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableUnsubscribe
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_TableUnsubscribe
  */
 void DS_TableSubscribe(void);
 
@@ -431,7 +431,7 @@ void DS_TableSubscribe(void);
  *  \par Assumptions, External Events, and Notes:
  *       Caller has determined that the old filter table exists.
  *
- *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableSubscribe
+ *  \sa #DS_PacketEntry_t, #DS_FilterParams_t, #DS_TableSubscribe
  */
 void DS_TableUnsubscribe(void);
 
@@ -556,7 +556,7 @@ int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex);
  *       - Data storage packet processor
  *       - Command handler (set file index)
  *       - Command handler (set filter type)
- *       - Command handler (set filter parms)
+ *       - Command handler (set filter params)
  *       - Command handler (add messageID to filter table)
  *
  *  \par Assumptions, External Events, and Notes:

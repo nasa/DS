@@ -44,7 +44,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_NOOP_INF_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -52,7 +52,7 @@
  *       - Invalid command packet length
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_NOOP_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -71,7 +71,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will reset to zero
+ *       - #DS_HkTlm_Payload_t.CommandCounter will reset to zero
  *       - The #DS_RESET_INF_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -79,7 +79,7 @@
  *       - Invalid command packet length
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_RESET_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -99,7 +99,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_ENADIS_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -108,7 +108,7 @@
  *       - Invalid enable/disable state selection
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_ENADIS_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -128,7 +128,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_FILE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -141,7 +141,7 @@
  *       - Cannot modify unused packet filter table entry
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_FILE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -161,7 +161,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_FTYPE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -174,7 +174,7 @@
  *       - Cannot modify unused packet filter table entry
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_FTYPE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -190,12 +190,12 @@
  *       indicated entry in the Packet Filter Table.
  *
  *  \par Command Structure
- *       #DS_SetFilterParmsCmd_t
+ *       #DS_SetFilterParamsCmd_t
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
- *       - The #DS_PARMS_CMD_EID informational event message will be sent
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
+ *       - The #DS_PARAMS_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
  *       This command can fail for the following reasons:
@@ -207,13 +207,13 @@
  *       - Cannot modify unused packet filter table entry
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
- *       - The #DS_PARMS_CMD_ERR_EID error event message will be sent
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
+ *       - The #DS_PARAMS_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
  *       None
  */
-#define DS_SET_FILTER_PARMS_CC DS_CCVAL(SET_FILTER_PARMS)
+#define DS_SET_FILTER_PARAMS_CC DS_CCVAL(SET_FILTER_PARAMS)
 
 /**
  * \brief Set Filename Type For Destination File Table Entry
@@ -227,7 +227,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_NTYPE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -238,7 +238,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_NTYPE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -258,7 +258,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_STATE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -269,7 +269,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_STATE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -289,7 +289,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_PATH_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -300,7 +300,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_PATH_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -320,7 +320,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_BASE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -331,7 +331,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_BASE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -351,7 +351,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_EXT_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -362,7 +362,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_EXT_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -382,7 +382,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_SIZE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -393,7 +393,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_SIZE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -413,7 +413,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_AGE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -424,7 +424,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_AGE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -444,7 +444,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_SEQ_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -455,7 +455,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_SEQ_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -474,7 +474,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_CLOSE_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -484,7 +484,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_CLOSE_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -503,7 +503,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_FileInfoPkt_t packet will be sent
  *
  *  \par Error Conditions
@@ -511,7 +511,7 @@
  *       - Invalid command packet length
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_GET_FILE_INFO_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -531,7 +531,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_ADD_MID_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -543,7 +543,7 @@
  *       - All packet filter table entries are already in use
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_ADD_MID_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -564,7 +564,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_CLOSE_ALL_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -573,7 +573,7 @@
  *       - Destination file table is not currently loaded
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_CLOSE_ALL_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality
@@ -593,7 +593,7 @@
  *
  *  \par Command Verification
  *       Evidence of success may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandCounter will increment
  *       - The #DS_REMOVE_MID_CMD_EID informational event message will be sent
  *
  *  \par Error Conditions
@@ -604,7 +604,7 @@
  *       - Message ID does not exist in packet filter table
  *
  *       Evidence of failure may be found in the following telemetry:
- *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - #DS_HkTlm_Payload_t.CommandErrCounter will increment
  *       - The #DS_REMOVE_MID_CMD_ERR_EID error event message will be sent
  *
  *  \par Criticality

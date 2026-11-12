@@ -59,7 +59,7 @@ void DS_NoopCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_NoopCmd(&UT_CmdBuf.NoopCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NOOP_INF_EID);
@@ -75,20 +75,20 @@ void DS_ResetCountersCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_ResetCountersCmd(&UT_CmdBuf.ResetCountersCmd));
 
     /* Verify results */
-    UtAssert_ZERO(DS_AppData.CmdAcceptedCounter);
-    UtAssert_ZERO(DS_AppData.CmdRejectedCounter);
-    UtAssert_ZERO(DS_AppData.DisabledPktCounter);
-    UtAssert_ZERO(DS_AppData.IgnoredPktCounter);
-    UtAssert_ZERO(DS_AppData.FilteredPktCounter);
-    UtAssert_ZERO(DS_AppData.PassedPktCounter);
-    UtAssert_ZERO(DS_AppData.FileWriteCounter);
-    UtAssert_ZERO(DS_AppData.FileWriteErrCounter);
-    UtAssert_ZERO(DS_AppData.FileUpdateCounter);
-    UtAssert_ZERO(DS_AppData.FileUpdateErrCounter);
-    UtAssert_ZERO(DS_AppData.DestTblLoadCounter);
-    UtAssert_ZERO(DS_AppData.DestTblErrCounter);
-    UtAssert_ZERO(DS_AppData.FilterTblLoadCounter);
-    UtAssert_ZERO(DS_AppData.FilterTblErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.CommandCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.CommandErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.DisabledPktCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.IgnoredPktCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FilteredPktCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.PassedPktCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileWriteCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileWriteErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileUpdateCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FileUpdateErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.DestTblLoadCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.DestTblErrCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FilterTblLoadCounter);
+    UtAssert_ZERO(DS_AppData.HkTlm.Payload.FilterTblErrCounter);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_RESET_INF_EID);
@@ -110,9 +110,9 @@ void DS_SetAppStateCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.AppStateCmd));
 
     /* Verify results */
-    UtAssert_INT32_EQ(DS_AppData.CmdRejectedCounter, 0);
-    UtAssert_INT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
-    UtAssert_True(DS_AppData.AppEnableState == true, "DS_AppData.AppEnableState == true");
+    UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 0);
+    UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
+    UtAssert_True(DS_AppData.HkTlm.Payload.AppEnableState == true, "DS_AppData.HkTlm.Payload.AppEnableState == true");
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_EID);
@@ -129,7 +129,7 @@ void DS_SetAppStateCmd_Test_InvalidAppState(void)
     UtAssert_VOIDCALL(DS_SetAppStateCmd(&UT_CmdBuf.AppStateCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ENADIS_CMD_ERR_EID);
@@ -141,12 +141,12 @@ void DS_SetFilterFileCmd_Test_Nominal(void)
     int32                    forced_FilterTableIndex = 1;
     DS_FilterFile_Payload_t *CmdPayload              = &UT_CmdBuf.FilterFileCmd.Payload;
 
-    CmdPayload->FilterParmsIndex = 2;
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FileTableIndex   = 4;
+    CmdPayload->FilterParamsIndex = 2;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FileTableIndex    = 4;
 
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
-    DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->FilterParmsIndex].FileTableIndex = 0;
+    DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->FilterParamsIndex].FileTableIndex = 0;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), forced_FilterTableIndex);
@@ -155,13 +155,13 @@ void DS_SetFilterFileCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_True(
-        DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->FilterParmsIndex].FileTableIndex
+        DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->FilterParamsIndex].FileTableIndex
             == CmdPayload->FileTableIndex,
         "DS_AppData.FilterTblPtr->Packet[forced_FilterTableIndex].Filter[CmdPayload->"
-        "FilterParmsIndex].FileTableIndex == CmdPayload->FileTableIndex");
+        "FilterParamsIndex].FileTableIndex == CmdPayload->FileTableIndex");
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_EID);
@@ -181,7 +181,7 @@ void DS_SetFilterFileCmd_Test_InvalidMessageID(void)
     UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
@@ -192,14 +192,14 @@ void DS_SetFilterFileCmd_Test_InvalidFilterParametersIndex(void)
 {
     DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
@@ -210,15 +210,15 @@ void DS_SetFilterFileCmd_Test_InvalidFileTableIndex(void)
 {
     DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = 1;
-    CmdPayload->FileTableIndex   = 99;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = 1;
+    CmdPayload->FileTableIndex    = 99;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
@@ -229,9 +229,9 @@ void DS_SetFilterFileCmd_Test_FilterTableNotLoaded(void)
 {
     DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = 1;
-    CmdPayload->FileTableIndex   = 1;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = 1;
+    CmdPayload->FileTableIndex    = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyFileIndex), true);
 
@@ -242,7 +242,7 @@ void DS_SetFilterFileCmd_Test_FilterTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
@@ -253,9 +253,9 @@ void DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable(void)
 {
     DS_FilterFile_Payload_t *CmdPayload = &UT_CmdBuf.FilterFileCmd.Payload;
 
-    CmdPayload->FilterParmsIndex = 2;
-    CmdPayload->MessageID        = DS_UT_MID_2;
-    CmdPayload->FileTableIndex   = 4;
+    CmdPayload->FilterParamsIndex = 2;
+    CmdPayload->MessageID         = DS_UT_MID_2;
+    CmdPayload->FileTableIndex    = 4;
 
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
@@ -266,7 +266,7 @@ void DS_SetFilterFileCmd_Test_MessageIDNotInFilterTable(void)
     UtAssert_VOIDCALL(DS_SetFilterFileCmd(&UT_CmdBuf.FilterFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FILE_CMD_ERR_EID);
@@ -277,9 +277,9 @@ void DS_SetFilterTypeCmd_Test_Nominal(void)
 {
     DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
-    CmdPayload->FilterParmsIndex = 2;
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterType       = 1;
+    CmdPayload->FilterParamsIndex = 2;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterType        = 1;
 
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
@@ -289,9 +289,9 @@ void DS_SetFilterTypeCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
-    UtAssert_UINT32_EQ(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].FilterType, 1);
+    UtAssert_UINT32_EQ(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParamsIndex].FilterType, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_EID);
@@ -311,7 +311,7 @@ void DS_SetFilterTypeCmd_Test_InvalidMessageID(void)
     UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
@@ -322,14 +322,14 @@ void DS_SetFilterTypeCmd_Test_InvalidFilterParametersIndex(void)
 {
     DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
@@ -340,15 +340,15 @@ void DS_SetFilterTypeCmd_Test_InvalidFilterType(void)
 {
     DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = 1;
-    CmdPayload->FilterType       = false;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = 1;
+    CmdPayload->FilterType        = false;
 
     /* Execute the function being tested */
     UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
@@ -359,9 +359,9 @@ void DS_SetFilterTypeCmd_Test_FilterTableNotLoaded(void)
 {
     DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = 1;
-    CmdPayload->FilterType       = 1;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = 1;
+    CmdPayload->FilterType        = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
 
@@ -372,7 +372,7 @@ void DS_SetFilterTypeCmd_Test_FilterTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
@@ -383,9 +383,9 @@ void DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable(void)
 {
     DS_FilterType_Payload_t *CmdPayload = &UT_CmdBuf.FilterTypeCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_2;
-    CmdPayload->FilterParmsIndex = 1;
-    CmdPayload->FilterType       = 1;
+    CmdPayload->MessageID         = DS_UT_MID_2;
+    CmdPayload->FilterParamsIndex = 1;
+    CmdPayload->FilterType        = 1;
 
     UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyType), true);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
@@ -394,144 +394,144 @@ void DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable(void)
     UtAssert_VOIDCALL(DS_SetFilterTypeCmd(&UT_CmdBuf.FilterTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_FTYPE_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_SetFilterParmsCmd_Test_Nominal(void)
+void DS_SetFilterParamsCmd_Test_Nominal(void)
 {
-    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
+    DS_FilterParams_Payload_t *CmdPayload = &UT_CmdBuf.FilterParamsCmd.Payload;
 
-    CmdPayload->FilterParmsIndex = 2;
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->Algorithm_N      = 0;
-    CmdPayload->Algorithm_X      = 0;
-    CmdPayload->Algorithm_O      = 0;
+    CmdPayload->FilterParamsIndex = 2;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->Algorithm_N       = 0;
+    CmdPayload->Algorithm_X       = 0;
+    CmdPayload->Algorithm_O       = 0;
 
-    UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
+    UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParams), true);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
+    UtAssert_VOIDCALL(DS_SetFilterParamsCmd(&UT_CmdBuf.FilterParamsCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
-    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_N);
-    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_X);
-    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParmsIndex].Algorithm_O);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParamsIndex].Algorithm_N);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParamsIndex].Algorithm_X);
+    UtAssert_ZERO(DS_AppData.FilterTblPtr->Packet[0].Filter[CmdPayload->FilterParamsIndex].Algorithm_O);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARAMS_CMD_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
     /* Verify command struct size minus header is at least explicitly padded to 32-bit boundaries */
-    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetFilterParmsCmd_t), "DS_FilterParmsCmd_t is 32-bit aligned");
+    UtAssert_True(CMD_STRUCT_DATA_IS_32_ALIGNED(DS_SetFilterParamsCmd_t), "DS_FilterParamsCmd_t is 32-bit aligned");
 }
 
-void DS_SetFilterParmsCmd_Test_InvalidMessageID(void)
+void DS_SetFilterParamsCmd_Test_InvalidMessageID(void)
 {
-    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
+    DS_FilterParams_Payload_t *CmdPayload = &UT_CmdBuf.FilterParamsCmd.Payload;
 
     CmdPayload->MessageID = CFE_SB_INVALID_MSG_ID;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
+    UtAssert_VOIDCALL(DS_SetFilterParamsCmd(&UT_CmdBuf.FilterParamsCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARAMS_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex(void)
+void DS_SetFilterParamsCmd_Test_InvalidFilterParametersIndex(void)
 {
-    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
+    DS_FilterParams_Payload_t *CmdPayload = &UT_CmdBuf.FilterParamsCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = DS_FILTERS_PER_PACKET;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = DS_FILTERS_PER_PACKET;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
+    UtAssert_VOIDCALL(DS_SetFilterParamsCmd(&UT_CmdBuf.FilterParamsCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARAMS_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm(void)
+void DS_SetFilterParamsCmd_Test_InvalidFilterAlgorithm(void)
 {
-    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
+    DS_FilterParams_Payload_t *CmdPayload = &UT_CmdBuf.FilterParamsCmd.Payload;
 
-    CmdPayload->FilterParmsIndex = 2;
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->Algorithm_N      = 1;
-    CmdPayload->Algorithm_X      = 1;
-    CmdPayload->Algorithm_O      = 1;
+    CmdPayload->FilterParamsIndex = 2;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->Algorithm_N       = 1;
+    CmdPayload->Algorithm_X       = 1;
+    CmdPayload->Algorithm_O       = 1;
 
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
+    UtAssert_VOIDCALL(DS_SetFilterParamsCmd(&UT_CmdBuf.FilterParamsCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARAMS_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_SetFilterParmsCmd_Test_FilterTableNotLoaded(void)
+void DS_SetFilterParamsCmd_Test_FilterTableNotLoaded(void)
 {
-    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
+    DS_FilterParams_Payload_t *CmdPayload = &UT_CmdBuf.FilterParamsCmd.Payload;
 
-    CmdPayload->MessageID        = DS_UT_MID_1;
-    CmdPayload->FilterParmsIndex = 1;
+    CmdPayload->MessageID         = DS_UT_MID_1;
+    CmdPayload->FilterParamsIndex = 1;
 
-    UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
+    UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParams), true);
 
     /* Reset table pointer to NULL (set in test setup) */
     DS_AppData.FilterTblPtr = NULL;
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
+    UtAssert_VOIDCALL(DS_SetFilterParamsCmd(&UT_CmdBuf.FilterParamsCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARAMS_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
-void DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable(void)
+void DS_SetFilterParamsCmd_Test_MessageIDNotInFilterTable(void)
 {
-    DS_FilterParms_Payload_t *CmdPayload = &UT_CmdBuf.FilterParmsCmd.Payload;
+    DS_FilterParams_Payload_t *CmdPayload = &UT_CmdBuf.FilterParamsCmd.Payload;
 
-    CmdPayload->FilterParmsIndex = 2;
-    CmdPayload->MessageID        = DS_UT_MID_2;
+    CmdPayload->FilterParamsIndex = 2;
+    CmdPayload->MessageID         = DS_UT_MID_2;
 
     DS_AppData.FilterTblPtr->Packet->MessageID = DS_UT_MID_1;
 
-    UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParms), true);
+    UT_SetDefaultReturnValue(UT_KEY(DS_TableVerifyParams), true);
     UT_SetDefaultReturnValue(UT_KEY(DS_TableFindMsgID), DS_INDEX_NONE);
 
     /* Execute the function being tested */
-    UtAssert_VOIDCALL(DS_SetFilterParmsCmd(&UT_CmdBuf.FilterParmsCmd));
+    UtAssert_VOIDCALL(DS_SetFilterParamsCmd(&UT_CmdBuf.FilterParamsCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
-    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARMS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PARAMS_CMD_ERR_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
 }
 
@@ -549,7 +549,7 @@ void DS_SetDestTypeCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].FileNameType, 2);
 
@@ -571,7 +571,7 @@ void DS_SetDestTypeCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
@@ -591,7 +591,7 @@ void DS_SetDestTypeCmd_Test_InvalidFilenameType(void)
     UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
@@ -614,7 +614,7 @@ void DS_SetDestTypeCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestTypeCmd(&UT_CmdBuf.DestTypeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_NTYPE_CMD_ERR_EID);
@@ -635,7 +635,7 @@ void DS_SetDestStateCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_True(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].EnableState == CmdPayload->EnableState,
                   "DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].EnableState == "
@@ -659,7 +659,7 @@ void DS_SetDestStateCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
@@ -679,7 +679,7 @@ void DS_SetDestStateCmd_Test_InvalidFileState(void)
     UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
@@ -701,7 +701,7 @@ void DS_SetDestStateCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestStateCmd(&UT_CmdBuf.DestStateCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_STATE_CMD_ERR_EID);
@@ -721,7 +721,7 @@ void DS_SetDestPathCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.DestPathCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Pathname,
                           "pathname",
@@ -745,7 +745,7 @@ void DS_SetDestPathCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.DestPathCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_ERR_EID);
@@ -767,7 +767,7 @@ void DS_SetDestPathCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestPathCmd(&UT_CmdBuf.DestPathCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_PATH_CMD_ERR_EID);
@@ -787,7 +787,7 @@ void DS_SetDestBaseCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.DestBaseCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_True(strncmp(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Basename,
                           "base",
@@ -811,7 +811,7 @@ void DS_SetDestBaseCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.DestBaseCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_ERR_EID);
@@ -833,7 +833,7 @@ void DS_SetDestBaseCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestBaseCmd(&UT_CmdBuf.DestBaseCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_BASE_CMD_ERR_EID);
@@ -853,7 +853,7 @@ void DS_SetDestExtCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.DestExtCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_True(
         strncmp(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].Extension, "txt", DS_EXTENSION_BUFSIZE)
@@ -877,7 +877,7 @@ void DS_SetDestExtCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.DestExtCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_ERR_EID);
@@ -899,7 +899,7 @@ void DS_SetDestExtCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestExtCmd(&UT_CmdBuf.DestExtCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_EXT_CMD_ERR_EID);
@@ -920,7 +920,7 @@ void DS_SetDestSizeCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileSize, 100000000);
 
@@ -943,7 +943,7 @@ void DS_SetDestSizeCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
@@ -965,7 +965,7 @@ void DS_SetDestSizeCmd_Test_InvalidFileSizeLimit(void)
     UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
@@ -988,7 +988,7 @@ void DS_SetDestSizeCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestSizeCmd(&UT_CmdBuf.DestSizeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SIZE_CMD_ERR_EID);
@@ -1009,7 +1009,7 @@ void DS_SetDestAgeCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].MaxFileAge, 1000);
 
@@ -1032,7 +1032,7 @@ void DS_SetDestAgeCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
@@ -1054,7 +1054,7 @@ void DS_SetDestAgeCmd_Test_InvalidFileAgeLimit(void)
     UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
@@ -1077,7 +1077,7 @@ void DS_SetDestAgeCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestAgeCmd(&UT_CmdBuf.DestAgeCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_AGE_CMD_ERR_EID);
@@ -1098,7 +1098,7 @@ void DS_SetDestCountCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_UINT32_EQ(DS_AppData.DestFileTblPtr->File[CmdPayload->FileTableIndex].SequenceCount, 1);
     UtAssert_UINT32_EQ(DS_AppData.FileStatus[CmdPayload->FileTableIndex].FileCount, 1);
@@ -1122,7 +1122,7 @@ void DS_SetDestCountCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
@@ -1144,7 +1144,7 @@ void DS_SetDestCountCmd_Test_InvalidFileSequenceCount(void)
     UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
@@ -1167,7 +1167,7 @@ void DS_SetDestCountCmd_Test_FileTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_SetDestCountCmd(&UT_CmdBuf.DestCountCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_SEQ_CMD_ERR_EID);
@@ -1196,7 +1196,7 @@ void DS_CloseFileCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.CloseFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_EID);
@@ -1226,7 +1226,7 @@ void DS_CloseFileCmd_Test_NominalAlreadyClosed(void)
     UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.CloseFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_EID);
@@ -1248,7 +1248,7 @@ void DS_CloseFileCmd_Test_InvalidFileTableIndex(void)
     UtAssert_VOIDCALL(DS_CloseFileCmd(&UT_CmdBuf.CloseFileCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_CMD_ERR_EID);
@@ -1271,7 +1271,7 @@ void DS_CloseAllCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.CloseAllCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_CLOSE_ALL_CMD_EID);
@@ -1294,7 +1294,7 @@ void DS_CloseAllCmd_Test_CloseAll(void)
     UtAssert_VOIDCALL(DS_CloseAllCmd(&UT_CmdBuf.CloseAllCmd));
 
     /* Verify results */
-    UtAssert_INT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_INT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_STUB_COUNT(DS_FileUpdateHeader, DS_DEST_FILE_CNT);
     UtAssert_STUB_COUNT(DS_FileCloseDest, DS_DEST_FILE_CNT);
@@ -1324,7 +1324,7 @@ void DS_GetFileInfoCmd_Test_EnabledOpen(void)
     UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.GetFileInfoCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
     /* Changes to DS_FileInfoPkt cannot easily be verified because DS_FileInfoPkt is a local variable */
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
@@ -1357,7 +1357,7 @@ void DS_GetFileInfoCmd_Test_DisabledClosed(void)
     UtAssert_VOIDCALL(DS_GetFileInfoCmd(&UT_CmdBuf.GetFileInfoCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_GET_FILE_INFO_CMD_EID);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
 
@@ -1391,7 +1391,7 @@ void DS_AddMIDCmd_Test_Nominal(void)
     UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdAcceptedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandCounter, 1);
 
     UtAssert_BOOL_TRUE(CFE_SB_MsgId_Equal(DS_AppData.FilterTblPtr->Packet[FilterTableIndex].MessageID, DS_UT_MID_1));
 
@@ -1433,7 +1433,7 @@ void DS_AddMIDCmd_Test_InvalidMessageID(void)
     UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
@@ -1453,7 +1453,7 @@ void DS_AddMIDCmd_Test_FilterTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
@@ -1473,7 +1473,7 @@ void DS_AddMIDCmd_Test_MIDAlreadyInFilterTable(void)
     UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
@@ -1493,7 +1493,7 @@ void DS_AddMIDCmd_Test_FilterTableFull(void)
     UtAssert_VOIDCALL(DS_AddMidCmd(&UT_CmdBuf.AddMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_ADD_MID_CMD_ERR_EID);
@@ -1565,7 +1565,7 @@ void DS_RemoveMIDCmd_Test_InvalidMessageID(void)
     UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
@@ -1585,7 +1585,7 @@ void DS_RemoveMIDCmd_Test_FilterTableNotLoaded(void)
     UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
@@ -1604,7 +1604,7 @@ void DS_RemoveMIDCmd_Test_MessageIDNotAdded(void)
     UtAssert_VOIDCALL(DS_RemoveMidCmd(&UT_CmdBuf.RemoveMidCmd));
 
     /* Verify results */
-    UtAssert_UINT32_EQ(DS_AppData.CmdRejectedCounter, 1);
+    UtAssert_UINT32_EQ(DS_AppData.HkTlm.Payload.CommandErrCounter, 1);
 
     UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
     UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, DS_REMOVE_MID_CMD_ERR_EID);
@@ -1769,27 +1769,30 @@ void UtTest_Setup(void)
                DS_Test_TearDown,
                "DS_SetFilterTypeCmd_Test_MessageIDNotInFilterTable");
 
-    UtTest_Add(DS_SetFilterParmsCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetFilterParmsCmd_Test_Nominal");
-    UtTest_Add(DS_SetFilterParmsCmd_Test_InvalidMessageID,
+    UtTest_Add(DS_SetFilterParamsCmd_Test_Nominal,
                DS_Test_Setup,
                DS_Test_TearDown,
-               "DS_SetFilterParmsCmd_Test_InvalidMessageID");
-    UtTest_Add(DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex,
+               "DS_SetFilterParamsCmd_Test_Nominal");
+    UtTest_Add(DS_SetFilterParamsCmd_Test_InvalidMessageID,
                DS_Test_Setup,
                DS_Test_TearDown,
-               "DS_SetFilterParmsCmd_Test_InvalidFilterParametersIndex");
-    UtTest_Add(DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm,
+               "DS_SetFilterParamsCmd_Test_InvalidMessageID");
+    UtTest_Add(DS_SetFilterParamsCmd_Test_InvalidFilterParametersIndex,
                DS_Test_Setup,
                DS_Test_TearDown,
-               "DS_SetFilterParmsCmd_Test_InvalidFilterAlgorithm");
-    UtTest_Add(DS_SetFilterParmsCmd_Test_FilterTableNotLoaded,
+               "DS_SetFilterParamsCmd_Test_InvalidFilterParametersIndex");
+    UtTest_Add(DS_SetFilterParamsCmd_Test_InvalidFilterAlgorithm,
                DS_Test_Setup,
                DS_Test_TearDown,
-               "DS_SetFilterParmsCmd_Test_FilterTableNotLoaded");
-    UtTest_Add(DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable,
+               "DS_SetFilterParamsCmd_Test_InvalidFilterAlgorithm");
+    UtTest_Add(DS_SetFilterParamsCmd_Test_FilterTableNotLoaded,
                DS_Test_Setup,
                DS_Test_TearDown,
-               "DS_SetFilterParmsCmd_Test_MessageIDNotInFilterTable");
+               "DS_SetFilterParamsCmd_Test_FilterTableNotLoaded");
+    UtTest_Add(DS_SetFilterParamsCmd_Test_MessageIDNotInFilterTable,
+               DS_Test_Setup,
+               DS_Test_TearDown,
+               "DS_SetFilterParamsCmd_Test_MessageIDNotInFilterTable");
 
     UtTest_Add(DS_SetDestTypeCmd_Test_Nominal, DS_Test_Setup, DS_Test_TearDown, "DS_SetDestTypeCmd_Test_Nominal");
     UtTest_Add(DS_SetDestTypeCmd_Test_InvalidFileTableIndex,

@@ -48,7 +48,7 @@ bool DS_VerifyLength(const CFE_SB_Buffer_t *BufPtr, size_t ExpectedLength, uint1
         /*
         ** Invalid command packet length...
         */
-        DS_AppData.CmdRejectedCounter++;
+        DS_AppData.HkTlm.Payload.CommandErrCounter++;
 
         CFE_EVS_SendEvent(FailEventID,
                           CFE_EVS_EventType_ERROR,
@@ -137,11 +137,11 @@ void DS_SetFilterTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 /*                                                                 */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void DS_SetFilterParmsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+void DS_SetFilterParamsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
 {
-    if (DS_VerifyLength(BufPtr, sizeof(DS_SetFilterParmsCmd_t), DS_PARMS_CMD_ERR_EID, "FILTER PARMS"))
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SetFilterParamsCmd_t), DS_PARAMS_CMD_ERR_EID, "FILTER PARAMS"))
     {
-        DS_SetFilterParmsCmd((const DS_SetFilterParmsCmd_t *)BufPtr);
+        DS_SetFilterParamsCmd((const DS_SetFilterParamsCmd_t *)BufPtr);
     }
 }
 
@@ -434,8 +434,8 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
         /*
         ** Set packet filter algorithm parameters...
         */
-        case DS_SET_FILTER_PARMS_CC:
-            DS_SetFilterParmsVerifyDispatch(BufPtr);
+        case DS_SET_FILTER_PARAMS_CC:
+            DS_SetFilterParamsVerifyDispatch(BufPtr);
             break;
 
         /*
@@ -539,7 +539,7 @@ void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
                               DS_CMD_MID,
                               CommandCode);
 
-            DS_AppData.CmdRejectedCounter++;
+            DS_AppData.HkTlm.Payload.CommandErrCounter++;
             break;
     }
 }
