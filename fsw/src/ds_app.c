@@ -145,7 +145,7 @@ void DS_AppMain(void)
     /*
     ** Check for "fatal" process error...
     */
-    if (Result != CFE_SUCCESS)
+    if (RunStatus == CFE_ES_RunStatus_APP_ERROR)
     {
         /*
         ** Send an event describing the reason for the termination...

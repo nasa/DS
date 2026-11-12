@@ -137,7 +137,7 @@ void DS_AppMain_Test_SBTimeout(void)
     UtAssert_VOIDCALL(DS_AppMain());
 
     /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }
 
 void DS_AppMain_Test_SBNoMessage(void)
@@ -153,7 +153,7 @@ void DS_AppMain_Test_SBNoMessage(void)
     UtAssert_VOIDCALL(DS_AppMain());
 
     /* Verify results */
-    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
 }
 
 void DS_AppInitialize_Test_Nominal(void)
