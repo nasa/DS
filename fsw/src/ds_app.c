@@ -123,6 +123,10 @@ void DS_AppMain(void)
             DS_TableManageDestFile();
             DS_TableManageFilter();
         }
+        else if (Result == CFE_SB_NO_MESSAGE)
+        {
+            /* no action, but also no error */
+        }
         else
         {
             /*
@@ -141,7 +145,7 @@ void DS_AppMain(void)
     /*
     ** Check for "fatal" process error...
     */
-    if (Result != CFE_SUCCESS)
+    if (RunStatus == CFE_ES_RunStatus_APP_ERROR)
     {
         /*
         ** Send an event describing the reason for the termination...
